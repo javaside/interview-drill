@@ -2,3 +2,7 @@
 node_modules/
 .next/
 .env*
+
+# 抓取的第三方网页等临时产物，不入库
+*.html
+!.superpowers/**/*.html
