@@ -136,9 +136,12 @@ Expected: 1 passed
 - [ ] **Step 7: Commit**
 
 ```bash
-git add package.json tsconfig.json vitest.config.ts src tests
+printf 'node_modules/\ndist/\n.DS_Store\n' > .gitignore
+git add .gitignore package.json pnpm-lock.yaml tsconfig.json vitest.config.ts src tests
 git commit -m "chore: 项目骨架与测试环境"
 ```
+
+**`pnpm-lock.yaml` 必须提交。** Task 14 的 CI 用的是 `pnpm install --frozen-lockfile`，仓库里没有 lockfile 时它会直接失败。
 
 ---
 
@@ -198,6 +201,23 @@ export type KeyPoint = {
   public: boolean
   /** 仅 cardType='sequence' 必填：该步骤在流程中的序号，从 1 起 */
   order?: number
+  /**
+   * 推理链。当本要点是**从已引用事实推出的结论**、而非可直接引用的事实时必填。
+   *
+   * 为什么需要它：§4.3 实测 comparison(15.3%) + judgment(11.5%) 共约 27% 的题，
+   * 答案是推理出来的 ——「为什么 InnoDB 不用跳表」在 MySQL 手册里没有这一段。
+   * 而 §9.1 要求"无出处的断言一律剔除"。按字面执行，这 27% 一条都写不出来，
+   * 作者只能改写枚举题，正好是 §4.3 记录的那三条漂移力之一。
+   *
+   * 这个字段不是放宽规则，是把推理变成**可审查的对象**：`source` 仍然必须指向
+   * 推理所依据的那些事实，`reasoning` 写清从事实到结论这一步怎么走。
+   * 审核者可以分别检查"事实对不对"和"这一步推得通不通"。
+   */
+  reasoning?: string
+  /** 本要点由哪个旧 id 改名而来，供跨提交守卫放行 */
+  movedFrom?: string
+  /** 退役日期。复审判定写错要删掉时用它，而不是真删 —— review_log.distractorIds 引用着它 */
+  retiredAt?: string
 }
 
 export type Card = {
@@ -313,6 +333,17 @@ test('中文博客不能作为 source —— kind 枚举挡住它', () => {
   expect(cardSchema.safeParse(card({ keyPoints: [bad, kp({ id: 'b' }), kp({ id: 'c' })] })).success).toBe(false)
 })
 
+test('卡级未知字段被拒，不被静默丢弃', () => {
+  const r = cardSchema.safeParse({ ...card(), retiredAT: '2026-09-18' })
+  expect(r.success).toBe(false)
+})
+
+test('要点级未知字段被拒 —— 拼错的可选字段必须有信号', () => {
+  const bad = { ...kp(), confirmedIndependntOf: [] }
+  const r = cardSchema.safeParse(card({ keyPoints: [bad as never, kp({ id: 'b' }), kp({ id: 'c' })] }))
+  expect(r.success).toBe(false)
+})
+
 test('verifiedAt 必须是 YYYY-MM-DD', () => {
   const bad = kp({ verifiedAt: '2026/09/18' })
   expect(cardSchema.safeParse(card({ keyPoints: [bad, kp({ id: 'b' }), kp({ id: 'c' })] })).success).toBe(false)
@@ -363,6 +394,9 @@ export const keyPointSchema = z.object({
   verifiedAt: z.string().regex(ISO_DATE, 'verifiedAt 必须是 YYYY-MM-DD'),
   public: z.boolean(),
   order: z.number().int().positive().optional(),
+  reasoning: z.string().min(1).optional(),
+  movedFrom: z.string().optional(),
+  retiredAt: z.string().regex(ISO_DATE).optional(),
 }).strict()
 
 export const cardSchema = z
@@ -407,7 +441,7 @@ export const cardSchema = z
 - [ ] **Step 4: 运行测试确认通过**
 
 Run: `pnpm vitest run tests/lib/content/schema.test.ts`
-Expected: 7 passed
+Expected: 9 passed
 
 - [ ] **Step 5: Commit**
 
@@ -429,7 +463,7 @@ git commit -m "feat(content): zod schema，最少要点数按 cardType 分派"
 - [ ] **Step 1: 写失败测试 `tests/lib/content/rules.test.ts`**
 
 ```ts
-import { checkKeyPointText, checkBlockName, MAX_KP_HAN_CHARS } from '../../../src/lib/content/rules.js'
+import { checkKeyPointText, checkBlockName, checkPlaceholders, MAX_KP_HAN_CHARS } from '../../../src/lib/content/rules.js'
 
 test('要点汉字数上界是 30', () => {
   expect(MAX_KP_HAN_CHARS).toBe(30)
@@ -458,6 +492,12 @@ test('正常要点无问题', () => {
   expect(checkKeyPointText('获取锁是对 state 做 CAS，成功即持有')).toEqual([])
 })
 
+test('脚手架占位符被识别', () => {
+  expect(checkPlaceholders('待填写要点 1')).toHaveLength(1)
+  expect(checkPlaceholders('https://example.org/REPLACE-ME')).toHaveLength(2)
+  expect(checkPlaceholders('获取锁是对 state 做 CAS')).toEqual([])
+})
+
 test.each(['基础', '进阶', '高级', '其他', '常见问题', '高频'])(
   '块名黑名单「%s」命中即失败', (word) => {
     expect(checkBlockName(`MySQL ${word}`)).toHaveLength(1)
@@ -483,13 +523,26 @@ export const MAX_KP_HAN_CHARS = 30
 /** KP5 承载词：把多个事实折叠进一个词，是"把不可枚举硬塞进枚举"的语法标志 */
 const CARRIER_WORDS = ['等', '多种', '一系列', '若干', '之类', '诸如', '各种'] as const
 
-/** B5 块名黑名单：这些词说明块的边界没想清楚 */
+/** 块名黑名单（§9.3 第 3 条机器规则）：这些词说明块的边界没想清楚 */
 const VAGUE_BLOCK_WORDS = ['基础', '进阶', '高级', '其他', '常见问题', '高频'] as const
 
 const HAN = /\p{Script=Han}/gu
 
 export function countHanChars(s: string): number {
   return (s.match(HAN) ?? []).length
+}
+
+/**
+ * 脚手架占位符。必须有这条检查，否则"全部通过 schema 校验"这个完成标准
+ * 可以被 1345 张**没写过内容的空骨架**满足 —— 脚手架产出的
+ * `待填写要点 1` / `REPLACE-ME` 是完全合法的字符串，schema 拦不住。
+ */
+const PLACEHOLDERS = ['待填写', 'REPLACE-ME', 'example.org'] as const
+
+export function checkPlaceholders(text: string): string[] {
+  return PLACEHOLDERS.filter(ph => text.includes(ph)).map(
+    ph => `仍含脚手架占位符「${ph}」，这张卡还没写完`,
+  )
 }
 
 export function checkKeyPointText(text: string): string[] {
@@ -510,7 +563,7 @@ export function checkBlockName(name: string): string[] {
   const issues: string[] = []
   for (const w of VAGUE_BLOCK_WORDS) {
     if (name.includes(w)) {
-      issues.push(`块名含模糊词「${w}」，说明块的边界没定清楚（违反 B5）`)
+      issues.push(`块名含模糊词「${w}」，说明块的边界没定清楚（§9.3 第 3 条机器规则）`)
     }
   }
   return issues
@@ -613,9 +666,21 @@ test('触发 KP5 承载词的要点在解析阶段就被报出', () => {
   expect(r.issues.join()).toContain('承载词')
 })
 
-test('缺 frontmatter 时报错不崩', () => {
+test('缺 frontmatter 时报错不崩，且说清缺了什么', () => {
   const r = parseCard('只有正文没有 frontmatter', 'content/x/y.md')
   expect(r.ok).toBe(false)
+  if (r.ok) return
+  expect(r.issues.length).toBeGreaterThan(0)
+  expect(r.issues.join()).toContain('frontmatter')
+  expect(r.issues.join()).toContain('content/x/y.md')
+})
+
+test('frontmatter 里写 detail 被拒 —— 否则会被正文静默覆盖', () => {
+  const bad = SRC.replace('keyPoints:', 'detail: 我不该出现在这里\nkeyPoints:')
+  const r = parseCard(bad, 'x.md')
+  expect(r.ok).toBe(false)
+  if (r.ok) return
+  expect(r.issues.join()).toContain('detail')
 })
 
 test('verifiedAt 必须保持字符串，不能被 YAML 当 timestamp 解析成 Date', () => {
@@ -738,7 +803,7 @@ export function parseCard(raw: string, path: string): ParseResult {
 - [ ] **Step 5: 运行测试确认通过**
 
 Run: `pnpm vitest run tests/lib/content/parse.test.ts`
-Expected: 6 passed
+Expected: 7 passed
 
 - [ ] **Step 6: Commit**
 
@@ -913,8 +978,8 @@ git commit -m "feat(content): 全库审计的 id 唯一性与外键检查"
 - [ ] **Step 1: 写失败测试 `tests/lib/content/audit-pool.test.ts`**
 
 ```ts
-import { auditLibrary, MIN_BLOCK_POOL } from '../../../src/lib/content/audit.js'
-import type { Card, KeyPoint } from '../../../src/lib/content/types.js'
+import { auditLibrary, MIN_BLOCK_POOL, type BlockLike } from '../../../src/lib/content/audit.js'
+import type { Card, CardType, KeyPoint } from '../../../src/lib/content/types.js'
 
 function kp(id: string, excl: string[] = []): KeyPoint {
   return {
@@ -923,66 +988,149 @@ function kp(id: string, excl: string[] = []): KeyPoint {
     source: { kind: 'official-doc', url: 'https://example.org/a', locator: 'x' },
   }
 }
-function card(id: string, kps: KeyPoint[]): Card {
+function card(id: string, kps: KeyPoint[], cardType: CardType = 'enumeration'): Card {
   return {
-    id, blockId: 'b1', relatedBlocks: [], question: '问题？', cardType: 'enumeration',
+    id, blockId: 'b1', relatedBlocks: [], question: '问题？', cardType,
     keyPoints: kps, detail: '', followUps: [], appliesTo: 'JDK 8+', frequency: 'mid',
   }
 }
+const ready: BlockLike[] = [{ id: 'b1', status: 'ready' }]
+const wip: BlockLike[] = [{ id: 'b1', status: 'wip' }]
 
-test('同块可用干扰项池的下界按最坏情况取 12', () => {
-  expect(MIN_BLOCK_POOL).toBe(12)
+/** 造 n 张陪衬卡，每张 3 条要点 */
+function fillers(n: number): Card[] {
+  return Array.from({ length: n }, (_, i) =>
+    card(`f${i}`, [kp(`f${i}a`), kp(`f${i}b`), kp(`f${i}c`)]))
+}
+
+test('下界按 cardType 分派，sequence 为 0', () => {
+  expect(MIN_BLOCK_POOL).toEqual({
+    enumeration: 12, comparison: 12, judgment: 8, atomic: 6, sequence: 0,
+  })
 })
 
-test('块内题目太少导致池不足时报错', () => {
-  const cards = [card('c1', [kp('a1'), kp('a2'), kp('a3')]), card('c2', [kp('b1'), kp('b2'), kp('b3')])]
-  // 对 c1 而言可用池 = c2 的 3 条 < 12
-  expect(auditLibrary(cards).errors.join()).toContain('干扰项池不足')
+test('enumeration 型池不足时报错，并报出实际值与下界', () => {
+  const cards = [card('c1', [kp('a1'), kp('a2'), kp('a3')]), ...fillers(2)]
+  const msg = auditLibrary(cards, ready).errors.join()
+  expect(msg).toContain('干扰项池不足')
+  expect(msg).toContain('可用 6 条')
+  expect(msg).toContain('下界 12')
+})
+
+test('sequence 型不要求同块池 —— 它的选项就是自己的步骤', () => {
+  const solo = [card('c1', [kp('a1'), kp('a2'), kp('a3'), kp('a4')], 'sequence')]
+  expect(auditLibrary(solo, ready).errors).toEqual([])
+})
+
+test('atomic 型的下界低于 enumeration —— 同样的池，一个过一个不过', () => {
+  const pool = fillers(2)   // 6 条可用要点
+  expect(auditLibrary([card('c1', [kp('a1')], 'atomic'), ...pool], ready).errors).toEqual([])
+  expect(auditLibrary([card('c1', [kp('a1'), kp('a2'), kp('a3')]), ...pool], ready).errors.length).toBe(1)
 })
 
 test('互斥登记把池吃到不足时同样报错', () => {
-  const cards = [
-    card('c1', [kp('a1'), kp('a2'), kp('a3')]),
-    card('c2', [kp('b1', ['c1']), kp('b2', ['c1']), kp('b3', ['c1'])]),
-    card('c3', [kp('d1', ['c1']), kp('d2', ['c1']), kp('d3', ['c1'])]),
-  ]
-  // c1 的可用池被互斥登记清空
-  expect(auditLibrary(cards).errors.join()).toContain('干扰项池不足')
+  const victim = card('c1', [kp('a1'), kp('a2'), kp('a3')])
+  const blockers = fillers(4).map(c => ({
+    ...c, keyPoints: c.keyPoints.map(k => ({ ...k, excludeAsDistractorFor: ['c1'] })),
+  }))
+  expect(auditLibrary([victim, ...blockers], ready).errors.join()).toContain('干扰项池不足')
+})
+
+test('wip 块完全跳过池校验 —— 内容生产期间大多数块是半成品', () => {
+  const cards = [card('c1', [kp('a1'), kp('a2'), kp('a3')])]
+  expect(auditLibrary(cards, wip).errors).toEqual([])
+})
+
+test('不传 blocks 时不做池校验 —— Task 6 那些只关心 id 与外键的调用方不受影响', () => {
+  const cards = [card('c1', [kp('a1'), kp('a2'), kp('a3')])]
+  expect(auditLibrary(cards).errors).toEqual([])
 })
 
 test('池充足时通过', () => {
-  // 每张卡的可用池 = 其余 4 张 × 3 条 = 12，刚好达到下界
-  const cards = [1, 2, 3, 4, 5].map(i =>
-    card(`c${i}`, [kp(`k${i}a`), kp(`k${i}b`), kp(`k${i}c`)]),
-  )
-  expect(auditLibrary(cards).errors).toEqual([])
+  const cards = [card('c1', [kp('a1'), kp('a2'), kp('a3')]), ...fillers(4)]
+  expect(auditLibrary(cards, ready).errors).toEqual([])
+})
+
+test('ready 块里残留脚手架占位符被拦下 —— 空骨架不能算"通过校验"', () => {
+  const stub = card('c1', [kp('a1'), kp('a2'), kp('a3')])
+  stub.keyPoints[0]!.text = '待填写要点 1'
+  expect(auditLibrary([stub, ...fillers(4)], ready).errors.join()).toContain('占位符')
+})
+
+test('同一组合既登记互斥又登记不成立，必须报出矛盾', () => {
+  const c = card('c1', [kp('a1'), kp('a2'), kp('a3')])
+  c.keyPoints[0]!.excludeAsDistractorFor = ['x']
+  c.keyPoints[0]!.confirmedIndependentOf = ['x']
+  expect(auditLibrary([c]).errors.join()).toContain('矛盾')
+})
+
+test('wip 块里的占位符不报错 —— 半成品是正常状态', () => {
+  const stub = card('c1', [kp('a1'), kp('a2'), kp('a3')])
+  stub.keyPoints[0]!.text = '待填写要点 1'
+  expect(auditLibrary([stub], wip).errors).toEqual([])
 })
 ```
+
+最后两条是**防回归**的：前者锁住"不传 blocks 就不查池"这个契约（Task 6 的全部夹具依赖它），后者确认下界本身是可达的。
 
 - [ ] **Step 2: 运行测试确认失败**
 
 Run: `pnpm vitest run tests/lib/content/audit-pool.test.ts`
-Expected: FAIL —— `MIN_BLOCK_POOL` 未导出
+Expected: FAIL —— `MIN_BLOCK_POOL` 与 `BlockLike` 未导出
 
-- [ ] **Step 3: 在 `src/lib/content/audit.ts` 顶部加入常量**
+- [ ] **Step 3: 在 `src/lib/content/audit.ts` 顶部加入类型与常量，并扩展签名**
+
+先把函数签名从 `auditLibrary(cards: Card[])` 改成：
+
+```ts
+export function auditLibrary(cards: Card[], blocks: BlockLike[] = []): AuditResult {
+```
+
+默认值 `[]` 是关键：Task 6 的全部夹具都只传一个参数，靠它保持不变。同时在文件顶部 `import type { Card, CardType } from './types.js'`（原来只导入了 `Card`）。
+
+然后加入：
 
 ```ts
 /**
- * 同块可用干扰项池下界。按**最坏情况**推导：
- *
- * - 干扰项数 = 9 − 正确要点数。正确要点最少 3 条（§8.3 的 enumeration 下界），
- *   所以单次出题最多需要 **6 条**干扰项。
- * - §4.3 的分层比例表里 `s = 1` 那档是 **3:0** —— 掌握度满时干扰项**全部从同块抽**。
- *
- * 即最坏情况下单次出题就要吃掉 6 条同块要点。而 §4.3 同时规定"绝不允许少给干扰项"
- * （会让选项总数变化、泄露正确条数）且"不允许重复抽同一条"。
- * 池 = 6 是刚好够一次、余量为零；叠加"每次重抽"和服务端预生成 K 份 variants，
- * 必然反复抽到同一批。取 2 倍余量。
+ * 块元数据的最小形状。Task 12 的 `Block` 在结构上满足它 ——
+ * 这样本任务不必向后依赖那个还不存在的类型。
  */
-export const MIN_BLOCK_POOL = 12
+export type BlockLike = { id: string; status: 'wip' | 'ready' }
+
+/**
+ * 同块可用干扰项池下界，**按 cardType 分派**。§4.3 的出题形式决定需求：
+ *
+ * - `enumeration` / `comparison`：9 选、正确要点最少 3 条 → 单次最多吃 **6 条**干扰项；
+ *   且 §4.3 分层表的 `s = 1` 档是 **3:0**（干扰项全来自同块）。取 2 倍余量 = 12
+ * - `judgment`：二段式，结论占一半，支撑要点部分需求减半 = 8
+ * - `atomic`：4 选 1，单次 3 条干扰项，2 倍余量 = 6
+ * - `sequence`：**排序题，选项就是本卡自己的步骤，不抽同块干扰项** = 0
+ *
+ * 早期版本对所有卡一视同仁要求 12 条，对 `sequence` 是定义上的错误。按 §4.3 的
+ * 目标占比，那会让约 28% 的卡被一条与它们无关的规则卡住，作者只能往块里注水凑题。
+ */
+export const MIN_BLOCK_POOL: Record<CardType, number> = {
+  enumeration: 12,
+  comparison: 12,
+  judgment: 8,
+  atomic: 6,
+  sequence: 0,
+}
+
+/**
+ * 推论：池下界反过来定义了**块的最小可行规模**。
+ * 对一张 k 条要点的 enumeration 卡，可用池 = 块内总要点数 T − k ≥ 12，
+ * 即 T ≥ 12 + k。k 取上限 6 时 T ≥ 18 —— 按平均 4 条/卡约合 5 张卡。
+ *
+ * 这条约束应当反馈给内容侧：**一个块低于约 5 张卡就不该声明 ready**。
+ * spec §2 定的每块 15-25 题远在这之上，所以真实块不会撞线；
+ * 撞线的只有试点这种刻意做小的块。
+ */
 ```
 
-- [ ] **Step 4: 在 `auditLibrary` 的 return 之前插入池容量检查**
+- [ ] **Step 4: 插入池容量检查**
+
+位置：`auditLibrary` 函数体内，**紧接在外键校验那个 `for (const c of cards)` 循环之后、`return { errors, warnings }` 之前**。
 
 ```ts
   // 干扰项池容量：对每张卡，同块其他卡的要点里有多少是可用的
@@ -993,14 +1141,17 @@ export const MIN_BLOCK_POOL = 12
     else byBlock.set(c.blockId, [c])
   }
 
-  // 池容量只校验已完善的块。内容生产要持续 4-9 个月，期间绝大多数块是半成品，
-  // 让在建块把 CI 一直染红等于让所有人学会忽略它。
+  // 只校验**声明为 ready** 的块。内容生产要持续 4-9 个月，期间绝大多数块是半成品，
+  // 让在建块把 CI 一直染红，等于让所有人学会忽略它。
+  // 不传 blocks（如只关心 id 与外键的调用方）则完全跳过池校验。
   const readyBlocks = new Set(blocks.filter(b => b.status === 'ready').map(b => b.id))
 
   for (const [blockId, blockCards] of byBlock) {
-    if (blocks.length > 0 && !readyBlocks.has(blockId)) continue
+    if (!readyBlocks.has(blockId)) continue
     for (const c of blockCards) {
       if (c.retiredAt) continue
+      const need = MIN_BLOCK_POOL[c.cardType]
+      if (need === 0) continue
       let usable = 0
       for (const other of blockCards) {
         if (other.id === c.id || other.retiredAt) continue
@@ -1008,10 +1159,34 @@ export const MIN_BLOCK_POOL = 12
           if (!kp.excludeAsDistractorFor.includes(c.id)) usable++
         }
       }
-      if (usable < MIN_BLOCK_POOL) {
+      if (usable < need) {
         errors.push(
-          `块 ${blockId} 卡 ${c.id} 的同块干扰项池不足：可用 ${usable} 条，下界 ${MIN_BLOCK_POOL}`,
+          `块 ${blockId} 卡 ${c.id}（${c.cardType}）的同块干扰项池不足：可用 ${usable} 条，下界 ${need}`,
         )
+      }
+    }
+  }
+
+  // 同一 (要点, 目标题) 不能既登记为"成立"又登记为"不成立" ——
+  // 出现说明有人改错了文件，或两次确认给了相反答案。不报的话，
+  // buildPairs 会跳过它，矛盾永远不被发现。
+  for (const c of cards) {
+    for (const kp of c.keyPoints) {
+      const both = kp.excludeAsDistractorFor.filter(t => kp.confirmedIndependentOf.includes(t))
+      for (const t of both) {
+        errors.push(`卡 ${c.id} 要点 ${kp.id} 对 ${t} 同时登记了互斥与不成立，二者矛盾`)
+      }
+    }
+  }
+
+  // 占位符：同样只对 ready 块报错。wip 块里全是半成品，那是正常的。
+  for (const c of cards) {
+    if (!readyBlocks.has(c.blockId) || c.retiredAt) continue
+    const texts = [c.question, c.detail, ...c.keyPoints.flatMap(k => [k.text, k.source.url, k.source.locator])]
+    for (const t of texts) {
+      for (const msg of checkPlaceholders(t)) {
+        errors.push(`块 ${c.blockId} 卡 ${c.id}：${msg}`)
+        break
       }
     }
   }
@@ -1088,9 +1263,28 @@ test('要点 id 还在则放行', () => {
   expect(checkIdLock([card('c1')], ['card:c1', 'kp:b1/kp-1'])).toEqual([])
 })
 
+test('要点 id 的作用域含块前缀 —— 不同块的同名要点互不顶替', () => {
+  const a = card('c1')                          // b1/kp-1
+  const b = card('c2', { blockId: 'b2' })       // b2/kp-1
+  expect(checkIdLock([a, b], ['card:c1', 'card:c2', 'kp:b1/kp-1', 'kp:b2/kp-1'])).toEqual([])
+  // 只剩 b2 那张时，b1/kp-1 仍应被判为消失
+  expect(checkIdLock([b], ['card:c2', 'kp:b1/kp-1']).join()).toContain('b1/kp-1')
+})
+
+test('要点写了 movedFrom 就放行，报错文案给出出路', () => {
+  const moved = card('c1')
+  moved.keyPoints[0]!.id = 'kp-new'
+  moved.keyPoints[0]!.movedFrom = 'kp-1'
+  expect(checkIdLock([moved], ['card:c1', 'kp:b1/kp-1'])).toEqual([])
+  const errs = checkIdLock([card('c1')], ['card:c1', 'kp:b1/kp-gone'])
+  expect(errs.join()).toContain('movedFrom')
+  expect(errs.join()).toContain('retiredAt')
+})
+
 test('无法识别的 lockfile 行被报出，而不是静默忽略', () => {
   expect(checkIdLock([card('c1')], ['垃圾行']).join()).toContain('无法识别')
 })
+```
 
 - [ ] **Step 2: 运行测试确认失败**
 
@@ -1113,6 +1307,11 @@ export function checkIdLock(cards: Card[], lockedIds: string[]): string[] {
   const liveKeyPoints = new Set(
     cards.flatMap(c => c.keyPoints.map(kp => `${c.blockId}/${kp.id}`)),
   )
+  const kpMovedFrom = new Set(
+    cards.flatMap(c => c.keyPoints
+      .map(kp => kp.movedFrom ? `${c.blockId}/${kp.movedFrom}` : null)
+      .filter((x): x is string => !!x)),
+  )
 
   const errors: string[] = []
   for (const line of lockedIds) {
@@ -1126,10 +1325,12 @@ export function checkIdLock(cards: Card[], lockedIds: string[]): string[] {
         `直接删除会让 review_log 与 excludeAsDistractorFor 变成悬空引用。`,
       )
     } else if (kind === 'kp') {
-      if (liveKeyPoints.has(id)) continue
+      if (liveKeyPoints.has(id) || kpMovedFrom.has(id)) continue
       errors.push(
         `要点 id ${id} 相对上一次 main 消失了。` +
-        `review_log.distractorIds 引用的正是它，删改会让历史记录无法解释。`,
+        `若为改名，请在新要点上写 movedFrom: ${id.split('/').pop()}；` +
+        `若判定写错要作废，请保留该要点并设 retiredAt，不要直接删除 —— ` +
+        `review_log.distractorIds 引用的正是它。`,
       )
     } else {
       errors.push(`lockfile 行格式无法识别：${line}`)
@@ -1142,7 +1343,7 @@ export function checkIdLock(cards: Card[], lockedIds: string[]): string[] {
 - [ ] **Step 4: 运行测试确认通过**
 
 Run: `pnpm vitest run tests/lib/content/audit-lock.test.ts`
-Expected: 8 passed
+Expected: 10 passed
 
 - [ ] **Step 5: Commit**
 
@@ -1388,6 +1589,10 @@ test('要点不与自己所属的卡配对', () => {
   const pairs = buildPairs(cards, 'b1')
   expect(pairs.every(p => p.ownerCardId !== p.targetCardId)).toBe(true)
   expect(pairs).toHaveLength(2)
+  // 文本字段必须真的带出来 —— 人工确认界面全靠它们，清空了也看不出来
+  const p0 = pairs.find(p => p.keyPointId === 'k1')!
+  expect(p0.keyPointText).toBe('要点 k1')
+  expect(p0.targetQuestion).toBe('问题 c2？')
 })
 
 test('已登记过的组合被跳过，避免重复人工确认', () => {
@@ -1509,7 +1714,7 @@ id: c1
 blockId: b1
 relatedBlocks: []
 question: 问题？
-cardType: atomic
+cardType: enumeration
 appliesTo: JDK 8+
 frequency: mid
 followUps: []
@@ -1524,6 +1729,26 @@ keyPoints:
       kind: official-doc
       url: https://example.org/a
       locator: x
+  - id: kp-2
+    text: 要点二
+    public: false
+    verifiedAt: 2026-09-18
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://example.org/b
+      locator: y
+  - id: kp-3
+    text: 要点三
+    public: false
+    verifiedAt: 2026-09-18
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://example.org/c
+      locator: z
 ---
 
 正文`
@@ -1577,6 +1802,26 @@ test('无关字段不被改写 —— verifiedAt 不变成时间戳、url 不被
   expect(out).not.toContain('T00:00:00')
 })
 
+test('写进的是指定的那条要点，不是第一条', () => {
+  const out = registerDecision(SRC, 'kp-2', 'c2', 'exclude')
+  const r = parseCard(out, 'x.md')
+  expect(r.ok).toBe(true)
+  if (!r.ok) return
+  expect(r.card.keyPoints[0]!.excludeAsDistractorFor).toEqual([])
+  expect(r.card.keyPoints[1]!.excludeAsDistractorFor).toEqual(['c2'])
+  expect(r.card.keyPoints[2]!.excludeAsDistractorFor).toEqual([])
+})
+
+test('只动目标要点，其余要点的其他字段一律不变', () => {
+  const out = registerDecision(SRC, 'kp-2', 'c2', 'exclude')
+  const r = parseCard(out, 'x.md')
+  expect(r.ok).toBe(true)
+  if (!r.ok) return
+  expect(r.card.keyPoints.map(k => k.text)).toEqual(['要点一', '要点二', '要点三'])
+  expect(r.card.keyPoints.map(k => k.public)).toEqual([true, false, false])
+  expect(r.card.keyPoints.map(k => k.source.locator)).toEqual(['x', 'y', 'z'])
+})
+
 test('要点 id 不存在时抛出明确错误', () => {
   expect(() => registerDecision(SRC, 'no-such-kp', 'c2', 'exclude')).toThrow(/no-such-kp/)
 })
@@ -1585,6 +1830,7 @@ test('正文部分不被改动', () => {
   const out = registerDecision(SRC, 'kp-1', 'c2', 'exclude')
   expect(out.trimEnd().endsWith('正文')).toBe(true)
 })
+```
 
 - [ ] **Step 2: 运行测试确认失败**
 
@@ -1643,7 +1889,7 @@ export function registerDecision(
 - [ ] **Step 4: 运行测试确认通过**
 
 Run: `pnpm vitest run tests/tools/review-register.test.ts`
-Expected: 8 passed
+Expected: 10 passed
 
 - [ ] **Step 5: Commit**
 
@@ -1766,15 +2012,11 @@ export function parseBlock(raw: string, path: string): ParseBlockResult {
 }
 ```
 
-- [ ] **Step 4: 让 `auditLibrary` 接收块元数据并校验一致性**
+- [ ] **Step 4: 让 `auditLibrary` 校验卡与块的归属一致性**
 
-在 `src/lib/content/audit.ts` 中，把签名改为接收第二个参数，并在函数体末尾追加检查：
+签名在 Task 7 已经是 `auditLibrary(cards: Card[], blocks: BlockLike[] = [])`，**不需要再改**——Task 12 的 `Block` 在结构上满足 `BlockLike`（多出来的 `name` / `category` 不影响赋值兼容）。
 
-```ts
-export function auditLibrary(cards: Card[], blocks: Block[] = []): AuditResult {
-```
-
-在 return 之前追加：
+只需在 `return { errors, warnings }` **之前**追加：
 
 ```ts
   if (blocks.length > 0) {
@@ -1925,9 +2167,20 @@ function walk(dir: string): string[] {
 
 const fileOf = new Map<string, string>()
 const cards: Card[] = []
+const broken: string[] = []
 for (const f of walk('content')) {
   const r = parseCard(readFileSync(f, 'utf8'), f)
   if (r.ok) { cards.push(r.card); fileOf.set(r.card.id, f) }
+  else broken.push(...r.issues)
+}
+
+// 解析失败必须中止，不能跳过。跳过的后果是：那张卡的要点不进组合、
+// 也不进干扰项池，审核者以为这个块已经确认完了 —— 而漏掉的互斥
+// 会在出题时变成"这条其实也对"的废题，且没有任何地方会报出来。
+if (broken.length > 0) {
+  console.error(`有 ${broken.length} 个内容问题，先修好再做互斥确认：`)
+  for (const b of broken) console.error(`  - ${b}`)
+  process.exit(1)
 }
 
 const total = countPairs(cards, blockId)
@@ -2168,6 +2421,32 @@ pnpm content:new mysql/mvcc-undo atomic
 
 - [ ] **Step 3: 填写五张卡的真实内容，每张计时**
 
+> 这一步是整个计划里最大的一块，不是 2-5 分钟的动作。按 §9.1 的 7-12 分钟/题也要接近一小时，而那个数字是"批量预生成之后的审核"工时，**不是从零写作 + 查一手资料**的工时。实测它正是本任务存在的理由。
+
+**`source` 填写规范（本块统一钉 MySQL 8.0）**：
+
+| kind | url 形态 | locator 形态 | 例 |
+|---|---|---|---|
+| `official-doc` | `https://dev.mysql.com/doc/refman/8.0/en/<page>.html` | 手册节号 | `15.7.2.3` |
+| `source-code` | `https://github.com/mysql/mysql-server/blob/8.0/storage/innobase/<file>` | `类#方法` 或函数名 | `trx_undo_report_row_operation` |
+
+`appliesTo` 相应写 `MySQL 8.0+`。**禁止**中文博客、Stack Overflow、掘金/CSDN/知乎——`SourceKind` 枚举挡住了 `kind`，但 `url` 字段不挡，别把博客链接填进 `official-doc`。
+
+**推理型要点怎么写**：`comparison` 和 `judgment` 那两张卡的要点多半推不出直接出处（"RR 下 MVCC 能否完全避免幻读"手册里没有这一句）。这类要点：`source` 指向推理所**依据的事实**（如手册里关于 ReadView 生成时机的那一节），`reasoning` 写清从那个事实到结论这一步怎么走。不要为了凑出处硬找一个不相干的链接。
+
+**要点粒度判据 KP1-KP6（§9.3 原文，本步骤要实际用它们）**：
+
+- **KP1 独立可说出**——能用一句话（15-25 字）说出、且说出后面试官会点头的最小单位。判据：「他只说了这一条，面试官会不会认为答到了点上？」
+- **KP2 单一信息核**——只含一个可被独立追问的事实。判据：能不能对它提出两个互不相干的追问？能就该拆成两条
+- **KP3 同卡同类型**——一张卡的要点全是结构、或全是流程、或全是权衡，不混
+- **KP4 等价可失**——漏掉任意一条的后果大致相当。首尾落差明显时，最后那条降为 `detail`
+- **KP5 不含承载词**——不得出现「等」「多种」「一系列」「若干」「之类」「诸如」
+- **KP6 与题面同粒度**——不下沉到实现细节，不上浮到定义
+
+**要点数要写足**：块内总要点数需 ≥ 18，否则 enumeration / comparison 那两张卡在
+`ready` 状态下会因池不足被拦（见 Task 7 的推论）。按下表把 enumeration 和
+comparison 各写到 5-6 条要点即可达标——这也更接近真实卡片的密度。
+
 题目建议（覆盖五种题型，且都是 MVCC 块的真实高频题）：
 
 | cardType | 题面 |
@@ -2177,6 +2456,8 @@ pnpm content:new mysql/mvcc-undo atomic
 | `sequence` | 一条 update 语句执行时，undo log、redo log、binlog 的写入顺序是怎样的？ |
 | `judgment` | RR 隔离级别下 MVCC 能完全避免幻读吗？ |
 | `atomic` | InnoDB 默认的隔离级别是什么？ |
+
+预期要点数：enumeration 5-6、comparison 5-6、sequence 4-5、judgment 2-3、atomic 1，合计 ≥ 18。
 
 填写要求：每条要点的 `source` 必须指向英文一手资料（MySQL 官方手册或 InnoDB 源码），`locator` 精确到章节号或类#方法；要点须符合 §9.3 的 KP1-KP6。
 
@@ -2213,7 +2494,9 @@ Expected: 输出待确认组合数。5 张卡 × 约 4 条要点 × 4 道其他�
 ## 互斥检查实测
 - 组合数：__ （设计文档估算：单块约 1710，本块因只有 5 张卡故小得多）
 - 人工确认耗时：__ 分钟
-- 命中率：__ %（设计文档假设 5-10%）
+- 命中率：**本次无法测得** —— Task 13 的打分器是按字符重合度的占位实现，
+  不是 spec §4.3 说的 LLM 召回。它的命中率不反映真实流程，不要拿这个数去
+  修正 §9.1 的估算。接入真实 LLM 后单独测一次。
 
 ## schema 是否装得下五种题型
 逐型记录遇到的表达困难。
@@ -2237,8 +2520,17 @@ git commit -m "content: MySQL MVCC 单块试点，五种 cardType 各一张 + �
 
 - [ ] `pnpm test` 全绿
 - [ ] `pnpm typecheck` 无错误
-- [ ] `pnpm content:audit` 通过
+- [ ] 试点块 `block.yml` 改成 `status: ready` 后 `pnpm content:audit` 仍然通过
+      —— **必须在 ready 下验收**。wip 状态会跳过池校验和占位符校验，
+      用 wip 验收等于没验
+- [ ] `pnpm content:audit` 能拦住残留占位符（把一条要点改回 `待填写` 试一次，
+      确认它报错；改回来）
 - [ ] 五种 `cardType` 各有一张真实内容的卡通过全部校验
+- [ ] **CI 真的跑过一次并且是绿的**（开一个 PR，不要只在本地验证）
+- [ ] **id 守卫端到端验证过**：改掉一张卡的 id、不写 `movedFrom`，
+      确认 CI 红；补上 `movedFrom` 后转绿
+- [ ] **互斥回路端到端跑通**：`pnpm review:pairs <block> --confirm` 答一个"是"
+      一个"否"，确认两者都写回源文件，且再次运行时这两组不再出现
 - [ ] 校准笔记里有实测工时，且与 §9.1 的 145-220 小时估算做过对照
 
 **这个计划完成后，内容生产才可以开工。** 在此之前写的任何卡片都面临 schema 变更导致的返工风险——设计文档 §4.2 把这条标为"唯一有截止期限的改动"。
