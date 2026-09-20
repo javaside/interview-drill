@@ -138,6 +138,21 @@ export function auditLibrary(cards: Card[], blocks: BlockLike[] = []): AuditResu
     }
   }
 
+  // 卡与块的归属一致性。只在传了 blocks 时校验。
+  if (blocks.length > 0) {
+    const declared = new Set(blocks.map(b => b.id))
+    for (const c of cards) {
+      if (!declared.has(c.blockId)) {
+        errors.push(`卡 ${c.id} 的 blockId ${c.blockId} 没有对应的 block.yml`)
+      }
+    }
+    const ids = new Set<string>()
+    for (const b of blocks) {
+      if (ids.has(b.id)) errors.push(`块 id 重复：${b.id}`)
+      ids.add(b.id)
+    }
+  }
+
   return { errors, warnings }
 }
 
