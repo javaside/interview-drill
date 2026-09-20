@@ -61,14 +61,45 @@ if (!process.argv.includes('--confirm')) {
   process.exit(0)
 }
 
+// 不用 readline/promises 的 rl.question：stdin 到 EOF（管道输入耗尽或 Ctrl-D）时
+// 它永远不 resolve，顶层 await 卡死、进程崩退出码 13，而本轮已答的判定已写回一半。
+// 改成自己维护一个「行队列 + 等待者」：'line' 事件入队，'close' 事件置 EOF 标志。
+// ask() 优先取队列里已到的行 —— 这保证管道里 EOF 前的最后一行答案不会被 close 抢掉
+// （早先用 Promise.race 竞速会丢掉紧挨 EOF 的那一行）；队列空且已 EOF 则当作 q 收尾。
 const rl = createInterface({ input: process.stdin, output: process.stdout })
+const lineQueue: string[] = []
+let inputEnded = false
+let waiter: ((line: string | null) => void) | null = null
+
+rl.on('line', line => {
+  if (waiter) { const w = waiter; waiter = null; w(line) }
+  else lineQueue.push(line)
+})
+rl.on('close', () => {
+  inputEnded = true
+  if (waiter) { const w = waiter; waiter = null; w(null) }
+})
+
+/** 取下一行答案。返回 null 表示输入已结束（EOF），调用方按退出处理。 */
+function nextLine(): Promise<string | null> {
+  if (lineQueue.length > 0) return Promise.resolve(lineQueue.shift()!)
+  if (inputEnded) return Promise.resolve(null)
+  return new Promise(resolve => { waiter = resolve })
+}
+
+async function ask(prompt: string): Promise<string> {
+  process.stdout.write(prompt)
+  const line = await nextLine()
+  return line === null ? 'q' : line.trim().toLowerCase()
+}
+
 let registered = 0
 let independent = 0
 for (const [i, f] of flagged.entries()) {
   console.log(`\n[${i + 1}/${flagged.length}] ${f.reason}`)
   console.log(`  要点（来自 ${f.pair.ownerCardId}）：${f.pair.keyPointText}`)
   console.log(`  目标题：${f.pair.targetQuestion}`)
-  const ans = (await rl.question('  这条要点对目标题也成立吗？[y/n/s 跳过/q 退出] ')).trim().toLowerCase()
+  const ans = await ask('  这条要点对目标题也成立吗？[y/n/s 跳过/q 退出] ')
   if (ans === 'q') break
   if (ans === 's') continue
 
