@@ -1,0 +1,37 @@
+name: content
+on:
+  pull_request:
+    paths: ['content/**', 'src/lib/content/**', 'tools/**']
+  push:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - name: 用 main 的 lockfile 做跨提交 id 守卫
+        run: |
+          set -euo pipefail
+          if git rev-parse --verify origin/main >/dev/null 2>&1; then
+            if git cat-file -e origin/main:content/.ids.lock 2>/dev/null; then
+              git show origin/main:content/.ids.lock > /tmp/main.ids.lock
+              cp /tmp/main.ids.lock content/.ids.lock
+              echo "已取到 main 的 lockfile（$(wc -l < content/.ids.lock) 个 id）"
+            else
+              echo "main 上还没有 lockfile，跳过跨提交守卫（仅首次建库时允许）"
+            fi
+          else
+            echo "::error::取不到 origin/main，跨提交守卫无法执行"
+            exit 1
+          fi
+          pnpm content:audit
