@@ -140,3 +140,48 @@ export function auditLibrary(cards: Card[], blocks: BlockLike[] = []): AuditResu
 
   return { errors, warnings }
 }
+
+/**
+ * 跨提交 id 守卫。`lockedIds` 是上一次 main 的 content/.ids.lock 内容，
+ * 每行形如 `card:<cardId>` 或 `kp:<blockId>/<keyPointId>`。
+ *
+ * 两类 id 都要守：review_log.distractorIds 存的是**要点** id，
+ * 只守卡 id 的话要点改名一样让历史日志悬空。
+ */
+export function checkIdLock(cards: Card[], lockedIds: string[]): string[] {
+  const liveCards = new Set(cards.map(c => c.id))
+  const movedFrom = new Set(cards.map(c => c.movedFrom).filter((x): x is string => !!x))
+  const liveKeyPoints = new Set(
+    cards.flatMap(c => c.keyPoints.map(kp => `${c.blockId}/${kp.id}`)),
+  )
+  const kpMovedFrom = new Set(
+    cards.flatMap(c => c.keyPoints
+      .map(kp => kp.movedFrom ? `${c.blockId}/${kp.movedFrom}` : null)
+      .filter((x): x is string => !!x)),
+  )
+
+  const errors: string[] = []
+  for (const line of lockedIds) {
+    const [kind, ...rest] = line.split(':')
+    const id = rest.join(':')
+    if (kind === 'card') {
+      if (liveCards.has(id) || movedFrom.has(id)) continue
+      errors.push(
+        `卡 id ${id} 相对上一次 main 消失了。` +
+        `若为改名，请在新卡上写 movedFrom: ${id}；若为下线，请保留该卡并设 retiredAt。` +
+        `直接删除会让 review_log 与 excludeAsDistractorFor 变成悬空引用。`,
+      )
+    } else if (kind === 'kp') {
+      if (liveKeyPoints.has(id) || kpMovedFrom.has(id)) continue
+      errors.push(
+        `要点 id ${id} 相对上一次 main 消失了。` +
+        `若为改名，请在新要点上写 movedFrom: ${id.split('/').pop()}；` +
+        `若判定写错要作废，请保留该要点并设 retiredAt，不要直接删除 —— ` +
+        `review_log.distractorIds 引用的正是它。`,
+      )
+    } else {
+      errors.push(`lockfile 行格式无法识别：${line}`)
+    }
+  }
+  return errors
+}
