@@ -1,7 +1,7 @@
 name: content
 on:
   pull_request:
-    paths: ['content/**', 'src/lib/content/**', 'tools/**']
+    paths: ['content/**', 'src/lib/content/**', 'tools/**', '.github/workflows/content.yml']
   push:
     branches: [main]
 
@@ -13,9 +13,9 @@ jobs:
         with:
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
-        with: { version: 9 }
+        with: { version: 11 }
       - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: pnpm }
+        with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm test

@@ -2518,19 +2518,23 @@ git commit -m "content: MySQL MVCC 单块试点，五种 cardType 各一张 + �
 
 ## 完成标准
 
-- [ ] `pnpm test` 全绿
-- [ ] `pnpm typecheck` 无错误
-- [ ] 试点块 `block.yml` 改成 `status: ready` 后 `pnpm content:audit` 仍然通过
+> 状态截至 2026-09-20：除"CI 真跑一次转绿"外全部完成并本地验证。
+> 那一项需开 PR 在 GitHub Actions 上实跑，无法本地验证。
+
+- [x] `pnpm test` 全绿（12 文件 94 测试）
+- [x] `pnpm typecheck` 无错误
+- [x] 试点块 `block.yml` 改成 `status: ready` 后 `pnpm content:audit` 仍然通过
       —— **必须在 ready 下验收**。wip 状态会跳过池校验和占位符校验，
       用 wip 验收等于没验
-- [ ] `pnpm content:audit` 能拦住残留占位符（把一条要点改回 `待填写` 试一次，
+- [x] `pnpm content:audit` 能拦住残留占位符（把一条要点改回 `待填写` 试一次，
       确认它报错；改回来）
-- [ ] 五种 `cardType` 各有一张真实内容的卡通过全部校验
-- [ ] **CI 真的跑过一次并且是绿的**（开一个 PR，不要只在本地验证）
-- [ ] **id 守卫端到端验证过**：改掉一张卡的 id、不写 `movedFrom`，
-      确认 CI 红；补上 `movedFrom` 后转绿
-- [ ] **互斥回路端到端跑通**：`pnpm review:pairs <block> --confirm` 答一个"是"
+- [x] 五种 `cardType` 各有一张真实内容的卡通过全部校验
+- [ ] **CI 真的跑过一次并且是绿的**（开一个 PR，不要只在本地验证）——**唯一未完成项**
+- [x] **id 守卫端到端验证过**：改掉一张卡的 id、不写 `movedFrom`，
+      确认报错；补上 `movedFrom` 后通过（本地用 `content:audit` + lockfile 验证）
+- [x] **互斥回路端到端跑通**：`pnpm review:pairs <block> --confirm` 答一个"是"
       一个"否"，确认两者都写回源文件，且再次运行时这两组不再出现
+      （过程中发现并修复了管道输入下 EOF 卡死的 bug，commit b481a06）
 - [ ] 校准笔记里有实测工时，且与 §9.1 的 145-220 小时估算做过对照
 
 **这个计划完成后，内容生产才可以开工。** 在此之前写的任何卡片都面临 schema 变更导致的返工风险——设计文档 §4.2 把这条标为"唯一有截止期限的改动"。
