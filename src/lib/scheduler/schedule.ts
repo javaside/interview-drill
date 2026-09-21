@@ -14,6 +14,10 @@ export type OverloadWarning = {
   /** 前缀和判据最早违反的天；E=0 豁免路径恒为 0 */
   earliestOverloadDay?: number
   dropped: DroppedReview[]
+  /** 收窄建议（§5.4/§5.6）：按 (frequency 降序, cardId 升序) 的最大可行前缀 */
+  narrowTo?: readonly SchedulableCard[]
+  /** §5.6 口径文案的数字："这三周你能刷透约 N 道" */
+  suggestedCount?: number
 }
 
 export type ScheduleResult = {
@@ -138,7 +142,17 @@ export function schedule(
     } else {
       const violation = prefixCheck(gen.load, dailyCapacity, E)
       if (violation !== undefined || gen.dropped.length > 0) {
-        warning = { earliestOverloadDay: violation, dropped: gen.dropped }
+        // §5.4：收窄建议必须重跑判据验证——narrowSuggestion 的可行性定义
+        // 就是"生成后无 drop 且前缀和通过"，建议即验证
+        const narrowTo = narrowSuggestion(
+          fresh, stateMap, readyByDate, dailyCapacity, today, reservedLoad,
+        )
+        warning = {
+          earliestOverloadDay: violation,
+          dropped: gen.dropped,
+          narrowTo,
+          suggestedCount: narrowTo.length,
+        }
       }
     }
     for (const [id, plan] of gen.plans) plans.set(id, plan)
@@ -151,4 +165,65 @@ export function schedule(
     plans,
     overloadWarning: warning,
   }
+}
+
+/**
+ * 把存量计划的每日占用汇总成 reservedLoad（§5.1 的调用方职责，这里给出
+ * 纯函数实现）。paused 卡的计划保留但不消费，不再占容量；负偏移是逾期，
+ * 属于过去，不占未来容量。
+ */
+export function reservedLoadOf(cardStates: CardState[]): Map<number, number> {
+  const load = new Map<number, number>()
+  for (const st of cardStates) {
+    if (st.phase === 'paused') continue
+    for (const day of st.plan) {
+      if (day < 0) continue
+      load.set(day, (load.get(day) ?? 0) + 1)
+    }
+  }
+  return load
+}
+
+/**
+ * 收窄建议（§5.4/§5.6）：这不是异常兜底，是核心交互——它回答产品最有
+ * 价值的问题："从 1200 道里，我这三周该刷哪些"。
+ *
+ * 按 (frequency 降序, cardId 升序) 取最大前缀 k，使前 k 张重新生成后
+ * 无 drop 且前缀和通过。负载随 k 单调不减，二分查找。
+ *
+ * 单调性说明：前 k 张的末次分配与错峰排位在增大 k 后不变（贪心从 E 往前、
+ * 排位按前缀），新增卡只添负载，贪心右推只会更挤——这是结构性质而非构造性
+ * 证明，「收窄建议执行后重跑」测试是它的直接守卫。
+ */
+export function narrowSuggestion(
+  cards: SchedulableCard[],
+  states: ReadonlyMap<string, CardState>,
+  readyByDate: LocalDate,
+  dailyCapacity: number,
+  today: LocalDate,
+  reservedLoad: ReadonlyMap<number, number>,
+): SchedulableCard[] {
+  const ordered = sortForScheduling(cards)
+  const R = diffDays(readyByDate, today)
+  const E = Math.max(0, R - bufferOf(R))
+  if (E < 1) return []
+
+  const feasible = (k: number): boolean => {
+    const gen = generatePlans(ordered.slice(0, k), states, dailyCapacity, E, reservedLoad)
+    return gen.dropped.length === 0 && prefixCheck(gen.load, dailyCapacity, E) === undefined
+  }
+
+  let lo = 0
+  let hi = ordered.length
+  let best: SchedulableCard[] = []
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1
+    if (feasible(mid)) {
+      best = ordered.slice(0, mid)
+      lo = mid + 1
+    } else {
+      hi = mid - 1
+    }
+  }
+  return best
 }
