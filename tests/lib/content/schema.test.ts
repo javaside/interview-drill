@@ -81,3 +81,23 @@ test('verifiedAt 必须是 YYYY-MM-DD', () => {
   const bad = kp({ verifiedAt: '2026/09/18' })
   expect(cardSchema.safeParse(card({ keyPoints: [bad, kp({ id: 'b' }), kp({ id: 'c' })] })).success).toBe(false)
 })
+
+test('judgment 必须携带结论字段，其余型禁填（§4.4 二段式）', () => {
+  const base = {
+    id: 'c1', blockId: 'b', relatedBlocks: [], question: 'q', detail: 'd',
+    followUps: [], appliesTo: 'JDK 8+', frequency: 'mid' as const,
+    keyPoints: [
+      { id: 'k1', text: 'a', source: { kind: 'official-doc' as const, url: 'https://x', locator: 's1' },
+        excludeAsDistractorFor: [], confirmedIndependentOf: [], verifiedAt: '2026-01-01', public: false },
+      { id: 'k2', text: 'b', source: { kind: 'official-doc' as const, url: 'https://x', locator: 's2' },
+        excludeAsDistractorFor: [], confirmedIndependentOf: [], verifiedAt: '2026-01-01', public: false },
+    ],
+  }
+  const judgment = { ...base, cardType: 'judgment' as const }
+  expect(() => cardSchema.parse(judgment)).toThrow()                    // 缺 conclusion
+  expect(cardSchema.parse({ ...judgment, conclusion: 'depends' })).toBeTruthy()
+  expect(() => cardSchema.parse({ ...judgment, conclusion: 'maybe' })).toThrow()
+  const enumCard = { ...base, cardType: 'enumeration' as const, keyPoints: [...base.keyPoints, base.keyPoints[0]!] }
+  enumCard.keyPoints[2] = { ...base.keyPoints[0]!, id: 'k3' }
+  expect(() => cardSchema.parse({ ...enumCard, conclusion: 'yes' })).toThrow()  // 非 judgment 禁填
+})

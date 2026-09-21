@@ -76,6 +76,8 @@ export type Card = {
   /** 卡级版本适用范围，如 'JDK 8+' */
   appliesTo: string
   frequency: Frequency
+  /** 仅 cardType='judgment' 必填：正确结论（§4.4 二段式——结论错则本题 0 分） */
+  conclusion?: 'yes' | 'no' | 'depends'
   /** tombstone：退役日期 YYYY-MM-DD。设置后不再出题，但保留以免 review_log 悬空 */
   retiredAt?: string
   /** id 迁移记录：本卡由哪个旧 id 改名而来，供 CI 跨提交守卫放行 */

@@ -51,6 +51,7 @@ export const cardSchema = z
     followUps: z.array(z.string()),
     appliesTo: z.string().min(1),
     frequency: z.enum(['high', 'mid', 'low']),
+    conclusion: z.enum(['yes', 'no', 'depends']).optional(),
     retiredAt: z.string().regex(ISO_DATE).optional(),
     movedFrom: z.string().optional(),
   })
@@ -74,5 +75,13 @@ export const cardSchema = z
           })
         }
       })
+    }
+    if (card.cardType === 'judgment' && card.conclusion === undefined) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['conclusion'],
+        message: 'judgment 型必须声明正确结论（yes/no/depends）' })
+    }
+    if (card.cardType !== 'judgment' && card.conclusion !== undefined) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['conclusion'],
+        message: 'conclusion 仅 judgment 型允许' })
     }
   })
