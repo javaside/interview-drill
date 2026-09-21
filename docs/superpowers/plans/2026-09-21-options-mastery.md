@@ -1484,3 +1484,20 @@ git commit -m "test(options): §11 验收——泄露边界、互斥、复现、
 - **计划 4（应用层）装配点**：取今日队列时对每卡调 `prepareOptions(card, pools, s, userId, reviewCount, K)`（K = 该卡剩余复习次数），`pools` 由 server 装配——`sameBlockPoolOf` + `crossBlockPoolFor(entitlement, …)` + 相邻大类池；`cards[]` 用 `entitledCards(ent, allCards)` 过滤后喂 `schedule()`。提交判分：按 `cardType` 分派 `scoreSelection`/`scoreSequence`/`scoreJudgment`/`scoreAtomic`，得分乘进 `weightedS`（lib/scheduler）更新 `s`；知识地图用 `blockMastery`。`degradedTo='neighbor'` 与 `drawDistractors` 抛错都要接 server 日志。
 - **已知缺口（计划 4 前需内容侧补齐）**：① judgment 的正确结论（会/不会/取决于）目前没有内容字段承载——本计划不扩 schema，`scoreJudgment` 以 `conclusionCorrect: boolean` 为输入；计划 4 落地 UI 前要么在 `KeyPoint`/卡级补结论字段，要么以内容约定表示，届时再议。② comparison 的"干扰项优先抽'把两边说反'的变体"（§4.3 分型表）在选项层没有入口——反转对无法用现有字段表达，属内容模型缺口；第一版按"与枚举同构"实现（成对呈现是内容撰写期约定），若日后要机器化"优先抽反转变体"，需扩 `KeyPoint` 表达反转关系后再给 `drawDistractors` 加偏好。
 - **`review_log.distractorIds` 复现**：seed 三元组 `(userId, cardId, reviewIndex)` 已定死，`reviewIndex` 由 server 的 `card_state.reviewCount` 提供；算法迭代时同 `algoVersion` 语义照搬计划 2 的约定。
+
+---
+
+## 执行期裁决与修订记录（2026-09-21 终审修复波）
+
+分支全量终审裁定 7 项必修（实修 8 处 + 本记录），一次修完、每项带覆盖测试、全量回归后分主题提交。逐条记录如下：
+
+1. **draw.ts 缺口双向回填**：终审发现缺口滚动单向——跨块不足时直接进 neighbor，同块有剩余也会错误降级甚至抛错。裁决：进 neighbor 前先 `takeFrom(pools.sameBlock, shortfall)` 回捞同块剩余（takeFrom 按 taken 去重天然只用剩余）；注释说明"块 ⊂ 大类，同块剩余属于同大类补足"（spec §4.3"优先从同大类补足"）。落点：`src/lib/options/draw.ts`；测试：draw-layer.test.ts"缺口双向回填""双向回填也去重"。
+2. **score.ts scoreJudgment 输入校验**：终审发现 pointsScore 不校验，非法分数会产出越界结果。裁决：入口校验 den>0、0≤num≤den、均为整数，非法抛错且消息带实际值（结论错也先过校验）。落点：`src/lib/mastery/score.ts`；测试：score.test.ts"非法 pointsScore 抛错"。
+3. **entitlement.ts 冻结防突变**：终审发现返回可突变数组，push 会静默改写付费边界。裁决：`makeFreeEntitlement`/`makePaidEntitlement` 返回 `Object.freeze` 对象，`freeBlockIds` 用 `Object.freeze(unique)`。落点：`src/lib/entitlement/entitlement.ts`；测试：entitlement.test.ts"冻结防突变"。
+4. **prepare.ts 活要点校验**：终审发现退役要点过滤可能清空正确项（atomic 单要点退役即空集）。裁决：过滤后按 cardType 校验——各型 ≥1 条活要点、sequence 活要点全部有 order，不满足抛错（消息带 cardId 与 cardType）。落点：`src/lib/options/prepare.ts`（`assertLiveKeyPoints`）；测试：prepare.test.ts"活要点校验"两则。
+5. **prepare.ts sequence 呈现序非答案化（最重要）**：终审发现 optionTexts 按 order 升序排成 canonical 序，用户不动手就满分。裁决：呈现序 = `shuffle(canonical, seedRng(hashSeed(userId, card.id, -1)))`——reviewIndex=-1 为保留哨兵，跨 K 份变体、跨天恒定；恒等置换时循环左移 1 位兜底（永不是答案本身）；`correctIndices` 升级为"按 canonical 顺序读出的呈现下标序列"，`distractorKeyPointIds` 仍为 `[]`；一切经注入 rng（哨兵 seed），不新增随机源。旧断言 `optionTexts === ['T-k0'..'T-k3']`、`correctIndices === [0,1,2,3]` 删除（锁的是错误行为）。落点：`src/lib/options/prepare.ts`（buildVariant sequence 分支）；测试：prepare.test.ts"呈现序非答案化""呈现序恒定""呈现序参与 seed"三则。
+6. **prepare.ts degradedTo 上浮**：终审 Ruling——降级标记应收敛为聚合字段，server 不必翻 K 份变体。裁决：`PreparedOptions` 增加顶层 `degradedTo: 'none' | 'neighbor'`（任一变体走 neighbor 即 'neighbor'），variants 内部结构不动；sequence 无抽取恒 'none'。落点：`src/lib/options/prepare.ts`；测试：prepare.test.ts"degradedTo 上浮"。
+7. **acceptance.test.ts neighbor 池过 public**：终审发现 starved 夹具的 neighbor 池装了非 public 要点，与 server 装配约定不符。裁决：夹具 8 条 neighbor 全部改 `kp(\`nb${i}\`, { public: true })` 并加注释"免费用户 neighbor 层同样只该装 public"。落点：`tests/lib/options/acceptance.test.ts`。
+8. **rng.ts fnv1a 注释澄清**：终审提醒 fnv1a 按 UTF-16 码元哈希是 JS 稳定变体，非 JS 端复算 seed 时易踩坑。裁决：仅补注释——与按字节的规范 FNV-1a 在非 ASCII 输入上不同，非 JS 端需按此语义复算。落点：`src/lib/options/rng.ts`。
+
+修复后全量回归：`pnpm test` 238 条全绿（229 基线 + 9 条新增），`pnpm typecheck` 无输出。
