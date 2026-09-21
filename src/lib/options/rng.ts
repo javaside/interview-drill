@@ -8,7 +8,12 @@
 
 export type Rng = () => number   // [0, 1)
 
-/** FNV-1a 32 位。纯整数运算（Math.imul），Node 与浏览器逐字节一致 */
+/**
+ * FNV-1a 32 位。纯整数运算（Math.imul），Node 与浏览器逐字节一致。
+ * 注意：按 **UTF-16 码元**哈希（charCodeAt，JS 稳定变体），与按字节的
+ * 规范 FNV-1a 在非 ASCII 输入（如中文 userId/cardId）上结果不同——
+ * 非 JS 端复算 seed 需按此语义，不能拿规范实现直接对字节。
+ */
 export function fnv1a(str: string): number {
   let h = 0x811c9dc5
   for (let i = 0; i < str.length; i++) {

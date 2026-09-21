@@ -100,7 +100,7 @@ test('§11 选项总数恒定：五种 cardType 全型扫描', () => {
     { card: card('at', 'b1', 'atomic', [kp('a')]), wantTotal: 4 },
     {
       card: card('seq', 'b1', 'sequence', [kp('a', { order: 1 }), kp('b', { order: 2 }), kp('c', { order: 3 }), kp('d', { order: 4 })]),
-      wantTotal: 4,   // sequence = 要点数，不打乱
+      wantTotal: 4,   // sequence = 要点数（呈现序恒 ≠ 答案序，仍 4 条）
     },
   ]
   for (const { card: c, wantTotal } of cards) {
@@ -117,7 +117,8 @@ test('§11 池不足降级不断供：两层枯竭走相邻大类，总数仍 9'
     // 挑一条无互斥登记的 public 要点——夹具里 b2-c0-x1 恰好对 t1 互斥禁抽，
     // 直接 slice(0,1) 会拿到它，跨块层可用实为 0 条，测试含义就变了
     crossBlock: poolsFor(t1, all).crossBlock.filter(p => p.id !== 'b2-c0-x1').slice(0, 1),
-    neighbor: Array.from({ length: 8 }, (_, i) => kp(`nb${i}`)),
+    // 免费用户 neighbor 层同样只该装 public——server 装配约定，此处夹具对齐
+    neighbor: Array.from({ length: 8 }, (_, i) => kp(`nb${i}`, { public: true })),
   }
   const d = drawDistractors(t1, starved, 6, S0, seedRng(11))
   expect(d.degradedTo).toBe('neighbor')
