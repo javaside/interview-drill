@@ -64,7 +64,8 @@ export type Degradation = 'none' | 'neighbor'
  * 干扰项抽取（§4.3）。
  *
  * - 过滤三连：退役、本题要点、excludeAsDistractorFor 含目标卡（三个池同一套）
- * - 分层抽取：同块不足的份额滚给跨块；两层都枯竭 → 相邻大类兜底并置
+ * - 分层抽取：缺口双向回填（§4.3"优先从同大类补足"）——同块不足滚给跨块，
+ *   跨块不足回捞同块剩余；两层都枯竭 → 相邻大类兜底并置
  *   degradedTo='neighbor'（调用方记日志告警——跨大类概念撞车率低，抽检即可）
  * - 绝不少给：三层全枯竭仍不足 → 抛错。少给会让选项总数变化，直接泄露
  *   正确条数（§4.3），比崩溃更糟
@@ -97,6 +98,10 @@ export function drawDistractors(
   const layers = layerCounts(count, s)
   let shortfall = takeFrom(pools.sameBlock, layers.sameBlock)
   shortfall = takeFrom(pools.crossBlock, layers.crossBlock + shortfall)
+  // 双向回填（spec §4.3"优先从同大类补足"）：块 ⊂ 大类，同块剩余仍属于同大类，
+  // 跨块不足时先回捞同块剩余（takeFrom 按 taken 去重，天然只取剩余条目），
+  // 仍缺才降级到相邻大类——同块有货就走 neighbor 是错误的降级。
+  shortfall = takeFrom(pools.sameBlock, shortfall)
   let degradedTo: Degradation = 'none'
   if (shortfall > 0) {
     degradedTo = 'neighbor'

@@ -47,3 +47,20 @@ test('crossBlockPoolFor：免费只留 public，付费全量（§4.3/§11 泄露
     .toEqual(['p1', 'p2'])
   expect(crossBlockPoolFor(makePaidEntitlement(), kps)).toHaveLength(4)
 })
+
+test('冻结防突变：对象与 freeBlockIds 均 frozen，push/改写抛 TypeError（终审）', () => {
+  const ent = makeFreeEntitlement(['b1', 'b2'])
+  expect(Object.isFrozen(ent)).toBe(true)
+  expect(Object.isFrozen(ent.freeBlockIds)).toBe(true)
+  // ESM 严格模式下对 frozen 数组 push 即抛 TypeError
+  expect(() => (ent.freeBlockIds as string[]).push('b3')).toThrow(TypeError)
+  expect(() => (ent.freeBlockIds as string[]).pop()).toThrow(TypeError)
+  expect(() => ((ent as { plan: string }).plan = 'paid')).toThrow(TypeError)
+  // 改写失败后状态不变
+  expect(ent).toEqual({ plan: 'free', freeBlockIds: ['b1', 'b2'] })
+
+  const paid = makePaidEntitlement()
+  expect(Object.isFrozen(paid)).toBe(true)
+  expect(Object.isFrozen(paid.freeBlockIds)).toBe(true)
+  expect(() => (paid.freeBlockIds as string[]).push('b3')).toThrow(TypeError)
+})

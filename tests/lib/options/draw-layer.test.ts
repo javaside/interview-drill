@@ -91,3 +91,30 @@ test('跨层重叠也不重复：同 id 要点在两层都出现时只抽一次�
   expect(new Set(ids).size).toBe(6)                    // 无重复
   expect(ids).toHaveLength(6)                          // 且绝不少给
 })
+
+test('缺口双向回填：跨块为 0 时同块剩余补足，同大类有货不降级（§4.3）', () => {
+  // 同块 10 条、跨块 0 条、count 6、s=0 → 分层 2+4。旧实现单向滚动会带着
+  // 4 条缺口直奔 neighbor；块 ⊂ 大类，同块剩余属于同大类补足，必须回捞
+  const r = drawDistractors(targetCard(), pools(poolOf('s', 10), []), 6, s(0, 1), seedRng(7))
+  const ids = r.keyPoints.map(k => k.id)
+  expect(ids).toHaveLength(6)
+  expect(ids.every(i => i.startsWith('s'))).toBe(true)   // 6 条全部来自同块层
+  expect(r.degradedTo).toBe('none')                      // 没走相邻大类
+})
+
+test('双向回填也去重：回捞同块剩余不与已抽条目重复', () => {
+  // 同块 10 条、跨块 2 条（与同块重叠 1 条）、count 6、s=0 → 分层 2+4：
+  // 同块 2 + 跨块 2 + 回捞同块剩余 2，仍无重复、不少给
+  const shared = kp('s0')
+  const r = drawDistractors(
+    targetCard(),
+    pools([shared, ...poolOf('s', 9)], [shared, kp('c0')]),
+    6,
+    s(0, 1),
+    seedRng(8),
+  )
+  const ids = r.keyPoints.map(k => k.id)
+  expect(new Set(ids).size).toBe(6)
+  expect(ids).toHaveLength(6)
+  expect(r.degradedTo).toBe('none')
+})

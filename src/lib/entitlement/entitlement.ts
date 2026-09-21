@@ -13,16 +13,20 @@ export type Entitlement = {
 
 export const FREE_BLOCK_LIMIT = 2
 
+/**
+ * 返回一律冻结（浅冻）：entitlement 是长生命周期会话状态，被意外 push/sort
+ * 会静默改写付费边界——fail fast 好过事后审计。要改就重建整个对象。
+ */
 export function makeFreeEntitlement(blockIds: readonly string[]): Entitlement {
   const unique = [...new Set(blockIds)]
   if (unique.length > FREE_BLOCK_LIMIT) {
     throw new Error(`免费层最多 ${FREE_BLOCK_LIMIT} 个块，收到 ${unique.length} 个（§10.1）`)
   }
-  return { plan: 'free', freeBlockIds: unique }
+  return Object.freeze({ plan: 'free', freeBlockIds: Object.freeze(unique) })
 }
 
 export function makePaidEntitlement(): Entitlement {
-  return { plan: 'paid', freeBlockIds: [] }
+  return Object.freeze({ plan: 'paid', freeBlockIds: Object.freeze<string[]>([]) })
 }
 
 export function isEntitled(ent: Entitlement, blockId: string): boolean {

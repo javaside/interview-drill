@@ -55,8 +55,16 @@ export function scoreSequence(
 /**
  * judgment 型（§4.4）：结论错 → 0；结论对 → 结论分 0.5 + 0.5 × 要点得分。
  * 整数运算：(den + num) / (2·den)，无浮点。
+ * pointsScore 必须是归一化精确分数（与四型计分出口的口径一致）——
+ * 非法输入是调用方 bug，直接抛错而不是产出越界分数。
  */
 export function scoreJudgment(conclusionCorrect: boolean, pointsScore: Rational): Rational {
+  const { num, den } = pointsScore
+  if (
+    !Number.isInteger(num) || !Number.isInteger(den) || den <= 0 || num < 0 || num > den
+  ) {
+    throw new Error(`非法要点得分 {num:${num}, den:${den}}：需 den>0、0≤num≤den 且均为整数`)
+  }
   if (!conclusionCorrect) return { num: 0, den: 1 }
   return rat(pointsScore.den + pointsScore.num, pointsScore.den * 2)
 }

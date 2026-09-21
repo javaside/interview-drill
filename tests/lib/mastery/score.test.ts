@@ -45,6 +45,19 @@ test('scoreJudgment：结论错 0 分；结论对 = 1/2 + 要点分/2（§4.4）
   expect(scoreJudgment(true, { num: 1, den: 1 })).toEqual({ num: 1, den: 1 })
 })
 
+test('scoreJudgment：非法 pointsScore 抛错，错误消息带实际值（终审）', () => {
+  expect(() => scoreJudgment(true, { num: 2, den: 1 })).toThrow(/num:2, den:1/)   // num > den
+  expect(() => scoreJudgment(true, { num: -1, den: 3 })).toThrow(/num:-1/)       // num < 0
+  expect(() => scoreJudgment(true, { num: 1, den: 0 })).toThrow(/den:0/)         // den ≤ 0
+  expect(() => scoreJudgment(true, { num: -2, den: -3 })).toThrow(/den:-3/)
+  expect(() => scoreJudgment(true, { num: 0.5, den: 2 })).toThrow(/num:0\.5/)    // 非整数
+  expect(() => scoreJudgment(true, { num: 1, den: 1.5 })).toThrow(/den:1\.5/)
+  // 结论错也先过校验——非法输入是调用方 bug，不被 0 分路径掩盖
+  expect(() => scoreJudgment(false, { num: 2, den: 1 })).toThrow()
+  // 合法输入不回归
+  expect(scoreJudgment(true, { num: 1, den: 2 })).toEqual({ num: 3, den: 4 })
+})
+
 test('scoreAtomic 与归一化：四型结果全部落在 [0,1] 且为精确分数（§11）', () => {
   expect(scoreAtomic(true)).toEqual({ num: 1, den: 1 })
   expect(scoreAtomic(false)).toEqual({ num: 0, den: 1 })
