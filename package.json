@@ -6,20 +6,35 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
+    "dev": "next dev",
+    "build": "next build",
     "typecheck": "tsc --noEmit",
     "content:new": "tsx tools/content-new/index.ts",
     "content:audit": "tsx tools/audit-cli.ts",
     "review:pairs": "tsx tools/review/cli.ts"
   },
   "dependencies": {
+    "@date-fns/tz": "^1.5.0",
+    "date-fns": "^4.4.0",
+    "drizzle-orm": "^0.45.2",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
+    "next": "^15.5.25",
+    "next-auth": "^4.24.15",
+    "pg": "^8.23.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "ulid": "^2.3.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.14.0",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "drizzle-kit": "^0.31.10",
     "tsx": "^4.16.0",
     "typescript": "^5.5.0",
     "vitest": "^2.0.0"
