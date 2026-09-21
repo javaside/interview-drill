@@ -34,7 +34,7 @@ export type ScheduleResult = {
  * 为"无计划的卡"生成计划：错峰 → 末端窗口 → 装箱。
  * reservedLoad 先进 load（§5.1：不在 cards[] 里但已有计划的卡仍占容量）。
  */
-function generatePlans(
+export function generateFreshPlans(
   fresh: SchedulableCard[],
   states: ReadonlyMap<string, CardState>,
   capacity: number,
@@ -135,7 +135,7 @@ export function schedule(
   let warning: OverloadWarning = { dropped: [] }
 
   if (fresh.length > 0) {
-    const gen = generatePlans(fresh, stateMap, dailyCapacity, E, reservedLoad)
+    const gen = generateFreshPlans(fresh, stateMap, dailyCapacity, E, reservedLoad)
     if (E === 0) {
       // §5.4：E=0 是唯一允许突破容量的情况——所有卡排今天并告警
       warning = { earliestOverloadDay: 0, dropped: [] }
@@ -209,7 +209,7 @@ export function narrowSuggestion(
   if (E < 1) return []
 
   const feasible = (k: number): boolean => {
-    const gen = generatePlans(ordered.slice(0, k), states, dailyCapacity, E, reservedLoad)
+    const gen = generateFreshPlans(ordered.slice(0, k), states, dailyCapacity, E, reservedLoad)
     return gen.dropped.length === 0 && prefixCheck(gen.load, dailyCapacity, E) === undefined
   }
 
