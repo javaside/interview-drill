@@ -5,6 +5,8 @@ import { scoreSelection, scoreSequence, scoreJudgment, scoreAtomic } from '../li
 import { failed, regenerateAfterFailure, maintenanceStep, shouldMarkDone } from '../lib/scheduler/regenerate.js'
 import { weightedS } from '../lib/scheduler/types.js'
 import type { Rational, CardState } from '../lib/scheduler/types.js'
+import type { LocalDate } from '../lib/scheduler/date.js'
+import { clampReviewedAt, localDateOf } from './time.js'
 import type { CardSnapshot, Settings, Submission } from './types.js'
 
 /**
@@ -143,4 +145,147 @@ export function transitionCard(
       replanned, maintenanceAdvanced,
     },
   }
+}
+
+/** 单条回放要落 review_log 的投影（route/adapters 据此写库；仅偏移域→绝对日期转换在外层） */
+export type ReplayLogRow = {
+  submissionId: string
+  cardId: string
+  /** 钳制后的 UTC 瞬时（严格升序） */
+  reviewedAtMs: number
+  localDate: LocalDate
+  correctChecked: number
+  wrongChecked: number
+  /** 判分当时的正确要点总数快照（内容后续变更不回改历史，§8.1） */
+  keyPointsTotal: number
+  distractorIds: string[]
+  clockClamped: null | 'past' | 'future'
+}
+
+/** 本批开始时的 DB 快照（纯核只读，绝不在回放中演化后回读） */
+export type ReplaySnapshot = {
+  cards: Map<string, CardSnapshot>
+  /** 偏移域的卡状态（plan 已由调用方 diffDays 转为相对 today 的偏移） */
+  states: Map<string, CardState>
+  /** 每卡最近 2 次得分（新→旧），从 review_log 带入 */
+  recents: Map<string, Rational[]>
+  /** 已落库的 submissionId（幂等去重的 DB 侧来源） */
+  knownSubmissionIds: Set<string>
+}
+
+export type ApplyCtx = {
+  userId: string
+  today: number
+  serverNowMs: number
+  timezone: string
+  mode: 'sprint' | 'maintenance'
+  E: number
+  settings: Settings
+  poolsOf: (cardId: string) => DistractorPools
+  /** 其他卡（不含本卡）的容量占用图 */
+  loadOf: (cardId: string) => Map<number, number>
+}
+
+export type ApplyResult = {
+  /** 与输入非重复提交一一对应（输入顺序） */
+  results: Array<{ submissionId: string; outcome: ReviewOutcome }>
+  duplicated: string[]
+  /** 待落 review_log 的行（新提交，已钳制/判分） */
+  logRows: ReplayLogRow[]
+  /** 回放后各卡的新状态（偏移域，调用方转绝对日期落 card_state） */
+  newStates: Map<string, CardState>
+}
+
+/**
+ * 离线回放纯核（§8.3）：按 cardId 分组 → 组内 reviewedAtMs 升序 → 逐条钳制/判分/迁移。
+ *
+ * 幂等：submissionId 已在 DB 或本批已见 → duplicated，不判分不写库。
+ * 确定性复现（§4.3）：变体重算用**批首快照的 s 与 reviewCount**，reviewIndex =
+ *   snapshot.reviewCount + j（j = 该卡本批第几条**非重复**提交，0 起）——绝不用
+ *   回放中演化的 s（见 variantAt 契约）。
+ * 顺序（§8.3）：组内维护钳后 last，clampReviewedAt 保证严格升序。
+ */
+export function applySubmissions(
+  subs: Submission[],
+  snapshot: ReplaySnapshot,
+  ctx: ApplyCtx,
+): ApplyResult {
+  const duplicated: string[] = []
+  const logRows: ReplayLogRow[] = []
+  const newStates = new Map<string, CardState>()
+  // submissionId → outcome，最后按输入顺序回填 results
+  const outcomeById = new Map<string, ReviewOutcome>()
+  const seen = new Set<string>(snapshot.knownSubmissionIds)
+
+  // 分组
+  const byCard = new Map<string, Submission[]>()
+  for (const sub of subs) {
+    const arr = byCard.get(sub.cardId) ?? []
+    arr.push(sub)
+    byCard.set(sub.cardId, arr)
+  }
+
+  for (const [cardId, group] of byCard) {
+    group.sort((a, b) => a.reviewedAtMs - b.reviewedAtMs)
+    const card = snapshot.cards.get(cardId)
+    if (card === undefined) continue   // 未知卡：防御，跳过（调用方不该传）
+
+    // 批首快照：s / reviewCount 全程固定，供变体重算
+    const snapState = snapshot.states.get(cardId) ?? freshState(cardId)
+    const sAtServe = snapState.s
+    const reviewCountAtServe = snapState.reviewCount
+
+    let workState = snapState
+    let recentThread = [...(snapshot.recents.get(cardId) ?? [])]
+    let lastMs: number | null = null
+    let jNonDup = 0
+
+    for (const sub of group) {
+      if (seen.has(sub.submissionId)) {
+        duplicated.push(sub.submissionId)
+        continue
+      }
+      seen.add(sub.submissionId)
+
+      const clamp = clampReviewedAt(sub.reviewedAtMs, lastMs, ctx.serverNowMs)
+      lastMs = clamp.ms
+
+      const variant = variantAt(card, ctx.poolsOf(cardId), sAtServe, ctx.userId, reviewCountAtServe + jNonDup)
+      const scored = scoreSubmission(card, variant, sub)
+      const { state, outcome } = transitionCard(workState, scored.score, {
+        today: ctx.today,
+        mode: ctx.mode,
+        E: ctx.E,
+        settings: ctx.settings,
+        loadOf: ctx.loadOf,
+        card: { id: card.cardId, frequency: card.frequency },
+      }, recentThread.slice(0, 2))
+      workState = state
+      recentThread = [scored.score, ...recentThread]
+
+      logRows.push({
+        submissionId: sub.submissionId,
+        cardId,
+        reviewedAtMs: clamp.ms,
+        localDate: localDateOf(clamp.ms, ctx.timezone),
+        correctChecked: scored.correctChecked,
+        wrongChecked: scored.wrongChecked,
+        keyPointsTotal: variant.correctIndices.length,
+        distractorIds: variant.distractorKeyPointIds,
+        clockClamped: clamp.clamped,
+      })
+      outcomeById.set(sub.submissionId, outcome)
+      jNonDup++
+    }
+    newStates.set(cardId, workState)
+  }
+
+  const results = subs
+    .filter(s => outcomeById.has(s.submissionId))
+    .map(s => ({ submissionId: s.submissionId, outcome: outcomeById.get(s.submissionId)! }))
+  return { results, duplicated, logRows, newStates }
+}
+
+function freshState(cardId: string): CardState {
+  return { cardId, phase: 'new', s: { num: 0, den: 1 }, plan: [], phaseIndex: 0, reviewCount: 0 }
 }
