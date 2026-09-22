@@ -5,6 +5,8 @@ import { rat } from '../../lib/scheduler/types.js'
 import type { CardState, Rational } from '../../lib/scheduler/types.js'
 import { diffDays } from '../../lib/scheduler/date.js'
 import type { LocalDate } from '../../lib/scheduler/date.js'
+import { makeFreeEntitlement, makePaidEntitlement } from '../../lib/entitlement/entitlement.js'
+import type { Entitlement } from '../../lib/entitlement/entitlement.js'
 import { ALGO_VERSION } from '../version.js'
 import type { CardSnapshot, Settings } from '../types.js'
 import type { ReplaySnapshot, ReplayLogRow } from '../replay.js'
@@ -42,6 +44,11 @@ export async function loadSettings(db: SqlRunner, userId: string): Promise<UserS
     plan: row.plan === 'paid' ? 'paid' : 'free',
     freeBlockIds: row.free_block_ids ?? [],
   }
+}
+
+/** UserSettingsRow → Entitlement（付费恒空 freeBlockIds） */
+export function entitlementOf(row: UserSettingsRow): Entitlement {
+  return row.plan === 'paid' ? makePaidEntitlement() : makeFreeEntitlement(row.freeBlockIds)
 }
 
 /** cards + key_points → CardSnapshot（判分/装配所需的最小投影） */
@@ -200,4 +207,97 @@ export async function syncTransaction(
           review_count = excluded.review_count, algo_version = excluded.algo_version, updated_at = now()`)
     }
   })
+}
+
+/**
+ * 全库卡快照 + blockId→category 映射（唯一池装配需要全库视图；未退役卡才进队列）。
+ * 干扰项池要能看到未解锁块的 public 语料，故装配用全库卡，entitlement 过滤在装配内。
+ */
+export async function loadAllCards(
+  db: SqlRunner,
+): Promise<{ cards: CardSnapshot[]; categories: Map<string, string> }> {
+  const cardRows = await db.execute<{ id: string }>(sql`
+    select id from cards where retired_at is null`)
+  const ids = cardRows.rows.map(r => r.id)
+  const snapMap = await loadCardSnapshots(db, ids)
+  const blockRows = await db.execute<{ id: string; category: string }>(sql`
+    select id, category from blocks`)
+  const categories = new Map(blockRows.rows.map(b => [b.id, b.category] as const))
+  // 按 cardId 稳定排序，装配与队列的输入顺序确定（schedule 内部会再排，这里只求可复现）
+  const cards = [...snapMap.values()].sort((a, b) => (a.cardId < b.cardId ? -1 : a.cardId > b.cardId ? 1 : 0))
+  return { cards, categories }
+}
+
+/** 某用户全部卡状态 → 偏移域（plan 绝对日期经 diffDays 转相对 today） */
+export async function loadAllCardStates(
+  db: SqlRunner, userId: string, today: LocalDate,
+): Promise<CardState[]> {
+  const r = await db.execute<{
+    card_id: string; phase: string; s_num: number; s_den: number
+    plan: string[]; phase_index: number; review_count: number
+  }>(sql`
+    select card_id, phase, s_num, s_den, plan, phase_index, review_count
+    from card_state where user_id = ${userId}`)
+  return r.rows.map(row => ({
+    cardId: row.card_id,
+    phase: row.phase as CardState['phase'],
+    s: rat(row.s_num, row.s_den),
+    plan: (row.plan ?? []).map(d => diffDays(d, today)),
+    phaseIndex: row.phase_index,
+    reviewCount: row.review_count,
+  }))
+}
+
+/**
+ * 新计划落盘（绝对日期 + planGeneratedAt + algoVersion）。plan[] 唯一写者之一。
+ * 新卡首次得计划 → phase 'new'→'learning'（plan-once：下次不再当 fresh 重算，I4）；
+ * 已在学/维持的卡 phase 原样保留。
+ */
+export async function persistPlans(
+  db: SqlRunner, userId: string, plans: Array<{ cardId: string; plan: LocalDate[] }>,
+): Promise<void> {
+  if (plans.length === 0) return
+  await db.transaction(async tx => {
+    for (const { cardId, plan } of plans) {
+      await tx.execute(sql`
+        insert into card_state (
+          user_id, card_id, phase, plan, phase_index, review_count,
+          plan_generated_at, algo_version, updated_at)
+        values (
+          ${userId}, ${cardId}, 'learning', ${JSON.stringify(plan)}::jsonb, 0, 0,
+          now(), ${ALGO_VERSION}, now())
+        on conflict (user_id, card_id) do update set
+          plan = excluded.plan,
+          plan_generated_at = now(),
+          phase = case when card_state.phase = 'new' then 'learning' else card_state.phase end,
+          algo_version = excluded.algo_version,
+          updated_at = now()`)
+    }
+  })
+}
+
+/**
+ * 当天首次取队列写定 queueSize（§6 分母），之后不动（ON CONFLICT DO NOTHING）。
+ * 返回当天生效的 queueSize（首写值——刷卡后再取队列分母不变）。
+ */
+export async function ensureDailySession(
+  db: SqlRunner, userId: string, today: LocalDate, queueSize: number,
+): Promise<number> {
+  await db.execute(sql`
+    insert into daily_session (user_id, local_date, queue_size)
+    values (${userId}, ${today}, ${queueSize})
+    on conflict (user_id, local_date) do nothing`)
+  const r = await db.execute<{ queue_size: number }>(sql`
+    select queue_size from daily_session where user_id = ${userId} and local_date = ${today}`)
+  return r.rows[0]?.queue_size ?? queueSize
+}
+
+/** 今日进度分子（§6）：当天已刷的不同卡数 */
+export async function countTodayDone(
+  db: SqlRunner, userId: string, today: LocalDate,
+): Promise<number> {
+  const r = await db.execute<{ n: number }>(sql`
+    select count(distinct card_id)::int as n from review_log
+    where user_id = ${userId} and local_date = ${today}`)
+  return r.rows[0]?.n ?? 0
 }

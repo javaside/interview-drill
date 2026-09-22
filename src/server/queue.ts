@@ -1,8 +1,17 @@
 import { sameBlockPoolOf } from '../lib/options/draw.js'
 import type { OptionCard, OptionKeyPoint, DistractorPools } from '../lib/options/types.js'
-import { crossBlockPoolFor } from '../lib/entitlement/entitlement.js'
+import { prepareOptions } from '../lib/options/prepare.js'
+import type { PreparedOptions } from '../lib/options/prepare.js'
+import { crossBlockPoolFor, entitledCards } from '../lib/entitlement/entitlement.js'
 import type { Entitlement } from '../lib/entitlement/entitlement.js'
-import type { CardSnapshot } from './types.js'
+import { schedule, reservedLoadOf } from '../lib/scheduler/schedule.js'
+import type { QueueItem } from '../lib/scheduler/schedule.js'
+import { addDays } from '../lib/scheduler/date.js'
+import type { LocalDate } from '../lib/scheduler/date.js'
+import { rat } from '../lib/scheduler/types.js'
+import type { CardState } from '../lib/scheduler/types.js'
+import { localDateOf } from './time.js'
+import type { CardSnapshot, Settings } from './types.js'
 
 /** CardSnapshot → OptionCard（lib/options 的最小输入投影） */
 function toOptionCard(c: CardSnapshot): OptionCard {
@@ -62,4 +71,79 @@ export function buildDistractorPools(
     crossBlock: crossBlockPoolFor(ent, crossRaw),
     neighbor: crossBlockPoolFor(ent, neighborRaw),
   }
+}
+
+export type DailyPayload = {
+  today: LocalDate
+  mode: 'sprint' | 'maintenance'
+  queue: QueueItem[]
+  /** PreparedOptions 含顶层 degradedTo——server 对 'neighbor' 记告警日志（终审裁决） */
+  prepared: PreparedOptions[]
+  progress: { done: number; total: number }
+}
+
+/** CardSnapshot → SchedulableCard（schedule 的最小输入；保留 blockId 供 entitlement 过滤） */
+const toSchedulable = (c: CardSnapshot) => ({ id: c.cardId, blockId: c.blockId, frequency: c.frequency })
+
+export type DailyPayloadDeps = {
+  userId: string
+  loadSettings(): Promise<{ settings: Settings & { timezone: string }; ent: Entitlement }>
+  loadCards(): Promise<{ cards: CardSnapshot[]; categories: Map<string, string> }>
+  /** 偏移域卡状态（plan 已由 adapter diffDays 转相对 today） */
+  loadStates(): Promise<CardState[]>
+  persistPlans(plans: Array<{ cardId: string; plan: LocalDate[] }>): Promise<void>
+  ensureDailySession(today: LocalDate, queueSize: number): Promise<number>
+  countTodayDone(today: LocalDate): Promise<number>
+  serverNowMs: number
+}
+
+/**
+ * 今日队列装配（§6/§4.3）：entitlement 过滤 → schedule（plan-once，含 reservedLoad
+ * ——已有计划卡占容量，§5.1）→ 新计划转回绝对日期落盘 → 每张队列卡预生成 K 份变体
+ * → daily_session 定分母。deps 注入全部 IO（集成测试经 pglite）。
+ *
+ * 变体复现口径：预生成用**取队列时**的 s 与 reviewCount（与 /api/sync 回放的
+ * 复现契约一致，见 replay.variantAt）。
+ */
+export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPayload> {
+  const { settings, ent } = await deps.loadSettings()
+  const today = localDateOf(deps.serverNowMs, settings.timezone)
+  const { cards, categories } = await deps.loadCards()
+
+  // 先按 entitlement 过滤（需 blockId），再投影为 SchedulableCard
+  const entitled = entitledCards(ent, cards.map(toSchedulable))
+  const states = await deps.loadStates()
+
+  const result = schedule(
+    entitled.map(c => ({ id: c.id, frequency: c.frequency })),
+    states,
+    settings.readyByDate,
+    settings.dailyCapacity,
+    today,
+    reservedLoadOf(states),   // §5.1：已有计划的卡（含已消费剩余项）占容量
+  )
+
+  // 新计划落盘（偏移域 → 绝对日期）
+  if (result.plans.size > 0) {
+    await deps.persistPlans([...result.plans].map(([cardId, offsets]) => ({
+      cardId, plan: offsets.map(o => addDays(today, o)),
+    })))
+  }
+
+  // 预生成：K = 本次新计划长度，否则存量剩余计划长度（fresh 卡走新计划——阶梯 5-6 项）
+  const stateByCard = new Map(states.map(s => [s.cardId, s] as const))
+  const cardByCard = new Map(cards.map(c => [c.cardId, c] as const))
+  const prepared: PreparedOptions[] = result.todayQueue.map(({ cardId }) => {
+    const card = cardByCard.get(cardId)!
+    const st = stateByCard.get(cardId)
+    const pools = buildDistractorPools(card, cards, ent, categories)
+    const k = result.plans.get(cardId)?.length ?? st?.plan.length ?? 1
+    return prepareOptions(
+      toOptionCard(card), pools, st?.s ?? rat(0, 1), deps.userId, st?.reviewCount ?? 0, Math.min(k, 6),
+    )
+  })
+
+  const total = await deps.ensureDailySession(today, result.todayQueue.length)
+  const done = await deps.countTodayDone(today)
+  return { today, mode: result.mode, queue: result.todayQueue, prepared, progress: { done, total } }
 }
