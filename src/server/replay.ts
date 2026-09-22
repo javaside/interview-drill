@@ -154,6 +154,8 @@ export type ReplayLogRow = {
   /** 钳制后的 UTC 瞬时（严格升序） */
   reviewedAtMs: number
   localDate: LocalDate
+  /** 本次判分的精确得分（§6 屏② 反馈用；review_log 只存 checked 计数，此为内存投影） */
+  score: Rational
   correctChecked: number
   wrongChecked: number
   /** 判分当时的正确要点总数快照（内容后续变更不回改历史，§8.1） */
@@ -268,6 +270,7 @@ export function applySubmissions(
         cardId,
         reviewedAtMs: clamp.ms,
         localDate: localDateOf(clamp.ms, ctx.timezone),
+        score: scored.score,
         correctChecked: scored.correctChecked,
         wrongChecked: scored.wrongChecked,
         keyPointsTotal: variant.correctIndices.length,
