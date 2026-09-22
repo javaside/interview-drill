@@ -301,3 +301,74 @@ export async function countTodayDone(
     where user_id = ${userId} and local_date = ${today}`)
   return r.rows[0]?.n ?? 0
 }
+
+/** 设置变更（§5.5 条件 2/3）：只更新传入字段，其余不动 */
+export async function updateUserSettings(
+  db: SqlRunner, userId: string,
+  next: { readyByDate?: LocalDate | null; dailyCapacity?: number },
+): Promise<void> {
+  const sets: SQL[] = []
+  if ('readyByDate' in next) sets.push(sql`ready_by_date = ${next.readyByDate ?? null}`)
+  if (next.dailyCapacity !== undefined) sets.push(sql`daily_capacity = ${next.dailyCapacity}`)
+  if (sets.length === 0) return
+  sets.push(sql`updated_at = now()`)
+  await db.execute(sql`
+    update user_settings set ${sql.join(sets, sql`, `)} where user_id = ${userId}`)
+}
+
+/** 更新免费块集（§5.5 条件 4） */
+export async function updateFreeBlockIds(
+  db: SqlRunner, userId: string, blockIds: readonly string[],
+): Promise<void> {
+  await db.execute(sql`
+    update user_settings set free_block_ids = ${JSON.stringify([...blockIds])}::jsonb, updated_at = now()
+    where user_id = ${userId}`)
+}
+
+/**
+ * 清空活跃卡（非 paused/done）的计划（§5.5 条件 2/3 的重排前置）：
+ * plan 置空、plan_generated_at 归零，phase 保留——随后 buildDailyPayload 视其为
+ * fresh 重新生成。返回被清空的卡数（= 待重排数）。
+ */
+export async function clearActivePlans(db: SqlRunner, userId: string): Promise<number> {
+  const r = await db.execute<{ card_id: string }>(sql`
+    update card_state set plan = '[]'::jsonb, plan_generated_at = null, updated_at = now()
+    where user_id = ${userId} and phase not in ('paused', 'done')
+      and jsonb_array_length(plan) > 0
+    returning card_id`)
+  return r.rows.length
+}
+
+/**
+ * 暂停指定块的活跃卡（§5.5 减块）：phase→'paused'，**plan 原样保留**（复购即恢复）。
+ * 返回被暂停的卡数。
+ */
+export async function pauseCardsInBlocks(
+  db: SqlRunner, userId: string, blockIds: readonly string[],
+): Promise<number> {
+  if (blockIds.length === 0) return 0
+  const r = await db.execute<{ card_id: string }>(sql`
+    update card_state set phase = 'paused', updated_at = now()
+    where user_id = ${userId} and phase not in ('paused', 'done')
+      and card_id in (select id from cards where block_id in ${inList([...blockIds])})
+    returning card_id`)
+  return r.rows.length
+}
+
+/**
+ * 恢复指定块的暂停卡（§5.5 加回）：paused→ 有计划则 'learning'、否则 'new'，
+ * plan 不动（保留 → plan-once 不重排，往返幂等）。返回被恢复的卡数。
+ */
+export async function resumeCardsInBlocks(
+  db: SqlRunner, userId: string, blockIds: readonly string[],
+): Promise<number> {
+  if (blockIds.length === 0) return 0
+  const r = await db.execute<{ card_id: string }>(sql`
+    update card_state
+    set phase = case when jsonb_array_length(plan) > 0 then 'learning' else 'new' end,
+        updated_at = now()
+    where user_id = ${userId} and phase = 'paused'
+      and card_id in (select id from cards where block_id in ${inList([...blockIds])})
+    returning card_id`)
+  return r.rows.length
+}
