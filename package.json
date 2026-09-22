@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "content:new": "tsx tools/content-new/index.ts",
     "content:audit": "tsx tools/audit-cli.ts",
+    "content:upsert": "tsx src/server/content-upsert/cli.ts",
     "review:pairs": "tsx tools/review/cli.ts"
   },
   "dependencies": {
