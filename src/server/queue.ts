@@ -79,7 +79,24 @@ export type DailyPayload = {
   queue: QueueItem[]
   /** PreparedOptions 含顶层 degradedTo——server 对 'neighbor' 记告警日志（终审裁决） */
   prepared: PreparedOptions[]
+  /** 屏①/屏② 渲染所需的展示元数据（与 queue 一一对应，只含队列内卡自身要点） */
+  cards: CardView[]
   progress: { done: number; total: number }
+}
+
+/**
+ * 屏①/屏② 展示元数据（不含判分口径）：题面/块名/频度供屏① 渲染，
+ * keyPoints 文本供屏② 染色与错勾归属（把 distractorKeyPointIds 映射回归属块）。
+ */
+export type CardView = {
+  cardId: string
+  blockId: string
+  blockName: string
+  cardType: CardSnapshot['cardType']
+  frequency: CardSnapshot['frequency']
+  question: string
+  conclusion?: 'yes' | 'no' | 'depends'
+  keyPoints: Array<{ id: string; text: string }>
 }
 
 /** CardSnapshot → SchedulableCard（schedule 的最小输入；保留 blockId 供 entitlement 过滤） */
@@ -145,5 +162,21 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
 
   const total = await deps.ensureDailySession(today, result.todayQueue.length)
   const done = await deps.countTodayDone(today)
-  return { today, mode: result.mode, queue: result.todayQueue, prepared, progress: { done, total } }
+
+  // 屏①/屏② 展示元数据投影（只投队列内卡自身要点——免费用户不泄露未解锁块语料）
+  const cardViews: CardView[] = result.todayQueue.map(({ cardId }) => {
+    const c = cardByCard.get(cardId)!
+    return {
+      cardId,
+      blockId: c.blockId,
+      blockName: c.blockName ?? '',
+      cardType: c.cardType,
+      frequency: c.frequency,
+      question: c.question ?? '',
+      ...(c.conclusion ? { conclusion: c.conclusion } : {}),
+      keyPoints: c.keyPoints.map(k => ({ id: k.id, text: k.text })),
+    }
+  })
+
+  return { today, mode: result.mode, queue: result.todayQueue, prepared, cards: cardViews, progress: { done, total } }
 }

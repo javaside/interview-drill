@@ -57,9 +57,11 @@ export async function loadCardSnapshots(db: SqlRunner, cardIds: string[]): Promi
   if (cardIds.length === 0) return out
   const cards = await db.execute<{
     id: string; block_id: string; card_type: string; frequency: string; conclusion: string | null
+    question: string; block_name: string | null
   }>(sql`
-    select id, block_id, card_type, frequency, conclusion
-    from cards where id in ${inList(cardIds)}`)
+    select c.id, c.block_id, c.card_type, c.frequency, c.conclusion, c.question, b.name as block_name
+    from cards c left join blocks b on b.id = c.block_id
+    where c.id in ${inList(cardIds)}`)
   const kps = await db.execute<{
     card_id: string; id: string; text: string; public: boolean
     exclude_as_distractor_for: string[]; retired_at: string | null; order: number | null
@@ -83,7 +85,9 @@ export async function loadCardSnapshots(db: SqlRunner, cardIds: string[]): Promi
       blockId: c.block_id,
       cardType: c.card_type as CardSnapshot['cardType'],
       frequency: c.frequency as CardSnapshot['frequency'],
+      question: c.question,
       keyPoints: kpByCard.get(c.id) ?? [],
+      ...(c.block_name ? { blockName: c.block_name } : {}),
       ...(c.conclusion ? { conclusion: c.conclusion as CardSnapshot['conclusion'] } : {}),
     })
   }
