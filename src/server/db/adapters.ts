@@ -57,9 +57,11 @@ export async function loadCardSnapshots(db: SqlRunner, cardIds: string[]): Promi
   if (cardIds.length === 0) return out
   const cards = await db.execute<{
     id: string; block_id: string; card_type: string; frequency: string; conclusion: string | null
+    question: string; block_name: string | null
   }>(sql`
-    select id, block_id, card_type, frequency, conclusion
-    from cards where id in ${inList(cardIds)}`)
+    select c.id, c.block_id, c.card_type, c.frequency, c.conclusion, c.question, b.name as block_name
+    from cards c left join blocks b on b.id = c.block_id
+    where c.id in ${inList(cardIds)}`)
   const kps = await db.execute<{
     card_id: string; id: string; text: string; public: boolean
     exclude_as_distractor_for: string[]; retired_at: string | null; order: number | null
@@ -83,7 +85,9 @@ export async function loadCardSnapshots(db: SqlRunner, cardIds: string[]): Promi
       blockId: c.block_id,
       cardType: c.card_type as CardSnapshot['cardType'],
       frequency: c.frequency as CardSnapshot['frequency'],
+      question: c.question,
       keyPoints: kpByCard.get(c.id) ?? [],
+      ...(c.block_name ? { blockName: c.block_name } : {}),
       ...(c.conclusion ? { conclusion: c.conclusion as CardSnapshot['conclusion'] } : {}),
     })
   }
@@ -226,6 +230,64 @@ export async function loadAllCards(
   // 按 cardId 稳定排序，装配与队列的输入顺序确定（schedule 内部会再排，这里只求可复现）
   const cards = [...snapMap.values()].sort((a, b) => (a.cardId < b.cardId ? -1 : a.cardId > b.cardId ? 1 : 0))
   return { cards, categories }
+}
+
+/**
+ * 全块 + 未退役卡计数（知识地图题量，§4.4）。left join 保证无卡的块也出现（cardCount=0），
+ * 按 blockId 升序确定输出。
+ */
+export async function loadBlocks(
+  db: SqlRunner,
+): Promise<Array<{ blockId: string; blockName: string; category: string; cardCount: number }>> {
+  const r = await db.execute<{ id: string; name: string; category: string; n: number }>(sql`
+    select b.id, b.name, b.category, count(c.id)::int as n
+    from blocks b left join cards c on c.block_id = b.id and c.retired_at is null
+    group by b.id order by b.id`)
+  return r.rows.map(row => ({
+    blockId: row.id, blockName: row.name, category: row.category, cardCount: row.n,
+  }))
+}
+
+/** 公开题目页视图（§7 SEO 边界）：题面 + 块名 + 仅 public 要点 + 全部活要点数 */
+export interface PublicCard {
+  cardId: string
+  question: string
+  blockName: string
+  publicKeyPoints: Array<{ id: string; text: string }>
+  totalKeyPoints: number
+}
+
+/**
+ * 公开题目页数据（§7「不做 cloaking」的服务端泄露边界）。三条查询：
+ * 1) cards join blocks 取题面 + 块名（卡不存在或已退役 → null）；
+ * 2) key_points **只选 public 要点**（`public = true and retired_at is null`，按 order/id 稳定序）
+ *    ——非 public 要点的 text 在查询层就被切断，绝不进入返回值；
+ * 3) count(*) 全部活要点（`retired_at is null`）作 totalKeyPoints（分母，不含任何私有文本）。
+ */
+export async function loadPublicCard(db: SqlRunner, cardId: string): Promise<PublicCard | null> {
+  const cardRes = await db.execute<{ question: string; block_name: string | null }>(sql`
+    select c.question, b.name as block_name
+    from cards c left join blocks b on b.id = c.block_id
+    where c.id = ${cardId} and c.retired_at is null`)
+  const card = cardRes.rows[0]
+  if (card === undefined) return null
+
+  const kpRes = await db.execute<{ id: string; text: string }>(sql`
+    select id, text from key_points
+    where card_id = ${cardId} and public = true and retired_at is null
+    order by "order" asc nulls last, id asc`)
+
+  const totalRes = await db.execute<{ n: number }>(sql`
+    select count(*)::int as n from key_points
+    where card_id = ${cardId} and retired_at is null`)
+
+  return {
+    cardId,
+    question: card.question,
+    blockName: card.block_name ?? '',
+    publicKeyPoints: kpRes.rows.map(r => ({ id: r.id, text: r.text })),
+    totalKeyPoints: totalRes.rows[0]?.n ?? 0,
+  }
 }
 
 /** 某用户全部卡状态 → 偏移域（plan 绝对日期经 diffDays 转相对 today） */

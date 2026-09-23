@@ -1,5 +1,6 @@
 import { buildDailyPayload } from './queue.js'
-import { payloadDepsOf } from './deps.js'
+import { buildBlockMap } from './map.js'
+import { payloadDepsOf, mapDepsOf } from './deps.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
 import {
   loadSettings, updateUserSettings, updateFreeBlockIds,
@@ -7,6 +8,40 @@ import {
 } from './db/adapters.js'
 
 export type ServerDeps = { db: SqlRunner; serverNowMs: number }
+
+/**
+ * 设置屏视图（Task 11）：预填当前就绪日/容量/计划 + 块选择态。
+ * blocks 复用 buildBlockMap，`selected = entry.unlocked`（免费=已选块，付费=全部）。
+ */
+export type SettingsView = {
+  readyByDate: LocalDate | null
+  dailyCapacity: number
+  plan: 'free' | 'paid'
+  blocks: Array<{ blockId: string; blockName: string; cardCount: number; selected: boolean }>
+}
+
+/**
+ * 装配设置屏视图（GET /api/settings 薄壳 + settings page 共用）：
+ * loadSettings 取 readyByDate/dailyCapacity/plan；buildBlockMap 取块列表，
+ * selected = unlocked（不发明新查询，复用 Task 9 的映射管线）。
+ */
+export async function loadSettingsView(deps: ServerDeps, userId: string): Promise<SettingsView> {
+  const [row, entries] = await Promise.all([
+    loadSettings(deps.db, userId),
+    buildBlockMap(mapDepsOf(deps.db, userId)),
+  ])
+  return {
+    readyByDate: row.readyByDate,
+    dailyCapacity: row.dailyCapacity,
+    plan: row.plan,
+    blocks: entries.map(e => ({
+      blockId: e.blockId,
+      blockName: e.blockName,
+      cardCount: e.cardCount,
+      selected: e.unlocked,
+    })),
+  }
+}
 
 /**
  * 设置变更入口（§5.5 条件 2/3）：readyByDate 或 dailyCapacity 变更后，**全部有计划的

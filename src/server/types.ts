@@ -13,6 +13,10 @@ export type Submission = { submissionId: string; cardId: string; reviewedAtMs: n
 export type CardSnapshot = {
   cardId: string
   blockId: string
+  /** 块显示名（blocks.name）——UI 屏①/屏② 展示用，装配/判分不依赖，故可选 */
+  blockName?: string
+  /** 题面（cards.question）——UI 屏①/屏② 展示用，可选 */
+  question?: string
   cardType: 'enumeration' | 'comparison' | 'sequence' | 'judgment' | 'atomic'
   frequency: 'high' | 'mid' | 'low'
   keyPoints: Array<{
