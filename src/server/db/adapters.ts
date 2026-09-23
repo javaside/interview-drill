@@ -232,6 +232,22 @@ export async function loadAllCards(
   return { cards, categories }
 }
 
+/**
+ * 全块 + 未退役卡计数（知识地图题量，§4.4）。left join 保证无卡的块也出现（cardCount=0），
+ * 按 blockId 升序确定输出。
+ */
+export async function loadBlocks(
+  db: SqlRunner,
+): Promise<Array<{ blockId: string; blockName: string; category: string; cardCount: number }>> {
+  const r = await db.execute<{ id: string; name: string; category: string; n: number }>(sql`
+    select b.id, b.name, b.category, count(c.id)::int as n
+    from blocks b left join cards c on c.block_id = b.id and c.retired_at is null
+    group by b.id order by b.id`)
+  return r.rows.map(row => ({
+    blockId: row.id, blockName: row.name, category: row.category, cardCount: row.n,
+  }))
+}
+
 /** 某用户全部卡状态 → 偏移域（plan 绝对日期经 diffDays 转相对 today） */
 export async function loadAllCardStates(
   db: SqlRunner, userId: string, today: LocalDate,

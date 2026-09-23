@@ -1,9 +1,10 @@
 import { localDateOf } from './time.js'
 import { buildDistractorPools } from './queue.js'
 import type { DailyPayloadDeps } from './queue.js'
+import type { BlockMapDeps } from './map.js'
 import type { DistractorPools } from '../lib/options/types.js'
 import {
-  loadSettings, entitlementOf, loadAllCards, loadAllCardStates,
+  loadSettings, entitlementOf, loadAllCards, loadAllCardStates, loadBlocks,
   persistPlans, ensureDailySession, countTodayDone, type SqlRunner,
 } from './db/adapters.js'
 
@@ -30,6 +31,29 @@ export function payloadDepsOf(db: SqlRunner, userId: string, serverNowMs: number
     persistPlans: plans => persistPlans(db, userId, plans),
     ensureDailySession: (today, size) => ensureDailySession(db, userId, today, size),
     countTodayDone: today => countTodayDone(db, userId, today),
+  }
+}
+
+/**
+ * buildBlockMap 的 IO 依赖装配（/api/map route 与 /map page 共用）。
+ * today 由 settings 时区 + 服务器当前时刻推出（plan 偏移基准，映射内不敏感）；
+ * loadCardBlocks 复用 loadAllCards（未退役卡）取每卡 blockId + frequency。
+ */
+export function mapDepsOf(db: SqlRunner, userId: string): BlockMapDeps {
+  return {
+    userId,
+    loadBlocks: () => loadBlocks(db),
+    async loadStates() {
+      const row = await loadSettings(db, userId)
+      return loadAllCardStates(db, userId, localDateOf(Date.now(), row.timezone))
+    },
+    async loadEnt() {
+      return entitlementOf(await loadSettings(db, userId))
+    },
+    async loadCardBlocks() {
+      const { cards } = await loadAllCards(db)
+      return new Map(cards.map(c => [c.cardId, { blockId: c.blockId, frequency: c.frequency }] as const))
+    },
   }
 }
 
