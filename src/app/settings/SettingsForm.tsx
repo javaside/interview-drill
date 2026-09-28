@@ -51,9 +51,14 @@ export function SettingsForm(
         e.preventDefault()
         void save()
       }}
+      className="mx-auto max-w-2xl px-5 py-8"
     >
-      <div>
-        <label htmlFor="settings-ready-by">就绪日</label>
+      <h1 className="mb-6 font-serif text-xl font-semibold text-paper-ink">设置</h1>
+
+      <div className="mb-6">
+        <label htmlFor="settings-ready-by" className="mb-1.5 block text-xs tracking-[0.2em] text-paper-muted">
+          就绪日（面试日期）
+        </label>
         <input
           id="settings-ready-by"
           type="date"
@@ -62,11 +67,14 @@ export function SettingsForm(
             setReplanned(null)
             setReadyByDate(e.target.value)
           }}
+          className="tnum rounded-md border border-paper-line bg-paper-card px-3 py-2 text-paper-ink transition-colors focus:border-paper-ink focus:outline-none"
         />
       </div>
 
-      <div>
-        <label htmlFor="settings-capacity">每日容量</label>
+      <div className="mb-8">
+        <label htmlFor="settings-capacity" className="mb-1.5 block text-xs tracking-[0.2em] text-paper-muted">
+          每日容量（题）
+        </label>
         <input
           id="settings-capacity"
           type="number"
@@ -75,29 +83,48 @@ export function SettingsForm(
             setReplanned(null)
             setDailyCapacity(Number(e.target.value))
           }}
+          className="tnum w-28 rounded-md border border-paper-line bg-paper-card px-3 py-2 text-paper-ink transition-colors focus:border-paper-ink focus:outline-none"
         />
+        <p className="mt-1.5 text-xs text-paper-muted">排期按此容量把冲刺计划摊到每天</p>
       </div>
 
       <fieldset>
-        <legend>块选择</legend>
-        {view.blocks.map(b => (
-          <label key={b.blockId}>
-            <input
-              type="checkbox"
-              name={b.blockId}
-              checked={selected.has(b.blockId)}
-              onChange={() => toggle(b.blockId)}
-            />
-            {b.blockName}（{b.cardCount} 题）
-          </label>
-        ))}
+        <legend className="mb-3 text-xs tracking-[0.2em] text-paper-muted">
+          块选择{view.plan === 'free' ? `（免费最多 ${FREE_BLOCK_LIMIT} 个）` : ''}
+        </legend>
+        <ul className="space-y-2">
+          {view.blocks.map(b => (
+            <li key={b.blockId}>
+              <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
+                <input
+                  type="checkbox"
+                  name={b.blockId}
+                  checked={selected.has(b.blockId)}
+                  onChange={() => toggle(b.blockId)}
+                />
+                <span className="flex-1">{b.blockName}</span>
+                <span className="tnum shrink-0 text-sm text-paper-muted">{b.cardCount} 题</span>
+              </label>
+            </li>
+          ))}
+        </ul>
       </fieldset>
 
-      {overLimit ? <p role="alert">免费层最多选 {FREE_BLOCK_LIMIT} 个块</p> : null}
+      {overLimit ? (
+        <p role="alert" className="mt-4 text-sm text-mark-bad">免费层最多选 {FREE_BLOCK_LIMIT} 个块</p>
+      ) : null}
 
-      <button type="submit" disabled={overLimit}>保存</button>
+      <button
+        type="submit"
+        disabled={overLimit}
+        className="mt-8 rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-ink disabled:pointer-events-none disabled:opacity-30"
+      >
+        保存
+      </button>
 
-      {replanned !== null ? <p>已重排 {replanned} 张卡的计划</p> : null}
+      {replanned !== null ? (
+        <p className="mt-4 text-sm text-mark-good">已重排 {replanned} 张卡的计划</p>
+      ) : null}
     </form>
   )
 }

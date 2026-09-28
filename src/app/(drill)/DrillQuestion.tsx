@@ -89,22 +89,27 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
   }
 
   return (
-    <section className="mx-auto max-w-2xl p-4">
-      <header className="mb-4">
-        <div className="flex items-center gap-2 text-sm text-gray-500">
+    <section className="mx-auto max-w-2xl px-5 py-8">
+      <header className="mb-6">
+        <div className="flex items-center gap-2 text-xs tracking-[0.2em] text-paper-muted">
           <span>{card.blockName}</span>
           <span aria-hidden="true">·</span>
           <span>{FREQUENCY_LABEL[card.frequency]}</span>
         </div>
-        <h1 className="mt-2 text-lg font-semibold">{card.question}</h1>
+        <h1 className="mt-3 font-serif text-2xl font-semibold leading-snug text-paper-ink text-pretty">
+          {card.question}
+        </h1>
       </header>
 
       {cardType === 'judgment' && (
-        <fieldset className="mb-4">
-          <legend className="mb-2 text-sm text-gray-500">你的结论</legend>
-          <div className="flex gap-4">
+        <fieldset className="mb-6">
+          <legend className="mb-2 text-xs tracking-[0.2em] text-paper-muted">你的结论</legend>
+          <div className="flex gap-2">
             {CONCLUSION_OPTIONS.map(o => (
-              <label key={o.value} className="flex items-center gap-1">
+              <label
+                key={o.value}
+                className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md border border-paper-line bg-paper-card px-3 py-2.5 text-sm transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft has-[:checked]:font-medium hover:border-paper-muted"
+              >
                 <input
                   type="radio"
                   name="conclusion"
@@ -118,19 +123,23 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         </fieldset>
       )}
 
-      <p className="mb-2 text-sm text-gray-500">{HINT}</p>
+      <p className="mb-3 text-sm text-paper-muted">{HINT}</p>
 
       {cardType === 'sequence' ? (
         <ol className="space-y-2">
           {order.map((optIdx, pos) => (
-            <li key={optIdx} className="flex items-center gap-2 rounded border border-gray-200 p-2">
-              <span className="flex-1">{variant.optionTexts[optIdx]}</span>
+            <li
+              key={optIdx}
+              className="flex items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3"
+            >
+              <span className="tnum w-5 shrink-0 text-right text-sm text-paper-muted">{pos + 1}</span>
+              <span className="flex-1 text-[15px] leading-relaxed">{variant.optionTexts[optIdx]}</span>
               <button
                 type="button"
                 aria-label="上移"
                 disabled={pos === 0}
                 onClick={() => move(pos, pos - 1)}
-                className="rounded border px-2 disabled:opacity-40"
+                className="rounded border border-paper-line px-2.5 py-1 text-paper-muted transition-colors hover:border-paper-ink hover:text-paper-ink disabled:opacity-30"
               >
                 ↑
               </button>
@@ -139,7 +148,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
                 aria-label="下移"
                 disabled={pos === order.length - 1}
                 onClick={() => move(pos, pos + 1)}
-                className="rounded border px-2 disabled:opacity-40"
+                className="rounded border border-paper-line px-2.5 py-1 text-paper-muted transition-colors hover:border-paper-ink hover:text-paper-ink disabled:opacity-30"
               >
                 ↓
               </button>
@@ -150,7 +159,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         <ul className="space-y-2">
           {variant.optionTexts.map((text, i) => (
             <li key={i}>
-              <label className="flex items-center gap-2 rounded border border-gray-200 p-2">
+              <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] leading-relaxed transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
                 <input
                   type="radio"
                   name="atomic"
@@ -166,7 +175,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         <ul className="space-y-2">
           {variant.optionTexts.map((text, i) => (
             <li key={i}>
-              <label className="flex items-center gap-2 rounded border border-gray-200 p-2">
+              <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] leading-relaxed transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
                 <input type="checkbox" checked={checked[i] ?? false} onChange={() => toggle(i)} />
                 <span>{text}</span>
               </label>
@@ -179,7 +188,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         type="button"
         onClick={submit}
         disabled={disabled}
-        className="mt-6 rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-40"
+        className="mt-8 rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-ink disabled:pointer-events-none disabled:opacity-30"
       >
         提交
       </button>

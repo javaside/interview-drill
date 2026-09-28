@@ -119,9 +119,10 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
   }
 
   return (
-    <main className="mx-auto max-w-2xl">
-      <div className="p-4 text-sm text-gray-500">
-        <span data-testid="progress">{`${done}/${total}`}</span>
+    <main className="mx-auto max-w-2xl px-5 pb-16">
+      <div className="flex items-center justify-between py-4 text-sm text-paper-muted">
+        <span>今日进度</span>
+        <span data-testid="progress" className="tnum font-medium text-paper-ink">{`${done}/${total}`}</span>
       </div>
 
       {phase === 'question' && card !== undefined && variant !== undefined && (
@@ -137,11 +138,11 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
             result={result}
             offline={offline}
           />
-          <div className="mx-auto max-w-2xl p-4">
+          <div className="mx-auto max-w-2xl px-5">
             <button
               type="button"
               onClick={advance}
-              className="rounded bg-blue-600 px-4 py-2 text-white"
+              className="rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-ink"
             >
               {isLast ? '完成' : '下一题'}
             </button>
@@ -149,9 +150,30 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
         </div>
       )}
 
-      {phase === 'done' && (
-        <section className="mx-auto max-w-2xl p-4 text-center">
-          <p className="text-xl font-semibold">今日完成</p>
+      {phase === 'done' && total === 0 && (
+        <section className="mt-8 rounded-lg border border-paper-line bg-paper-card px-6 py-10 text-center">
+          <h2 className="font-serif text-xl font-semibold text-paper-ink">今日队列是空的</h2>
+          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
+            排期由就绪日与所选知识块决定。设定你的面试日期、勾选要刷的块，队列就会出现。
+          </p>
+          <div className="mt-6 flex items-center justify-center gap-4 text-sm">
+            <a
+              href="/settings"
+              className="rounded-md bg-paper-ink px-5 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+            >
+              设定就绪日与知识块
+            </a>
+            <a href="/map" className="text-paper-muted underline underline-offset-4 transition-colors hover:text-paper-ink">
+              看看知识地图
+            </a>
+          </div>
+        </section>
+      )}
+
+      {phase === 'done' && total > 0 && (
+        <section className="mt-8 rounded-lg border border-paper-line bg-paper-card px-6 py-10 text-center">
+          <p className="font-serif text-xl font-semibold text-paper-ink">今日完成</p>
+          <p className="tnum mt-2 text-sm text-paper-muted">{`${done}/${total} · 明天见`}</p>
         </section>
       )}
     </main>

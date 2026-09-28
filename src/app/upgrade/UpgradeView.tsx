@@ -15,18 +15,27 @@ export function UpgradeView({
   const a = api ?? browserApi()
   const [started, setStarted] = useState(false)
   return (
-    <div>
-      <h1>解锁全部题库</h1>
-      <p>¥{priceCents / 100} · 一次性买断</p>
-      <button
-        onClick={async () => {
-          await a.postCreateOrder()
-          setStarted(true)
-        }}
-      >
-        立即解锁全部题库
-      </button>
-      {started && <span>支付发起中…</span>}
+    <div className="mx-auto max-w-2xl px-5 py-12">
+      <div className="rounded-lg border border-paper-line bg-paper-card px-8 py-12 text-center">
+        <h1 className="font-serif text-2xl font-semibold text-paper-ink">解锁全部题库</h1>
+        <p className="mt-4 font-serif text-5xl font-bold tracking-tight text-paper-ink">
+          ¥{priceCents / 100}
+        </p>
+        <p className="mt-3 text-sm text-paper-muted">一次性买断 · 全部知识块 · 无订阅</p>
+        <button
+          onClick={async () => {
+            await a.postCreateOrder()
+            setStarted(true)
+          }}
+          className="mt-8 rounded-md bg-accent px-10 py-3 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+          立即解锁全部题库
+        </button>
+        {started && <p className="mt-4 text-sm text-paper-muted">支付发起中…</p>}
+      </div>
+      <p className="mt-4 text-center text-xs text-paper-muted">
+        排期与刷题功能永久免费，解锁的只是题量
+      </p>
     </div>
   )
 }

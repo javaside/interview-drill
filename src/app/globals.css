@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 暖白纸感编辑风全局底 */
+html {
+  scroll-behavior: smooth;
+}
+body {
+  @apply bg-paper font-sans text-paper-ink antialiased;
+}
+::selection {
+  background: #ead9cb;
+}
+
+/* 数据数字（进度/得分/题数/百分比）统一等宽数字，防跳动 */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 原生控件统一暖墨色（checkbox/radio/date picker 指示色） */
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: #211d16;
+}

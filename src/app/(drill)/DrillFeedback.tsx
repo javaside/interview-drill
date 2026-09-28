@@ -14,14 +14,14 @@ export type DrillFeedbackProps = {
   offline: boolean
 }
 
-/** 逐条染色三态（§6 屏②）+ 中性 */
+/** 逐条染色三态（§6 屏②）+ 中性——纸面批注色：勾对苔绿/漏选赭黄/错勾砖红 */
 type OptionState = 'correct' | 'missed' | 'wrong' | 'neutral'
 
 const STATE_CLASS: Record<OptionState, string> = {
-  correct: 'border-green-500 bg-green-50 text-green-800',
-  missed: 'border-yellow-500 bg-yellow-50 text-yellow-800',
-  wrong: 'border-red-500 bg-red-50 text-red-800',
-  neutral: 'border-gray-200 text-gray-700',
+  correct: 'border-mark-good bg-mark-good-soft text-mark-good',
+  missed: 'border-mark-miss bg-mark-miss-soft text-mark-miss',
+  wrong: 'border-mark-bad bg-mark-bad-soft text-mark-bad',
+  neutral: 'border-paper-line bg-paper-card text-paper-ink',
 }
 
 /** 从提交里取出「被勾集合」——只有 selection/judgment/atomic 有勾选语义 */
@@ -62,13 +62,13 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
   }
 
   return (
-    <section className="mx-auto max-w-2xl p-4">
-      <header className="mb-4">
-        <div className="text-sm text-gray-500">{card.blockName}</div>
-        <div className="mt-1 text-2xl font-semibold">
+    <section className="mx-auto max-w-2xl px-5 py-8">
+      <header className="mb-6">
+        <div className="text-xs tracking-[0.2em] text-paper-muted">{card.blockName}</div>
+        <div className="tnum mt-3 font-serif text-3xl font-semibold text-paper-ink">
           得分 {result.score.num}/{result.score.den}
         </div>
-        <div className="mt-1 text-sm text-gray-600">
+        <div className="tnum mt-2 text-sm text-paper-muted">
           <span>漏选 {result.feedback.missed} 条</span>
           <span aria-hidden="true"> · </span>
           <span>错勾 {result.feedback.wrongChecked} 条</span>
@@ -83,18 +83,18 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
               key={i}
               data-testid="option"
               data-state={state}
-              className={`rounded border p-2 ${STATE_CLASS[state]}`}
+              className={`rounded-md border px-4 py-3 text-[15px] leading-relaxed ${STATE_CLASS[state]}`}
             >
               <span>{text}</span>
               {state === 'wrong' && (
-                <span className="ml-2 text-xs text-gray-500">{WRONG_ATTRIBUTION}</span>
+                <span className="ml-2 text-xs opacity-70">{WRONG_ATTRIBUTION}</span>
               )}
             </li>
           )
         })}
       </ul>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <div className="flex items-center gap-2">
           {plan.map((date, i) => {
             const isFinal = i === lastIdx
@@ -103,7 +103,7 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
                 key={`${date}-${i}`}
                 data-testid="plan-dot"
                 title={date}
-                className={`inline-block h-3 w-3 rounded-full ${isFinal ? 'bg-red-500' : 'bg-blue-400'}`}
+                className={`inline-block h-3 w-3 rounded-full transition-colors ${isFinal ? 'bg-accent' : 'bg-paper-muted/40'}`}
               >
                 {isFinal && (
                   <span data-testid="plan-dot-final" className="sr-only">
@@ -115,10 +115,10 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
           })}
         </div>
         {result.replanned && (
-          <p className="mt-2 text-sm text-orange-600">计划已重排</p>
+          <p className="mt-2 text-sm text-mark-miss">计划已重排</p>
         )}
         {offline && (
-          <p className="mt-2 text-sm text-gray-500">计划将在联网后更新</p>
+          <p className="mt-2 text-sm text-paper-muted">计划将在联网后更新</p>
         )}
       </div>
     </section>

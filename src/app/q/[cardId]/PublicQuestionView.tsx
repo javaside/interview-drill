@@ -8,15 +8,23 @@ import type { PublicCard } from '../../../server/db/adapters.js'
  */
 export function PublicQuestionView({ card }: { card: PublicCard }): React.JSX.Element {
   return (
-    <main>
-      <p>{card.blockName}</p>
-      <h1>{card.question}</h1>
-      <ul>
+    <main className="mx-auto max-w-2xl px-5 py-10">
+      <p className="text-xs tracking-[0.2em] text-paper-muted">{card.blockName}</p>
+      <h1 className="mt-3 font-serif text-2xl font-semibold leading-snug text-paper-ink text-pretty">
+        {card.question}
+      </h1>
+      <ul className="mt-8 space-y-3 border-l-2 border-paper-line pl-5">
         {card.publicKeyPoints.map(kp => (
-          <li key={kp.id} data-testid="public-kp">{kp.text}</li>
+          <li key={kp.id} data-testid="public-kp" className="text-[15px] leading-relaxed text-paper-ink">
+            {kp.text}
+          </li>
         ))}
       </ul>
-      <a href="/">完整 {card.totalKeyPoints} 条要点在 App 内</a>
+      <p className="mt-10 text-sm">
+        <a href="/" className="tnum font-medium text-accent underline underline-offset-4 transition-opacity hover:opacity-80">
+          完整 {card.totalKeyPoints} 条要点在 App 内
+        </a>
+      </p>
     </main>
   )
 }
