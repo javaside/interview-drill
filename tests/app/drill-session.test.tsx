@@ -103,3 +103,13 @@ test('今天没有错题 → 不显示「再练」入口', () => {
   render(<DrillSession payload={p} deps={mkDeps(true) as never} />)
   expect(screen.queryByRole('button', { name: /再练/ })).toBeNull()
 })
+
+test('刷题中（phase=question）：进度行旁也有「错题 N」直达入口', async () => {
+  const u = userEvent.setup()
+  const postRequeue = vi.fn(async () => ({ requeued: 2 }))
+  const deps = { ...mkDeps(true), postRequeue }
+  const p = { ...(payload as object), missesToday: 2 } as never   // 队列有 1 张 + 今天还有 2 张错题
+  render(<DrillSession payload={p} deps={deps as never} />)
+  await u.click(screen.getByRole('button', { name: /错题\s*2/ }))
+  expect(postRequeue).toHaveBeenCalledOnce()
+})

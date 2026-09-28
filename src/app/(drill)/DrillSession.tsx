@@ -138,7 +138,18 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
     <main className="mx-auto max-w-2xl px-5 pb-16">
       <div className="flex items-center justify-between py-4 text-sm text-paper-muted">
         <span>今日进度</span>
-        <span data-testid="progress" className="tnum font-medium text-paper-ink">{`${done}/${total}`}</span>
+        <div className="flex items-center gap-4">
+          {payload.missesToday > 0 && phase !== 'done' && (
+            <button
+              type="button"
+              onClick={requeueMisses}
+              className="tnum rounded-full border border-accent px-3 py-0.5 text-xs text-accent transition-colors hover:bg-accent-soft"
+            >
+              错题 {payload.missesToday}
+            </button>
+          )}
+          <span data-testid="progress" className="tnum font-medium text-paper-ink">{`${done}/${total}`}</span>
+        </div>
       </div>
 
       {phase === 'question' && card !== undefined && variant !== undefined && (
