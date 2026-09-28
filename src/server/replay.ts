@@ -1,6 +1,6 @@
 import { prepareOptions } from '../lib/options/prepare.js'
 import type { PreparedVariant } from '../lib/options/prepare.js'
-import type { DistractorPools } from '../lib/options/types.js'
+import type { DistractorPools, OptionCard } from '../lib/options/types.js'
 import { scoreSelection, scoreSequence, scoreJudgment, scoreAtomic } from '../lib/mastery/score.js'
 import { failed, regenerateAfterFailure, maintenanceStep } from '../lib/scheduler/regenerate.js'
 import { weightedS } from '../lib/scheduler/types.js'
@@ -16,12 +16,19 @@ import type { CardSnapshot, Settings, Submission } from './types.js'
  * 即客户端拿到的整套变体基于**取队列时**的 s。因此重算必须用批首快照的 s，
  * 绝不能用回放中已演化的 state.s——s 跨 layerCounts 档位会改变分层配额，
  * 抽中不同干扰项，变体就对不上了。
+ *
+ * 修复（v2）：此处必须投影为 OptionCard（id = cardId）——曾直接把 CardSnapshot
+ * 以 as never 传入，prepareOptions 读 card.id 得 undefined，seed 全错、判分用的
+ * 是另一份变体（客户端染色与服务端统计对不上的实测根因）。
  */
 export function variantAt(
   card: CardSnapshot, pools: DistractorPools, sAtServe: Rational,
   userId: string, reviewIndex: number,
 ): PreparedVariant {
-  return prepareOptions(card as never, pools, sAtServe, userId, reviewIndex, 1).variants[0]!
+  const optionCard: OptionCard = {
+    id: card.cardId, blockId: card.blockId, cardType: card.cardType, keyPoints: card.keyPoints,
+  }
+  return prepareOptions(optionCard, pools, sAtServe, userId, reviewIndex, 1).variants[0]!
 }
 
 export type Scored = { score: Rational; correctChecked: number; wrongChecked: number }
@@ -59,8 +66,10 @@ export function scoreSubmission(
     const points = scoreSelection(correct, wrong, variant.correctIndices.length)
     return {
       score: scoreJudgment(conclusionCorrect, points),
-      correctChecked: conclusionCorrect ? correct : 0,
-      wrongChecked: conclusionCorrect ? wrong : variant.correctIndices.length,
+      // 记账按实际勾选（与屏② 染色同一口径）：结论对错由 score 一票否决体现，
+      // 不再把「勾对的要点」记成 0/全部记错——统计与染色对不上是实测缺陷。
+      correctChecked: correct,
+      wrongChecked: wrong,
     }
   }
   const hit = variant.correctIndices.includes(submission.selected)

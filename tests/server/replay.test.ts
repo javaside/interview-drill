@@ -43,8 +43,15 @@ function mkCtx(over: Partial<TransitionCtx> = {}): TransitionCtx {
 }
 
 test('variantAt 与 prepareOptions 第 reviewIndex 份逐字节一致（确定性重算契约）', () => {
+  // 两边都用正确的 OptionCard 形状（id = cardId）——修复前此测试把 CardSnapshot
+  // 直接传 prepareOptions（card.id=undefined），两边同错所以「一致」，掩盖了
+  // 在线判分 seed 错位的真实缺陷（见 variantAt 的修复注释）。
+  const oc = {
+    id: enumCard.cardId, blockId: enumCard.blockId,
+    cardType: enumCard.cardType, keyPoints: enumCard.keyPoints,
+  }
   const v = variantAt(enumCard, POOLS, rat(0, 1), 'u1', 3)
-  const full = prepareOptions(enumCard as never, POOLS, rat(0, 1), 'u1', 3, 1)
+  const full = prepareOptions(oc, POOLS, rat(0, 1), 'u1', 3, 1)
   expect(v).toEqual(full.variants[0])
 })
 
@@ -61,13 +68,16 @@ test('scoreSubmission：selection 按 correctIndices 判勾对/勾错', () => {
   expect(r2).toEqual({ score: rat(1, 3), correctChecked: 2, wrongChecked: 1 })
 })
 
-test('scoreSubmission：judgment 结论错 → 0 分（conclusion 0=yes 1=no 2=depends 映射）', () => {
+test('scoreSubmission：judgment 结论错 → 0 分，但记账按实际勾选（与染色口径一致）', () => {
   const card = { ...enumCard, cardType: 'judgment', conclusion: 'depends' } as CardSnapshot
-  const v: PreparedVariant = { optionTexts: [], correctIndices: [0], distractorKeyPointIds: [] }
-  const wrong = scoreSubmission(card, v, {
-    submissionId: 's', cardId: 'c1', reviewedAtMs: 0, kind: 'judgment', conclusion: 0, selected: [0],
+  const v: PreparedVariant = { optionTexts: [], correctIndices: [0, 1, 2, 3], distractorKeyPointIds: [] }
+  // 结论错（want=2，选了 0）+ 勾了对 2 条要点、错 0 条
+  const r = scoreSubmission(card, v, {
+    submissionId: 's', cardId: 'c1', reviewedAtMs: 0, kind: 'judgment', conclusion: 0, selected: [0, 1],
   })
-  expect(wrong.score).toEqual(rat(0, 1))
+  expect(r.score).toEqual(rat(0, 1))          // 分数层面：结论一票否决
+  expect(r.correctChecked).toBe(2)            // 记账层面：实际勾对 2（染色口径）
+  expect(r.wrongChecked).toBe(0)              // 实际错勾 0（不再把全部要点记成错勾）
 })
 
 test('transitionCard：答对消费今天项，s 加权，剩余遍数 = plan 长度', () => {
