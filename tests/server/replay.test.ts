@@ -94,8 +94,30 @@ test('transitionCard：维持模式走 maintenanceStep，plan = [today + nextInD
   expect(r.outcome.maintenanceAdvanced).toBe(true)
 })
 
-test('transitionCard：plan 清空 → phase done', () => {
-  const st = mkState({ plan: [0], phase: 'learning' })
+test('transitionCard：计划耗尽（答对消费完末项）→ 维持滚动兜底，不再 done', () => {
+  const st = mkState({ plan: [0], phase: 'learning', phaseIndex: 0 })
   const r = transitionCard(st, rat(1, 1), mkCtx({ today: 0 }), [])
-  expect(r.state.phase).toBe('done')
+  expect(r.state.phase).toBe('learning')       // 自动毕业废除
+  expect(r.state.plan).toEqual([3])            // k 0→1 进档，MAINTAIN_INTERVALS[1]=3
+  expect(r.outcome.maintenanceAdvanced).toBe(true)
+  expect(r.outcome.replanned).toBe(false)      // 互斥契约
+})
+
+test('transitionCard：E=0 答错（重排空计划）→ 明天再见（临阵磨枪），flag 互斥', () => {
+  const st = mkState({ plan: [0], phase: 'learning', phaseIndex: 2 })
+  const r = transitionCard(st, rat(0, 1), mkCtx({ today: 0, E: 0 }), [])
+  expect(r.state.phase).toBe('learning')
+  expect(r.state.plan).toEqual([1])            // 答错退 0 档 → 明天
+  expect(r.state.phaseIndex).toBe(0)
+  expect(r.outcome.replanned).toBe(true)       // 答错语义：UI 显示「计划已重排」
+  expect(r.outcome.maintenanceAdvanced).toBe(false)   // 互斥契约：两 flag 不同真
+})
+
+test('transitionCard：E>0 答错 → 原重排行为不变（阶梯计划、replanned=true）', () => {
+  const st = mkState({ plan: [0, 5], s: rat(1, 3) })
+  const r = transitionCard(st, rat(1, 3), mkCtx({ today: 0, E: 19 }), [])
+  expect(r.outcome.replanned).toBe(true)
+  expect(r.outcome.maintenanceAdvanced).toBe(false)
+  expect(r.state.plan.length).toBeGreaterThan(0)
+  expect(r.state.plan[0]).toBeGreaterThan(0)
 })

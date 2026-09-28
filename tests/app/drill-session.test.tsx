@@ -68,3 +68,18 @@ test('空队列且分母正常（刷完了当天全部）→ 今日完成带分�
   expect(screen.getByText('今日完成')).toBeInTheDocument()
   expect(screen.getByText('5/5 · 明天见')).toBeInTheDocument()
 })
+
+test('常备模式空队列 → 「常备模式 · 今天没有到期卡」，不误报配置引导', () => {
+  const p = { ...(payload as object), queue: [], cards: [], prepared: [],
+    progress: { done: 0, total: 0 }, mode: 'maintenance', needsDateUpdate: false } as never
+  render(<DrillSession payload={p} deps={mkDeps(true) as never} />)
+  expect(screen.getByText(/常备模式 · 今天没有到期卡/)).toBeInTheDocument()
+  expect(screen.queryByText('今日队列是空的')).toBeNull()
+})
+
+test('常备模式 + 就绪日已过期 → 附「已回到常备模式」提示（needsDateUpdate 透出）', () => {
+  const p = { ...(payload as object), queue: [], cards: [], prepared: [],
+    progress: { done: 0, total: 0 }, mode: 'maintenance', needsDateUpdate: true } as never
+  render(<DrillSession payload={p} deps={mkDeps(true) as never} />)
+  expect(screen.getByText(/就绪日已过/)).toBeInTheDocument()
+})

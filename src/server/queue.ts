@@ -76,6 +76,8 @@ export function buildDistractorPools(
 export type DailyPayload = {
   today: LocalDate
   mode: 'sprint' | 'maintenance'
+  /** 就绪日已过期（R<0）——UI 应提示「已回到常备模式，可更新日期」（spec §5.2 ①，此前算了就扔） */
+  needsDateUpdate: boolean
   queue: QueueItem[]
   /** PreparedOptions 含顶层 degradedTo——server 对 'neighbor' 记告警日志（终审裁决） */
   prepared: PreparedOptions[]
@@ -178,5 +180,8 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
     }
   })
 
-  return { today, mode: result.mode, queue: result.todayQueue, prepared, cards: cardViews, progress: { done, total } }
+  return {
+    today, mode: result.mode, needsDateUpdate: result.needsDateUpdate,
+    queue: result.todayQueue, prepared, cards: cardViews, progress: { done, total },
+  }
 }

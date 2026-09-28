@@ -1,7 +1,7 @@
 import { localDateOf, clampReviewedAt, MAX_CLOCK_SKEW_MS } from '../../src/server/time.js'
 import { ALGO_VERSION } from '../../src/server/version.js'
 
-test('ALGO_VERSION 钉死 v1', () => expect(ALGO_VERSION).toBe('v1'))
+test('ALGO_VERSION 钉死 v2（计划 6 常备模式：耗尽转维持滚动）', () => expect(ALGO_VERSION).toBe('v2'))
 
 test('localDateOf：按用户时区判日历日——同一瞬时不同时区可差一天', () => {
   const instant = Date.UTC(2026, 8, 21, 17, 0)   // 2026-09-21T17:00Z

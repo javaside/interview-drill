@@ -14,6 +14,12 @@ const view = {
 function mkApi() {
   return { postSettings: vi.fn(async () => ({ replanned: 12 })), postBlocks: vi.fn(async () => ({ paused: 0, added: 1 })) }
 }
+function mkCramApi() {
+  return {
+    ...mkApi(),
+    postCram: vi.fn(async () => ({ crammed: 5, excluded: 0, overloaded: false })),
+  }
+}
 
 test('预填当前就绪日与容量、块勾选态', () => {
   render(<SettingsForm view={view} api={mkApi() as never} />)
@@ -40,4 +46,14 @@ test('保存：调 postSettings + postBlocks，显示重排条数', async () => 
   expect(api.postSettings).toHaveBeenCalledWith({ readyByDate: '2026-11-01', dailyCapacity: 45 })
   expect(api.postBlocks).toHaveBeenCalledWith({ blockIds: ['b1'] })
   expect(await screen.findByText(/重排.*12/)).toBeInTheDocument()
+})
+
+test('临时加密（§5.8）：填面试日期提交 → 调 postCram 并回显加密结果', async () => {
+  const u = userEvent.setup()
+  const api = mkCramApi()
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.type(screen.getByLabelText(/^面试日期/), '2026-12-01')
+  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
+  expect(api.postCram).toHaveBeenCalledWith({ examDate: '2026-12-01', blockIds: ['b1'] })
+  expect(await screen.findByText(/已加密.*5/)).toBeInTheDocument()
 })

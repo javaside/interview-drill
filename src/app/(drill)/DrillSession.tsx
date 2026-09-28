@@ -150,7 +150,26 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
         </div>
       )}
 
-      {phase === 'done' && done === 0 && total === 0 && (
+      {phase === 'done' && done === 0 && total === 0 && payload.mode === 'maintenance' && (
+        <section className="mt-8 rounded-lg border border-paper-line bg-paper-card px-6 py-10 text-center">
+          <h2 className="font-serif text-xl font-semibold text-paper-ink">常备模式 · 今天没有到期卡</h2>
+          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
+            滚动间隔复习会按到期日把卡送回队列——答对的间隔越拉越长，答错的明天就来。
+          </p>
+          {payload.needsDateUpdate && (
+            <p className="mt-3 text-sm text-mark-miss" data-testid="needs-date-update">
+              就绪日已过，已回到常备模式。约到面试可在设置里临时加密。
+            </p>
+          )}
+          <div className="mt-6 text-sm">
+            <a href="/map" className="text-paper-muted underline underline-offset-4 transition-colors hover:text-paper-ink">
+              看看知识地图
+            </a>
+          </div>
+        </section>
+      )}
+
+      {phase === 'done' && done === 0 && total === 0 && payload.mode !== 'maintenance' && (
         <section className="mt-8 rounded-lg border border-paper-line bg-paper-card px-6 py-10 text-center">
           <h2 className="font-serif text-xl font-semibold text-paper-ink">今日队列是空的</h2>
           <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">

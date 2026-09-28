@@ -135,3 +135,85 @@ test('加→减→加 往返：计划与只加一次一致（§11）', async () 
     await t.pg.close()
   }
 })
+
+/** 常备用户（未设就绪日）+ 1 卡带滚动计划（维持模式的下次复习） */
+async function seedSteadyWithRollingPlan(): Promise<TestDb> {
+  const t = await createTestDb()
+  await t.db.execute(sql`insert into users (id, github_id) values ('u1', 'gh-u1')`)
+  await t.db.execute(sql`
+    insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, free_block_ids)
+    values ('u1', null, 45, ${TZ}, 'free', ${JSON.stringify(['b1'])}::jsonb)`)
+  await t.db.execute(sql`insert into blocks (id, name, category) values ('b1', 'B1', 'cat-a')`)
+  await addCard(t, 'c0', 'b1')
+  await t.db.execute(sql`
+    insert into card_state (user_id, card_id, phase, s_num, s_den, plan, phase_index, review_count, algo_version)
+    values ('u1', 'c0', 'learning', 1, 2, ${JSON.stringify([plusDays(1)])}::jsonb, 2, 1, 'v1')`)
+  return t
+}
+
+test('常备模式（未设就绪日）改容量：不清空滚动计划（R-1 黑洞）', async () => {
+  const t = await seedSteadyWithRollingPlan()
+  try {
+    const r = await applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 30 })
+    expect(r.replanned).toBe(0)   // 常备模式：没有卡被「重排」
+    const row = await t.db.execute<{ plan: string[] }>(sql`
+      select plan from card_state where card_id = 'c0'`)
+    expect(row.rows[0]!.plan).toEqual([plusDays(1)])   // 滚动计划原样保留
+  } finally {
+    await t.pg.close()
+  }
+})
+
+/** done 存量卡（v1 毕业的）+ 常备用户：保存设置应复活 */
+async function seedSteadyWithDoneCard(): Promise<TestDb> {
+  const t = await createTestDb()
+  await t.db.execute(sql`insert into users (id, github_id) values ('u1', 'gh-u1')`)
+  await t.db.execute(sql`
+    insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, free_block_ids)
+    values ('u1', null, 45, ${TZ}, 'free', ${JSON.stringify(['b1'])}::jsonb)`)
+  await t.db.execute(sql`insert into blocks (id, name, category) values ('b1', 'B1', 'cat-a')`)
+  await addCard(t, 'c0', 'b1')
+  await addCard(t, 'c1', 'b1')
+  await t.db.execute(sql`
+    insert into card_state (user_id, card_id, phase, s_num, s_den, plan, phase_index, review_count, algo_version)
+    values ('u1', 'c0', 'done', 0, 1, '[]'::jsonb, 0, 3, 'v1')`)
+  return t
+}
+
+test('常备用户保存设置：存量 done 卡复活为 learning 且补种滚动计划（评审耦合点）', async () => {
+  const t = await seedSteadyWithDoneCard()
+  try {
+    await applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 30 })
+    const st = await t.db.execute<{ phase: string; plan: string[] }>(sql`
+      select phase, plan from card_state where card_id = 'c0'`)
+    expect(st.rows[0]!.phase).toBe('learning')   // 复活
+    expect(st.rows[0]!.plan).toEqual([plusDays(1)])   // 补种 [today+interval(k)]——k=0 → 明天，不再是黑洞
+  } finally {
+    await t.pg.close()
+  }
+})
+
+/** done 卡 + 未解锁块（b2 不在 free_block_ids）：复活范围按解锁块收敛 */
+async function seedDoneOutsideEntitlement(): Promise<TestDb> {
+  const t = await seedSteadyWithDoneCard()
+  await t.db.execute(sql`insert into blocks (id, name, category) values ('b2', 'B2', 'cat-b')`)
+  await addCard(t, 'c9', 'b2')
+  await t.db.execute(sql`
+    insert into card_state (user_id, card_id, phase, s_num, s_den, plan, phase_index, review_count, algo_version)
+    values ('u1', 'c9', 'done', 0, 1, '[]'::jsonb, 0, 1, 'v1')`)
+  return t
+}
+
+test('done 复活范围按解锁块收敛：未解锁块的 done 卡不动', async () => {
+  const t = await seedDoneOutsideEntitlement()
+  try {
+    await applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 30 })
+    const st = await t.db.execute<{ card_id: string; phase: string }>(sql`
+      select card_id, phase from card_state order by card_id`)
+    const byId = new Map(st.rows.map(r => [r.card_id, r.phase]))
+    expect(byId.get('c0')).toBe('learning')   // 解锁块内复活
+    expect(byId.get('c9')).toBe('done')       // 未解锁块不动（entitlement 外无意义）
+  } finally {
+    await t.pg.close()
+  }
+})

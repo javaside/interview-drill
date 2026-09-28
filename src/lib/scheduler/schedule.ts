@@ -1,6 +1,6 @@
 import { diffDays } from './date.js'
 import type { LocalDate } from './date.js'
-import { bufferOf, startTier, layLadder, firstExposureOffset, assignFinalDays } from './plan.js'
+import { bufferOf, startTier, layLadder, firstExposureOffset, assignFinalDays, newPerDayOf } from './plan.js'
 import { binIntermediates, prefixCheck } from './capacity.js'
 import type { DayLoad, DroppedReview } from './capacity.js'
 import { rat, sortForScheduling, compareCardId } from './types.js'
@@ -69,14 +69,17 @@ export function generateFreshPlans(
 /**
  * 组装今日队列：逾期卡在前（§5.5，最早逾期者最先），当天卡按
  * (frequency 降序, cardId 升序)。计划来源：新生成的 plans 优先，否则用存量。
+ * newCardLimit（常备模式用）：无计划新卡的首曝上限——到期/逾期卡不受限。
  */
 function buildQueue(
   cards: SchedulableCard[],
   states: ReadonlyMap<string, CardState>,
   plans: ReadonlyMap<string, number[]>,
+  newCardLimit?: number,
 ): QueueItem[] {
   const overdue: Array<{ key: number; cardId: string }> = []
   const due: SchedulableCard[] = []
+  const freshExposure: SchedulableCard[] = []
   for (const c of cards) {
     const st = states.get(c.id)
     if (st && (st.phase === 'paused' || st.phase === 'done')) continue
@@ -87,13 +90,16 @@ function buildQueue(
     } else if (plan.includes(0)) {
       due.push(c)
     } else if (plan.length === 0 && (!st || st.phase === 'new')) {
-      due.push(c)   // 维持模式下的无计划新卡：首次曝光就是今天
+      freshExposure.push(c)   // 维持模式下的无计划新卡：首次曝光就是今天
     }
   }
+  const capped = newCardLimit === undefined
+    ? freshExposure
+    : sortForScheduling(freshExposure).slice(0, newCardLimit)
   overdue.sort((a, b) => a.key - b.key || compareCardId(a.cardId, b.cardId))
   return [
     ...overdue.map(o => ({ cardId: o.cardId, reason: 'overdue' as const })),
-    ...sortForScheduling(due).map(c => ({ cardId: c.id, reason: 'due' as const })),
+    ...sortForScheduling([...due, ...capped]).map(c => ({ cardId: c.id, reason: 'due' as const })),
   ]
 }
 
@@ -110,12 +116,14 @@ export function schedule(
 ): ScheduleResult {
   const stateMap = new Map(cardStates.map(s => [s.cardId, s] as const))
 
-  // §5.7：readyByDate 为空或已过期 → 日常维持模式。R<0 必须提示更新（§5.2 ①）
+  // §5.7：readyByDate 为空或已过期 → 日常维持模式（常备）。R<0 必须提示更新（§5.2 ①）
+  // 常备新卡限流（R-2）：无计划新卡首曝 ≤ newPerDayOf(capacity)，与冲刺错峰同配额——
+  // 否则解锁 1345 卡的常备用户首日 todayQueue=1345（载荷与变体预生成双爆炸）。
   if (readyByDate === null || diffDays(readyByDate, today) < 0) {
     return {
       mode: 'maintenance',
       needsDateUpdate: readyByDate !== null,
-      todayQueue: buildQueue(cards, stateMap, new Map()),
+      todayQueue: buildQueue(cards, stateMap, new Map(), newPerDayOf(dailyCapacity)),
       plans: new Map(),
       overloadWarning: { dropped: [] },
     }
