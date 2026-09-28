@@ -1,9 +1,16 @@
 'use client'
 
+import { useState } from 'react'
 import type { CardView } from '../../server/queue.js'
 import type { Submission } from '../../server/types.js'
 import type { ReviewResult } from '../../server/review.js'
 import type { PreparedVariant } from '../../lib/options/prepare.js'
+import { splitDetail } from '../../lib/content/split.js'
+import { RichText } from '../RichText.js'
+
+/** judgment 结论三选（与 DrillQuestion 的 CONCLUSION_OPTIONS 同映射：0=会 1=不会 2=取决于） */
+const CONCLUSION_LABELS = ['会', '不会', '取决于'] as const
+const CONCLUSION_OF = { yes: 0, no: 1, depends: 2 } as const
 
 export type DrillFeedbackProps = {
   card: CardView
@@ -54,6 +61,7 @@ const WRONG_ATTRIBUTION = '属于本大类的另一道题'
  * 时必须显式明说「计划已重排」，不得默默换一排圆点。
  */
 export function DrillFeedback({ card, variant, submission, result, offline }: DrillFeedbackProps) {
+  const [showDetail, setShowDetail] = useState(false)
   const correct = new Set(variant.correctIndices)
   const checked = checkedSetOf(submission)
   const plan = result.remainingPlan
@@ -75,6 +83,29 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
         <h1 className="mt-3 font-serif text-2xl font-semibold leading-snug text-paper-ink text-pretty">
           {card.question}
         </h1>
+        {card.detail !== '' && (
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => setShowDetail(v => !v)}
+              aria-expanded={showDetail}
+              className="text-sm text-accent underline underline-offset-4 transition-opacity hover:opacity-80"
+            >
+              {showDetail ? '收起讲解' : '看不懂术语？看讲解'}
+            </button>
+            {showDetail && (
+              <div className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
+                <p className="whitespace-pre-line"><RichText text={splitDetail(card.detail).intro} /></p>
+                {splitDetail(card.detail).advanced !== '' && (
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-sm text-paper-muted">进阶（面试深度）</summary>
+                    <p className="mt-2 whitespace-pre-line"><RichText text={splitDetail(card.detail).advanced} /></p>
+                  </details>
+                )}
+              </div>
+            )}
+          </div>
+        )}
         <div className="tnum mt-3 text-2xl font-semibold text-paper-ink">
           得分 {result.score.num}/{result.score.den}
         </div>
@@ -84,6 +115,40 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
           <span>错勾 {result.feedback.wrongChecked} 条</span>
         </div>
       </header>
+
+      {card.cardType === 'judgment' && card.conclusion !== undefined && submission.kind === 'judgment' && (
+        <fieldset className="mb-6">
+          <legend className="mb-2 text-xs tracking-[0.2em] text-paper-muted">你的结论（批改）</legend>
+          <div className="flex gap-2">
+            {CONCLUSION_LABELS.map((label, value) => {
+              const isRight = CONCLUSION_OF[card.conclusion!] === value
+              const isMine = submission.conclusion === value
+              const tone = isRight
+                ? 'border-mark-good bg-mark-good-soft text-mark-good'
+                : isMine
+                  ? 'border-mark-bad bg-mark-bad-soft text-mark-bad'
+                  : 'border-paper-line bg-paper-card text-paper-muted'
+              return (
+                <div
+                  key={value}
+                  data-testid="conclusion-row"
+                  data-correct={isRight || undefined}
+                  data-mine={isMine || undefined}
+                  className={`flex flex-1 items-center justify-center gap-2 rounded-md border px-3 py-2.5 text-sm ${tone}`}
+                >
+                  <span className={isMine ? 'font-semibold' : ''}>
+                    {isMine ? '◉' : '○'} {label}
+                  </span>
+                  {isRight && <span className="text-xs font-medium">✓ 正确答案</span>}
+                  {isMine && !isRight && <span className="text-xs font-medium">✗ 你的选择</span>}
+                </div>
+              )
+            })}
+          </div>
+        </fieldset>
+      )}
+
+      <p className="mb-3 text-sm text-paper-muted">勾出所有属于这道题的要点（批改）</p>
 
       <ul className="space-y-2">
         {variant.optionTexts.map((text, i) => {
