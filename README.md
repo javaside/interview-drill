@@ -26,9 +26,8 @@ pnpm install
 # 1. 起 PG（示例：Docker）并建库
 docker run -d --name interview-drill-pg -e POSTGRES_PASSWORD=dev -e POSTGRES_DB=drill -p 5432:5432 postgres:16
 
-# 2. 应用迁移（用容器内的 psql，宿主机无需安装）
-docker exec -i interview-drill-pg psql -U postgres -d drill -v ON_ERROR_STOP=1 < drizzle/0000_init.sql
-docker exec -i interview-drill-pg psql -U postgres -d drill -v ON_ERROR_STOP=1 < drizzle/0001_polite_proudstar.sql
+# 2. 应用迁移（幂等，可重复执行；连接串从 DATABASE_URL 读，默认 localhost drill 库）
+DATABASE_URL=postgresql://postgres:dev@localhost:5432/drill pnpm exec drizzle-kit migrate
 
 # 3. 灌入题库内容（CLI 用 tsx 运行，不读 .env，环境变量需内联或先 export）
 DATABASE_URL=postgresql://postgres:dev@localhost:5432/drill pnpm content:upsert
