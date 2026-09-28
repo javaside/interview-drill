@@ -72,10 +72,13 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
     <section className="mx-auto max-w-2xl px-5 py-8">
       <header className="mb-6">
         <div className="text-xs tracking-[0.2em] text-paper-muted">{card.blockName}</div>
-        <div className="tnum mt-3 font-serif text-3xl font-semibold text-paper-ink">
+        <h1 className="mt-3 font-serif text-2xl font-semibold leading-snug text-paper-ink text-pretty">
+          {card.question}
+        </h1>
+        <div className="tnum mt-3 text-2xl font-semibold text-paper-ink">
           得分 {result.score.num}/{result.score.den}
         </div>
-        <div className="tnum mt-2 text-sm text-paper-muted">
+        <div className="tnum mt-1.5 text-sm text-paper-muted">
           <span>漏选 {result.feedback.missed} 条</span>
           <span aria-hidden="true"> · </span>
           <span>错勾 {result.feedback.wrongChecked} 条</span>
@@ -85,14 +88,21 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
       <ul className="space-y-2">
         {variant.optionTexts.map((text, i) => {
           const state = stateOf(i)
+          const wasChecked = checked.has(i)
           return (
             <li
               key={i}
               data-testid="option"
               data-state={state}
-              className={`flex items-baseline justify-between gap-3 rounded-md border px-4 py-3 text-[15px] leading-relaxed ${STATE_CLASS[state]}`}
+              className={`flex items-baseline gap-3 rounded-md border px-4 py-3 text-[15px] leading-relaxed ${STATE_CLASS[state]}`}
             >
-              <span>{text}</span>
+              <span
+                aria-label={wasChecked ? '作答时已勾选' : '作答时未勾选'}
+                className="shrink-0 select-none"
+              >
+                {wasChecked ? '☑' : '☐'}
+              </span>
+              <span className="flex-1">{text}</span>
               {state !== 'neutral' && (
                 <span className="shrink-0 text-xs font-medium tracking-wide opacity-80">
                   {STATE_LABEL[state]}
