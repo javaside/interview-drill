@@ -2,7 +2,7 @@ import { prepareOptions } from '../lib/options/prepare.js'
 import type { PreparedVariant } from '../lib/options/prepare.js'
 import type { DistractorPools } from '../lib/options/types.js'
 import { scoreSelection, scoreSequence, scoreJudgment, scoreAtomic } from '../lib/mastery/score.js'
-import { failed, regenerateAfterFailure, maintenanceStep, shouldMarkDone } from '../lib/scheduler/regenerate.js'
+import { failed, regenerateAfterFailure, maintenanceStep } from '../lib/scheduler/regenerate.js'
 import { weightedS } from '../lib/scheduler/types.js'
 import type { Rational, CardState } from '../lib/scheduler/types.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
@@ -132,8 +132,16 @@ export function transitionCard(
     maintenanceAdvanced = true
   }
 
-  // 4. 终止
-  if (shouldMarkDone(nextPlan)) phase = 'done'
+  // 4. 计划耗尽兜底（mode 无关，v2 语义）：冲刺窗口收口 ≠ 掌握——答对消费完末项、
+  //    E=0 答错重排得空、防御性空计划提交，一律落入维持滚动：答错明天再见
+  //    （临阵磨枪，+1 不当天回队、不踩同日死循环红线），答对按档位拉长间隔。
+  //    自动 done 就此废除——「没记住的卡被永久退休」是实测产品缺陷。
+  if (nextPlan.length === 0) {
+    const step = maintenanceStep(phaseIndex, score)
+    phaseIndex = step.k
+    nextPlan = [ctx.today + step.nextInDays]
+    if (!replanned) maintenanceAdvanced = true   // E=0 答错 replanned 已置真，保互斥契约
+  }
 
   const nextState: CardState = {
     ...state, s: newS, plan: nextPlan, phase, phaseIndex, reviewCount: state.reviewCount + 1,

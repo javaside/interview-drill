@@ -1,5 +1,5 @@
 import {
-  failed, regenerateAfterFailure, shouldMarkDone, maintenanceStep, MAINTAIN_INTERVALS,
+  failed, regenerateAfterFailure, maintenanceStep, MAINTAIN_INTERVALS,
 } from '../../../src/lib/scheduler/regenerate.js'
 import { rat } from '../../../src/lib/scheduler/types.js'
 import type { CardState, SchedulableCard } from '../../../src/lib/scheduler/types.js'
@@ -54,12 +54,11 @@ test('重排结果保持 I2 严格递增', () => {
   }
 })
 
-test('shouldMarkDone：还有未消费项就未完成', () => {
-  expect(shouldMarkDone([0, 5])).toBe(false)    // 今天还有
-  expect(shouldMarkDone([-1, 5])).toBe(false)   // 逾期未刷 + 未来
-  expect(shouldMarkDone([5])).toBe(false)
-  expect(shouldMarkDone([-3])).toBe(false)      // 只剩逾期：还没刷完——done 会把它挡在 todayQueue 外（§5.5 逾期卡必须并入队列）
-  expect(shouldMarkDone([])).toBe(true)         // 全部消费完才是 done
+test('计划耗尽语义（v2）：shouldMarkDone 已删除——计划耗尽由 transitionCard 兜底转维持滚动', () => {
+  // 自动 done 废除（v2）：原 shouldMarkDone 的边界语义（逾期卡不得被 done 挡在队列外）
+  // 由兜底机制天然满足——耗尽即得 [today+interval]，永不为空、永不 done。
+  expect(MAINTAIN_INTERVALS).toEqual([1, 3, 7, 15, 30, 60, 120])
+  expect(maintenanceStep(0, rat(0, 1)).nextInDays).toBe(1)   // 答错 → 明天
 })
 
 test('维持间隔表：到 120 天封顶不再增长（§5.7）', () => {

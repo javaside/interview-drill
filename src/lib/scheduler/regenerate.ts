@@ -47,18 +47,6 @@ export function regenerateAfterFailure(
   return binIntermediates(intermediates, target, card.id, ctx.load, ctx.capacity)
 }
 
-/**
- * 终止状态判定（§5.5）：计划项全部消费完（plan 为空）→ phase = done，退出队列。
- * 两条边界都不能提前置 done：
- * - 含今天（0）的项：今天还要刷（spec 原文「已无 > today 的项」按字面会把 [0]
- *   也判成 done，这是取更严的读法）；
- * - 只含逾期项（负数）：逾期卡必须并入 todayQueue（§5.5），done 会把它挡在
- *   队列外，那次逾期复习就永久丢了。
- */
-export function shouldMarkDone(plan: number[]): boolean {
-  return plan.length === 0
-}
-
 /** 维持模式间隔表（§5.7）。到表尾后停在 120 天不再增长 */
 export const MAINTAIN_INTERVALS = [1, 3, 7, 15, 30, 60, 120] as const
 
