@@ -68,8 +68,10 @@ export async function applySettingsChange(
   await updateUserSettings(deps.db, userId, next)
   const row = await loadSettings(deps.db, userId)
   const today = localDateOf(deps.serverNowMs, row.timezone)
-  // 存量 done 复活（v2 迁移）：v1 自动毕业的卡救回排期（两条模式路径都要）
-  await reviveDoneCards(deps.db, userId, row.plan === 'paid' ? await allBlockIds(deps.db) : row.freeBlockIds)
+  // 存量 done 复活（v2 迁移）：v1 自动毕业的卡救回排期（两条模式路径都要；
+  // 常备路径 reviveDoneCards 内部补种滚动计划，sprint 路径由随后的重排接管）
+  await reviveDoneCards(deps.db, userId,
+    row.plan === 'paid' ? await allBlockIds(deps.db) : row.freeBlockIds, today)
   if (row.readyByDate === null || diffDays(row.readyByDate, today) < 0) {
     return { replanned: 0 }   // 常备模式：滚动计划原样保留
   }

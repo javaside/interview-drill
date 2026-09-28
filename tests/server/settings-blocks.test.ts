@@ -180,13 +180,14 @@ async function seedSteadyWithDoneCard(): Promise<TestDb> {
   return t
 }
 
-test('常备用户保存设置：存量 done 卡复活为 learning（B 迁移）', async () => {
+test('常备用户保存设置：存量 done 卡复活为 learning 且补种滚动计划（评审耦合点）', async () => {
   const t = await seedSteadyWithDoneCard()
   try {
     await applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 30 })
-    const st = await t.db.execute<{ phase: string }>(sql`
-      select phase from card_state where card_id = 'c0'`)
-    expect(st.rows[0]!.phase).toBe('learning')   // 复活，可再进排期
+    const st = await t.db.execute<{ phase: string; plan: string[] }>(sql`
+      select phase, plan from card_state where card_id = 'c0'`)
+    expect(st.rows[0]!.phase).toBe('learning')   // 复活
+    expect(st.rows[0]!.plan).toEqual([plusDays(1)])   // 补种 [today+interval(k)]——k=0 → 明天，不再是黑洞
   } finally {
     await t.pg.close()
   }
