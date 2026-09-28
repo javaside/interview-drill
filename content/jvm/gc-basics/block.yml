@@ -1,0 +1,4 @@
+id: jvm/gc-basics
+name: 垃圾判定与 GC 算法
+category: jvm
+status: ready

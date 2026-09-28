@@ -1,0 +1,4 @@
+id: jvm/memory-areas
+name: 运行时内存区域
+category: jvm
+status: ready

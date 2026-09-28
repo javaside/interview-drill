@@ -1,0 +1,4 @@
+id: jvm/gc-collectors
+name: 垃圾收集器
+category: jvm
+status: ready
