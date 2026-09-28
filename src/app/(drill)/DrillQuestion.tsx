@@ -5,6 +5,7 @@ import type { CardView } from '../../server/queue.js'
 import type { ConclusionChoice } from '../../server/types.js'
 import type { PreparedVariant } from '../../lib/options/prepare.js'
 import { splitDetail } from '../../lib/content/split.js'
+import { RichText } from '../RichText.js'
 
 /** Submission 去掉 submissionId/cardId/reviewedAtMs 的作答负载（屏① 只产出作答意图） */
 export type SubmissionPayload =
@@ -113,11 +114,11 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
             </button>
             {showDetail && (
               <div className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
-                {splitDetail(card.detail).intro}
+                <p className="whitespace-pre-line"><RichText text={splitDetail(card.detail).intro} /></p>
                 {splitDetail(card.detail).advanced !== '' && (
                   <details className="mt-2">
                     <summary className="cursor-pointer text-sm text-paper-muted">进阶（面试深度）</summary>
-                    <p className="mt-2 whitespace-pre-line">{splitDetail(card.detail).advanced}</p>
+                    <p className="mt-2 whitespace-pre-line"><RichText text={splitDetail(card.detail).advanced} /></p>
                   </details>
                 )}
               </div>

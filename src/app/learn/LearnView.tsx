@@ -4,6 +4,7 @@
  * 纯展示 server component——数据由 page.tsx 装配。
  */
 import { splitDetail } from '../../lib/content/split.js'
+import { RichText } from '../RichText.js'
 
 export type LearnCard = {
   cardId: string
@@ -18,13 +19,13 @@ function DetailLayers({ detail }: { detail: string }): React.JSX.Element {
   const { intro, advanced } = splitDetail(detail)
   return (
     <div className="mt-2 pl-8 text-[15px] leading-relaxed text-paper-ink">
-      <p className="whitespace-pre-line">{intro}</p>
+      <p className="whitespace-pre-line"><RichText text={intro} /></p>
       {advanced !== '' && (
         <details className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3">
           <summary className="cursor-pointer text-sm font-medium text-paper-muted">
             进阶（面试深度）
           </summary>
-          <p className="mt-2 whitespace-pre-line">{advanced}</p>
+          <p className="mt-2 whitespace-pre-line"><RichText text={advanced} /></p>
         </details>
       )}
     </div>

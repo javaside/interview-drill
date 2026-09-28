@@ -12,3 +12,11 @@ export function splitDetail(detail: string): { intro: string; advanced: string }
     advanced: detail.slice(idx + marker.length).trim(),
   }
 }
+
+/**
+ * `**粗体**` 标记切段（渲染层用，零依赖的极简 Markdown 子集）：
+ * 按 `**` split，奇数段为粗体。未配对的 `**` 自然落进文本段，不炸。
+ */
+export function splitBold(text: string): Array<{ text: string; bold: boolean }> {
+  return text.split('**').map((seg, i) => ({ text: seg, bold: i % 2 === 1 }))
+}
