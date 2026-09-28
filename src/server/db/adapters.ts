@@ -476,3 +476,30 @@ export async function loadOrder(db: SqlRunner, orderId: string): Promise<OrderRo
     paidAt: row.paid_at === null ? null : new Date(row.paid_at),
   }
 }
+
+/** 订单置 paid：写网关流水号与支付时刻（仅在履约分支调用——状态合法性由纯核 fulfillmentDecision 保证） */
+export async function markOrderPaid(
+  db: SqlRunner, orderId: string, gatewayTxnId: string,
+): Promise<void> {
+  await db.execute(sql`
+    update orders set status = 'paid', gateway_txn_id = ${gatewayTxnId}, paid_at = now()
+    where id = ${orderId}`)
+}
+
+/** 订单迁移到指定终态（failed/expired 回调）；paid 走 markOrderPaid（带流水号与时刻） */
+export async function markOrderStatus(
+  db: SqlRunner, orderId: string, status: OrderStatus,
+): Promise<void> {
+  await db.execute(sql`
+    update orders set status = ${status} where id = ${orderId}`)
+}
+
+/**
+ * 权限升级（§10.1 锁题量不锁功能）：只改 plan 与 free_block_ids——
+ * paid 恒空数组（与 lib/entitlement 契约一致），幂等（重复执行结果不变）。
+ */
+export async function upgradeToPaid(db: SqlRunner, userId: string): Promise<void> {
+  await db.execute(sql`
+    update user_settings set plan = 'paid', free_block_ids = '[]'::jsonb, updated_at = now()
+    where user_id = ${userId}`)
+}
