@@ -436,6 +436,24 @@ export async function resumeCardsInBlocks(
   return r.rows.length
 }
 
+/**
+ * 存量 done 卡复活（v2 迁移，计划 6 Task 4）：v1 的自动毕业把「冲刺收口」误当
+ * 「掌握」，done 卡永久退休无复活路径。保存设置时按解锁块范围复活为 learning
+ * （phaseIndex/s 保留——掌握度与维持档位记忆不丢），随后可重新进排期。
+ * paused 不动（减块语义独立）。v2 起 done 不再自动产生。
+ */
+export async function reviveDoneCards(
+  db: SqlRunner, userId: string, blockIds: readonly string[],
+): Promise<number> {
+  if (blockIds.length === 0) return 0
+  const r = await db.execute<{ card_id: string }>(sql`
+    update card_state set phase = 'learning', updated_at = now()
+    where user_id = ${userId} and phase = 'done'
+      and card_id in (select id from cards where block_id in ${inList([...blockIds])})
+    returning card_id`)
+  return r.rows.length
+}
+
 /** 订单行（§10 付费解锁 · 计划 5）：status 读取自立库时刻，映射回 OrderStatus */
 export type OrderRow = {
   id: string

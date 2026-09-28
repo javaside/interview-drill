@@ -6,8 +6,14 @@ import { diffDays } from '../lib/scheduler/date.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
 import {
   loadSettings, updateUserSettings, updateFreeBlockIds,
-  clearActivePlans, pauseCardsInBlocks, resumeCardsInBlocks, type SqlRunner,
+  clearActivePlans, pauseCardsInBlocks, resumeCardsInBlocks, reviveDoneCards,
+  loadBlocks, type SqlRunner,
 } from './db/adapters.js'
+
+/** paid 用户全部块 id（done 复活范围）；free 由 freeBlockIds 决定 */
+async function allBlockIds(db: SqlRunner): Promise<string[]> {
+  return (await loadBlocks(db)).map(b => b.blockId)
+}
 
 export type ServerDeps = { db: SqlRunner; serverNowMs: number }
 
@@ -62,6 +68,8 @@ export async function applySettingsChange(
   await updateUserSettings(deps.db, userId, next)
   const row = await loadSettings(deps.db, userId)
   const today = localDateOf(deps.serverNowMs, row.timezone)
+  // 存量 done 复活（v2 迁移）：v1 自动毕业的卡救回排期（两条模式路径都要）
+  await reviveDoneCards(deps.db, userId, row.plan === 'paid' ? await allBlockIds(deps.db) : row.freeBlockIds)
   if (row.readyByDate === null || diffDays(row.readyByDate, today) < 0) {
     return { replanned: 0 }   // 常备模式：滚动计划原样保留
   }
