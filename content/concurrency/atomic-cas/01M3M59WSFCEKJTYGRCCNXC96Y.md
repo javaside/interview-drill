@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: 'juc'
+  - id: kp-ac1-5
+    text: "getIncrement 与 getAndSet 皆为自旋封装的单变量原语"
+    public: false
+    verifiedAt: '2026-09-28'
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
+      locator: 'juc'
 ---
 
 原子类 = **volatile 读 + CAS 写**的组合拳：
@@ -63,14 +73,3 @@ AtomicInteger.incrementAndGet() 就是这个圈的封装。8+ 的 getAndAccumula
 
 <!--advanced-->
 Unsafe（17+ VarHandle）的 compareAndSet 是 hotspot intrinsics。字段级原子：AtomicIntegerFieldUpdater/VarHandle 直接 CAS 普通字段（免包装对象）。AQS/CHM/并发集合底层同源这把 CAS。
-  - id: kp-ac1-5
-    text: "getIncrement 与 getAndSet 皆为自旋封装的单变量原语"
-    public: false
-    verifiedAt: '2026-09-28'
-    excludeAsDistractorFor: []
-    confirmedIndependentOf: []
-    source:
-      kind: official-doc
-      url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
-

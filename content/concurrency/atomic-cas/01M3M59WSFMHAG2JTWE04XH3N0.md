@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: 'juc'
+  - id: kp-ac2-5
+    text: "sum 的弱一致换 O(1) 写入：读少写多的吞吐契约"
+    public: false
+    verifiedAt: '2026-09-28'
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
+      locator: 'juc'
 ---
 
 计数器的**堵与疏**：
@@ -63,14 +73,3 @@ keyPoints:
 
 <!--advanced-->
 Cell 用 @Contended 避免伪共享（独占缓存行）。ConcurrentHashMap 的 counterCells 即此思想。striped 理念：HotSpot 的 @Contended 与 -XX:-RestrictContended。
-  - id: kp-ac2-5
-    text: "sum 的弱一致换 O(1) 写入：读少写多的吞吐契约"
-    public: false
-    verifiedAt: '2026-09-28'
-    excludeAsDistractorFor: []
-    confirmedIndependentOf: []
-    source:
-      kind: official-doc
-      url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
-
