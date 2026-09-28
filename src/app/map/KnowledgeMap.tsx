@@ -40,7 +40,12 @@ export function KnowledgeMap({ entries }: { entries: BlockMapEntry[] }): React.J
                   className="rounded-md border border-paper-line bg-paper-card px-4 py-3 transition-colors hover:border-paper-muted"
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <span className="font-medium text-paper-ink">{e.blockName}</span>
+                    <a
+                      href={`/learn?block=${e.blockId}`}
+                      className="font-medium text-paper-ink underline decoration-paper-line underline-offset-4 transition-colors hover:decoration-paper-ink"
+                    >
+                      {e.blockName}
+                    </a>
                     {e.unlocked ? (
                       <a
                         href={`/practice?block=${e.blockId}`}
