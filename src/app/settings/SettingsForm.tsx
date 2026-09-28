@@ -72,6 +72,9 @@ export function SettingsForm(
           }}
           className="tnum rounded-md border border-paper-line bg-paper-card px-3 py-2 text-paper-ink transition-colors focus:border-paper-ink focus:outline-none"
         />
+        <p className="mt-1.5 text-xs text-paper-muted">
+          留空 = 常备模式：滚动间隔复习，随时保持题感；有明确面试日再填，排期按当天记忆峰值冲刺
+        </p>
       </div>
 
       <div className="mb-8">
