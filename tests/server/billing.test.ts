@@ -3,6 +3,8 @@ import { sql } from 'drizzle-orm'
 import { createTestDb } from './helpers.js'
 import { insertOrder, loadOrder, loadSettings } from '../../src/server/db/adapters.js'
 import { createOrder, fulfillOrder, handleWebhook, type PaymentGateway } from '../../src/server/billing.js'
+import { buildBlockMap } from '../../src/server/map.js'
+import { mapDepsOf } from '../../src/server/deps.js'
 
 const fakeGateway: PaymentGateway = {
   createPayment: async () => ({ payParams: { fake: true } }),
@@ -100,5 +102,31 @@ test('webhook 验签成功 → 履约 200，用户升级 paid', async () => {
     const r = await handleWebhook({ db: t.db as never, gateway: gw }, '{}', { sig: 'ok' })
     expect(r.status).toBe(200)
     expect((await loadSettings(t.db as never, 'u1')).plan).toBe('paid')
+  } finally { await t.pg.close() }
+})
+
+test('端到端：免费未解锁块 → 下单 → 回调履约 → 地图全量解锁', async () => {
+  const t = await createTestDb()
+  try {
+    // 免费用户仅选 b1；b1/b2 各 1 张卡
+    await t.db.execute(sql`insert into users (id, github_id) values ('u1','gh1')`)
+    await t.db.execute(sql`insert into user_settings (user_id, free_block_ids) values ('u1', '["b1"]'::jsonb)`)
+    await t.db.execute(sql`insert into blocks (id, name, category) values ('b1','MySQL','db'),('b2','Redis','db')`)
+    await t.db.execute(sql`insert into cards (id, block_id, question, card_type, detail, follow_ups, applies_to, frequency)
+      values ('b1-0','b1','q','enumeration','d','[]'::jsonb,'x','high'),
+             ('b2-0','b2','q','enumeration','d','[]'::jsonb,'x','high')`)
+
+    const before = await buildBlockMap(mapDepsOf(t.db as never, 'u1'))
+    expect(before.find(e => e.blockId === 'b2')!.unlocked).toBe(false)
+
+    const { orderId, amountCents } = await createOrder({ db: t.db as never, gateway: fakeGateway }, 'u1', 'fake')
+    const gw: PaymentGateway = { ...fakeGateway,
+      parseCallback: () => ({ orderId, amountCents, gatewayTxnId: 't1', event: 'paid' }) }
+    const r = await handleWebhook({ db: t.db as never, gateway: gw }, '{}', { sig: 'ok' })
+    expect(r.status).toBe(200)
+
+    const after = await buildBlockMap(mapDepsOf(t.db as never, 'u1'))
+    expect(after.find(e => e.blockId === 'b2')!.unlocked).toBe(true)   // paid 全解锁
+    expect(after.every(e => e.unlocked)).toBe(true)
   } finally { await t.pg.close() }
 })
