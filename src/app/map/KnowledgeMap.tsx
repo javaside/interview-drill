@@ -21,7 +21,7 @@ export function KnowledgeMap({ entries }: { entries: BlockMapEntry[] }): React.J
                 : `${Math.round((e.mastery.value.num / e.mastery.value.den) * 100)}%`}
             </a>
           ) : (
-            <span data-testid="locked-block">{e.cardCount} 题</span>
+            <a href="/upgrade" data-testid="locked-block">{e.cardCount} 题 · 解锁</a>
           )}
         </div>
       ))}

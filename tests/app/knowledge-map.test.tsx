@@ -20,11 +20,11 @@ test('未刷解锁块显示「未刷」而非 0%', () => {
   expect(screen.getByTestId('block-b3')).toHaveTextContent('未刷')
 })
 
-test('未解锁块：显示「N 题」不可进入，是唯一转化入口', () => {
+test('未解锁块：显示「N 题」且是链到 /upgrade 的唯一转化入口', () => {
   render(<KnowledgeMap entries={entries} />)
   const b2 = screen.getByTestId('block-b2')
   expect(b2).toHaveTextContent('18 题')
-  expect(b2.querySelector('a')).toBeNull()       // 不可进入
-  // 产品内不得第二处付费提示：全页只此一处 locked 标记
-  expect(screen.getAllByTestId('locked-block')).toHaveLength(1)
+  const locked = screen.getByTestId('locked-block')
+  expect(locked).toHaveAttribute('href', '/upgrade')
+  expect(screen.getAllByTestId('locked-block')).toHaveLength(1)   // 全页唯一
 })

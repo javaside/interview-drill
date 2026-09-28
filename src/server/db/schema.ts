@@ -97,3 +97,18 @@ export const dailySession = pgTable('daily_session', {
   queueSize: integer('queue_size').notNull(),
   startedAt: timestamp('started_at', { withTimezone: true }).notNull().defaultNow(),
 }, t => [primaryKey({ columns: [t.userId, t.localDate] })])
+
+/**
+ * 付费订单（§10 付费解锁 · 计划 5）。下单即 pending；支付回调履约时置 paid 并写网关流水号。
+ * status 取值对齐 lib/billing 的 OrderStatus：'pending'|'paid'|'failed'|'expired'。
+ */
+export const orders = pgTable('orders', {
+  id: text('id').primaryKey(),                    // ULID
+  userId: text('user_id').notNull().references(() => users.id),
+  amountCents: integer('amount_cents').notNull(),
+  status: text('status').notNull().default('pending'),   // OrderStatus
+  gateway: text('gateway').notNull(),             // 'wechat' | 'alipay' | 'fake'
+  gatewayTxnId: text('gateway_txn_id'),           // 网关流水号，回调时写
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  paidAt: timestamp('paid_at', { withTimezone: true }),
+}, t => [index('orders_user_idx').on(t.userId)])
