@@ -83,3 +83,23 @@ test('常备模式 + 就绪日已过期 → 附「已回到常备模式」提示
   render(<DrillSession payload={p} deps={mkDeps(true) as never} />)
   expect(screen.getByText(/就绪日已过/)).toBeInTheDocument()
 })
+
+test('今天有错题 → 空态显示「再练错题」按钮，点击调 postRequeue', async () => {
+  const u = userEvent.setup()
+  const postRequeue = vi.fn(async () => ({ requeued: 3 }))
+  const deps = { ...mkDeps(true), postRequeue }
+  const p = { ...(payload as object), queue: [], cards: [], prepared: [],
+    progress: { done: 5, total: 0 }, mode: 'maintenance', needsDateUpdate: false, missesToday: 3 } as never
+  render(<DrillSession payload={p} deps={deps as never} />)
+  const btn = screen.getByRole('button', { name: /再练/ })
+  expect(btn).toHaveTextContent('3')
+  await u.click(btn)
+  expect(postRequeue).toHaveBeenCalledOnce()
+})
+
+test('今天没有错题 → 不显示「再练」入口', () => {
+  const p = { ...(payload as object), queue: [], cards: [], prepared: [],
+    progress: { done: 0, total: 0 }, mode: 'maintenance', needsDateUpdate: false, missesToday: 0 } as never
+  render(<DrillSession payload={p} deps={mkDeps(true) as never} />)
+  expect(screen.queryByRole('button', { name: /再练/ })).toBeNull()
+})

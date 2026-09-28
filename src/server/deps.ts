@@ -7,7 +7,7 @@ import { gatewayOf } from './billing-gateway.js'
 import type { BillingDeps } from './billing.js'
 import {
   loadSettings, entitlementOf, loadAllCards, loadAllCardStates, loadBlocks,
-  persistPlans, ensureDailySession, countTodayDone, type SqlRunner,
+  persistPlans, ensureDailySession, countTodayDone, countTodayMisses, type SqlRunner,
 } from './db/adapters.js'
 
 /**
@@ -33,6 +33,7 @@ export function payloadDepsOf(db: SqlRunner, userId: string, serverNowMs: number
     persistPlans: plans => persistPlans(db, userId, plans),
     ensureDailySession: (today, size) => ensureDailySession(db, userId, today, size),
     countTodayDone: today => countTodayDone(db, userId, today),
+    countTodayMisses: today => countTodayMisses(db, userId, today),
   }
 }
 

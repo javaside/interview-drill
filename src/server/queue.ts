@@ -84,6 +84,8 @@ export type DailyPayload = {
   /** 屏①/屏② 渲染所需的展示元数据（与 queue 一一对应，只含队列内卡自身要点） */
   cards: CardView[]
   progress: { done: number; total: number }
+  /** 今天答错过的不同卡数——「再练错题」入口显隐（v2：初学阶段的密集重练权还给用户） */
+  missesToday: number
 }
 
 /**
@@ -113,6 +115,7 @@ export type DailyPayloadDeps = {
   persistPlans(plans: Array<{ cardId: string; plan: LocalDate[] }>): Promise<void>
   ensureDailySession(today: LocalDate, queueSize: number): Promise<number>
   countTodayDone(today: LocalDate): Promise<number>
+  countTodayMisses(today: LocalDate): Promise<number>
   serverNowMs: number
 }
 
@@ -164,6 +167,7 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
 
   const total = await deps.ensureDailySession(today, result.todayQueue.length)
   const done = await deps.countTodayDone(today)
+  const missesToday = await deps.countTodayMisses(today)
 
   // 屏①/屏② 展示元数据投影（只投队列内卡自身要点——免费用户不泄露未解锁块语料）
   const cardViews: CardView[] = result.todayQueue.map(({ cardId }) => {
@@ -182,6 +186,7 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
 
   return {
     today, mode: result.mode, needsDateUpdate: result.needsDateUpdate,
-    queue: result.todayQueue, prepared, cards: cardViews, progress: { done, total },
+    queue: result.todayQueue, prepared, cards: cardViews,
+    progress: { done, total }, missesToday,
   }
 }

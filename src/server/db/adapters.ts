@@ -355,7 +355,9 @@ export async function ensureDailySession(
   return r.rows[0]?.queue_size ?? queueSize
 }
 
-/** 今日进度分子（§6）：当天已刷的不同卡数 */
+/**
+ * 今日进度分子（§6）：当天已刷的不同卡数
+ */
 export async function countTodayDone(
   db: SqlRunner, userId: string, today: LocalDate,
 ): Promise<number> {
@@ -363,6 +365,44 @@ export async function countTodayDone(
     select count(distinct card_id)::int as n from review_log
     where user_id = ${userId} and local_date = ${today}`)
   return r.rows[0]?.n ?? 0
+}
+
+/**
+ * 今天答错过（判分口径 2·correct < total，即 failed）的不同卡数——
+ * 「再练错题」入口的显隐依据（v2：初学阶段的密集重练权还给用户）。
+ */
+export async function countTodayMisses(
+  db: SqlRunner, userId: string, today: LocalDate,
+): Promise<number> {
+  const r = await db.execute<{ n: number }>(sql`
+    select count(distinct card_id)::int as n from review_log
+    where user_id = ${userId} and local_date = ${today}
+      and 2 * correct_checked < key_points_total`)
+  return r.rows[0]?.n ?? 0
+}
+
+/**
+ * 再练错题（v2）：把「今天答错过、且下次复习排在今天之后」的卡拉回今天——
+ * plan 首项改写为 today（ISO 字符串字典序 = 时间序）。用户主动触发，不是自动回队，
+ * 不构成同日死循环；提前消费该项后，间隔从今天按表现重新进退。
+ * 返回拉回的卡数。
+ */
+export async function requeueTodaysMissedCards(
+  db: SqlRunner, userId: string, today: LocalDate,
+): Promise<number> {
+  const r = await db.execute<{ card_id: string }>(sql`
+    update card_state
+    set plan = jsonb_set(plan, '{0}', to_jsonb(${today}::text)), updated_at = now()
+    where user_id = ${userId}
+      and jsonb_array_length(plan) > 0
+      and plan->>0 > ${today}::text
+      and card_id in (
+        select distinct card_id from review_log
+        where user_id = ${userId} and local_date = ${today}
+          and 2 * correct_checked < key_points_total
+      )
+    returning card_id`)
+  return r.rows.length
 }
 
 /** 设置变更（§5.5 条件 2/3）：只更新传入字段，其余不动 */

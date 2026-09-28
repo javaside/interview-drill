@@ -72,6 +72,7 @@ function mkDeps(t: TestDb, userId: string): DailyPayloadDeps {
     persistPlans: plans => persistPlans(db, userId, plans),
     ensureDailySession: (today, size) => ensureDailySession(db, userId, today, size),
     countTodayDone: today => countTodayDone(db, userId, today),
+    countTodayMisses: () => Promise.resolve(0),
   }
 }
 

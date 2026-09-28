@@ -23,6 +23,8 @@ export type DrillDeps = {
   api: Api
   online: () => boolean
   now: () => number
+  /** 再练错题（v2）：注入优先于 api（测试用）；生产走 browserApi().postRequeue */
+  postRequeue?: () => Promise<{ requeued: number }>
 }
 
 export type DrillSessionProps = {
@@ -118,6 +120,12 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
     }
   }
 
+  /** 再练错题（v2）：用户主动把今天答错过的卡拉回今天——初学阶段的密集重练权 */
+  const requeueMisses = async () => {
+    await (deps.postRequeue ?? deps.api.postRequeue)()
+    window.location.reload()
+  }
+
   return (
     <main className="mx-auto max-w-2xl px-5 pb-16">
       <div className="flex items-center justify-between py-4 text-sm text-paper-muted">
@@ -161,7 +169,16 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
               就绪日已过，已回到常备模式。约到面试可在设置里临时加密。
             </p>
           )}
-          <div className="mt-6 text-sm">
+          <div className="mt-6 flex items-center justify-center gap-4 text-sm">
+            {payload.missesToday > 0 && (
+              <button
+                type="button"
+                onClick={requeueMisses}
+                className="rounded-md bg-accent px-5 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+              >
+                再练今天的 {payload.missesToday} 张错题
+              </button>
+            )}
             <a href="/map" className="text-paper-muted underline underline-offset-4 transition-colors hover:text-paper-ink">
               看看知识地图
             </a>
@@ -182,6 +199,15 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
             >
               设定就绪日与知识块
             </a>
+            {payload.missesToday > 0 && (
+              <button
+                type="button"
+                onClick={requeueMisses}
+                className="rounded-md bg-accent px-5 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+              >
+                再练今天的 {payload.missesToday} 张错题
+              </button>
+            )}
             <a href="/map" className="text-paper-muted underline underline-offset-4 transition-colors hover:text-paper-ink">
               看看知识地图
             </a>
@@ -197,6 +223,15 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
           ) : (
             // 分母被当天首次访问锁定为 0（先访问后设置的场景）：只报今天刷过的题数
             <p className="tnum mt-2 text-sm text-paper-muted">{`今天刷了 ${done} 题`}</p>
+          )}
+          {payload.missesToday > 0 && (
+            <button
+              type="button"
+              onClick={requeueMisses}
+              className="mt-5 rounded-md bg-accent px-6 py-2 text-sm font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+            >
+              没记住？再练今天的 {payload.missesToday} 张错题
+            </button>
           )}
         </section>
       )}
