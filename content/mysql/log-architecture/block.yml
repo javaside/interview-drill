@@ -1,0 +1,4 @@
+id: mysql/log-architecture
+name: 日志体系与两阶段提交
+category: mysql
+status: ready

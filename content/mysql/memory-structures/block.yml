@@ -1,0 +1,4 @@
+id: mysql/memory-structures
+name: InnoDB 内存结构
+category: mysql
+status: ready
