@@ -47,6 +47,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
   const [conclusion, setConclusion] = useState<ConclusionChoice | null>(null)
   const [atomicSel, setAtomicSel] = useState<number | null>(null)
   const [order, setOrder] = useState<number[]>(() => Array.from({ length: n }, (_, i) => i))
+  const [showDetail, setShowDetail] = useState(false)
 
   const cardType = card.cardType
   const selected = checked.flatMap((c, i) => (c ? [i] : []))
@@ -99,6 +100,23 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         <h1 className="mt-3 font-serif text-2xl font-semibold leading-snug text-paper-ink text-pretty">
           {card.question}
         </h1>
+        {card.detail !== '' && (
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => setShowDetail(v => !v)}
+              aria-expanded={showDetail}
+              className="text-sm text-accent underline underline-offset-4 transition-opacity hover:opacity-80"
+            >
+              {showDetail ? '收起讲解' : '不会？先看讲解'}
+            </button>
+            {showDetail && (
+              <div className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
+                {card.detail}
+              </div>
+            )}
+          </div>
+        )}
       </header>
 
       {cardType === 'judgment' && (

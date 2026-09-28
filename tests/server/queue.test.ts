@@ -171,6 +171,7 @@ test('DailyPayload.cards 携带屏①/屏② 所需展示元数据（题面/块�
     expect(first.blockName.length).toBeGreaterThan(0)
     expect(['high', 'mid', 'low']).toContain(first.frequency)
     expect(first.keyPoints.length).toBeGreaterThan(0)
+    expect(first.detail.length).toBeGreaterThan(0)   // 先学后练：屏①「看讲解」的材料
     // 免费用户：cards 里也不得泄露未解锁块的要点文本（只出队列内卡的自身要点）
     const queued = new Set(p.queue.map(q => q.cardId))
     expect(p.cards.every(c => queued.has(c.cardId))).toBe(true)

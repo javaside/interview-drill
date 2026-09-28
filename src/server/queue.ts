@@ -101,6 +101,8 @@ export type CardView = {
   question: string
   conclusion?: 'yes' | 'no' | 'depends'
   keyPoints: Array<{ id: string; text: string }>
+  /** 题解讲解（先学后练：屏①「先看讲解」的材料，对不会的用户先学再答） */
+  detail: string
 }
 
 /** CardSnapshot → SchedulableCard（schedule 的最小输入；保留 blockId 供 entitlement 过滤） */
@@ -181,6 +183,7 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
       question: c.question ?? '',
       ...(c.conclusion ? { conclusion: c.conclusion } : {}),
       keyPoints: c.keyPoints.map(k => ({ id: k.id, text: k.text })),
+      detail: c.detail ?? '',
     }
   })
 
@@ -249,6 +252,7 @@ export async function practiceQueue(
       question: card.question ?? '',
       ...(card.conclusion ? { conclusion: card.conclusion } : {}),
       keyPoints: card.keyPoints.map(k => ({ id: k.id, text: k.text })),
+      detail: card.detail ?? '',
     }
   })
 

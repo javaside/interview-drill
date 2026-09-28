@@ -25,6 +25,8 @@ export type CardSnapshot = {
     retiredAt?: string; order?: number
   }>
   conclusion?: 'yes' | 'no' | 'depends'
+  /** 题解讲解（cards.detail）——UI 屏①「先看讲解」用，装配/判分不依赖，故可选 */
+  detail?: string
 }
 
 export type Settings = { readyByDate: LocalDate | null; dailyCapacity: number }
