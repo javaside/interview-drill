@@ -1,0 +1,4 @@
+id: java/equals-hashcode
+name: equals 与 hashCode 契约
+category: java
+status: ready
