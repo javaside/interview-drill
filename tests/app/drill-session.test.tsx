@@ -44,3 +44,27 @@ test('离线提交：入队且屏②本地判分出反馈 +「计划将在联网
   expect(await deps.store.submissions.all()).toHaveLength(1)
   expect(deps.api.postReview).not.toHaveBeenCalled()
 })
+
+/** 空队列 payload 模板：queue 空时的两种空态（§6 分母 queue-once 当天锁定） */
+const emptyPayload = (done: number, total: number) => ({
+  ...(payload as object), queue: [], cards: [], prepared: [],
+  progress: { done, total },
+}) as never
+
+test('空队列且今天一题未刷（未设就绪日/未选块）→ 引导去设置', () => {
+  render(<DrillSession payload={emptyPayload(0, 0)} deps={mkDeps(true) as never} />)
+  expect(screen.getByText('今日队列是空的')).toBeInTheDocument()
+})
+
+test('空队列但今天已刷过（分母被当天首次访问锁 0）→ 显示今日完成，不误报引导', () => {
+  render(<DrillSession payload={emptyPayload(5, 0)} deps={mkDeps(true) as never} />)
+  expect(screen.getByText('今日完成')).toBeInTheDocument()
+  expect(screen.queryByText('今日队列是空的')).toBeNull()
+  expect(screen.queryByText('设定就绪日与知识块')).toBeNull()
+})
+
+test('空队列且分母正常（刷完了当天全部）→ 今日完成带分母', () => {
+  render(<DrillSession payload={emptyPayload(5, 5)} deps={mkDeps(true) as never} />)
+  expect(screen.getByText('今日完成')).toBeInTheDocument()
+  expect(screen.getByText('5/5 · 明天见')).toBeInTheDocument()
+})

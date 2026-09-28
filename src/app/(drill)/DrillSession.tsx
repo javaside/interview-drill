@@ -150,7 +150,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
         </div>
       )}
 
-      {phase === 'done' && total === 0 && (
+      {phase === 'done' && done === 0 && total === 0 && (
         <section className="mt-8 rounded-lg border border-paper-line bg-paper-card px-6 py-10 text-center">
           <h2 className="font-serif text-xl font-semibold text-paper-ink">今日队列是空的</h2>
           <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
@@ -170,10 +170,15 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
         </section>
       )}
 
-      {phase === 'done' && total > 0 && (
+      {phase === 'done' && (done > 0 || total > 0) && (
         <section className="mt-8 rounded-lg border border-paper-line bg-paper-card px-6 py-10 text-center">
           <p className="font-serif text-xl font-semibold text-paper-ink">今日完成</p>
-          <p className="tnum mt-2 text-sm text-paper-muted">{`${done}/${total} · 明天见`}</p>
+          {total > 0 ? (
+            <p className="tnum mt-2 text-sm text-paper-muted">{`${done}/${total} · 明天见`}</p>
+          ) : (
+            // 分母被当天首次访问锁定为 0（先访问后设置的场景）：只报今天刷过的题数
+            <p className="tnum mt-2 text-sm text-paper-muted">{`今天刷了 ${done} 题`}</p>
+          )}
         </section>
       )}
     </main>
