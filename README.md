@@ -33,13 +33,8 @@ docker exec -i interview-drill-pg psql -U postgres -d drill -v ON_ERROR_STOP=1 <
 # 3. 灌入题库内容（CLI 用 tsx 运行，不读 .env，环境变量需内联或先 export）
 DATABASE_URL=postgresql://postgres:dev@localhost:5432/drill pnpm content:upsert
 
-# 4. 配置环境变量（next dev 自动读 .env.local）
-cat > .env.local <<'EOF'
-DATABASE_URL=postgresql://postgres:dev@localhost:5432/drill
-AUTH_SECRET=足够长的随机字符串
-GITHUB_ID=          # GitHub OAuth App（不设则无法登录）
-GITHUB_SECRET=
-EOF
+# 4. 配置环境变量：复制模板并填入（.env.local 不进 git；AUTH_SECRET 用 openssl rand -base64 32 生成）
+cp .env.example .env.local
 
 # 5. 启动
 pnpm dev   # → http://localhost:3000

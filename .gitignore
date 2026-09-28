@@ -6,3 +6,6 @@ dist/
 .next/
 *.tsbuildinfo
 .codetui/
+.env
+.env.*
+!.env.example
