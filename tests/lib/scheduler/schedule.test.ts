@@ -62,6 +62,23 @@ test('未设就绪日：维持模式，不提示更新', () => {
   expect(r.todayQueue).toHaveLength(3)
 })
 
+test('常备模式新卡限流（R-2）：20 张新卡容量 45 → 首曝 ≤ newPerDayOf(45)=15', () => {
+  const cs = cards(20)
+  const r = schedule(cs, states(cs, () => ({ phase: 'new', plan: [] })), null, 45, TODAY)
+  expect(r.mode).toBe('maintenance')
+  expect(r.todayQueue).toHaveLength(15)   // sortForScheduling 确定性前 15
+})
+
+test('常备模式限流不影响到期卡：滚动计划到期/逾期照常全进', () => {
+  const cs = cards(20)
+  const st = states(cs, id => (id < 'c003'
+    ? { phase: 'learning' as const, plan: [0] }        // c000-c002 三张今天到期
+    : { phase: 'new' as const, plan: [] }))
+  const r = schedule(cs, st, null, 45, TODAY)
+  const due = r.todayQueue.filter(q => q.reason === 'due')
+  expect(due).toHaveLength(3 + 15)   // 到期 3 + 新卡限流 15，到期卡不占新卡配额也不被砍
+})
+
 test('E=0（就绪日就在明天）：全部排今天，唯一容量豁免且必告警', () => {
   const cs = cards(10)
   const r = schedule(cs, states(cs), '2026-09-22', 3, TODAY)
