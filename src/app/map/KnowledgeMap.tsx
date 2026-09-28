@@ -11,7 +11,7 @@ function masteryView(e: BlockMapEntry): { label: string; pct: number | null } {
  * 知识地图（§4.4 掌握度 + §10.1 唯一转化入口）。可作 server component。
  * 按大类分组的纸卡列表：
  * - 每块一格 `data-testid=block-{id}`：块名 + 掌握度（untried 显示「未刷」，§4.4）+ 细进度条。
- * - 解锁块 → `<a href="/?block={id}">` 进入刷题。
+ * - 解锁块 → `<a href="/practice?block={id}">` 自由刷题（v2：想刷就刷，不看排期）。
  * - 未解锁块 → 「{cardCount} 题 · 解锁」链到 /upgrade，`data-testid=locked-block`。
  *   这是产品内**唯一**付费转化入口——本页除此之外无任何付费文案（§10.1）。
  */
@@ -43,7 +43,7 @@ export function KnowledgeMap({ entries }: { entries: BlockMapEntry[] }): React.J
                     <span className="font-medium text-paper-ink">{e.blockName}</span>
                     {e.unlocked ? (
                       <a
-                        href={`/?block=${e.blockId}`}
+                        href={`/practice?block=${e.blockId}`}
                         className="tnum shrink-0 text-sm font-medium text-paper-ink underline decoration-paper-line underline-offset-4 transition-colors hover:decoration-paper-ink"
                       >
                         {label}

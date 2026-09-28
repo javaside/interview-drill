@@ -8,7 +8,7 @@ import { schedule, reservedLoadOf } from '../lib/scheduler/schedule.js'
 import type { QueueItem } from '../lib/scheduler/schedule.js'
 import { addDays } from '../lib/scheduler/date.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
-import { rat } from '../lib/scheduler/types.js'
+import { rat, cmpRat, compareCardId } from '../lib/scheduler/types.js'
 import type { CardState } from '../lib/scheduler/types.js'
 import { localDateOf } from './time.js'
 import type { CardSnapshot, Settings } from './types.js'
@@ -188,5 +188,74 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
     today, mode: result.mode, needsDateUpdate: result.needsDateUpdate,
     queue: result.todayQueue, prepared, cards: cardViews,
     progress: { done, total }, missesToday,
+  }
+}
+
+/**
+ * 自由刷题（v2 用户主权）：按块构造练习载荷——**不看排期**，块的解锁卡全进
+ * （逾期/到期在前，其余按掌握度升序——最不会的先刷），上限 dailyCapacity。
+ * 练习不落 daily_session 分母（不干扰正式排期的今日进度）；判分照常走
+ * transitionCard（提前消费未来复习项、按表现进退档）——算法是参谋不是门卫。
+ */
+export async function practiceQueue(
+  deps: DailyPayloadDeps, userId: string, blockId: string,
+): Promise<DailyPayload> {
+  const { settings, ent } = await deps.loadSettings()
+  const today = localDateOf(deps.serverNowMs, settings.timezone)
+  const { cards, categories } = await deps.loadCards()
+
+  // 免费墙：只刷解锁块
+  const inBlock = entitledCards(ent, cards.map(toSchedulable))
+    .filter(c => c.blockId === blockId)
+  const states = await deps.loadStates()
+  const stateByCard = new Map(states.map(s => [s.cardId, s] as const))
+  const cardByCard = new Map(cards.map(c => [c.cardId, c] as const))
+
+  // 排序：逾期/今天到期在前 → s 升序（最不会的先）→ cardId
+  const ordered = [...inBlock].sort((a, b) => {
+    const sa = stateByCard.get(a.id)
+    const sb = stateByCard.get(b.id)
+    const rankOf = (st: typeof sa): number => {
+      if (st === undefined) return 1
+      const hasDue = st.plan.some(d => d <= 0)
+      if (hasDue) return 0
+      return 1
+    }
+    const ra = rankOf(sa), rb = rankOf(sb)
+    if (ra !== rb) return ra - rb
+    return (
+      cmpRat(sa?.s ?? rat(0, 1), sb?.s ?? rat(0, 1)) ||
+      compareCardId(a.id, b.id)
+    )
+  }).slice(0, settings.dailyCapacity)
+
+  const queue = ordered.map(c => ({ cardId: c.id, reason: 'due' as const }))
+  const prepared: PreparedOptions[] = ordered.map(c => {
+    const card = cardByCard.get(c.id)!
+    const st = stateByCard.get(c.id)
+    const pools = buildDistractorPools(card, cards, ent, categories)
+    return prepareOptions(
+      toOptionCard(card), pools, st?.s ?? rat(0, 1), userId, st?.reviewCount ?? 0, 1,
+    )
+  })
+  const cardViews: CardView[] = ordered.map(c => {
+    const card = cardByCard.get(c.id)!
+    return {
+      cardId: c.id,
+      blockId: card.blockId,
+      blockName: card.blockName ?? '',
+      cardType: card.cardType,
+      frequency: card.frequency,
+      question: card.question ?? '',
+      ...(card.conclusion ? { conclusion: card.conclusion } : {}),
+      keyPoints: card.keyPoints.map(k => ({ id: k.id, text: k.text })),
+    }
+  })
+
+  const missesToday = await deps.countTodayMisses(today)
+  return {
+    today, mode: settings.readyByDate === null ? 'maintenance' : 'sprint', needsDateUpdate: false,
+    queue, prepared, cards: cardViews,
+    progress: { done: 0, total: queue.length }, missesToday,
   }
 }

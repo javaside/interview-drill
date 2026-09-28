@@ -2,6 +2,8 @@ import { sql } from 'drizzle-orm'
 import { createTestDb, type TestDb } from './helpers.js'
 import { requeueTodaysMissedCards, countTodayMisses } from '../../src/server/db/adapters.js'
 import type { SqlRunner } from '../../src/server/db/adapters.js'
+import { practiceQueue } from '../../src/server/queue.js'
+import { payloadDepsOf } from '../../src/server/deps.js'
 import { localDateOf } from '../../src/server/time.js'
 import { addDays } from '../../src/lib/scheduler/date.js'
 
@@ -25,10 +27,16 @@ async function seedMisses(): Promise<TestDb> {
     insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, free_block_ids)
     values ('u1', null, 45, ${TZ}, 'free', ${JSON.stringify(['b1'])}::jsonb)`)
   await t.db.execute(sql`insert into blocks (id, name, category) values ('b1', 'B1', 'cat-a')`)
+  const kpSrc = JSON.stringify({ kind: 'official-doc', url: 'https://x', locator: 's' })
   for (const id of ['c0', 'c1', 'c2']) {
     await t.db.execute(sql`
       insert into cards (id, block_id, question, card_type, detail, follow_ups, applies_to, frequency)
       values (${id}, 'b1', 'q', 'enumeration', 'd', '[]'::jsonb, 'JDK 8+', 'mid')`)
+    for (let i = 0; i < 3; i++) {
+      await t.db.execute(sql`
+        insert into key_points (card_id, id, text, source, public, exclude_as_distractor_for)
+        values (${id}, ${`${id}-k${i}`}, ${`${id}-pt-${i}`}, ${kpSrc}::jsonb, false, '[]'::jsonb)`)
+    }
     await t.db.execute(sql`
       insert into card_state (user_id, card_id, phase, s_num, s_den, plan, phase_index, review_count, algo_version)
       values ('u1', ${id}, 'learning', 1, 2, ${JSON.stringify([TOMORROW])}::jsonb, 0, 1, 'v2')`)
@@ -77,6 +85,33 @@ test('再练错题幂等：再跑一遍没有卡可拉（plan 首项已是今天
   try {
     await requeueTodaysMissedCards(runner(t), 'u1', TODAY)
     expect(await requeueTodaysMissedCards(runner(t), 'u1', TODAY)).toBe(0)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('自由刷题（practiceQueue）：不看排期，块的卡全进练习队列（v2 用户主权）', async () => {
+  const t = await seedMisses()
+  try {
+    const payload = await practiceQueue(payloadDepsOf(runner(t), 'u1', SERVER_NOW), 'u1', 'b1')
+    expect(payload.queue.map(q => q.cardId).sort()).toEqual(['c0', 'c1', 'c2'])   // 明天才到期也照刷
+    expect(payload.cards).toHaveLength(3)
+    expect(payload.prepared).toHaveLength(3)
+    expect(payload.progress.total).toBe(3)
+    // 练习不落 daily_session 分母（不影响正式排期的今日进度）
+    const ds = await t.db.execute<{ n: number }>(sql`select count(*)::int as n from daily_session`)
+    expect(ds.rows[0]!.n).toBe(0)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('自由刷题：未解锁块 → 空队列（免费墙不被练习绕过）', async () => {
+  const t = await seedMisses()
+  try {
+    await t.db.execute(sql`insert into blocks (id, name, category) values ('b2', 'B2', 'cat-b')`)
+    const payload = await practiceQueue(payloadDepsOf(runner(t), 'u1', SERVER_NOW), 'u1', 'b2')
+    expect(payload.queue).toHaveLength(0)
   } finally {
     await t.pg.close()
   }
