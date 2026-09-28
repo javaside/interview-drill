@@ -1,7 +1,10 @@
 /**
- * 块学习页视图（教材在前、习题在后）：按卡列出题面 + 完整题解讲解，
- * 读完好去测试。纯展示 server component——数据由 page.tsx 装配。
+ * 块学习页视图（教材在前、习题在后）：按卡列出题面 + 分层题解——
+ * 入门版（零基础可读）默认展开，进阶版（面试深度）折叠。
+ * 纯展示 server component——数据由 page.tsx 装配。
  */
+import { splitDetail } from '../../lib/content/split.js'
+
 export type LearnCard = {
   cardId: string
   question: string
@@ -10,6 +13,23 @@ export type LearnCard = {
 }
 
 const FREQ_LABEL = { high: '高频', mid: '中频', low: '低频' } as const
+
+function DetailLayers({ detail }: { detail: string }): React.JSX.Element {
+  const { intro, advanced } = splitDetail(detail)
+  return (
+    <div className="mt-2 pl-8 text-[15px] leading-relaxed text-paper-ink">
+      <p className="whitespace-pre-line">{intro}</p>
+      {advanced !== '' && (
+        <details className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3">
+          <summary className="cursor-pointer text-sm font-medium text-paper-muted">
+            进阶（面试深度）
+          </summary>
+          <p className="mt-2 whitespace-pre-line">{advanced}</p>
+        </details>
+      )}
+    </div>
+  )
+}
 
 export function LearnView({
   blockName, cards, blockId,
@@ -32,9 +52,7 @@ export function LearnView({
               </h2>
             </div>
             <div className="mt-1 pl-8 text-xs tracking-[0.2em] text-paper-muted">{FREQ_LABEL[c.frequency]}</div>
-            <p className="mt-2 whitespace-pre-line pl-8 text-[15px] leading-relaxed text-paper-ink">
-              {c.detail}
-            </p>
+            <DetailLayers detail={c.detail} />
           </article>
         ))}
       </div>

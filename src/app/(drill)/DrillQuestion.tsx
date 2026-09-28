@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { CardView } from '../../server/queue.js'
 import type { ConclusionChoice } from '../../server/types.js'
 import type { PreparedVariant } from '../../lib/options/prepare.js'
+import { splitDetail } from '../../lib/content/split.js'
 
 /** Submission 去掉 submissionId/cardId/reviewedAtMs 的作答负载（屏① 只产出作答意图） */
 export type SubmissionPayload =
@@ -112,7 +113,13 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
             </button>
             {showDetail && (
               <div className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
-                {card.detail}
+                {splitDetail(card.detail).intro}
+                {splitDetail(card.detail).advanced !== '' && (
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-sm text-paper-muted">进阶（面试深度）</summary>
+                    <p className="mt-2 whitespace-pre-line">{splitDetail(card.detail).advanced}</p>
+                  </details>
+                )}
               </div>
             )}
           </div>
