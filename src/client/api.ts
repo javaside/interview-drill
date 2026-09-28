@@ -22,6 +22,8 @@ export interface Api {
   postBlocks(body: { blockIds: string[] }): Promise<{ paused: number; added: number }>
   /** POST /api/billing/create-order → 订单号 + 服务端定价 + 网关拉起支付参数 */
   postCreateOrder(): Promise<{ orderId: string; amountCents: number; payParams: unknown }>
+  /** POST /api/cram → 面试临时加密（§5.8）：选中块重铺冲刺的结果 */
+  postCram(body: { examDate: LocalDate; blockIds: string[] }): Promise<{ crammed: number; excluded: number; overloaded: boolean }>
 }
 
 const JSON_HEADERS = { 'content-type': 'application/json' } as const
@@ -63,6 +65,11 @@ export function browserApi(): Api {
     async postCreateOrder() {
       return readJson<{ orderId: string; amountCents: number; payParams: unknown }>(
         await fetch('/api/billing/create-order', { method: 'POST', headers: JSON_HEADERS }),
+      )
+    },
+    async postCram(body) {
+      return readJson<{ crammed: number; excluded: number; overloaded: boolean }>(
+        await fetch('/api/cram', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }),
       )
     },
   }

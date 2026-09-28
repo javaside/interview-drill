@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { FREE_BLOCK_LIMIT } from '../../lib/entitlement/entitlement.js'
 import { browserApi, type Api } from '../../client/api.js'
 import type { SettingsView } from '../../server/settings.js'
+import type { LocalDate } from '../../lib/scheduler/date.js'
 
 /**
  * 设置屏（§5.5/§10.1，Task 11）——`'use client'`：
@@ -14,7 +15,7 @@ import type { SettingsView } from '../../server/settings.js'
  * `api` 可选：server component 不传，client 侧默认 browserApi()。
  */
 export function SettingsForm(
-  { view, api }: { view: SettingsView; api?: Pick<Api, 'postSettings' | 'postBlocks'> },
+  { view, api }: { view: SettingsView; api?: Pick<Api, 'postSettings' | 'postBlocks' | 'postCram'> },
 ): React.JSX.Element {
   const client = api ?? browserApi()
   const [readyByDate, setReadyByDate] = useState<string>(view.readyByDate ?? '')
@@ -23,6 +24,8 @@ export function SettingsForm(
     () => new Set(view.blocks.filter(b => b.selected).map(b => b.blockId)),
   )
   const [replanned, setReplanned] = useState<number | null>(null)
+  const [examDate, setExamDate] = useState<string>('')
+  const [cramResult, setCramResult] = useState<{ crammed: number; excluded: number; overloaded: boolean } | null>(null)
 
   const overLimit = view.plan === 'free' && selected.size > FREE_BLOCK_LIMIT
 
@@ -125,6 +128,48 @@ export function SettingsForm(
       {replanned !== null ? (
         <p className="mt-4 text-sm text-mark-good">已重排 {replanned} 张卡的计划</p>
       ) : null}
+
+      <fieldset className="mt-12 rounded-lg border border-paper-line bg-paper-card px-5 py-5">
+        <legend className="px-1 text-xs tracking-[0.2em] text-paper-muted">临时加密</legend>
+        <p className="mt-1 text-sm leading-relaxed text-paper-muted">
+          约到面试了？填上日期，对当前勾选的块在面试前重铺冲刺；面试一过自动回到常备模式。
+        </p>
+        <div className="mt-4 flex flex-wrap items-end gap-3">
+          <div>
+            <label htmlFor="cram-exam-date" className="mb-1.5 block text-xs tracking-[0.2em] text-paper-muted">
+              面试日期
+            </label>
+            <input
+              id="cram-exam-date"
+              type="date"
+              value={examDate}
+              onChange={e => {
+                setCramResult(null)
+                setExamDate(e.target.value)
+              }}
+              className="tnum rounded-md border border-paper-line bg-paper px-3 py-2 text-paper-ink transition-colors focus:border-paper-ink focus:outline-none"
+            />
+          </div>
+          <button
+            type="button"
+            disabled={examDate === '' || selected.size === 0}
+            onClick={async () => {
+              const r = await client.postCram({ examDate: examDate as LocalDate, blockIds: [...selected] })
+              setCramResult(r)
+            }}
+            className="rounded-md bg-accent px-6 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-30"
+          >
+            临时加密
+          </button>
+        </div>
+        {cramResult !== null && (
+          <p className="tnum mt-3 text-sm" data-testid="cram-result">
+            已加密 {cramResult.crammed} 张
+            {cramResult.excluded > 0 && `（${cramResult.excluded} 张窗口不足）`}
+            {cramResult.overloaded && ' · 部分日子超容量'}
+          </p>
+        )}
+      </fieldset>
     </form>
   )
 }
