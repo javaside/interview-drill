@@ -20,6 +20,8 @@ export interface Api {
   postSettings(body: { readyByDate?: LocalDate | null; dailyCapacity?: number }): Promise<{ replanned: number }>
   /** POST /api/blocks → 暂停/新增的块数 */
   postBlocks(body: { blockIds: string[] }): Promise<{ paused: number; added: number }>
+  /** POST /api/billing/create-order → 订单号 + 服务端定价 + 网关拉起支付参数 */
+  postCreateOrder(): Promise<{ orderId: string; amountCents: number; payParams: unknown }>
 }
 
 const JSON_HEADERS = { 'content-type': 'application/json' } as const
@@ -56,6 +58,11 @@ export function browserApi(): Api {
     async postBlocks(body) {
       return readJson<{ paused: number; added: number }>(
         await fetch('/api/blocks', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }),
+      )
+    },
+    async postCreateOrder() {
+      return readJson<{ orderId: string; amountCents: number; payParams: unknown }>(
+        await fetch('/api/billing/create-order', { method: 'POST', headers: JSON_HEADERS }),
       )
     },
   }
