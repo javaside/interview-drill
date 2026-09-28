@@ -2,7 +2,7 @@ import { ulid } from 'ulid'
 import { sql } from 'drizzle-orm'
 import { createTestDb } from './helpers.js'
 import { insertOrder, loadOrder, loadSettings } from '../../src/server/db/adapters.js'
-import { createOrder, fulfillOrder, type PaymentGateway } from '../../src/server/billing.js'
+import { createOrder, fulfillOrder, handleWebhook, type PaymentGateway } from '../../src/server/billing.js'
 
 const fakeGateway: PaymentGateway = {
   createPayment: async () => ({ payParams: { fake: true } }),
@@ -75,5 +75,30 @@ test('未知订单 → rejected', async () => {
     const r = await fulfillOrder({ db: t.db as never, gateway: fakeGateway },
       { orderId: 'nope', amountCents: 12900, gatewayTxnId: 't', event: 'paid' })
     expect(r.outcome).toBe('rejected')
+  } finally { await t.pg.close() }
+})
+
+const badSig: PaymentGateway = { ...fakeGateway, verifySignature: () => false }
+
+test('webhook 验签失败 → 401，不履约', async () => {
+  const t = await createTestDb()
+  try {
+    await seedUser(t.db as never)
+    const r = await handleWebhook({ db: t.db as never, gateway: badSig }, '{}', {})
+    expect(r.status).toBe(401)
+    expect((await loadSettings(t.db as never, 'u1')).plan).toBe('free')
+  } finally { await t.pg.close() }
+})
+
+test('webhook 验签成功 → 履约 200，用户升级 paid', async () => {
+  const t = await createTestDb()
+  try {
+    await seedUser(t.db as never)
+    const { orderId, amountCents } = await createOrder({ db: t.db as never, gateway: fakeGateway }, 'u1', 'fake')
+    const gw: PaymentGateway = { ...fakeGateway,
+      parseCallback: () => ({ orderId, amountCents, gatewayTxnId: 't1', event: 'paid' }) }
+    const r = await handleWebhook({ db: t.db as never, gateway: gw }, '{}', { sig: 'ok' })
+    expect(r.status).toBe(200)
+    expect((await loadSettings(t.db as never, 'u1')).plan).toBe('paid')
   } finally { await t.pg.close() }
 })

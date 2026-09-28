@@ -66,3 +66,21 @@ export async function fulfillOrder(
   await upgradeToPaid(deps.db, order.userId)
   return { outcome: 'fulfilled' }
 }
+
+/**
+ * webhook 处理纯核（可测：IO 与网关全注入）。**安全边界**：这是无 session 的
+ * 对外写端点，唯一防线是 verifySignature——验签失败必须拒绝履约（401）。
+ * 验签通过 → 解析回调 → fulfillOrder（幂等）→ 200 + outcome。
+ * 履约异常（如金额不符的 assertAmount 抛错）不在纯核吞掉——向上抛给 route
+ * 捕获记录后回非 2xx，让网关重投。
+ */
+export async function handleWebhook(
+  deps: BillingDeps, rawBody: string, headers: Record<string, string>,
+): Promise<{ status: number; body: unknown }> {
+  if (!deps.gateway.verifySignature(rawBody, headers)) {
+    return { status: 401, body: { error: 'bad signature' } }
+  }
+  const cb = deps.gateway.parseCallback(rawBody)
+  const { outcome } = await fulfillOrder(deps, cb)
+  return { status: 200, body: { outcome } }
+}

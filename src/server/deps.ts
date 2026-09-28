@@ -3,6 +3,8 @@ import { buildDistractorPools } from './queue.js'
 import type { DailyPayloadDeps } from './queue.js'
 import type { BlockMapDeps } from './map.js'
 import type { DistractorPools } from '../lib/options/types.js'
+import { gatewayOf } from './billing-gateway.js'
+import type { BillingDeps } from './billing.js'
 import {
   loadSettings, entitlementOf, loadAllCards, loadAllCardStates, loadBlocks,
   persistPlans, ensureDailySession, countTodayDone, type SqlRunner,
@@ -74,4 +76,12 @@ export async function poolsOfFor(
     if (card === undefined) throw new Error(`卡不存在或已退役：${cardId}`)
     return buildDistractorPools(card, cards, ent, categories)
   }
+}
+
+/**
+ * billing 纯核（createOrder/fulfillOrder/handleWebhook）的 IO 依赖装配：
+ * 生产/集成测试共用；网关经 gatewayOf 选择（当前恒 fake，真实网关注册见 billing-gateway.ts）。
+ */
+export function billingDepsOf(db: SqlRunner, gatewayName = 'fake'): BillingDeps {
+  return { db, gateway: gatewayOf(gatewayName) }
 }
