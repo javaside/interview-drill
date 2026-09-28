@@ -7,6 +7,7 @@ import { diffDays } from '../../lib/scheduler/date.js'
 import type { LocalDate } from '../../lib/scheduler/date.js'
 import { makeFreeEntitlement, makePaidEntitlement } from '../../lib/entitlement/entitlement.js'
 import type { Entitlement } from '../../lib/entitlement/entitlement.js'
+import type { OrderStatus } from '../../lib/billing/order.js'
 import { ALGO_VERSION } from '../version.js'
 import type { CardSnapshot, Settings } from '../types.js'
 import type { ReplaySnapshot, ReplayLogRow } from '../replay.js'
@@ -433,4 +434,45 @@ export async function resumeCardsInBlocks(
       and card_id in (select id from cards where block_id in ${inList([...blockIds])})
     returning card_id`)
   return r.rows.length
+}
+
+/** 订单行（§10 付费解锁 · 计划 5）：status 读取自立库时刻，映射回 OrderStatus */
+export type OrderRow = {
+  id: string
+  userId: string
+  amountCents: number
+  status: OrderStatus
+  gateway: string
+  gatewayTxnId: string | null
+  paidAt: Date | null
+}
+
+/** 建单（下单即 pending，status 走列默认值；金额由服务端决定，不接受调用方传状态） */
+export async function insertOrder(
+  db: SqlRunner, o: { id: string; userId: string; amountCents: number; gateway: string },
+): Promise<void> {
+  await db.execute(sql`
+    insert into orders (id, user_id, amount_cents, gateway)
+    values (${o.id}, ${o.userId}, ${o.amountCents}, ${o.gateway})`)
+}
+
+/** 按 id 取订单（不存在 → null）；paid_at 兼容 string/Date 驱动差异归一为 Date */
+export async function loadOrder(db: SqlRunner, orderId: string): Promise<OrderRow | null> {
+  const r = await db.execute<{
+    id: string; user_id: string; amount_cents: number; status: string
+    gateway: string; gateway_txn_id: string | null; paid_at: string | Date | null
+  }>(sql`
+    select id, user_id, amount_cents, status, gateway, gateway_txn_id, paid_at
+    from orders where id = ${orderId}`)
+  const row = r.rows[0]
+  if (row === undefined) return null
+  return {
+    id: row.id,
+    userId: row.user_id,
+    amountCents: row.amount_cents,
+    status: row.status as OrderStatus,
+    gateway: row.gateway,
+    gatewayTxnId: row.gateway_txn_id,
+    paidAt: row.paid_at === null ? null : new Date(row.paid_at),
+  }
 }
