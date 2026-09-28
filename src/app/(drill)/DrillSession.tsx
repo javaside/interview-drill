@@ -25,6 +25,8 @@ export type DrillDeps = {
   now: () => number
   /** 再练错题（v2）：注入优先于 api（测试用）；生产走 browserApi().postRequeue */
   postRequeue?: () => Promise<{ requeued: number }>
+  /** 全部再来一遍（v2）：同上，scope='all' */
+  postRequeueAll?: () => Promise<{ requeued: number }>
 }
 
 export type DrillSessionProps = {
@@ -123,6 +125,12 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
   /** 再练错题（v2）：用户主动把今天答错过的卡拉回今天——初学阶段的密集重练权 */
   const requeueMisses = async () => {
     await (deps.postRequeue ?? deps.api.postRequeue)()
+    window.location.reload()
+  }
+
+  /** 全部再来一遍（v2）：今天刷过的卡全部拉回——刷过一次 ≠ 记住，重复到记住为止 */
+  const requeueAll = async () => {
+    await (deps.postRequeueAll ?? deps.api.postRequeue)('all')
     window.location.reload()
   }
 
@@ -232,6 +240,17 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
             >
               没记住？再练今天的 {payload.missesToday} 张错题
             </button>
+          )}
+          {(done > 0 || payload.missesToday > 0) && (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={requeueAll}
+                className="rounded-md border border-paper-line px-6 py-2 text-sm text-paper-muted transition-colors hover:border-paper-ink hover:text-paper-ink"
+              >
+                全部再来一遍（{Math.max(done, payload.missesToday)} 张）
+              </button>
+            </div>
           )}
         </section>
       )}

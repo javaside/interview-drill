@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm'
 import { createTestDb, type TestDb } from './helpers.js'
-import { requeueTodaysMissedCards, countTodayMisses } from '../../src/server/db/adapters.js'
+import { requeueTodaysMissedCards, requeueTodaysCards, countTodayMisses } from '../../src/server/db/adapters.js'
 import type { SqlRunner } from '../../src/server/db/adapters.js'
 import { practiceQueue } from '../../src/server/queue.js'
 import { payloadDepsOf } from '../../src/server/deps.js'
@@ -85,6 +85,19 @@ test('再练错题幂等：再跑一遍没有卡可拉（plan 首项已是今天
   try {
     await requeueTodaysMissedCards(runner(t), 'u1', TODAY)
     expect(await requeueTodaysMissedCards(runner(t), 'u1', TODAY)).toBe(0)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('全部再来一遍：今天刷过的卡（含答对的）全部拉回今天（用户主权）', async () => {
+  const t = await seedMisses()
+  try {
+    const n = await requeueTodaysCards(runner(t), 'u1', TODAY)
+    expect(n).toBe(3)   // c0/c1（答错）+ c2（答对）全拉回——不限错题
+    const r = await t.db.execute<{ card_id: string; plan: string[] }>(sql`
+      select card_id, plan from card_state order by card_id`)
+    for (const row of r.rows) expect(row.plan).toEqual([TODAY])
   } finally {
     await t.pg.close()
   }

@@ -24,8 +24,8 @@ export interface Api {
   postCreateOrder(): Promise<{ orderId: string; amountCents: number; payParams: unknown }>
   /** POST /api/cram → 面试临时加密（§5.8）：选中块重铺冲刺的结果 */
   postCram(body: { examDate: LocalDate; blockIds: string[] }): Promise<{ crammed: number; excluded: number; overloaded: boolean }>
-  /** POST /api/queue/requeue → 把今天答错过的卡拉回今天（再练错题） */
-  postRequeue(): Promise<{ requeued: number }>
+  /** POST /api/queue/requeue → 把今天刷过的卡拉回今天（misses=错题 / all=全部再来一遍） */
+  postRequeue(scope?: 'misses' | 'all'): Promise<{ requeued: number }>
 }
 
 const JSON_HEADERS = { 'content-type': 'application/json' } as const
@@ -74,9 +74,9 @@ export function browserApi(): Api {
         await fetch('/api/cram', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }),
       )
     },
-    async postRequeue() {
+    async postRequeue(scope: 'misses' | 'all' = 'misses') {
       return readJson<{ requeued: number }>(
-        await fetch('/api/queue/requeue', { method: 'POST', headers: JSON_HEADERS }),
+        await fetch('/api/queue/requeue', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ scope }) }),
       )
     },
   }

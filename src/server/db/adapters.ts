@@ -406,6 +406,28 @@ export async function requeueTodaysMissedCards(
   return r.rows.length
 }
 
+/**
+ * 全部再来一遍（v2 用户主权）：把「今天刷过、且下次复习排在今天之后」的卡
+ * **全部**拉回今天——含答对的。刷过一次 ≠ 记住，重复到记住为止的权力在用户；
+ * 每次作答照常计分进退档。返回拉回的卡数。
+ */
+export async function requeueTodaysCards(
+  db: SqlRunner, userId: string, today: LocalDate,
+): Promise<number> {
+  const r = await db.execute<{ card_id: string }>(sql`
+    update card_state
+    set plan = jsonb_set(plan, '{0}', to_jsonb(${today}::text)), updated_at = now()
+    where user_id = ${userId}
+      and jsonb_array_length(plan) > 0
+      and plan->>0 > ${today}::text
+      and card_id in (
+        select distinct card_id from review_log
+        where user_id = ${userId} and local_date = ${today}
+      )
+    returning card_id`)
+  return r.rows.length
+}
+
 /** 设置变更（§5.5 条件 2/3）：只更新传入字段，其余不动 */
 export async function updateUserSettings(
   db: SqlRunner, userId: string,
