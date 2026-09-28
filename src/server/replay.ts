@@ -55,8 +55,15 @@ export function scoreSubmission(
     const canonical = variant.correctIndices.map(i => presented[i]!)   // 计划 3 修复后的语义
     const score = scoreSequence(userOrder, canonical)
     const n = variant.correctIndices.length
-    const correct = Math.round((score.num * n) / score.den)
-    return { score, correctChecked: correct, wrongChecked: n - correct }
+    // 记账 = 位置精确匹配数（与屏② 位置染色同口径）——排序题的对错是位置不是勾选，
+    // 此前按 score×n 四舍五入换算，统计与染色永远对不上。
+    const positionMatches = submission.order
+      .filter((presentedIdx, pos) => presentedIdx === variant.correctIndices[pos]).length
+    return {
+      score,
+      correctChecked: positionMatches,
+      wrongChecked: n - positionMatches,
+    }
   }
   if (submission.kind === 'judgment') {
     const want = { yes: 0, no: 1, depends: 2 }[card.conclusion!]!

@@ -84,6 +84,33 @@ test('批改页有「看讲解」入口：展开显示入门讲解（术语当�
   expect(screen.getByText('幻读')).toBeInTheDocument()   // **幻读** 粗体段（RichText 拆分后独立元素）
 })
 
+/** sequence 卡：对错是位置不是勾选（update 顺序题实型） */
+const seqBase = {
+  card: {
+    cardId: 'c7', blockName: 'MVCC', question: '一条 update 语句提交时，undo log、redo log、binlog 的写入顺序是怎样的？',
+    cardType: 'sequence' as const, detail: '', keyPoints: [],
+  } as never,
+  // 呈现 [A,B,C,D]，正确的呈现顺序 = correctIndices = [1,0,3,2]（即 B,A,D,C）
+  variant: { optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [] },
+  submission: { submissionId: 's7', cardId: 'c7', reviewedAtMs: 0, kind: 'sequence' as const, order: [1, 0, 2, 3] },
+}
+
+test('sequence 批改：每行显示你的位置与应在位置（位置对绿 / 错位标「应在第 N 位」）', () => {
+  render(<DrillFeedback {...seqBase} offline={false}
+    result={{ score: { num: 1, den: 2 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 2, wrongChecked: 2, missed: 0 } } as never} />)
+  expect(screen.getByText('你的排序（批改）')).toBeInTheDocument()
+  const rows = screen.getAllByTestId('seq-row')
+  expect(rows).toHaveLength(4)
+  // 位置 0（B）与位置 1（A）位置正确
+  expect(rows[0]!.textContent).toContain('✓ 位置正确')
+  expect(rows[1]!.textContent).toContain('✓ 位置正确')
+  // 用户位置 2 排的是 C（下标 2），正确顺序该位是 D → C 应在位置 3
+  expect(rows[2]!.textContent).toContain('应在第 4 位')
+  expect(rows[3]!.textContent).toContain('应在第 3 位')
+  // 不出现勾选语义的漏选/错勾徽标
+  expect(rows.every(r => !r.textContent!.includes('漏选') && !r.textContent!.includes('错勾'))).toBe(true)
+})
+
 test('答错重排：显式渲染「计划已重排」', () => {
   render(<DrillFeedback {...base} offline={false}
     result={{ score: { num: 1, den: 3 }, remainingPlan: ['2026-09-25'], replanned: true, feedback: { correctChecked: 1, wrongChecked: 0, missed: 2 } } as never} />)

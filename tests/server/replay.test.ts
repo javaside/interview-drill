@@ -80,6 +80,18 @@ test('scoreSubmission：judgment 结论错 → 0 分，但记账按实际勾选�
   expect(r.wrongChecked).toBe(0)              // 实际错勾 0（不再把全部要点记成错勾）
 })
 
+test('scoreSubmission：sequence 记账 = 位置精确匹配数（与屏② 位置染色同口径）', () => {
+  const card = { ...enumCard, cardType: 'sequence' } as CardSnapshot
+  // correctIndices 语义：canonical 第 i 项在呈现中的下标 → 正确的呈现顺序 = [1, 0, 3, 2]
+  const v: PreparedVariant = { optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [] }
+  // 用户排 [1, 0, 2, 3]：位置 0（1✓）、位置 1（0✓）、位置 2（2 应为 3 ✗）、位置 3（3 应为 2 ✗）
+  const r = scoreSubmission(card, v, {
+    submissionId: 's', cardId: 'c1', reviewedAtMs: 0, kind: 'sequence', order: [1, 0, 2, 3],
+  })
+  expect(r.correctChecked).toBe(2)   // 位置精确匹配 2 项
+  expect(r.wrongChecked).toBe(2)     // 错位 2 项
+})
+
 test('transitionCard：答对消费今天项，s 加权，剩余遍数 = plan 长度', () => {
   // plan 偏移 [0, 2, 6]，today=0：消费 0 → 剩 [2,6]
   const st = mkState({ plan: [0, 2, 6], s: rat(1, 2), phase: 'learning' })

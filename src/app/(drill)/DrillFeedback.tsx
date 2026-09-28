@@ -110,9 +110,19 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
           得分 {result.score.num}/{result.score.den}
         </div>
         <div className="tnum mt-1.5 text-sm text-paper-muted">
-          <span>漏选 {result.feedback.missed} 条</span>
-          <span aria-hidden="true"> · </span>
-          <span>错勾 {result.feedback.wrongChecked} 条</span>
+          {card.cardType === 'sequence' ? (
+            <>
+              <span>位置正确 {result.feedback.correctChecked} 项</span>
+              <span aria-hidden="true"> · </span>
+              <span>错位 {result.feedback.wrongChecked} 项</span>
+            </>
+          ) : (
+            <>
+              <span>漏选 {result.feedback.missed} 条</span>
+              <span aria-hidden="true"> · </span>
+              <span>错勾 {result.feedback.wrongChecked} 条</span>
+            </>
+          )}
         </div>
       </header>
 
@@ -148,36 +158,68 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
         </fieldset>
       )}
 
-      <p className="mb-3 text-sm text-paper-muted">勾出所有属于这道题的要点（批改）</p>
+      {card.cardType === 'sequence' && submission.kind === 'sequence' ? (
+        <div>
+          <p className="mb-3 text-xs tracking-[0.2em] text-paper-muted">你的排序（批改）</p>
+          <ul className="space-y-2">
+            {submission.order.map((presentedIdx, pos) => {
+              const rightAt = variant.correctIndices.indexOf(presentedIdx)!
+              const inPlace = rightAt === pos
+              return (
+                <li
+                  key={presentedIdx}
+                  data-testid="seq-row"
+                  data-in-place={inPlace || undefined}
+                  className={`flex items-baseline gap-3 rounded-md border px-4 py-3 text-[15px] leading-relaxed ${
+                    inPlace
+                      ? 'border-mark-good bg-mark-good-soft text-mark-good'
+                      : 'border-mark-miss bg-mark-miss-soft text-mark-miss'
+                  }`}
+                >
+                  <span className="tnum w-5 shrink-0 text-right font-mono text-sm opacity-70">{pos + 1}</span>
+                  <span className="flex-1">{variant.optionTexts[presentedIdx]}</span>
+                  <span className="shrink-0 text-xs font-medium tracking-wide opacity-80">
+                    {inPlace ? '✓ 位置正确' : `应在第 ${rightAt + 1} 位`}
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ) : (
+        <>
+          <p className="mb-3 text-sm text-paper-muted">勾出所有属于这道题的要点（批改）</p>
 
-      <ul className="space-y-2">
-        {variant.optionTexts.map((text, i) => {
-          const state = stateOf(i)
-          const wasChecked = checked.has(i)
-          return (
-            <li
-              key={i}
-              data-testid="option"
-              data-state={state}
-              className={`flex items-baseline gap-3 rounded-md border px-4 py-3 text-[15px] leading-relaxed ${STATE_CLASS[state]}`}
-            >
-              <span
-                aria-label={wasChecked ? '作答时已勾选' : '作答时未勾选'}
-                className="shrink-0 select-none"
-              >
-                {wasChecked ? '☑' : '☐'}
-              </span>
-              <span className="flex-1">{text}</span>
-              {state !== 'neutral' && (
-                <span className="shrink-0 text-xs font-medium tracking-wide opacity-80">
-                  {STATE_LABEL[state]}
-                  {state === 'wrong' && ` · ${WRONG_ATTRIBUTION}`}
-                </span>
-              )}
-            </li>
-          )
-        })}
-      </ul>
+          <ul className="space-y-2">
+            {variant.optionTexts.map((text, i) => {
+              const state = stateOf(i)
+              const wasChecked = checked.has(i)
+              return (
+                <li
+                  key={i}
+                  data-testid="option"
+                  data-state={state}
+                  className={`flex items-baseline gap-3 rounded-md border px-4 py-3 text-[15px] leading-relaxed ${STATE_CLASS[state]}`}
+                >
+                  <span
+                    aria-label={wasChecked ? '作答时已勾选' : '作答时未勾选'}
+                    className="shrink-0 select-none"
+                  >
+                    {wasChecked ? '☑' : '☐'}
+                  </span>
+                  <span className="flex-1">{text}</span>
+                  {state !== 'neutral' && (
+                    <span className="shrink-0 text-xs font-medium tracking-wide opacity-80">
+                      {STATE_LABEL[state]}
+                      {state === 'wrong' && ` · ${WRONG_ATTRIBUTION}`}
+                    </span>
+                  )}
+                </li>
+              )
+            })}
+          </ul>
+        </>
+      )}
 
       <div className="mt-8">
         <div className="flex items-center gap-2">
