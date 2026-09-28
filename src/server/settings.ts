@@ -1,6 +1,8 @@
 import { buildDailyPayload } from './queue.js'
 import { buildBlockMap } from './map.js'
 import { payloadDepsOf, mapDepsOf } from './deps.js'
+import { localDateOf } from './time.js'
+import { diffDays } from '../lib/scheduler/date.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
 import {
   loadSettings, updateUserSettings, updateFreeBlockIds,
@@ -48,12 +50,21 @@ export async function loadSettingsView(deps: ServerDeps, userId: string): Promis
  * 活跃卡**必须重排——新窗口下旧计划形状无效。实现 = 更新设置 → 清空活跃卡的计划 →
  * 跑 buildDailyPayload 装配核（清空后它们成 fresh，被重新生成落盘）。
  * 返回被重排的卡数（= 清空的活跃计划数）。
+ *
+ * **常备模式豁免（R-1）**：结果模式为 maintenance（就绪日为空或已过期）时不清空——
+ * 维持分支不生成任何计划，清空后无人再种，滚动计划会被永久黑洞（用户实测：常备下
+ * 改容量丢全部复习排期）。滚动间隔不依赖窗口形状，容量变更对它无意义，直接跳过。
  */
 export async function applySettingsChange(
   deps: ServerDeps, userId: string,
   next: { readyByDate?: LocalDate | null; dailyCapacity?: number },
 ): Promise<{ replanned: number }> {
   await updateUserSettings(deps.db, userId, next)
+  const row = await loadSettings(deps.db, userId)
+  const today = localDateOf(deps.serverNowMs, row.timezone)
+  if (row.readyByDate === null || diffDays(row.readyByDate, today) < 0) {
+    return { replanned: 0 }   // 常备模式：滚动计划原样保留
+  }
   const replanned = await clearActivePlans(deps.db, userId)
   await buildDailyPayload(payloadDepsOf(deps.db, userId, deps.serverNowMs))
   return { replanned }
