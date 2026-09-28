@@ -23,6 +23,15 @@ test('逐条染色：勾对绿、漏选黄、错勾红（用 data-state 标记�
   expect(opts[3]).toHaveAttribute('data-state', 'missed')    // 漏选
 })
 
+test('三态文字徽标：不依赖颜色也能区分勾对/漏选/错勾（无障碍）', () => {
+  render(<DrillFeedback {...base} offline={false}
+    result={{ score: { num: 2, den: 3 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 2, wrongChecked: 1, missed: 1 } } as never} />)
+  const opts = screen.getAllByTestId('option')
+  expect(opts[0]!.textContent).toContain('勾对')
+  expect(opts[1]!.textContent).toContain('错勾')
+  expect(opts[3]!.textContent).toContain('漏选')
+})
+
 test('答错重排：显式渲染「计划已重排」', () => {
   render(<DrillFeedback {...base} offline={false}
     result={{ score: { num: 1, den: 3 }, remainingPlan: ['2026-09-25'], replanned: true, feedback: { correctChecked: 1, wrongChecked: 0, missed: 2 } } as never} />)

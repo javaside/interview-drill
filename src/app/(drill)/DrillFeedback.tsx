@@ -14,7 +14,7 @@ export type DrillFeedbackProps = {
   offline: boolean
 }
 
-/** 逐条染色三态（§6 屏②）+ 中性——纸面批注色：勾对苔绿/漏选赭黄/错勾砖红 */
+/** 逐条染色三态（§6 屏②）+ 中性——纸面批注色 + 文字徽标（不依赖颜色也能区分） */
 type OptionState = 'correct' | 'missed' | 'wrong' | 'neutral'
 
 const STATE_CLASS: Record<OptionState, string> = {
@@ -22,6 +22,13 @@ const STATE_CLASS: Record<OptionState, string> = {
   missed: 'border-mark-miss bg-mark-miss-soft text-mark-miss',
   wrong: 'border-mark-bad bg-mark-bad-soft text-mark-bad',
   neutral: 'border-paper-line bg-paper-card text-paper-ink',
+}
+
+const STATE_LABEL: Record<OptionState, string> = {
+  correct: '✓ 勾对',
+  missed: '漏选',
+  wrong: '✗ 错勾',
+  neutral: '',
 }
 
 /** 从提交里取出「被勾集合」——只有 selection/judgment/atomic 有勾选语义 */
@@ -83,11 +90,14 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
               key={i}
               data-testid="option"
               data-state={state}
-              className={`rounded-md border px-4 py-3 text-[15px] leading-relaxed ${STATE_CLASS[state]}`}
+              className={`flex items-baseline justify-between gap-3 rounded-md border px-4 py-3 text-[15px] leading-relaxed ${STATE_CLASS[state]}`}
             >
               <span>{text}</span>
-              {state === 'wrong' && (
-                <span className="ml-2 text-xs opacity-70">{WRONG_ATTRIBUTION}</span>
+              {state !== 'neutral' && (
+                <span className="shrink-0 text-xs font-medium tracking-wide opacity-80">
+                  {STATE_LABEL[state]}
+                  {state === 'wrong' && ` · ${WRONG_ATTRIBUTION}`}
+                </span>
               )}
             </li>
           )
