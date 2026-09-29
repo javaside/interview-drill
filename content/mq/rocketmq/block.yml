@@ -1,0 +1,4 @@
+id: mq/rocketmq
+name: RocketMQ 与 RabbitMQ
+category: mq
+status: ready
