@@ -36,7 +36,7 @@ test('先学后练：默认不显示讲解，点「先看讲解」展开题解�
 test('空勾选时提交禁用；勾一项后启用', async () => {
   const u = userEvent.setup()
   render(<DrillQuestion card={card} variant={variant} onSubmit={() => {}} />)
-  const submit = screen.getByRole('button', { name: /提交/ })
+  const submit = screen.getByRole('button', { name: /交卷/ })
   expect(submit).toBeDisabled()
   await u.click(screen.getAllByRole('checkbox')[0]!)
   expect(submit).toBeEnabled()
@@ -48,7 +48,7 @@ test('提交回调带勾选下标（selection）', async () => {
   render(<DrillQuestion card={card} variant={variant} onSubmit={onSubmit} />)
   await u.click(screen.getAllByRole('checkbox')[0]!)
   await u.click(screen.getAllByRole('checkbox')[2]!)
-  await u.click(screen.getByRole('button', { name: /提交/ }))
+  await u.click(screen.getByRole('button', { name: /交卷/ }))
   expect(onSubmit).toHaveBeenCalledWith({ kind: 'selection', selected: [0, 2] })
 })
 

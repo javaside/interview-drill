@@ -4,49 +4,40 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Ethereal Glass：OLED 深底 + 纸白文字 + Emerald 唯一强调
+        // 蓝图纸 + 荧光笔：工程面试的世界是图纸与划重点。
+        // 荧光黄是唯一强调色——语义=「荧光笔划重点」，选中/强调全靠它。
         paper: {
-          DEFAULT: '#050506',   // OLED 近黑（禁纯黑 #000）
-          deep: '#08080A',
-          card: '#0E0F13',      // 卡内核面
-          line: '#232429',      // hairline
-          ink: '#EDEEF2',
-          muted: '#9BA0AB',
-          wash: '#17181D',
+          DEFAULT: '#0F1826',   // 图纸深蓝（带明确蓝调，非 near-black）
+          deep: '#0C1420',
+          card: '#16202F',      // 卷面卡（蓝灰）
+          line: '#253246',      // 蓝灰细线
+          ink: '#EDF1F7',       // 粉笔白主文字
+          muted: '#8C9AB3',     // 蓝灰次级
+          wash: '#1C2938',      // 悬停面
         },
         accent: {
-          DEFAULT: '#34D399',
-          soft: '#0E271F',
+          DEFAULT: '#FACC15',   // 荧光黄 marker——选中它=划重点
+          soft: '#FACC151F',    // 荧光笔扫过（黄 12% 透明）
         },
         mark: {
-          good: { DEFAULT: '#4ADE80', soft: '#0E271F' },
-          miss: { DEFAULT: '#FBBF24', soft: '#2A2210' },
-          bad: { DEFAULT: '#F87171', soft: '#301418' },
+          good: { DEFAULT: '#4ADE80', soft: '#0F2A1E' },
+          miss: { DEFAULT: '#FBBF24', soft: '#2B2410' },
+          bad: { DEFAULT: '#F87171', soft: '#301420' },
         },
       },
       fontFamily: {
-        serif: ['Outfit', '-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Noto Sans SC"', 'system-ui', 'sans-serif'],
+        // 图纸风：黑体标题 + 系统正文 + mono 数字；无衬线花活
+        serif: ['-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Noto Sans SC"', 'system-ui', 'sans-serif'],
         sans: ['-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Noto Sans SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', '"SF Mono"', 'ui-monospace', 'Menlo', 'Consolas', 'monospace'],
       },
       boxShadow: {
-        // 扩散影：极宽极淡，营造悬浮而非投影
-        diffuse: '0 24px 48px -16px rgba(0, 0, 0, 0.55)',
-        'diffuse-lg': '0 32px 64px -20px rgba(0, 0, 0, 0.65)',
-        stamp: '0 0 16px rgba(52, 211, 153, 0.3)',
+        card: '0 1px 2px rgba(4, 10, 20, 0.4)',
+        raised: '0 4px 16px rgba(4, 10, 20, 0.5)',
+        marker: '0 0 0 1px rgba(250, 204, 21, 0.35), 0 0 20px rgba(250, 204, 21, 0.12)',
       },
-      // 全站过渡曲线：无 linear / ease-in-out
       transitionTimingFunction: {
-        fluid: 'cubic-bezier(0.32, 0.72, 0, 1)',
-      },
-      keyframes: {
-        reveal: {
-          '0%': { opacity: '0', transform: 'translateY(40px)', filter: 'blur(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)', filter: 'blur(0)' },
-        },
-      },
-      animation: {
-        reveal: 'reveal 0.9s cubic-bezier(0.32, 0.72, 0, 1) both',
+        snap: 'cubic-bezier(0.2, 0, 0, 1)',
       },
     },
   },

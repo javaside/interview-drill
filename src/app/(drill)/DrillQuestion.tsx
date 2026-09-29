@@ -93,9 +93,9 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
 
   return (
     <section className="rise pb-6">
-      <div className="shell mb-5"><div className="core p-7">
+      <div className="card-flat p-7">
       <header className="mb-6">
-        <span className="eyebrow-badge w-fit">
+        <span className="eyebrow block w-fit">
           <span>{card.blockName}</span>
           <span aria-hidden="true">·</span>
           <span>{FREQUENCY_LABEL[card.frequency]}</span>
@@ -127,7 +127,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
           </div>
         )}
       </header>
-      </div></div>
+      </div>
 
       {cardType === 'judgment' && (
         <fieldset className="mb-6">
@@ -216,10 +216,9 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         type="button"
         onClick={submit}
         disabled={disabled}
-        className="btn-primary group/btn mt-6 w-full justify-between text-base sm:w-auto"
+        className="btn-primary mt-6 w-full text-base sm:w-auto"
       >
-        提交答案
-        <span className="btn-orb" aria-hidden="true">→</span>
+        交卷
       </button>
     </section>
   )

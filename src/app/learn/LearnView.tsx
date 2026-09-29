@@ -48,7 +48,7 @@ export function LearnView({
       <p className="eyebrow">学习 · Learn</p>
       <h1 className="mt-3 font-sans text-4xl font-bold tracking-tighter text-paper-ink md:text-5xl">{blockName}</h1>
       {locked ? (
-        <div className="mt-8 shell md:max-w-2xl"><div className="core p-8">
+        <div className="card-flat mt-8 max-w-2xl p-8">
           <p className="text-[15px] leading-relaxed text-paper-muted">
             这个块有 <span className="tnum font-semibold text-paper-ink">{cardCount ?? '这些'}</span> 题，
             还没有解锁——解锁后这里就是完整的教材。
@@ -56,16 +56,15 @@ export function LearnView({
           <div className="mt-8 flex flex-wrap gap-3">
             <a
               href="/upgrade"
-              className="group/btn inline-flex items-center gap-3 rounded-full bg-accent py-2 pl-6 pr-2 font-semibold text-paper transition-all duration-500 ease-fluid hover:-translate-y-px hover:brightness-110 active:scale-[0.98]"
+              className="btn-primary"
             >
               解锁全部大类
-              <span className="btn-orb flex h-8 w-8 items-center justify-center rounded-full bg-black/20 text-sm transition-all duration-500 ease-fluid group-hover/btn:translate-x-0.5" aria-hidden="true">→</span>
             </a>
             <a href="/settings" className="btn-ghost py-2">
               在设置里把它选为免费块
             </a>
           </div>
-        </div></div>
+        </div>
       ) : (
         <>
           <p className="mt-3 max-w-[60ch] text-[15px] leading-relaxed text-paper-muted">
@@ -75,8 +74,8 @@ export function LearnView({
           <div className="mt-10 grid gap-12 lg:grid-cols-[220px_1fr]">
             {cards.length > 3 && (
               <aside className="hidden lg:block">
-                <div className="sticky top-24 shell">
-                  <div className="core p-5">
+                <div className="sticky top-6 card-flat p-5">
+                  <div className="p-5">
                     <p className="eyebrow mb-4">本块目录</p>
                     <ol className="space-y-1.5">
                       {cards.map((c, i) => (
@@ -122,18 +121,12 @@ export function LearnView({
           <div className="mt-16 text-center">
             <a
               href={`/practice?block=${blockId}`}
-              className="btn-primary group/btn inline-flex items-center gap-3 rounded-full py-2 pl-7 pr-2 text-base"
+              className="btn-primary text-base"
             >
               学完了，开始测试
-              <span
-                className="btn-orb flex h-8 w-8 items-center justify-center rounded-full bg-black/[0.08] text-sm transition-all duration-500 ease-fluid group-hover/btn:translate-x-0.5"
-                aria-hidden="true"
-              >
-                →
-              </span>
             </a>
           </div>
-            </div>
+          </div>
           </div>
         </>
       )}

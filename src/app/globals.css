@@ -2,23 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ethereal Glass：OLED 底 + mesh 光球 + 蓝图网格 */
+/* 图纸蓝 + 荧光笔：深蓝图纸底，安静、克制、语义化 */
 html {
   scroll-behavior: smooth;
 }
 body {
   @apply bg-paper font-sans text-paper-ink antialiased;
-  background-image:
-    radial-gradient(1000px 560px at 82% -12%, rgba(52, 211, 153, 0.09), transparent 62%),
-    radial-gradient(820px 500px at -12% 30%, rgba(96, 165, 250, 0.06), transparent 58%),
-    radial-gradient(700px 700px at 55% 115%, rgba(52, 211, 153, 0.04), transparent 60%);
+  /* 图纸底光：左上一束冷光，其余靠网格承担 */
+  background-image: radial-gradient(1200px 600px at 20% -10%, rgba(56, 96, 160, 0.14), transparent 60%);
   background-attachment: fixed;
 }
 ::selection {
-  background: rgba(52, 211, 153, 0.28);
+  background: #facc15;
+  color: #0f1826;
 }
 
-/* 蓝图网格：极淡 1px 线 + 顶部渐隐遮罩（fixed，不随滚动重绘） */
+/* 坐标纸网格：图纸的身份纹理（fixed，不随滚动重绘） */
 .grain::before {
   content: '';
   position: fixed;
@@ -26,10 +25,9 @@ body {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, black 20%, transparent 80%);
+    linear-gradient(rgba(96, 140, 200, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96, 140, 200, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 .tnum {
@@ -38,107 +36,45 @@ body {
 
 input[type='checkbox'],
 input[type='radio'] {
-  accent-color: #34d399;
+  accent-color: #facc15;
 }
 
 :focus-visible {
-  outline: 2px solid #34d399;
-  outline-offset: 3px;
-  border-radius: 4px;
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
 }
 
 @layer components {
-  /* ===== Double-Bezel 双壳嵌套：外壳托盘 + 内核玻璃 ===== */
-  .shell {
-    @apply rounded-[2rem] bg-white/[0.03] p-1.5 ring-1 ring-white/[0.06] shadow-diffuse;
-  }
-  .core {
-    @apply rounded-[1.375rem] border border-white/[0.06] bg-paper-card
-      shadow-[inset_0_1px_1px_rgba(255,255,255,0.07)];
+  /* 卷面卡：平、薄、蓝灰——靠留白不靠壳 */
+  .card-flat {
+    @apply rounded-lg border border-paper-line bg-paper-card shadow-card;
   }
 
-  /* 眉标：微型胶囊徽章 */
-  .eyebrow-badge {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.04]
-      px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-accent;
-  }
-
-  /* 眉标（行内版，不带底） */
+  /* 眉标：mono 蓝灰小字（无胶囊无底），字号小即层级 */
   .eyebrow {
-    @apply font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-accent;
+    @apply font-mono text-xs text-paper-muted;
   }
 
-  /* 岛式主按钮：胶囊 + 物理按压（尾随圆图标由组件内嵌） */
+  /* 主按钮：荧光黄底墨字——「划重点」的重量感 */
   .btn-primary {
-    @apply inline-flex items-center gap-3 rounded-full bg-paper-ink py-2 pl-6 pr-2 font-semibold text-paper
-      transition-all duration-500 ease-fluid hover:-translate-y-px hover:bg-white active:scale-[0.98]
+    @apply inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-semibold text-[#101826]
+      transition-all duration-200 ease-snap hover:brightness-105 active:translate-y-px
       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
-      disabled:pointer-events-none disabled:opacity-30;
-  }
-  .btn-primary .btn-orb {
-    @apply flex h-8 w-8 items-center justify-center rounded-full bg-black/[0.08] text-sm
-      transition-all duration-500 ease-fluid group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-px group-hover/btn:bg-black/[0.14];
+      disabled:pointer-events-none disabled:opacity-40;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.03] px-6 py-2.5
-      font-medium text-paper-ink transition-all duration-500 ease-fluid hover:-translate-y-px
-      hover:border-white/25 hover:bg-white/[0.06] active:scale-[0.98]
-      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
-      disabled:pointer-events-none disabled:opacity-30;
+    @apply inline-flex items-center gap-2 rounded-lg border border-paper-line bg-paper-card px-5 py-3
+      font-medium text-paper-ink transition-all duration-200 ease-snap hover:border-paper-muted
+      active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
+      disabled:pointer-events-none disabled:opacity-40;
   }
 
-  /* 选项行：内核玻璃 + 选中青绿晕染 + 左缘亮条 */
+  /* 选项行：选中 = 荧光笔划过（黄底墨字，核心记忆点） */
   .choice {
-    @apply relative flex cursor-pointer items-center gap-3 rounded-2xl border border-white/[0.06]
-      bg-white/[0.02] px-4 py-3.5 text-[15px] leading-relaxed transition-all duration-500 ease-fluid
-      hover:-translate-y-px hover:border-white/[0.14] hover:bg-white/[0.04]
-      has-[:checked]:border-accent/60 has-[:checked]:bg-accent-soft has-[:checked]:shadow-stamp;
+    @apply relative flex cursor-pointer items-center gap-3 rounded-lg border border-paper-line
+      bg-paper-card px-4 py-3.5 text-[15px] leading-relaxed transition-all duration-150 ease-snap
+      hover:border-paper-muted
+      has-[:checked]:border-accent has-[:checked]:bg-accent/15 has-[:checked]:text-paper-ink;
   }
-  .choice::before {
-    content: '';
-    position: absolute;
-    left: -1px;
-    top: 10px;
-    bottom: 10px;
-    width: 3px;
-    border-radius: 2px;
-    background: #34d399;
-    opacity: 0;
-    transform: scaleY(0.4);
-    transition: opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1), transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-  }
-  .choice:has(:checked)::before {
-    opacity: 1;
-    transform: scaleY(1);
-  }
-}
-
-/* 入场编排：重物上浮 + 去模糊（--d 级联延迟） */
-@keyframes reveal {
-  0% {
-    opacity: 0;
-    transform: translateY(40px);
-    filter: blur(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-.reveal {
-  animation: reveal 0.9s cubic-bezier(0.32, 0.72, 0, 1) both;
-  animation-delay: var(--d, 0ms);
-}
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    animation: none;
-  }
-}
-
-h1,
-h2,
-h3 {
-  text-wrap: balance;
 }

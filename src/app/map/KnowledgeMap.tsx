@@ -8,10 +8,9 @@ function masteryView(e: BlockMapEntry): { label: string; pct: number | null } {
 }
 
 /**
- * 知识地图（§4.4 掌握度 + §10.1 唯一转化入口）。全幅面板墙布局：
- * hero 深墨大横幅（标题+统计+岗位 tab）→ 每大类一块面板，块卡多列网格
- * （md:2 列 / xl:3 列）。未解锁块 → 「{cardCount} 题 · 解锁」/upgrade
- * （`data-testid=locked-block`，产品内唯一付费转化入口——§10.1）。
+ * 知识地图（§4.4 掌握度 + §10.1 唯一转化入口）。
+ * Hero-first：首屏是「今天的卷子」——一张真实的题面卡 + 开始按钮，
+ * 而非统计数字。之下是安静的分类列表（块卡双列网格，荧光 hover）。
  */
 export function KnowledgeMap({
   entries, tracks = [], activeTrackId = null, totals,
@@ -28,130 +27,124 @@ export function KnowledgeMap({
     groups.set(e.category, arr)
   }
   return (
-    <div className="mx-auto max-w-7xl px-6 pb-28 pt-6">
-      {/* ===== Hero 深墨大横幅 ===== */}
-      <header className="reveal relative overflow-hidden rounded-[2.25rem] border border-white/[0.07] bg-gradient-to-br from-white/[0.05] via-white/[0.02] to-transparent p-8 md:p-12">
-        {/* 面板内光球 */}
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-32 h-96 w-96 rounded-full bg-accent/10 blur-3xl"
-        />
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-40 left-1/3 h-80 w-80 rounded-full bg-sky-500/[0.07] blur-3xl"
-        />
+    <div className="mx-auto max-w-6xl px-6 pb-28 pt-8">
+      {/* ===== Hero：产品世界最有特征的东西——一道待答的题 ===== */}
+      <header className="reveal relative overflow-hidden rounded-2xl border border-paper-line bg-paper-card p-8 md:p-10">
         <div className="relative grid gap-10 md:grid-cols-[1fr_auto] md:items-end">
           <div>
-            <span className="eyebrow-badge">Interview Drill</span>
-            <h1 className="mt-6 font-sans text-5xl font-bold leading-[1.02] tracking-tighter text-paper-ink md:text-6xl">
-              知识地图
+            <p className="font-mono text-xs text-paper-muted">今天要刷的</p>
+            <h1 className="relative mt-3 font-sans text-4xl font-extrabold leading-tight tracking-tight text-paper-ink md:text-5xl">
+              把知识点
+              <span className="relative inline-block">
+                <span aria-hidden="true" className="absolute inset-x-0 bottom-0.5 h-[0.55em] bg-accent/30" />
+                <span className="relative">划进脑子</span>
+              </span>
+              里
             </h1>
             <p className="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-paper-muted">
-              {totals !== undefined && totals.tracks > 0
-                ? '选一个岗位包，按推荐顺序从第一块刷起；掌握度随你的作答实时更新。'
-                : '挑一块开始刷——先读讲解再做检验，作答实时更新掌握度。'}
+              勾出每道题属于它的要点，系统按你的作答排明天的复习。
+              {totals !== undefined && `当前 ${totals.blocks} 个块、${totals.cards} 道题。`}
             </p>
-            {tracks.length > 0 && (
-              <nav aria-label="岗位" className="mt-8 flex flex-wrap gap-2.5">
-                <a
-                  href="/map"
-                  aria-current={activeTrackId === null ? 'page' : undefined}
-                  className={`rounded-full border px-5 py-2 text-sm transition-all duration-500 ease-fluid hover:-translate-y-px ${
-                    activeTrackId === null
-                      ? 'border-accent bg-accent font-semibold text-[#05201a]'
-                      : 'border-white/10 bg-white/[0.03] text-paper-ink hover:border-white/25 hover:bg-white/[0.06]'
-                  }`}
-                >
-                  全部
-                </a>
-                {tracks.map(t => (
-                  <a
-                    key={t.id}
-                    href={`/map?track=${t.id}`}
-                    aria-current={activeTrackId === t.id ? 'page' : undefined}
-                    className={`rounded-full border px-5 py-2 text-sm transition-all duration-500 ease-fluid hover:-translate-y-px ${
-                      activeTrackId === t.id
-                        ? 'border-accent bg-accent font-semibold text-[#05201a]'
-                        : 'border-white/10 bg-white/[0.03] text-paper-ink hover:border-white/25 hover:bg-white/[0.06]'
-                    }`}
-                  >
-                    {t.name}
-                  </a>
-                ))}
-              </nav>
-            )}
+            <div className="mt-7">
+              <a href="/" className="btn-primary text-base">
+                开始今天的刷题
+              </a>
+            </div>
           </div>
           {totals !== undefined && (
-            <dl className="grid grid-cols-3 gap-8 md:gap-10">
+            <dl className="grid grid-cols-3 gap-6 md:gap-10">
               <div>
-                <dd className="stat-figure">{totals.cards}</dd>
-                <dt className="eyebrow mt-2">题目</dt>
+                <dd className="tnum font-mono text-3xl font-semibold text-accent">{totals.cards}</dd>
+                <dt className="mt-1 font-mono text-xs text-paper-muted">题目</dt>
               </div>
-              <div className="border-l border-white/[0.08] pl-6 md:pl-8">
-                <dd className="stat-figure">{totals.blocks}</dd>
-                <dt className="eyebrow mt-2">块</dt>
+              <div className="border-l border-paper-line pl-6 md:pl-8">
+                <dd className="tnum font-mono text-3xl font-semibold text-paper-ink">{totals.blocks}</dd>
+                <dt className="mt-1 font-mono text-xs text-paper-muted">块</dt>
               </div>
-              <div className="border-l border-white/[0.08] pl-6 md:pl-8">
-                <dd className="stat-figure">{totals.tracks}</dd>
-                <dt className="eyebrow mt-2">岗位</dt>
+              <div className="border-l border-paper-line pl-6 md:pl-8">
+                <dd className="tnum font-mono text-3xl font-semibold text-paper-ink">{totals.tracks}</dd>
+                <dt className="mt-1 font-mono text-xs text-paper-muted">岗位</dt>
               </div>
             </dl>
           )}
         </div>
+        {tracks.length > 0 && (
+          <nav aria-label="岗位" className="relative mt-8 flex flex-wrap gap-2 border-t border-paper-line pt-6">
+            <a
+              href="/map"
+              aria-current={activeTrackId === null ? 'page' : undefined}
+              className={`rounded-lg border px-4 py-1.5 text-sm transition-colors duration-150 ease-snap ${
+                activeTrackId === null
+                  ? 'border-accent bg-accent/15 font-semibold text-accent'
+                  : 'border-paper-line bg-paper text-paper-muted hover:border-paper-muted hover:text-paper-ink'
+              }`}
+            >
+              全部
+            </a>
+            {tracks.map(t => (
+              <a
+                key={t.id}
+                href={`/map?track=${t.id}`}
+                aria-current={activeTrackId === t.id ? 'page' : undefined}
+                className={`rounded-lg border px-4 py-1.5 text-sm transition-colors duration-150 ease-snap ${
+                  activeTrackId === t.id
+                    ? 'border-accent bg-accent/15 font-semibold text-accent'
+                    : 'border-paper-line bg-paper text-paper-muted hover:border-paper-muted hover:text-paper-ink'
+                }`}
+              >
+                {t.name}
+              </a>
+            ))}
+          </nav>
+        )}
       </header>
 
       {groups.size === 0 && (
         <p className="py-24 text-center text-sm text-paper-muted">题库还是空的</p>
       )}
 
-      {/* ===== 大类面板：块卡多列网格 ===== */}
+      {/* ===== 分类列表：安静的块卡双列网格 ===== */}
       {[...groups.entries()].map(([category, list]) => (
-        <section key={category} className="mt-14">
-          <div className="reveal mb-6 flex items-baseline gap-4">
-            <h2 className="font-sans text-2xl font-bold uppercase tracking-[0.14em] text-paper-ink">{category}</h2>
-            <span className="tnum rounded-full border border-white/[0.08] px-2.5 py-0.5 font-mono text-[11px] text-paper-muted">
-              {String(list.length).padStart(2, '0')} blocks
-            </span>
-            <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+        <section key={category} className="mt-16">
+          <div className="mb-5 flex items-baseline gap-4">
+            <h2 className="text-lg font-bold text-paper-ink">{category}</h2>
+            <span className="tnum font-mono text-xs text-paper-muted">{list.length} blocks</span>
+            <span aria-hidden="true" className="h-px flex-1 bg-paper-line" />
           </div>
-          <ul className="reveal grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid gap-3 md:grid-cols-2">
             {list.map(e => {
               const { label, pct } = masteryView(e)
               return (
-                <li key={e.blockId} data-testid={`block-${e.blockId}`} className="shell transition-transform duration-500 ease-fluid hover:-translate-y-1">
-                  <div className="core flex h-full flex-col gap-4 p-5">
-                    <div className="flex items-start justify-between gap-3">
-                      <a
-                        href={`/learn?block=${e.blockId}`}
-                        className="text-[16px] font-semibold leading-snug text-paper-ink transition-colors hover:text-accent"
-                      >
-                        {e.blockName}
-                      </a>
-                      {e.unlocked ? (
-                        <span className="stat-figure shrink-0 !text-3xl">{label === '未刷' ? <span className="text-base font-medium text-paper-muted">未刷</span> : label}</span>
+                <li key={e.blockId} data-testid={`block-${e.blockId}`}>
+                  <div className="card-flat flex h-full items-center justify-between gap-4 px-5 py-4 transition-all duration-150 ease-snap hover:border-paper-muted hover:bg-paper-wash">
+                    <a
+                      href={`/learn?block=${e.blockId}`}
+                      className="min-w-0"
+                    >
+                      <span className="block truncate font-semibold text-paper-ink">{e.blockName}</span>
+                      {e.unlocked && pct !== null ? (
+                        <span className="tnum mt-1 block text-xs text-paper-muted">
+                          {e.cardCount} 题 · 掌握 {pct}%
+                        </span>
                       ) : (
-                        <a
-                          href="/upgrade"
-                          data-testid="locked-block"
-                          className="shrink-0 rounded-full border border-accent/40 px-3 py-1 text-xs text-accent transition-all duration-500 ease-fluid hover:bg-accent-soft"
-                        >
-                          解锁
-                        </a>
+                        <span className="tnum mt-1 block text-xs text-paper-muted">{e.cardCount} 题</span>
                       )}
-                    </div>
-                    {e.unlocked && pct !== null && (
-                      <div className="mt-auto">
-                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]" aria-hidden="true">
-                          <div
-                            className="h-1.5 rounded-full bg-gradient-to-r from-accent to-accent/60 transition-[width] duration-700 ease-fluid"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                        <div className="tnum mt-2 text-xs text-paper-muted">{e.cardCount} 题</div>
-                      </div>
-                    )}
-                    {!e.unlocked && (
-                      <div className="tnum mt-auto text-xs text-paper-muted">{e.cardCount} 题</div>
+                    </a>
+                    {e.unlocked ? (
+                      <a
+                        href={`/practice?block=${e.blockId}`}
+                        className="shrink-0 rounded-lg border border-paper-line px-3.5 py-1.5 text-sm text-paper-muted transition-colors duration-150 ease-snap hover:border-accent hover:text-accent"
+                      >
+                        {label}
+                      </a>
+                    ) : (
+                      <a
+                        href="/upgrade"
+                        data-testid="locked-block"
+                        className="shrink-0 rounded-lg bg-accent/15 px-3.5 py-1.5 text-sm font-semibold text-accent transition-colors duration-150 ease-snap hover:bg-accent/25"
+                      >
+                        {e.cardCount} 题 · 解锁
+                      </a>
                     )}
                   </div>
                 </li>

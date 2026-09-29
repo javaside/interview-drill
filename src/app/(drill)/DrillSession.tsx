@@ -143,7 +143,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
         <aside className="md:sticky md:top-24 md:self-start">
           <div className="shell">
             <div className="core p-6">
-              <p className="eyebrow-badge w-fit">今日进度</p>
+              <p className="eyebrow">今日进度</p>
               <div className="tnum mt-5 flex items-baseline gap-1.5">
                 <span data-testid="progress" className="font-serif text-6xl font-bold leading-none tracking-tighter text-paper-ink">
                   {`${done}/${total}`}

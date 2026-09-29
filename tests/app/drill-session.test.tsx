@@ -28,7 +28,7 @@ test('答对一张：屏①→提交→屏②显示得分与进度推进', async
   await u.click(screen.getAllByRole('checkbox')[0]!)
   await u.click(screen.getAllByRole('checkbox')[1]!)
   await u.click(screen.getAllByRole('checkbox')[2]!)
-  await u.click(screen.getByRole('button', { name: /提交/ }))
+  await u.click(screen.getByRole('button', { name: /交卷/ }))
   expect(await screen.findByText(/3\s*\/\s*3/)).toBeInTheDocument()
 })
 
@@ -39,7 +39,7 @@ test('离线提交：入队且屏②本地判分出反馈 +「计划将在联网
   await u.click(screen.getAllByRole('checkbox')[0]!)
   await u.click(screen.getAllByRole('checkbox')[1]!)
   await u.click(screen.getAllByRole('checkbox')[2]!)
-  await u.click(screen.getByRole('button', { name: /提交/ }))
+  await u.click(screen.getByRole('button', { name: /交卷/ }))
   expect(await screen.findByText('计划将在联网后更新')).toBeInTheDocument()
   expect(await deps.store.submissions.all()).toHaveLength(1)
   expect(deps.api.postReview).not.toHaveBeenCalled()
