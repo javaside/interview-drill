@@ -15,10 +15,10 @@ export type LearnCard = {
 
 const FREQ_LABEL = { high: '高频', mid: '中频', low: '低频' } as const
 
-function DetailLayers({ detail }: { detail: string }): React.JSX.Element {
+function DetailLayers({ detail, indent = true }: { detail: string; indent?: boolean }): React.JSX.Element {
   const { intro, advanced } = splitDetail(detail)
   return (
-    <div className="mt-2 pl-8 text-[15px] leading-relaxed text-paper-ink">
+    <div className={`mt-2 text-[15px] leading-relaxed text-paper-ink ${indent ? 'pl-8' : ''}`}>
       <p className="whitespace-pre-line"><RichText text={intro} /></p>
       {advanced !== '' && (
         <details className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3">
@@ -73,17 +73,21 @@ export function LearnView({
             通读下面的讲解，理解了再去做题检验——做题时也能随时回来看。
           </p>
 
-          <div className="mt-8 space-y-8">
+          <div className="mt-10 space-y-12">
             {cards.map((c, i) => (
-              <article key={c.cardId} className="border-l-2 border-paper-line pl-5 transition-colors hover:border-accent">
-                <div className="flex items-baseline gap-3">
-                  <span className="tnum font-mono text-xs text-paper-muted">{String(i + 1).padStart(2, '0')}</span>
-                  <h2 className="font-serif text-lg font-semibold leading-snug text-paper-ink text-pretty">
-                    {c.question}
-                  </h2>
-                </div>
-                <div className="mt-1 pl-8 text-xs tracking-[0.2em] text-paper-muted">{FREQ_LABEL[c.frequency]}</div>
-                <DetailLayers detail={c.detail} />
+              <article key={c.cardId} className="group relative pl-16">
+                {/* 大序号：serif 淡墨，行内导航兼装饰 */}
+                <span
+                  aria-hidden="true"
+                  className="tnum pointer-events-none absolute left-0 top-0 select-none font-serif text-4xl font-bold leading-none text-paper-ink/15 transition-colors duration-300 group-hover:text-accent/25"
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h2 className="font-serif text-xl font-semibold leading-snug tracking-tight text-paper-ink text-balance">
+                  {c.question}
+                </h2>
+                <div className="mt-1.5 eyebrow">{FREQ_LABEL[c.frequency]}</div>
+                <DetailLayers detail={c.detail} indent={false} />
               </article>
             ))}
           </div>

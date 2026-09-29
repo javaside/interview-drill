@@ -92,8 +92,12 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
   }
 
   return (
-    <section className="rise mx-auto max-w-2xl px-5 py-8">
-      <header className="mb-6">
+    <section className="rise relative mx-auto max-w-2xl px-5 py-8">
+      {/* 背景淡墨大字：章节氛围（纯装饰） */}
+      <span aria-hidden="true" className="ghost-display absolute -top-4 right-2 text-[9rem]">
+        问
+      </span>
+      <header className="relative mb-6">
         <div className="eyebrow flex items-center gap-2">
           <span>{card.blockName}</span>
           <span aria-hidden="true">·</span>

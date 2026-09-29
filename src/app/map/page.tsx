@@ -31,5 +31,18 @@ export default async function MapPage(
     ? trackParam
     : tracks.some(t => t.id === settings.trackId) ? settings.trackId : null
   const filtered = filterEntriesByTrack(entries, tracks, trackId)
-  return <KnowledgeMap entries={filtered} tracks={tracks.map(t => ({ id: t.id, name: t.name }))} activeTrackId={trackId} />
+  // 刊头统计：真实库量（非演示数字）
+  const totals = {
+    cards: entries.reduce((n, e) => n + e.cardCount, 0),
+    blocks: entries.length,
+    tracks: tracks.length,
+  }
+  return (
+    <KnowledgeMap
+      entries={filtered}
+      tracks={tracks.map(t => ({ id: t.id, name: t.name }))}
+      activeTrackId={trackId}
+      totals={totals}
+    />
+  )
 }

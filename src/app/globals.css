@@ -134,3 +134,16 @@ h2,
 h3 {
   text-wrap: balance;
 }
+
+/* ===== 编辑刊头件 ===== */
+@layer components {
+  /* 超大展示字：淡墨衬线，作为章节背景装饰（aria-hidden，纯氛围） */
+  .ghost-display {
+    @apply pointer-events-none select-none font-serif font-bold leading-none text-paper-ink/[0.05];
+  }
+
+  /* 统计大数：真数据的衬线展示 */
+  .stat-figure {
+    @apply tnum block font-serif text-4xl font-semibold leading-none tracking-tight text-paper-ink md:text-5xl;
+  }
+}
