@@ -188,7 +188,9 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
         </div>
       ) : (
         <>
-          <p className="mb-3 text-sm text-paper-muted">勾出所有属于这道题的要点（批改）</p>
+          <p className="mb-3 text-sm text-paper-muted">
+            {card.cardType === 'atomic' ? '你的选择（批改）' : '勾出所有属于这道题的要点（批改）'}
+          </p>
 
           <ul className="space-y-2">
             {variant.optionTexts.map((text, i) => {

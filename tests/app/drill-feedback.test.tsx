@@ -111,6 +111,17 @@ test('sequence 批改：每行显示你的位置与应在位置（位置对绿 /
   expect(rows.every(r => !r.textContent!.includes('漏选') && !r.textContent!.includes('错勾'))).toBe(true)
 })
 
+test('atomic 批改屏：提示为「你的选择（批改）」，不出现「勾出所有」文案', () => {
+  render(<DrillFeedback
+    card={{ cardId: 'c5', blockName: 'MVCC', question: '哪条日志先写？', cardType: 'atomic' as const, keyPoints: [] } as never}
+    variant={{ optionTexts: ['redo log', 'binlog', 'undo log', 'doublewrite'], correctIndices: [0], distractorKeyPointIds: [] }}
+    submission={{ submissionId: 's5', cardId: 'c5', reviewedAtMs: 0, kind: 'atomic' as const, selected: 1 }}
+    offline={false}
+    result={{ score: { num: 0, den: 1 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 0, wrongChecked: 1, missed: 0 } } as never} />)
+  expect(screen.getByText('你的选择（批改）')).toBeInTheDocument()
+  expect(screen.queryByText('勾出所有属于这道题的要点（批改）')).toBeNull()
+})
+
 test('答错重排：显式渲染「计划已重排」', () => {
   render(<DrillFeedback {...base} offline={false}
     result={{ score: { num: 1, den: 3 }, remainingPlan: ['2026-09-25'], replanned: true, feedback: { correctChecked: 1, wrongChecked: 0, missed: 2 } } as never} />)

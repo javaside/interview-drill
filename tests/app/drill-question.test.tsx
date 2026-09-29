@@ -57,3 +57,24 @@ test('atomic 型 4 个单选，选一个即可提交', () => {
     variant={{ optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [0], distractorKeyPointIds: [] }} onSubmit={() => {}} />)
   expect(screen.getAllByRole('radio')).toHaveLength(4)
 })
+
+test('sequence 型提示为排序指引，不出现勾选文案（排序题没有可勾选项）', () => {
+  render(<DrillQuestion card={{ ...card, cardType: 'sequence' }}
+    variant={{ optionTexts: ['第 1 步', '第 2 步', '第 3 步', '第 4 步'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [] }}
+    onSubmit={() => {}} />)
+  expect(screen.getByText('把要点排成正确的先后顺序')).toBeInTheDocument()
+  expect(screen.queryByText('勾出所有属于这道题的要点')).toBeNull()
+})
+
+test('atomic 型提示为单选指引，不出现「勾出所有」文案', () => {
+  render(<DrillQuestion card={{ ...card, cardType: 'atomic' }}
+    variant={{ optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [0], distractorKeyPointIds: [] }} onSubmit={() => {}} />)
+  expect(screen.getByText('选出正确的一项')).toBeInTheDocument()
+  expect(screen.queryByText('勾出所有属于这道题的要点')).toBeNull()
+})
+
+test('judgment 型提示覆盖两步交互：先选结论再勾要点', () => {
+  render(<DrillQuestion card={{ ...card, cardType: 'judgment' }} variant={variant} onSubmit={() => {}} />)
+  expect(screen.getByText('先选结论，再勾出所有属于这道题的要点')).toBeInTheDocument()
+  expect(screen.getByRole('radio', { name: '会' })).toBeInTheDocument()
+})

@@ -31,7 +31,14 @@ const CONCLUSION_OPTIONS: ReadonlyArray<{ value: ConclusionChoice; label: string
   { value: 2, label: '取决于' },
 ]
 
-const HINT = '勾出所有属于这道题的要点'
+/** 提示语按卡型分派——仍是固定文案（不渲染答案条数），但排序/单选型不再是勾选语义 */
+const HINT_BY_TYPE: Record<CardView['cardType'], string> = {
+  enumeration: '勾出所有属于这道题的要点',
+  comparison: '勾出所有属于这道题的要点',
+  judgment: '先选结论，再勾出所有属于这道题的要点',
+  sequence: '把要点排成正确的先后顺序',
+  atomic: '选出正确的一项',
+}
 
 /**
  * 屏① 题目+选项。按 cardType 四型分派：
@@ -40,7 +47,7 @@ const HINT = '勾出所有属于这道题的要点'
  * - atomic：单选 radio → {kind:'atomic', selected}
  * - sequence：可上下移的列表 → {kind:'sequence', order}
  *
- * 约束：提示语固定文案，不渲染答案条数；空勾选/无结论时禁用提交（前端拦截空提交）。
+ * 约束：提示语按卡型分派固定文案（HINT_BY_TYPE），不渲染答案条数；空勾选/无结论时禁用提交（前端拦截空提交）。
  * 选项数由 variant.optionTexts.length 决定（enum 型恒 9，atomic 恒 4）。
  */
 export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
@@ -151,7 +158,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         </fieldset>
       )}
 
-      <p className="mb-3 text-sm text-paper-muted">{HINT}</p>
+      <p className="mb-3 text-sm text-paper-muted">{HINT_BY_TYPE[cardType]}</p>
 
       {cardType === 'sequence' ? (
         <ol className="space-y-2">
