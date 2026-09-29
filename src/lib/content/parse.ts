@@ -1,6 +1,6 @@
 import matter from 'gray-matter'
 import { cardSchema } from './schema.js'
-import { checkKeyPointText } from './rules.js'
+import { checkKeyPointText, checkSequenceKeyPointText } from './rules.js'
 import { MATTER_OPTS } from './yaml.js'
 import type { Card } from './types.js'
 
@@ -44,6 +44,13 @@ export function parseCard(raw: string, path: string): ParseResult {
     checkKeyPointText(kp.text).map(msg => `${path}: 要点 ${kp.id} —— ${msg}`),
   )
   if (textIssues.length > 0) return { ok: false, issues: textIssues }
+
+  if (card.cardType === 'sequence') {
+    const seqIssues = card.keyPoints.flatMap(kp =>
+      checkSequenceKeyPointText(kp.text).map(msg => `${path}: 要点 ${kp.id} —— ${msg}`),
+    )
+    if (seqIssues.length > 0) return { ok: false, issues: seqIssues }
+  }
 
   return { ok: true, card }
 }

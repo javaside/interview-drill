@@ -1,5 +1,4 @@
 import { parseCard } from '../../../src/lib/content/parse.js'
-
 const SRC = `---
 id: 01J8ZKQ7Y0000000000000000A
 blockId: concurrency/aqs
@@ -99,4 +98,76 @@ test('public 仍然是 boolean，没有被 JSON_SCHEMA 影响', () => {
   expect(r.ok).toBe(true)
   if (!r.ok) return
   expect(r.card.keyPoints[0]!.public).toBe(true)
+})
+
+/** sequence 卡带 order 的最小合法骨架（顺序标号规则的宿主卡型） */
+const SEQ_SRC = `---
+id: 01J8ZKQ7Y0000000000000000B
+blockId: network/tcp-connection
+relatedBlocks: []
+question: 三次握手的顺序？
+cardType: sequence
+appliesTo: 通用
+frequency: high
+followUps: []
+keyPoints:
+  - id: kp-1
+    text: 客户端发 SYN 进 SYN_SENT 状态
+    public: true
+    verifiedAt: 2026-09-18
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    order: 1
+    source:
+      kind: official-doc
+      url: https://www.rfc-editor.org/rfc/rfc9293.html
+      locator: RFC 9293
+  - id: kp-2
+    text: 服务端回 SYN+ACK 进 SYN_RCVD
+    public: false
+    verifiedAt: 2026-09-18
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    order: 2
+    source:
+      kind: official-doc
+      url: https://www.rfc-editor.org/rfc/rfc9293.html
+      locator: RFC 9293
+  - id: kp-3
+    text: 客户端回 ACK 双方 ESTABLISHED
+    public: false
+    verifiedAt: 2026-09-18
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    order: 3
+    source:
+      kind: official-doc
+      url: https://www.rfc-editor.org/rfc/rfc9293.html
+      locator: RFC 9293
+  - id: kp-4
+    text: 序号与确认号保证字节流有序不丢
+    public: false
+    verifiedAt: 2026-09-18
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    order: 4
+    source:
+      kind: official-doc
+      url: https://www.rfc-editor.org/rfc/rfc9293.html
+      locator: RFC 9293
+---
+
+三次握手建立可靠连接。`
+
+test('sequence 要点自带「第 N 步」标号被拒——排序题答案不得写在题面上', () => {
+  const bad = SEQ_SRC.replace('text: 客户端发 SYN 进 SYN_SENT 状态', 'text: 第 1 步 客户端发 SYN 进 SYN_SENT 状态')
+  const r = parseCard(bad, 'content/x/y.md')
+  expect(r.ok).toBe(false)
+  if (r.ok) return
+  expect(r.issues.join()).toContain('顺序标号')
+})
+
+test('enumeration 要点带顺序叙述不触发该规则（顺序标号只对 sequence 泄题）', () => {
+  const r = parseCard(SRC.replace('text: 获取锁是对 state 做 CAS，成功即持有', 'text: 获取锁先对 state 做 CAS，成功即持有'), 'x.md')
+  expect(r.ok).toBe(true)
 })

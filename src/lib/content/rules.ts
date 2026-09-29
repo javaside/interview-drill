@@ -49,3 +49,25 @@ export function checkBlockName(name: string): string[] {
   }
   return issues
 }
+
+/** sequence 要点文本中的顺序标号——数字与圈数字都算（圈序号/步骤N 是同义变体） */
+const SEQ_ORDER_MARKERS = [
+  /第\s*[\d一二三四五六七八九十]+\s*步/,
+  /步骤\s*[\d一二三四五六七八九十]+/,
+  /[①②③④⑤⑥⑦⑧⑨⑩]/,
+] as const
+
+/**
+ * sequence 专属文案规则：要点不得自带顺序标号。排序题的答案就是顺序，
+ * 标号（「第 1 步」「①」）把答案写在题面上——呈现序再怎么洗牌，用户按
+ * 数字排就能满分，排序交互退化为数数。顺序只应蕴含在 order 字段与内容
+ * 逻辑里。仅 sequence 卡调用：enumeration 讲步骤带叙述性序词不泄题。
+ */
+export function checkSequenceKeyPointText(text: string): string[] {
+  for (const marker of SEQ_ORDER_MARKERS) {
+    if (marker.test(text)) {
+      return ['要点文本自带顺序标号——排序题的答案被写在题面上（顺序只应蕴含在 order 与内容逻辑里）']
+    }
+  }
+  return []
+}

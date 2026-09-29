@@ -1,4 +1,4 @@
-import { checkKeyPointText, checkBlockName, checkPlaceholders, MAX_KP_HAN_CHARS } from '../../../src/lib/content/rules.js'
+import { checkKeyPointText, checkBlockName, checkPlaceholders, checkSequenceKeyPointText, MAX_KP_HAN_CHARS } from '../../../src/lib/content/rules.js'
 
 test('要点汉字数上界是 30', () => {
   expect(MAX_KP_HAN_CHARS).toBe(30)
@@ -38,6 +38,17 @@ test.each(['基础', '进阶', '高级', '其他', '常见问题', '高频'])(
     expect(checkBlockName(`MySQL ${word}`)).toHaveLength(1)
   },
 )
+
+test.each(['第 1 步 应用发起请求', '第 2 步：模型输出意图', '第 3 步 应用执行调用', '① 应用发起请求', '步骤4 提交'])(
+  'sequence 要点自带顺序标号「%s」即失败——排序题答案不得写在题面上', (text) => {
+    expect(checkSequenceKeyPointText(text)).toHaveLength(1)
+  },
+)
+
+test('sequence 要点无顺序标号则通过（顺序只应蕴含在内容逻辑里）', () => {
+  expect(checkSequenceKeyPointText('客户端发 SYN 进 SYN_SENT 状态')).toEqual([])
+  expect(checkSequenceKeyPointText('模型只决策不执行，输出调用意图')).toEqual([])
+})
 
 test('合格的块名通过', () => {
   expect(checkBlockName('MVCC 与 Undo Log')).toEqual([])
