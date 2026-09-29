@@ -36,6 +36,48 @@ export function RichText({ text }: { text: string }): React.JSX.Element {
             </pre>
           )
         }
+        if (block.kind === 'table') {
+          return (
+            <div key={i} className="overflow-x-auto">
+              <table className="w-full border-collapse text-[13.5px] leading-relaxed">
+                <thead>
+                  <tr>
+                    {block.header.map((cell, j) => (
+                      <th key={j} className="border-b border-white/15 px-2.5 py-1.5 text-left font-medium text-paper-muted">
+                        {cell === '' ? '\u00A0' : <Inline text={cell} />}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.map((row, r) => (
+                    <tr key={r}>
+                      {row.map((cell, c) => (
+                        <td key={c} className="border-b border-white/[0.06] px-2.5 py-1.5 align-top">
+                          <Inline text={cell} />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        }
+        if (block.kind === 'quote') {
+          return (
+            <blockquote key={i} className="border-l-2 border-l-accent/50 pl-3 text-paper-muted">
+              <p className="whitespace-pre-line"><Inline text={block.text} /></p>
+            </blockquote>
+          )
+        }
+        if (block.kind === 'heading') {
+          return (
+            <h3 key={i} className="mt-1 font-semibold tracking-tight text-paper-ink">
+              <Inline text={block.text} />
+            </h3>
+          )
+        }
         if (block.kind === 'ul') {
           return (
             <ul key={i} className="list-disc space-y-1 pl-5">

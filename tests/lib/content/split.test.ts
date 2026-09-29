@@ -75,3 +75,42 @@ test('splitBlocks：段落与列表混排顺序保持（真实卡面形状）', 
     { kind: 'p', text: '现代代码用 strip。' },
   ])
 })
+
+test('splitBlocks：markdown 表格 → table 块（表头/分隔行/数据行，单元格 trim）', () => {
+  const blocks = splitBlocks('对比：\n| | ReAct | Plan-and-Execute |\n|---|---|---|\n| 节奏 | 每步观察 | 先计划再执行 |\n| 强项 | 适应力强 | 可审计 |')
+  expect(blocks).toEqual([
+    { kind: 'p', text: '对比：' },
+    {
+      kind: 'table',
+      header: ['', 'ReAct', 'Plan-and-Execute'],
+      rows: [
+        ['节奏', '每步观察', '先计划再执行'],
+        ['强项', '适应力强', '可审计'],
+      ],
+    },
+  ])
+})
+
+test('splitBlocks：表格分隔行容忍对齐冒号（:---: 变体）', () => {
+  const blocks = splitBlocks('| A | B |\n|:--|--:|\n| 1 | 2 |')
+  expect(blocks).toEqual([{ kind: 'table', header: ['A', 'B'], rows: [['1', '2']] }])
+})
+
+test('splitBlocks：代码块内的表格线原样保留（不被解析成 table）', () => {
+  expect(splitBlocks('```\n|---|\n```')).toEqual([{ kind: 'code', lang: '', code: '|---|' }])
+})
+
+test('splitBlocks：引用块 > 连续行聚合', () => {
+  expect(splitBlocks('前言：\n> 引用一句\n> 第二行\n\n后文。')).toEqual([
+    { kind: 'p', text: '前言：' },
+    { kind: 'quote', text: '引用一句\n第二行' },
+    { kind: 'p', text: '后文。' },
+  ])
+})
+
+test('splitBlocks：标题行 → heading 块（保留层级）', () => {
+  expect(splitBlocks('# 大标题\n正文')).toEqual([
+    { kind: 'heading', level: 1, text: '大标题' },
+    { kind: 'p', text: '正文' },
+  ])
+})

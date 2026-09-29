@@ -41,3 +41,19 @@ test('混合内容：段落/列表/代码块各自成块且顺序保持', () => 
   const tags = Array.from(container.children).map(el => el.tagName.toLowerCase())
   expect(tags).toEqual(['p', 'ul', 'pre', 'p'])
 })
+
+test('表格渲染为 table/th/td，单元格内粗体仍解析（截图缺陷回归）', () => {
+  render(<RichText text={'| | ReAct | 先谋后动 |\n|---|---|---|\n| 节奏 | 每步观察 | **完整计划** |'} />)
+  expect(screen.getByRole('table')).toBeInTheDocument()
+  expect(screen.getAllByRole('columnheader')).toHaveLength(3)
+  expect(screen.getAllByRole('cell')).toHaveLength(3)
+  const bold = screen.getByText('完整计划')
+  expect(bold.tagName).toBe('STRONG')
+})
+
+test('引用块渲染为 blockquote，标题渲染为 heading 元素', () => {
+  const { container } = render(<RichText text={'> 一句引用\n\n## 小节\n正文'} />)
+  expect(container.querySelector('blockquote')).not.toBeNull()
+  expect(container.querySelector('h3')).not.toBeNull()
+  expect(screen.getByText('正文').closest('p')).not.toBeNull()
+})
