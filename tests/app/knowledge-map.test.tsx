@@ -47,3 +47,30 @@ test('无 tracks（老库）不渲染岗位 tab', () => {
   render(<KnowledgeMap entries={entries} />)
   expect(screen.queryByRole('link', { name: '全部' })).not.toBeInTheDocument()
 })
+
+// ===== 匿名目录模式（authed=false，登录逻辑 v2：知识库默认可见）=====
+
+test('匿名目录：每块统一「刷题」入口指向 /practice，绝不出 /upgrade 解锁位', () => {
+  render(<KnowledgeMap entries={entries} authed={false} />)
+  // 未解锁的 b2 也只是普通目录行，不出付费转化位
+  expect(screen.getByTestId('block-b2')).toHaveTextContent('18 题')
+  expect(screen.queryByTestId('locked-block')).not.toBeInTheDocument()
+  expect(screen.getAllByTestId('catalog-practice')).toHaveLength(3)
+  expect(screen.getByTestId('block-b1').querySelector('[data-testid="catalog-practice"]'))
+    .toHaveAttribute('href', '/practice?block=b1')
+})
+
+test('匿名目录不渲染掌握度——无百分比、无「未刷」', () => {
+  render(<KnowledgeMap entries={entries} authed={false} />)
+  expect(screen.getByTestId('block-b1').textContent).not.toContain('掌握')
+  expect(screen.getByTestId('block-b1').textContent).not.toContain('50%')
+  expect(screen.getByTestId('block-b3').textContent).not.toContain('未刷')
+  expect(screen.getByTestId('block-b1')).toHaveTextContent('23 题')
+})
+
+test('默认 authed=true：现有已登录行为不变（解锁位/掌握度照旧）', () => {
+  render(<KnowledgeMap entries={entries} />)
+  expect(screen.getByTestId('locked-block')).toBeInTheDocument()
+  expect(screen.getByTestId('block-b1')).toHaveTextContent('掌握 50%')
+  expect(screen.queryByTestId('catalog-practice')).not.toBeInTheDocument()
+})

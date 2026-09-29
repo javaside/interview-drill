@@ -11,14 +11,18 @@ function masteryView(e: BlockMapEntry): { label: string; pct: number | null } {
  * 知识地图（§4.4 掌握度 + §10.1 唯一转化入口）。
  * Hero-first：首屏是「今天的卷子」——一张真实的题面卡 + 开始按钮，
  * 而非统计数字。之下是安静的分类列表（块卡双列网格，荧光 hover）。
+ * authed=false（匿名目录浏览）：全库可见但不渲染掌握度与付费解锁位——
+ * 每块给「刷题」入口（未登录点它 → 刷题页提示登录），绝不出 /upgrade 转化位。
  */
 export function KnowledgeMap({
-  entries, tracks = [], activeTrackId = null, totals,
+  entries, tracks = [], activeTrackId = null, totals, authed = true,
 }: {
   entries: BlockMapEntry[]
   tracks?: Array<{ id: string; name: string }>
   activeTrackId?: string | null
   totals?: { cards: number; blocks: number; tracks: number }
+  /** 已登录（默认）。false = 匿名目录模式：无掌握度、无解锁墙 */
+  authed?: boolean
 }): React.JSX.Element {
   const groups = new Map<string, BlockMapEntry[]>()
   for (const e of entries) {
@@ -122,7 +126,7 @@ export function KnowledgeMap({
                       className="min-w-0"
                     >
                       <span className="block truncate font-semibold text-paper-ink">{e.blockName}</span>
-                      {e.unlocked && pct !== null ? (
+                      {authed && e.unlocked && pct !== null ? (
                         <span className="tnum mt-1 block text-xs text-paper-muted">
                           {e.cardCount} 题 · 掌握 {pct}%
                         </span>
@@ -130,7 +134,16 @@ export function KnowledgeMap({
                         <span className="tnum mt-1 block text-xs text-paper-muted">{e.cardCount} 题</span>
                       )}
                     </a>
-                    {e.unlocked ? (
+                    {!authed ? (
+                      // 匿名目录：统一「刷题」入口——未登录点它 → 刷题页提示登录
+                      <a
+                        href={`/practice?block=${e.blockId}`}
+                        data-testid="catalog-practice"
+                        className="shrink-0 rounded-lg border border-paper-line px-3.5 py-1.5 text-sm text-paper-muted transition-colors duration-150 ease-snap hover:border-accent hover:text-accent"
+                      >
+                        刷题
+                      </a>
+                    ) : e.unlocked ? (
                       <a
                         href={`/practice?block=${e.blockId}`}
                         className="shrink-0 rounded-lg border border-paper-line px-3.5 py-1.5 text-sm text-paper-muted transition-colors duration-150 ease-snap hover:border-accent hover:text-accent"
