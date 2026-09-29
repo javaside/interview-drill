@@ -44,25 +44,24 @@ export function LearnView({
   cardCount?: number
 }): React.JSX.Element {
   return (
-    <main className="rise mx-auto max-w-2xl px-5 py-8">
+    <main className="rise mx-auto max-w-2xl px-5 pb-24 pt-2">
       <p className="text-xs tracking-[0.2em] text-paper-muted">学习</p>
       <h1 className="mt-2 font-serif text-3xl font-semibold tracking-tight text-paper-ink">{blockName}</h1>
       {locked ? (
         <>
-          <p className="mt-2 text-sm text-paper-muted">
-            这个块有 {cardCount ?? '这些'} 题，你还没有解锁它——解锁后这里就是完整的教材。
+          <p className="mt-3 text-[15px] leading-relaxed text-paper-muted">
+            这个块有 <span className="tnum font-semibold text-paper-ink">{cardCount ?? '这些'}</span> 题，
+            还没有解锁——解锁后这里就是完整的教材。
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <a
               href="/upgrade"
-              className="rounded-md bg-accent px-6 py-2 font-medium text-paper shadow-stamp transition-all duration-200 hover:-translate-y-px hover:opacity-95 active:translate-y-0"
+              className="group/btn inline-flex items-center gap-3 rounded-full bg-accent py-2 pl-6 pr-2 font-semibold text-paper transition-all duration-500 ease-fluid hover:-translate-y-px hover:brightness-110 active:scale-[0.98]"
             >
               解锁全部大类
+              <span className="btn-orb flex h-8 w-8 items-center justify-center rounded-full bg-black/20 text-sm transition-all duration-500 ease-fluid group-hover/btn:translate-x-0.5" aria-hidden="true">→</span>
             </a>
-            <a
-              href="/settings"
-              className="btn-ghost px-6 py-2"
-            >
+            <a href="/settings" className="btn-ghost py-2">
               在设置里把它选为免费块
             </a>
           </div>
@@ -99,9 +98,15 @@ export function LearnView({
           <div className="mt-12 text-center">
             <a
               href={`/practice?block=${blockId}`}
-              className="btn-primary inline-block px-8"
+              className="btn-primary group/btn inline-flex items-center gap-3 rounded-full py-2 pl-7 pr-2 text-base"
             >
               学完了，开始测试
+              <span
+                className="btn-orb flex h-8 w-8 items-center justify-center rounded-full bg-black/[0.08] text-sm transition-all duration-500 ease-fluid group-hover/btn:translate-x-0.5"
+                aria-hidden="true"
+              >
+                →
+              </span>
             </a>
           </div>
         </>

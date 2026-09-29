@@ -20,7 +20,7 @@ function payloadOf(ids: string[]) {
 async function answerCurrent(u: ReturnType<typeof userEvent.setup>) {
   const boxes = screen.getAllByRole('checkbox')
   await u.click(boxes[0]!); await u.click(boxes[1]!); await u.click(boxes[2]!)
-  await u.click(screen.getByRole('button', { name: '提交' }))
+  await u.click(screen.getByRole('button', { name: /提交/ }))
   await u.click(await screen.findByRole('button', { name: /下一题|完成/ }))
 }
 

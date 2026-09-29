@@ -92,13 +92,14 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
   }
 
   return (
-    <section className="rise mx-auto max-w-2xl px-5 py-8">
+    <section className="rise mx-auto max-w-2xl px-5 pb-10 pt-2">
+      <div className="shell mb-5"><div className="core p-7">
       <header className="mb-6">
-        <div className="eyebrow flex items-center gap-2">
+        <span className="eyebrow-badge w-fit">
           <span>{card.blockName}</span>
           <span aria-hidden="true">·</span>
           <span>{FREQUENCY_LABEL[card.frequency]}</span>
-        </div>
+        </span>
         <h1 className="mt-3 font-serif text-[1.75rem] font-semibold leading-tight tracking-tight text-paper-ink text-balance md:text-3xl">
           {card.question}
         </h1>
@@ -113,7 +114,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
               {showDetail ? '收起讲解' : '不会？先看讲解'}
             </button>
             {showDetail && (
-              <div className="mt-3 rounded-r-md border border-l-2 border-l-accent border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
+              <div className="mt-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
                 <p className="whitespace-pre-line"><RichText text={splitDetail(card.detail).intro} /></p>
                 {splitDetail(card.detail).advanced !== '' && (
                   <details className="mt-2">
@@ -126,6 +127,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
           </div>
         )}
       </header>
+      </div></div>
 
       {cardType === 'judgment' && (
         <fieldset className="mb-6">
@@ -134,7 +136,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
             {CONCLUSION_OPTIONS.map(o => (
               <label
                 key={o.value}
-                className="choice flex-1 justify-center px-3 py-2.5 text-sm has-[:checked]:font-medium"
+                className="choice flex-1 justify-center px-3 py-3 text-sm has-[:checked]:font-medium"
               >
                 <input
                   type="radio"
@@ -156,7 +158,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
           {order.map((optIdx, pos) => (
             <li
               key={optIdx}
-              className="choice py-3"
+              className="choice"
             >
               <span className="tnum w-5 shrink-0 text-right text-sm text-paper-muted">{pos + 1}</span>
               <span className="flex-1 text-[15px] leading-relaxed">{variant.optionTexts[optIdx]}</span>
@@ -165,7 +167,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
                 aria-label="上移"
                 disabled={pos === 0}
                 onClick={() => move(pos, pos - 1)}
-                className="flex h-7 w-7 items-center justify-center rounded-md border border-paper-line text-paper-muted transition-all duration-200 hover:border-paper-ink hover:bg-paper-ink hover:text-paper disabled:pointer-events-none disabled:opacity-30"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-paper-muted transition-all duration-500 ease-fluid hover:border-white/30 hover:bg-white/[0.06] hover:text-paper-ink disabled:pointer-events-none disabled:opacity-30"
               >
                 ↑
               </button>
@@ -174,7 +176,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
                 aria-label="下移"
                 disabled={pos === order.length - 1}
                 onClick={() => move(pos, pos + 1)}
-                className="flex h-7 w-7 items-center justify-center rounded-md border border-paper-line text-paper-muted transition-all duration-200 hover:border-paper-ink hover:bg-paper-ink hover:text-paper disabled:pointer-events-none disabled:opacity-30"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-paper-muted transition-all duration-500 ease-fluid hover:border-white/30 hover:bg-white/[0.06] hover:text-paper-ink disabled:pointer-events-none disabled:opacity-30"
               >
                 ↓
               </button>
@@ -214,9 +216,10 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         type="button"
         onClick={submit}
         disabled={disabled}
-        className="btn-primary mt-8 w-full text-base sm:w-auto"
+        className="btn-primary group/btn mt-6 w-full justify-between text-base sm:w-auto"
       >
-        提交
+        提交答案
+        <span className="btn-orb" aria-hidden="true">→</span>
       </button>
     </section>
   )

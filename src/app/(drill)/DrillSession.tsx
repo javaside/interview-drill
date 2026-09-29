@@ -136,7 +136,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
 
   return (
     <main className="rise mx-auto max-w-2xl px-5 pb-16">
-      <div className="sticky top-[53px] z-30 -mx-5 mb-2 bg-paper/85 px-5 py-3 backdrop-blur-sm">
+      <div className="sticky top-[72px] z-30 -mx-5 mb-4 rounded-2xl border border-white/[0.06] bg-paper/80 px-5 py-3 backdrop-blur-2xl">
         <div className="flex items-center justify-between text-sm text-paper-muted">
           <span>今日进度</span>
           <div className="flex items-center gap-4">
@@ -188,7 +188,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
       )}
 
       {phase === 'done' && done === 0 && total === 0 && payload.mode === 'maintenance' && (
-        <section className="paper-card mt-8 px-6 py-12 text-center">
+        <section className="shell mt-8"><div className="core px-6 py-14 text-center" data-shell-close="1">
           <h2 className="font-serif text-xl font-semibold text-paper-ink">常备模式 · 今天没有到期卡</h2>
           <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
             滚动间隔复习会按到期日把卡送回队列——答对的间隔越拉越长，答错的明天就来。
@@ -212,11 +212,11 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
               看看知识地图
             </a>
           </div>
-        </section>
+        </div></section>
       )}
 
       {phase === 'done' && done === 0 && total === 0 && payload.mode !== 'maintenance' && (
-        <section className="paper-card mt-8 px-6 py-12 text-center">
+        <section className="shell mt-8"><div className="core px-6 py-14 text-center" data-shell-close="1">
           <h2 className="font-serif text-xl font-semibold text-paper-ink">今日队列是空的</h2>
           <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
             排期由就绪日与所选知识块决定。设定你的面试日期、勾选要刷的块，队列就会出现。
@@ -241,11 +241,11 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
               看看知识地图
             </a>
           </div>
-        </section>
+        </div></section>
       )}
 
       {phase === 'done' && (done > 0 || total > 0) && (
-        <section className="paper-card mt-8 px-6 py-12 text-center">
+        <section className="shell mt-8"><div className="core px-6 py-14 text-center" data-shell-close="1">
           <p className="font-serif text-xl font-semibold text-paper-ink">今日完成</p>
           {total > 0 ? (
             <p className="tnum mt-2 text-sm text-paper-muted">{`${done}/${total} · 明天见`}</p>
@@ -273,7 +273,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
               </button>
             </div>
           )}
-        </section>
+        </div></section>
       )}
     </main>
   )

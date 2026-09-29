@@ -62,7 +62,7 @@ export function SettingsForm(
 
       {view.tracks.length > 0 && (
         <fieldset className="mb-8">
-          <legend className="eyebrow mb-3 block">面试岗位</legend>
+          <legend className="eyebrow-badge mb-4 inline-block">面试岗位</legend>
           <ul className="space-y-2">
             <li>
               <label className="choice">
@@ -136,7 +136,7 @@ export function SettingsForm(
       </div>
 
       <fieldset>
-        <legend className="eyebrow mb-3 block">
+        <legend className="eyebrow-badge mb-4 inline-block">
           块选择{view.plan === 'free' ? `（免费最多 ${FREE_BLOCK_LIMIT} 个）` : ''}
         </legend>
         {(() => {
@@ -178,9 +178,15 @@ export function SettingsForm(
       <button
         type="submit"
         disabled={overLimit}
-        className="btn-primary mt-8 w-full sm:w-auto"
+        className="btn-primary group/btn mt-8 w-full justify-between sm:w-auto"
       >
-        保存
+        <span>保存设置</span>
+        <span
+          className="btn-orb flex h-8 w-8 items-center justify-center rounded-full bg-black/[0.08] text-sm transition-all duration-500 ease-fluid group-hover/btn:translate-x-0.5"
+          aria-hidden="true"
+        >
+          →
+        </span>
       </button>
 
       {replanned !== null ? (
@@ -188,7 +194,7 @@ export function SettingsForm(
       ) : null}
 
       <fieldset className="paper-card mt-14 px-6 py-6">
-        <legend className="eyebrow px-1">临时加密</legend>
+        <legend className="eyebrow-badge">临时加密</legend>
         <p className="mt-1 text-sm leading-relaxed text-paper-muted">
           约到面试了？填上日期，对当前勾选的块在面试前重铺冲刺；面试一过自动回到常备模式。
         </p>

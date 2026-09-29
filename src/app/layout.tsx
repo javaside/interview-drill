@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           跳到主要内容
         </a>
         <NavBar />
-        <main id="main" className="relative z-[2] flex-1">
+        <main id="main" className="relative z-[2] flex-1 pt-24">
           {children}
         </main>
         <footer className="relative z-[2] border-t border-paper-line/70 bg-paper-deep/60">

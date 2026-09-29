@@ -32,7 +32,7 @@ test('未解锁块：显示解锁引导（卡数 + 升级/设为免费块出口�
     <LearnView blockName="进程与线程" cards={[]} blockId="os/process-thread" locked cardCount={30} />,
   )
   // 引导文案含真实卡数（卡数在知识地图本就公开，非机密）
-  expect(screen.getByText(/30\s*题/)).toBeInTheDocument()
+  expect(screen.getByText('30')).toBeInTheDocument()
   expect(screen.getByText(/还没有解锁/)).toBeInTheDocument()
   // 两个出口：升级 / 设置里改选免费块
   expect(screen.getByRole('link', { name: /解锁全部大类/ })).toHaveAttribute('href', '/upgrade')

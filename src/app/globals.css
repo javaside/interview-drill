@@ -2,23 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 深夜刷题：深底 + 网格纹理 + 青绿光斑 */
+/* Ethereal Glass：OLED 底 + mesh 光球 + 蓝图网格 */
 html {
   scroll-behavior: smooth;
 }
 body {
   @apply bg-paper font-sans text-paper-ink antialiased;
-  /* 氛围光斑：青绿一簇 + 冷蓝一簇，极淡——打破纯平底 */
   background-image:
-    radial-gradient(900px 480px at 85% -8%, rgba(52, 211, 153, 0.07), transparent 60%),
-    radial-gradient(800px 420px at -10% 110%, rgba(96, 165, 250, 0.05), transparent 55%);
+    radial-gradient(1000px 560px at 82% -12%, rgba(52, 211, 153, 0.09), transparent 62%),
+    radial-gradient(820px 500px at -12% 30%, rgba(96, 165, 250, 0.06), transparent 58%),
+    radial-gradient(700px 700px at 55% 115%, rgba(52, 211, 153, 0.04), transparent 60%);
   background-attachment: fixed;
 }
 ::selection {
-  background: rgba(52, 211, 153, 0.25);
+  background: rgba(52, 211, 153, 0.28);
 }
 
-/* 蓝图网格：极淡的 1px 网格纹理（fixed，不随滚动重绘） */
+/* 蓝图网格：极淡 1px 线 + 顶部渐隐遮罩（fixed，不随滚动重绘） */
 .grain::before {
   content: '';
   position: fixed;
@@ -26,79 +26,87 @@ body {
   z-index: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, black 30%, transparent 75%);
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, black 20%, transparent 80%);
 }
 
-/* 数据数字统一等宽 */
 .tnum {
   font-variant-numeric: tabular-nums;
 }
 
-/* 原生控件：青绿指示 */
 input[type='checkbox'],
 input[type='radio'] {
   accent-color: #34d399;
 }
 
-/* 键盘焦点 */
 :focus-visible {
   outline: 2px solid #34d399;
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 @layer components {
-  /* 卡面：深玻璃——提亮边 + 极弱扩散影 */
-  .paper-card {
-    @apply rounded-xl border border-paper-line bg-paper-card shadow-paper;
+  /* ===== Double-Bezel 双壳嵌套：外壳托盘 + 内核玻璃 ===== */
+  .shell {
+    @apply rounded-[2rem] bg-white/[0.03] p-1.5 ring-1 ring-white/[0.06] shadow-diffuse;
+  }
+  .core {
+    @apply rounded-[1.375rem] border border-white/[0.06] bg-paper-card
+      shadow-[inset_0_1px_1px_rgba(255,255,255,0.07)];
   }
 
-  .lift {
-    @apply transition-all duration-200 hover:-translate-y-px hover:border-paper-muted hover:shadow-paper-lg;
+  /* 眉标：微型胶囊徽章 */
+  .eyebrow-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.04]
+      px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-accent;
   }
 
-  /* 眉标：青绿 mono 小标签 */
+  /* 眉标（行内版，不带底） */
   .eyebrow {
     @apply font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-accent;
   }
 
-  /* 主按钮：纸白底墨字（深色 UI 的主 CTA 形态） */
+  /* 岛式主按钮：胶囊 + 物理按压（尾随圆图标由组件内嵌） */
   .btn-primary {
-    @apply rounded-lg bg-paper-ink px-8 py-2.5 font-semibold text-paper shadow-paper transition-all
-      duration-200 hover:-translate-y-px hover:bg-white active:translate-y-0
+    @apply inline-flex items-center gap-3 rounded-full bg-paper-ink py-2 pl-6 pr-2 font-semibold text-paper
+      transition-all duration-500 ease-fluid hover:-translate-y-px hover:bg-white active:scale-[0.98]
       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
       disabled:pointer-events-none disabled:opacity-30;
+  }
+  .btn-primary .btn-orb {
+    @apply flex h-8 w-8 items-center justify-center rounded-full bg-black/[0.08] text-sm
+      transition-all duration-500 ease-fluid group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-px group-hover/btn:bg-black/[0.14];
   }
 
   .btn-ghost {
-    @apply rounded-lg border border-paper-line bg-paper-card px-6 py-2.5 font-medium text-paper-ink
-      transition-all duration-200 hover:border-paper-muted hover:-translate-y-px
+    @apply inline-flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.03] px-6 py-2.5
+      font-medium text-paper-ink transition-all duration-500 ease-fluid hover:-translate-y-px
+      hover:border-white/25 hover:bg-white/[0.06] active:scale-[0.98]
       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
       disabled:pointer-events-none disabled:opacity-30;
   }
 
-  /* 选项行：选中 = 青绿边 + 深绿面 + 左缘亮条 */
+  /* 选项行：内核玻璃 + 选中青绿晕染 + 左缘亮条 */
   .choice {
-    @apply relative flex cursor-pointer items-center gap-3 rounded-lg border border-paper-line
-      bg-paper-card px-4 py-3 text-[15px] leading-relaxed shadow-paper transition-all duration-200
-      hover:-translate-y-px hover:border-paper-muted hover:shadow-paper-lg
-      has-[:checked]:border-accent has-[:checked]:bg-accent-soft has-[:checked]:shadow-stamp;
+    @apply relative flex cursor-pointer items-center gap-3 rounded-2xl border border-white/[0.06]
+      bg-white/[0.02] px-4 py-3.5 text-[15px] leading-relaxed transition-all duration-500 ease-fluid
+      hover:-translate-y-px hover:border-white/[0.14] hover:bg-white/[0.04]
+      has-[:checked]:border-accent/60 has-[:checked]:bg-accent-soft has-[:checked]:shadow-stamp;
   }
   .choice::before {
     content: '';
     position: absolute;
     left: -1px;
-    top: 8px;
-    bottom: 8px;
+    top: 10px;
+    bottom: 10px;
     width: 3px;
     border-radius: 2px;
     background: #34d399;
     opacity: 0;
     transform: scaleY(0.4);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.3s cubic-bezier(0.32, 0.72, 0, 1), transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
   }
   .choice:has(:checked)::before {
     opacity: 1;
@@ -106,23 +114,25 @@ input[type='radio'] {
   }
 }
 
-@keyframes fade-up {
+/* 入场编排：重物上浮 + 去模糊（--d 级联延迟） */
+@keyframes reveal {
   0% {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(40px);
+    filter: blur(10px);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .rise {
-    animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
+.reveal {
+  animation: reveal 0.9s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation-delay: var(--d, 0ms);
 }
 @media (prefers-reduced-motion: reduce) {
-  .rise {
+  .reveal {
     animation: none;
   }
 }
@@ -131,11 +141,4 @@ h1,
 h2,
 h3 {
   text-wrap: balance;
-}
-
-@layer components {
-  /* 统计大数：真数据的衬线展示 */
-  .stat-figure {
-    @apply tnum block font-sans text-4xl font-bold leading-none tracking-tight text-paper-ink md:text-5xl;
-  }
 }
