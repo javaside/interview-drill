@@ -1,0 +1,30 @@
+id: architect
+name: 架构师
+tagline: 系统设计方法论 / 容量与权衡 / 治理演进 / 大案实战——架构岗的全链路弹药库
+blocks:
+  # 架构师核心（方法论与实战）
+  - architecture/sysdesign-method
+  - architecture/capacity-planning
+  - architecture/tech-decision
+  - architecture/arch-governance
+  - architecture/system-cases
+  # 分布式系统（架构师的看家本领）
+  - distributed/high-availability
+  - distributed/dist-cache
+  - distributed/dist-tx
+  - distributed/sharding
+  - distributed/consensus
+  - distributed/arch-evolution
+  # 存储与数据
+  - mysql/index-basics
+  - mysql/sql-optimization
+  - mysql/transactions
+  - mysql/binlog
+  # 服务化与中间件
+  - rpc/rpc-basics
+  - rpc/service-governance
+  - mq/mq-fundamentals
+  # 网络与应用层
+  - network/net-layers
+  - network/http-protocol
+  - network/dns-cdn

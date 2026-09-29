@@ -116,14 +116,15 @@ export async function runUpsert(db: SqlRunner, contentDir = CONTENT_DIR): Promis
       update cards set retired_at = current_date
       where retired_at is null and id not in ${cardList}`)
 
-    // 要点 tombstone：按 (card_id, id) 复合键判断源里是否还在
-    const pairs = cards.flatMap(c => c.keyPoints.map(kp => ({ cardId: c.id, id: kp.id })))
-    const pairList = pairs.length > 0
-      ? sql`(${sql.join(pairs.map(p => sql`(${p.cardId}, ${p.id})`), sql`, `)})`
-      : sql`((null, null))`
+    // 要点 tombstone：按 (card_id, id) 复合键判断源里是否还在。
+    // 不平铺元组参数（1763 要点=7052 绑定参数，PGlite 拒绝且真 PG 也会随库增长撞上限），
+    // 改为单参数传 JSON 数组 + unnest 比对拼接键（'#' 不出现在 ULID/kp id 中，无歧义）。
+    const liveKeys = cards.flatMap(c => c.keyPoints.map(kp => `${c.id}#${kp.id}`))
     await tx.execute(sql`
       update key_points set retired_at = current_date
-      where retired_at is null and (card_id, id) not in ${pairList}`)
+      where retired_at is null
+        and (card_id || '#' || id) not in (
+          select jsonb_array_elements_text(${JSON.stringify(liveKeys)}::jsonb))`)
   })
 
   return { blocks: blocks.length, cards: cards.length, keyPoints: keyPointCount, tracks: tracks.length }
