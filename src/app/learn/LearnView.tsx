@@ -19,13 +19,13 @@ function DetailLayers({ detail, indent = true }: { detail: string; indent?: bool
   const { intro, advanced } = splitDetail(detail)
   return (
     <div className={`mt-2 text-[15px] leading-relaxed text-paper-ink ${indent ? 'pl-8' : ''}`}>
-      <p className="whitespace-pre-line"><RichText text={intro} /></p>
+      <div className="space-y-2"><RichText text={intro} /></div>
       {advanced !== '' && (
         <details className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3">
           <summary className="cursor-pointer text-sm font-medium text-paper-muted">
             进阶（面试深度）
           </summary>
-          <p className="mt-2 whitespace-pre-line"><RichText text={advanced} /></p>
+          <div className="mt-2 space-y-2"><RichText text={advanced} /></div>
         </details>
       )}
     </div>

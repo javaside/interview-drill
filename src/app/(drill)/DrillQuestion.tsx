@@ -122,11 +122,11 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
             </button>
             {showDetail && (
               <div className="mt-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
-                <p className="whitespace-pre-line"><RichText text={splitDetail(card.detail).intro} /></p>
+                <div className="space-y-2"><RichText text={splitDetail(card.detail).intro} /></div>
                 {splitDetail(card.detail).advanced !== '' && (
                   <details className="mt-2">
                     <summary className="cursor-pointer text-sm text-paper-muted">进阶（面试深度）</summary>
-                    <p className="mt-2 whitespace-pre-line"><RichText text={splitDetail(card.detail).advanced} /></p>
+                    <div className="mt-2 space-y-2"><RichText text={splitDetail(card.detail).advanced} /></div>
                   </details>
                 )}
               </div>

@@ -95,11 +95,11 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
             </button>
             {showDetail && (
               <div className="mt-3 rounded-r-md border border-l-2 border-l-accent border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
-                <p className="whitespace-pre-line"><RichText text={splitDetail(card.detail).intro} /></p>
+                <div className="space-y-2"><RichText text={splitDetail(card.detail).intro} /></div>
                 {splitDetail(card.detail).advanced !== '' && (
                   <details className="mt-2">
                     <summary className="cursor-pointer text-sm text-paper-muted">进阶（面试深度）</summary>
-                    <p className="mt-2 whitespace-pre-line"><RichText text={splitDetail(card.detail).advanced} /></p>
+                    <div className="mt-2 space-y-2"><RichText text={splitDetail(card.detail).advanced} /></div>
                   </details>
                 )}
               </div>
