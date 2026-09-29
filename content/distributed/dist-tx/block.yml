@@ -1,0 +1,4 @@
+id: distributed/dist-tx
+name: 分布式事务
+category: distributed
+status: ready
