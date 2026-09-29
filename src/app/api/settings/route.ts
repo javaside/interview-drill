@@ -26,7 +26,7 @@ export async function POST(request: Request): Promise<Response> {
   const userId = await requireUserId(request)
   if (userId instanceof Response) return userId
 
-  const body = (await request.json()) as { readyByDate?: LocalDate | null; dailyCapacity?: number }
+  const body = (await request.json()) as { readyByDate?: LocalDate | null; dailyCapacity?: number; trackId?: string | null }
   const result = await applySettingsChange(
     { db: getDb(), serverNowMs: Date.now() }, userId, body,
   )

@@ -7,7 +7,7 @@ import { runUpsert } from './run.js'
  */
 async function main(): Promise<void> {
   const r = await runUpsert(getDb())
-  console.log(`已 upsert：${r.blocks} 块 / ${r.cards} 卡 / ${r.keyPoints} 要点`)
+  console.log(`已 upsert：${r.blocks} 块 / ${r.cards} 卡 / ${r.keyPoints} 要点 / ${r.tracks} 个岗位包`)
 }
 
 main().catch((e: unknown) => {

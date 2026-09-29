@@ -15,6 +15,13 @@
       "when": 1790222715383,
       "tag": "0001_polite_proudstar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790650823225,
+      "tag": "0002_blushing_retro_girl",
+      "breakpoints": true
     }
   ]
 }

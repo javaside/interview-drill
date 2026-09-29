@@ -14,6 +14,8 @@ export const userSettings = pgTable('user_settings', {
   timezone: text('timezone').notNull().default('Asia/Shanghai'),
   plan: text('plan').notNull().default('free'),   // 'free' | 'paid'
   freeBlockIds: jsonb('free_block_ids').$type<string[]>().notNull().default([]),
+  /** 当前岗位包（tracks.id）；null = 全部。纯导航偏好，不进 entitlement */
+  trackId: text('track_id'),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 })
 
@@ -21,6 +23,18 @@ export const blocks = pgTable('blocks', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   category: text('category').notNull(),           // 大类，干扰项池的分组键
+})
+
+/**
+ * 岗位包（track）：块的有序引用集合，与 category 正交的导航视图。
+ * 不外键到 blocks——内容源（content/tracks/*.yml）为准 upsert，
+ * audit 在内容关保证引用存在；track 下线时 UI 对悬空 trackId 回退「全部」。
+ */
+export const tracks = pgTable('tracks', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  tagline: text('tagline').notNull(),
+  blockIds: jsonb('block_ids').$type<string[]>().notNull().default([]),
 })
 
 export const cards = pgTable('cards', {

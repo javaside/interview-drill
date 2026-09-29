@@ -4,6 +4,8 @@ import { SettingsForm } from '../../src/app/settings/SettingsForm.js'
 
 const view = {
   readyByDate: '2026-11-01', dailyCapacity: 45, plan: 'free',
+  trackId: 'java-backend',
+  tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: '服务端主力岗' }],
   blocks: [
     { blockId: 'b1', blockName: 'MySQL', category: 'mysql', cardCount: 23, selected: true },
     { blockId: 'b2', blockName: 'Redis', category: 'mysql', cardCount: 18, selected: false },
@@ -55,9 +57,20 @@ test('保存：调 postSettings + postBlocks，显示重排条数', async () => 
   const api = mkApi()
   render(<SettingsForm view={view} api={api as never} />)
   await u.click(screen.getByRole('button', { name: /保存/ }))
-  expect(api.postSettings).toHaveBeenCalledWith({ readyByDate: '2026-11-01', dailyCapacity: 45 })
+  expect(api.postSettings).toHaveBeenCalledWith({ readyByDate: '2026-11-01', dailyCapacity: 45, trackId: 'java-backend' })
   expect(api.postBlocks).toHaveBeenCalledWith({ blockIds: ['b1'] })
   expect(await screen.findByText(/重排.*12/)).toBeInTheDocument()
+})
+
+test('岗位单选：预选当前岗位，切到「全部」后保存带 trackId null', async () => {
+  const u = userEvent.setup()
+  const api = mkApi()
+  render(<SettingsForm view={view} api={api as never} />)
+  expect(screen.getByRole('radio', { name: /Java 后端/ })).toBeChecked()
+  expect(screen.getByRole('radio', { name: /^全部$/ })).not.toBeChecked()
+  await u.click(screen.getByRole('radio', { name: /^全部$/ }))
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(api.postSettings).toHaveBeenCalledWith(expect.objectContaining({ trackId: null }))
 })
 
 test('临时加密（§5.8）：填面试日期提交 → 调 postCram 并回显加密结果', async () => {

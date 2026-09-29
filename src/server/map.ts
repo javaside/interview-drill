@@ -67,3 +67,19 @@ export async function buildBlockMap(deps: BlockMapDeps): Promise<BlockMapEntry[]
     mastery: blockMastery(entriesByBlock.get(b.blockId) ?? []),
   }))
 }
+
+/**
+ * 按岗位包过滤地图（纯核）：只保留 track 引用的块，**组内按 track 的建议顺序**排列
+ * （category 分组由视图层做，这里只过滤+排序）。track 不在列表中（未知 id/悬空）→
+ * 视为「全部」，原样返回——岗位是导航视图，宁可全显也不空白。
+ */
+export function filterEntriesByTrack(
+  entries: BlockMapEntry[], tracks: Array<{ id: string; blockIds: string[] }>, trackId: string | null,
+): BlockMapEntry[] {
+  if (trackId === null) return entries
+  const track = tracks.find(t => t.id === trackId)
+  if (track === undefined) return entries
+  const order = new Map(track.blockIds.map((id, i) => [id, i] as const))
+  const inTrack = entries.filter(e => order.has(e.blockId))
+  return inTrack.sort((a, b) => (order.get(a.blockId)! - order.get(b.blockId)!))
+}

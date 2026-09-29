@@ -12,6 +12,9 @@ export type AuditResult = {
  */
 export type BlockLike = { id: string; status: 'wip' | 'ready' }
 
+/** 岗位包的最小形状（Track 在结构上满足它） */
+export type TrackLike = { id: string; blocks: string[] }
+
 /**
  * 同块可用干扰项池下界，**按 cardType 分派**。§4.3 的出题形式决定需求：
  *
@@ -42,7 +45,9 @@ export const MIN_BLOCK_POOL: Record<CardType, number> = {
  * 撞线的只有试点这种刻意做小的块。
  */
 
-export function auditLibrary(cards: Card[], blocks: BlockLike[] = []): AuditResult {
+export function auditLibrary(
+  cards: Card[], blocks: BlockLike[] = [], tracks: TrackLike[] = [],
+): AuditResult {
   const errors: string[] = []
   const warnings: string[] = []
 
@@ -150,6 +155,25 @@ export function auditLibrary(cards: Card[], blocks: BlockLike[] = []): AuditResu
     for (const b of blocks) {
       if (ids.has(b.id)) errors.push(`块 id 重复：${b.id}`)
       ids.add(b.id)
+    }
+  }
+
+  // 岗位包（track）引用完整性：id 唯一、块引用存在、同包内不重复。
+  // track 是导航视图，引用错了用户侧表现为「岗位包缺块/幽灵块」，必须在内容关拦截。
+  if (tracks.length > 0) {
+    const declaredBlocks = new Set(blocks.map(b => b.id))
+    const trackIds = new Set<string>()
+    for (const t of tracks) {
+      if (trackIds.has(t.id)) errors.push(`track id 重复：${t.id}`)
+      trackIds.add(t.id)
+      const seen = new Set<string>()
+      for (const b of t.blocks) {
+        if (blocks.length > 0 && !declaredBlocks.has(b)) {
+          errors.push(`track ${t.id} 引用了不存在的块：${b}`)
+        }
+        if (seen.has(b)) errors.push(`track ${t.id} 内块重复引用：${b}`)
+        seen.add(b)
+      }
     }
   }
 

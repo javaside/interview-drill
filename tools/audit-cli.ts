@@ -2,23 +2,25 @@ import { readFileSync, existsSync, readdirSync, statSync, writeFileSync } from '
 import { join } from 'node:path'
 import { parseCard } from '../src/lib/content/parse.js'
 import { parseBlock } from '../src/lib/content/block.js'
+import { parseTrack } from '../src/lib/content/track.js'
 import { auditLibrary, checkIdLock } from '../src/lib/content/audit.js'
 import type { Card } from '../src/lib/content/types.js'
 import type { Block } from '../src/lib/content/block.js'
+import type { Track } from '../src/lib/content/track.js'
 
 const CONTENT_DIR = 'content'
 const LOCK_FILE = join(CONTENT_DIR, '.ids.lock')
 
-function walk(dir: string, ext: string): string[] {
+function walk(dir: string, matches: (name: string) => boolean): string[] {
   if (!existsSync(dir)) return []
   return readdirSync(dir).flatMap(name => {
     const p = join(dir, name)
-    if (statSync(p).isDirectory()) return walk(p, ext)
-    return p.endsWith(ext) ? [p] : []
+    if (statSync(p).isDirectory()) return walk(p, matches)
+    return matches(name) ? [p] : []
   })
 }
 
-const files = walk(CONTENT_DIR, '.md')
+const files = walk(CONTENT_DIR, n => n.endsWith('.md'))
 const cards: Card[] = []
 const issues: string[] = []
 
@@ -29,13 +31,21 @@ for (const f of files) {
 }
 
 const blocks: Block[] = []
-for (const f of walk(CONTENT_DIR, 'block.yml')) {
+for (const f of walk(CONTENT_DIR, n => n === 'block.yml')) {
   const r = parseBlock(readFileSync(f, 'utf8'), f)
   if (r.ok) blocks.push(r.block)
   else issues.push(...r.issues)
 }
 
-const { errors } = auditLibrary(cards, blocks)
+// 岗位包：content/tracks/*.yml（目录允许不存在——P0 之前的老库没有它）
+const tracks: Track[] = []
+for (const f of walk(join(CONTENT_DIR, 'tracks'), n => n.endsWith('.yml'))) {
+  const r = parseTrack(readFileSync(f, 'utf8'), f)
+  if (r.ok) tracks.push(r.track)
+  else issues.push(...r.issues)
+}
+
+const { errors } = auditLibrary(cards, blocks, tracks)
 issues.push(...errors)
 
 if (existsSync(LOCK_FILE)) {
@@ -55,7 +65,7 @@ if (process.argv.includes('--write-lock')) {
   console.log(`已写入 ${LOCK_FILE}（${ids.length} 个 id）`)
 }
 
-console.log(`解析 ${files.length} 张卡文件、${blocks.length} 个块`)
+console.log(`解析 ${files.length} 张卡文件、${blocks.length} 个块、${tracks.length} 个岗位包`)
 if (issues.length > 0) {
   console.error(`\n发现 ${issues.length} 个问题：`)
   for (const i of issues) console.error(`  - ${i}`)

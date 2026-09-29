@@ -20,6 +20,7 @@ export function SettingsForm(
   const client = api ?? browserApi()
   const [readyByDate, setReadyByDate] = useState<string>(view.readyByDate ?? '')
   const [dailyCapacity, setDailyCapacity] = useState<number>(view.dailyCapacity)
+  const [trackId, setTrackId] = useState<string>(view.trackId ?? '')
   const [selected, setSelected] = useState<Set<string>>(
     () => new Set(view.blocks.filter(b => b.selected).map(b => b.blockId)),
   )
@@ -43,6 +44,7 @@ export function SettingsForm(
     const { replanned: n } = await client.postSettings({
       readyByDate: readyByDate === '' ? null : (readyByDate as SettingsView['readyByDate']),
       dailyCapacity,
+      trackId: trackId === '' ? null : trackId,
     })
     await client.postBlocks({ blockIds: [...selected] })
     setReplanned(n)
@@ -57,6 +59,45 @@ export function SettingsForm(
       className="mx-auto max-w-2xl px-5 py-8"
     >
       <h1 className="mb-6 font-serif text-xl font-semibold text-paper-ink">设置</h1>
+
+      {view.tracks.length > 0 && (
+        <fieldset className="mb-8">
+          <legend className="mb-3 text-xs tracking-[0.2em] text-paper-muted">面试岗位</legend>
+          <ul className="space-y-2">
+            <li>
+              <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
+                <input
+                  type="radio"
+                  name="track"
+                  checked={trackId === ''}
+                  onChange={() => setTrackId('')}
+                />
+                <span className="flex-1">全部</span>
+              </label>
+            </li>
+            {view.tracks.map(t => (
+              <li key={t.id}>
+                <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
+                  <input
+                    type="radio"
+                    name="track"
+                    value={t.id}
+                    checked={trackId === t.id}
+                    onChange={() => setTrackId(t.id)}
+                  />
+                  <span className="flex-1">
+                    <span className="font-medium">{t.name}</span>
+                    <span className="ml-2 text-xs text-paper-muted">{t.tagline}</span>
+                  </span>
+                </label>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-1.5 text-xs text-paper-muted">
+            岗位决定地图与学习的默认视野（块的推荐集合），不影响排期与免费块额度
+          </p>
+        </fieldset>
+      )}
 
       <div className="mb-6">
         <label htmlFor="settings-ready-by" className="mb-1.5 block text-xs tracking-[0.2em] text-paper-muted">

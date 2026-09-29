@@ -28,3 +28,22 @@ test('未解锁块：显示「N 题」且是链到 /upgrade 的唯一转化入�
   expect(locked).toHaveAttribute('href', '/upgrade')
   expect(screen.getAllByTestId('locked-block')).toHaveLength(1)   // 全页唯一
 })
+
+test('岗位 tab：tracks 存在时渲染导航，当前岗位高亮（aria-current）', () => {
+  const tracks = [
+    { id: 'java-backend', name: 'Java 后端' },
+    { id: 'agent-dev', name: 'Agent 开发' },
+  ]
+  render(<KnowledgeMap entries={entries} tracks={tracks} activeTrackId="agent-dev" />)
+  const all = screen.getByRole('link', { name: '全部' })
+  expect(all).toHaveAttribute('href', '/map')
+  expect(all).not.toHaveAttribute('aria-current', 'page')
+  const agent = screen.getByRole('link', { name: 'Agent 开发' })
+  expect(agent).toHaveAttribute('href', '/map?track=agent-dev')
+  expect(agent).toHaveAttribute('aria-current', 'page')
+})
+
+test('无 tracks（老库）不渲染岗位 tab', () => {
+  render(<KnowledgeMap entries={entries} />)
+  expect(screen.queryByRole('link', { name: '全部' })).not.toBeInTheDocument()
+})

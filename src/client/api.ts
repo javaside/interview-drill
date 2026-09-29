@@ -17,7 +17,7 @@ export interface Api {
   /** POST /api/sync，body = { submissions } → 批量回放结果 */
   postSync(subs: Submission[]): Promise<SyncResult>
   /** POST /api/settings → 因就绪日/容量变更重排的卡数 */
-  postSettings(body: { readyByDate?: LocalDate | null; dailyCapacity?: number }): Promise<{ replanned: number }>
+  postSettings(body: { readyByDate?: LocalDate | null; dailyCapacity?: number; trackId?: string | null }): Promise<{ replanned: number }>
   /** POST /api/blocks → 暂停/新增的块数 */
   postBlocks(body: { blockIds: string[] }): Promise<{ paused: number; added: number }>
   /** POST /api/billing/create-order → 订单号 + 服务端定价 + 网关拉起支付参数 */

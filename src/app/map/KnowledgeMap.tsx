@@ -9,13 +9,21 @@ function masteryView(e: BlockMapEntry): { label: string; pct: number | null } {
 
 /**
  * 知识地图（§4.4 掌握度 + §10.1 唯一转化入口）。可作 server component。
- * 按大类分组的纸卡列表：
+ * 顶部岗位 tab（全部 | 各岗位包）是纯导航链接（?track=）；选中岗位时
+ * entries 已由 page 侧按 track 顺序过滤，本组件仍按大类分组渲染。
  * - 每块一格 `data-testid=block-{id}`：块名 + 掌握度（untried 显示「未刷」，§4.4）+ 细进度条。
  * - 解锁块 → `<a href="/practice?block={id}">` 自由刷题（v2：想刷就刷，不看排期）。
  * - 未解锁块 → 「{cardCount} 题 · 解锁」链到 /upgrade，`data-testid=locked-block`。
  *   这是产品内**唯一**付费转化入口——本页除此之外无任何付费文案（§10.1）。
  */
-export function KnowledgeMap({ entries }: { entries: BlockMapEntry[] }): React.JSX.Element {
+export function KnowledgeMap({
+  entries, tracks = [], activeTrackId = null,
+}: {
+  entries: BlockMapEntry[]
+  /** 岗位包列表（id/name），空 = 不渲染 tab（老库无 tracks） */
+  tracks?: Array<{ id: string; name: string }>
+  activeTrackId?: string | null
+}): React.JSX.Element {
   const groups = new Map<string, BlockMapEntry[]>()
   for (const e of entries) {
     const arr = groups.get(e.category) ?? []
@@ -24,6 +32,35 @@ export function KnowledgeMap({ entries }: { entries: BlockMapEntry[] }): React.J
   }
   return (
     <div className="mx-auto max-w-2xl px-5 py-8">
+      {tracks.length > 0 && (
+        <nav aria-label="岗位" className="mb-6 flex flex-wrap gap-2">
+          <a
+            href="/map"
+            aria-current={activeTrackId === null ? 'page' : undefined}
+            className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+              activeTrackId === null
+                ? 'border-paper-ink bg-paper-ink text-paper'
+                : 'border-paper-line bg-paper-card text-paper-ink hover:border-paper-muted'
+            }`}
+          >
+            全部
+          </a>
+          {tracks.map(t => (
+            <a
+              key={t.id}
+              href={`/map?track=${t.id}`}
+              aria-current={activeTrackId === t.id ? 'page' : undefined}
+              className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+                activeTrackId === t.id
+                  ? 'border-paper-ink bg-paper-ink text-paper'
+                  : 'border-paper-line bg-paper-card text-paper-ink hover:border-paper-muted'
+              }`}
+            >
+              {t.name}
+            </a>
+          ))}
+        </nav>
+      )}
       {groups.size === 0 && (
         <p className="py-16 text-center text-sm text-paper-muted">题库还是空的</p>
       )}

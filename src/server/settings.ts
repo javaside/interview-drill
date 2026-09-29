@@ -5,9 +5,9 @@ import { localDateOf } from './time.js'
 import { diffDays } from '../lib/scheduler/date.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
 import {
-  loadSettings, updateUserSettings, updateFreeBlockIds,
+  loadSettings, loadTracks, updateUserSettings, updateFreeBlockIds,
   clearActivePlans, pauseCardsInBlocks, resumeCardsInBlocks, reviveDoneCards,
-  loadBlocks, type SqlRunner,
+  loadBlocks, type SqlRunner, type TrackRow,
 } from './db/adapters.js'
 
 /** paid 用户全部块 id（done 复活范围）；free 由 freeBlockIds 决定 */
@@ -25,24 +25,33 @@ export type SettingsView = {
   readyByDate: LocalDate | null
   dailyCapacity: number
   plan: 'free' | 'paid'
+  /** 当前岗位包；null = 全部。纯导航偏好（不进 entitlement） */
+  trackId: string | null
+  /** 可选岗位包列表（id/name/tagline，供单选） */
+  tracks: Array<Pick<TrackRow, 'id' | 'name' | 'tagline'>>
   /** 按 DB 返回顺序的平铺块列表；category 供表单按大类分组渲染 */
   blocks: Array<{ blockId: string; blockName: string; category: string; cardCount: number; selected: boolean }>
 }
 
 /**
  * 装配设置屏视图（GET /api/settings 薄壳 + settings page 共用）：
- * loadSettings 取 readyByDate/dailyCapacity/plan；buildBlockMap 取块列表，
+ * loadSettings 取 readyByDate/dailyCapacity/plan/trackId；buildBlockMap 取块列表，
  * selected = unlocked（不发明新查询，复用 Task 9 的映射管线）。
+ * trackId 悬空（track 已下线）时归一化为 null——UI 不必处理幽灵值。
  */
 export async function loadSettingsView(deps: ServerDeps, userId: string): Promise<SettingsView> {
-  const [row, entries] = await Promise.all([
+  const [row, entries, tracks] = await Promise.all([
     loadSettings(deps.db, userId),
     buildBlockMap(mapDepsOf(deps.db, userId)),
+    loadTracks(deps.db),
   ])
+  const trackIds = new Set(tracks.map(t => t.id))
   return {
     readyByDate: row.readyByDate,
     dailyCapacity: row.dailyCapacity,
     plan: row.plan,
+    trackId: row.trackId !== null && trackIds.has(row.trackId) ? row.trackId : null,
+    tracks: tracks.map(t => ({ id: t.id, name: t.name, tagline: t.tagline })),
     blocks: entries.map(e => ({
       blockId: e.blockId,
       blockName: e.blockName,
@@ -65,9 +74,13 @@ export async function loadSettingsView(deps: ServerDeps, userId: string): Promis
  */
 export async function applySettingsChange(
   deps: ServerDeps, userId: string,
-  next: { readyByDate?: LocalDate | null; dailyCapacity?: number },
+  next: { readyByDate?: LocalDate | null; dailyCapacity?: number; trackId?: string | null },
 ): Promise<{ replanned: number }> {
   await updateUserSettings(deps.db, userId, next)
+  // trackId 是纯导航偏好：单独变更不触发重排（改岗位视图不该把排期打乱）
+  const touchesPlan = 'readyByDate' in next || next.dailyCapacity !== undefined
+  if (!touchesPlan) return { replanned: 0 }
+
   const row = await loadSettings(deps.db, userId)
   const today = localDateOf(deps.serverNowMs, row.timezone)
   // 存量 done 复活（v2 迁移）：v1 自动毕业的卡救回排期（两条模式路径都要；

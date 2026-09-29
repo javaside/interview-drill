@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm'
 import { createTestDb } from './helpers.js'
-import { buildBlockMap } from '../../src/server/map.js'
+import { buildBlockMap, filterEntriesByTrack } from '../../src/server/map.js'
+import type { BlockMapEntry } from '../../src/server/map.js'
 import { mapDepsOf } from '../../src/server/deps.js'
 
 const TZ = 'Asia/Shanghai'
@@ -36,4 +37,22 @@ test('buildBlockMap：题数、解锁位、掌握度（未刷块 untried）', as
     expect(b2.cardCount).toBe(3)
     expect(b2.mastery).toEqual({ kind: 'untried' })  // 无状态卡
   } finally { await t.pg.close() }
+})
+
+// ===== 岗位包过滤（纯核，不依赖 DB） =====
+const mkEntry = (id: string): BlockMapEntry => ({
+  blockId: id, blockName: id, category: 'x', cardCount: 1, unlocked: true,
+  mastery: { kind: 'untried' },
+})
+
+test('filterEntriesByTrack：按 track 过滤并按建议顺序排列', () => {
+  const entries = [mkEntry('a'), mkEntry('b'), mkEntry('c')]
+  const tracks = [{ id: 't1', blockIds: ['c', 'a'] }]
+  expect(filterEntriesByTrack(entries, tracks, 't1').map(e => e.blockId)).toEqual(['c', 'a'])
+})
+
+test('filterEntriesByTrack：null 或未知 track → 全量原样（宁可全显不空白）', () => {
+  const entries = [mkEntry('a'), mkEntry('b')]
+  expect(filterEntriesByTrack(entries, [{ id: 't1', blockIds: ['a'] }], null)).toHaveLength(2)
+  expect(filterEntriesByTrack(entries, [{ id: 't1', blockIds: ['a'] }], 'ghost')).toHaveLength(2)
 })

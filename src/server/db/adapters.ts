@@ -26,15 +26,20 @@ function inList(values: string[]): SQL {
   return sql`(${sql.join(values.map(v => sql`${v}`), sql`, `)})`
 }
 
-export type UserSettingsRow = Settings & { timezone: string; plan: 'free' | 'paid'; freeBlockIds: string[] }
+export type UserSettingsRow = Settings & {
+  timezone: string
+  plan: 'free' | 'paid'
+  freeBlockIds: string[]
+  trackId: string | null
+}
 
 /** user_settings → 内存设置（readyByDate 可空 = 维持模式） */
 export async function loadSettings(db: SqlRunner, userId: string): Promise<UserSettingsRow> {
   const r = await db.execute<{
     ready_by_date: string | null; daily_capacity: number; timezone: string
-    plan: string; free_block_ids: string[]
+    plan: string; free_block_ids: string[]; track_id: string | null
   }>(sql`
-    select ready_by_date, daily_capacity, timezone, plan, free_block_ids
+    select ready_by_date, daily_capacity, timezone, plan, free_block_ids, track_id
     from user_settings where user_id = ${userId}`)
   const row = r.rows[0]
   if (row === undefined) throw new Error(`用户设置缺失：${userId}`)
@@ -44,7 +49,17 @@ export async function loadSettings(db: SqlRunner, userId: string): Promise<UserS
     timezone: row.timezone,
     plan: row.plan === 'paid' ? 'paid' : 'free',
     freeBlockIds: row.free_block_ids ?? [],
+    trackId: row.track_id,
   }
+}
+
+export type TrackRow = { id: string; name: string; tagline: string; blockIds: string[] }
+
+/** 岗位包全表（配置数据，量级是个位数） */
+export async function loadTracks(db: SqlRunner): Promise<TrackRow[]> {
+  const r = await db.execute<{ id: string; name: string; tagline: string; block_ids: string[] }>(sql`
+    select id, name, tagline, block_ids from tracks order by id`)
+  return r.rows.map(t => ({ id: t.id, name: t.name, tagline: t.tagline, blockIds: t.block_ids ?? [] }))
 }
 
 /** UserSettingsRow → Entitlement（付费恒空 freeBlockIds） */
@@ -431,11 +446,12 @@ export async function requeueTodaysCards(
 /** 设置变更（§5.5 条件 2/3）：只更新传入字段，其余不动 */
 export async function updateUserSettings(
   db: SqlRunner, userId: string,
-  next: { readyByDate?: LocalDate | null; dailyCapacity?: number },
+  next: { readyByDate?: LocalDate | null; dailyCapacity?: number; trackId?: string | null },
 ): Promise<void> {
   const sets: SQL[] = []
   if ('readyByDate' in next) sets.push(sql`ready_by_date = ${next.readyByDate ?? null}`)
   if (next.dailyCapacity !== undefined) sets.push(sql`daily_capacity = ${next.dailyCapacity}`)
+  if ('trackId' in next) sets.push(sql`track_id = ${next.trackId ?? null}`)
   if (sets.length === 0) return
   sets.push(sql`updated_at = now()`)
   await db.execute(sql`
