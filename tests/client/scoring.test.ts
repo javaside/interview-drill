@@ -22,11 +22,13 @@ test('selection：漏一条 + 错勾一条 → correct=1 wrong=1 missed=2', () =
   expect(r.missed).toBe(2)           // 2、5 未勾
 })
 
-test('judgment：结论错 → 0 分、missed 记全部正确项', () => {
+test('judgment：结论错 → 0 分；记账按实际勾选（与染色同口径，不再归零/记全错）', () => {
   const sub: Submission = { submissionId: 's', cardId: 'c', reviewedAtMs: 0, kind: 'judgment', conclusion: 0, selected: [0] }
   const r = scoreLocal({ cardType: 'judgment', conclusion: 'depends' }, { ...variant, correctIndices: [0] }, sub)
-  expect(r.score).toEqual(rat(0, 1))
-  expect(r.missed).toBe(1)
+  expect(r.score).toEqual(rat(0, 1))     // 结论错一票否决
+  expect(r.correctChecked).toBe(1)       // 要点勾对了（染色也是绿）
+  expect(r.missed).toBe(0)               // 没有漏选——header 与屏② 染色一致
+  expect(r.wrongChecked).toBe(0)
 })
 
 test('atomic：命中 1 分', () => {
