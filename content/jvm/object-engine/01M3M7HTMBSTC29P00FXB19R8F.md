@@ -60,4 +60,4 @@ keyPoints:
 **术语速查**：句柄=对象地址的中转牌｜直接指针=一步到位｜搬家成本=改谁指向它
 
 <!--advanced-->
-HotSpot 的 oop（ordinary object pointer）即直接指针形态；压缩指针下 oop 是 32 位偏移（管 32GB）。句柄派代表：早期 IBM J9。GC 移动的改引用由 roots 枚举+卡表/RSet 收敛范围。`,
+HotSpot 的 oop（ordinary object pointer）即直接指针形态；压缩指针下 oop 是 32 位偏移（管 32GB）。句柄派代表：早期 IBM J9。GC 移动的改引用由 roots 枚举+卡表/RSet 收敛范围。
