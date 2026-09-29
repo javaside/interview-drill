@@ -1,0 +1,20 @@
+id: agent-dev
+name: Agent 开发
+tagline: LLM 生成原理 / RAG / Agent 模式 / 工程化与安全——AI 应用开发岗全家桶
+blocks:
+  # LLM 与提示核心
+  - agent/llm-basics
+  - agent/prompt-context
+  - agent/rag
+  - agent/agent-patterns
+  - agent/llm-engineering
+  - agent/eval-safety
+  # 网络底座（API/流式/协议）
+  - network/net-layers
+  - network/tcp-connection
+  - network/http-protocol
+  # 系统底座（进程与 IO 模型是流式与并发的地基）
+  - os/process-thread
+  - os/io-model
+  # 异步与并发编排
+  - concurrency/thread-pools
