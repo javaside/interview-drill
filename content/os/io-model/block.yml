@@ -1,0 +1,4 @@
+id: os/io-model
+name: 磁盘 IO 与调度
+category: os
+status: ready
