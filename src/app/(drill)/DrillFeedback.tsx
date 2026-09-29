@@ -77,7 +77,7 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
   }
 
   return (
-    <section className="rise mx-auto max-w-2xl px-5 py-8">
+    <section className="rise pb-2 pt-2">
       <header className="mb-6">
         <div className="eyebrow">{card.blockName}</div>
         <h1 className="mt-3 font-serif text-[1.75rem] font-semibold leading-tight tracking-tight text-paper-ink text-balance md:text-3xl">

@@ -92,7 +92,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
   }
 
   return (
-    <section className="rise mx-auto max-w-2xl px-5 pb-10 pt-2">
+    <section className="rise pb-6">
       <div className="shell mb-5"><div className="core p-7">
       <header className="mb-6">
         <span className="eyebrow-badge w-fit">

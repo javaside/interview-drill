@@ -44,12 +44,12 @@ export function LearnView({
   cardCount?: number
 }): React.JSX.Element {
   return (
-    <main className="rise mx-auto max-w-2xl px-5 pb-24 pt-2">
-      <p className="text-xs tracking-[0.2em] text-paper-muted">学习</p>
-      <h1 className="mt-2 font-serif text-3xl font-semibold tracking-tight text-paper-ink">{blockName}</h1>
+    <main className="rise mx-auto max-w-6xl px-6 pb-24 pt-2">
+      <p className="eyebrow">学习 · Learn</p>
+      <h1 className="mt-3 font-sans text-4xl font-bold tracking-tighter text-paper-ink md:text-5xl">{blockName}</h1>
       {locked ? (
-        <>
-          <p className="mt-3 text-[15px] leading-relaxed text-paper-muted">
+        <div className="mt-8 shell md:max-w-2xl"><div className="core p-8">
+          <p className="text-[15px] leading-relaxed text-paper-muted">
             这个块有 <span className="tnum font-semibold text-paper-ink">{cardCount ?? '这些'}</span> 题，
             还没有解锁——解锁后这里就是完整的教材。
           </p>
@@ -65,16 +65,40 @@ export function LearnView({
               在设置里把它选为免费块
             </a>
           </div>
-        </>
+        </div></div>
       ) : (
         <>
-          <p className="mt-2 text-sm text-paper-muted">
+          <p className="mt-3 max-w-[60ch] text-[15px] leading-relaxed text-paper-muted">
             通读下面的讲解，理解了再去做题检验——做题时也能随时回来看。
           </p>
 
-          <div className="mt-10 space-y-12">
+          <div className="mt-10 grid gap-12 lg:grid-cols-[220px_1fr]">
+            {cards.length > 3 && (
+              <aside className="hidden lg:block">
+                <div className="sticky top-24 shell">
+                  <div className="core p-5">
+                    <p className="eyebrow mb-4">本块目录</p>
+                    <ol className="space-y-1.5">
+                      {cards.map((c, i) => (
+                        <li key={c.cardId}>
+                          <a
+                            href={`#${c.cardId}`}
+                            className="tnum flex items-baseline gap-2 rounded-lg px-2.5 py-1.5 text-[13px] text-paper-muted transition-colors hover:bg-white/[0.04] hover:text-paper-ink"
+                          >
+                            <span className="font-mono text-[11px] opacity-60">{String(i + 1).padStart(2, '0')}</span>
+                            <span className="line-clamp-1">{c.question}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+              </aside>
+            )}
+            <div className="min-w-0">
+          <div className="space-y-14">
             {cards.map((c, i) => (
-              <article key={c.cardId} className="group relative pl-16">
+              <article id={c.cardId} key={c.cardId} className="group relative scroll-mt-28 pl-16">
                 {/* 大序号：serif 淡墨，行内导航兼装饰 */}
                 <span
                   aria-hidden="true"
@@ -95,7 +119,7 @@ export function LearnView({
             <p className="py-16 text-center text-sm text-paper-muted">这个块还没有学习材料</p>
           )}
 
-          <div className="mt-12 text-center">
+          <div className="mt-16 text-center">
             <a
               href={`/practice?block=${blockId}`}
               className="btn-primary group/btn inline-flex items-center gap-3 rounded-full py-2 pl-7 pr-2 text-base"
@@ -108,6 +132,8 @@ export function LearnView({
                 →
               </span>
             </a>
+          </div>
+            </div>
           </div>
         </>
       )}

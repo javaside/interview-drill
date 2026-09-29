@@ -134,33 +134,53 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
     window.location.reload()
   }
 
+  const progressPct = total === 0 ? 0 : Math.round((done / total) * 100)
+
   return (
-    <main className="rise mx-auto max-w-2xl px-5 pb-16">
-      <div className="sticky top-[72px] z-30 -mx-5 mb-4 rounded-2xl border border-white/[0.06] bg-paper/80 px-5 py-3 backdrop-blur-2xl">
-        <div className="flex items-center justify-between text-sm text-paper-muted">
-          <span>今日进度</span>
-          <div className="flex items-center gap-4">
-            {payload.missesToday > 0 && phase !== 'done' && (
-              <button
-                type="button"
-                onClick={requeueMisses}
-                className="tnum rounded-full border border-accent px-3 py-0.5 text-xs text-accent transition-colors hover:bg-accent-soft"
-              >
-                错题 {payload.missesToday}
-              </button>
-            )}
-            <span data-testid="progress" className="tnum font-medium text-paper-ink">{`${done}/${total}`}</span>
+    <main className="rise mx-auto max-w-6xl px-6 pb-24">
+      <div className="grid gap-10 md:grid-cols-[260px_1fr]">
+        {/* ===== 左栏：考务面板（md 起 sticky；移动端折叠为顶部横条） ===== */}
+        <aside className="md:sticky md:top-24 md:self-start">
+          <div className="shell">
+            <div className="core p-6">
+              <p className="eyebrow-badge w-fit">今日进度</p>
+              <div className="tnum mt-5 flex items-baseline gap-1.5">
+                <span data-testid="progress" className="font-serif text-6xl font-bold leading-none tracking-tighter text-paper-ink">
+                  {`${done}/${total}`}
+                </span>
+              </div>
+              {total > 0 && (
+                <div className="mt-5 h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]" aria-hidden="true">
+                  <div
+                    className="h-1.5 rounded-full bg-gradient-to-r from-accent to-accent/60 transition-[width] duration-700 ease-fluid"
+                    style={{ width: `${progressPct}%` }}
+                  />
+                </div>
+              )}
+              <div className="tnum mt-3 text-xs text-paper-muted">已完成 {progressPct}%</div>
+              <div className="mt-6 space-y-2 border-t border-white/[0.06] pt-5">
+                {payload.missesToday > 0 && phase !== 'done' && (
+                  <button
+                    type="button"
+                    onClick={requeueMisses}
+                    className="tnum w-full rounded-xl border border-accent/40 px-4 py-2.5 text-sm text-accent transition-all duration-500 ease-fluid hover:bg-accent-soft"
+                  >
+                    错题 {payload.missesToday}
+                  </button>
+                )}
+                <a
+                  href="/map"
+                  className="block w-full rounded-xl border border-white/[0.08] px-4 py-2.5 text-center text-sm text-paper-muted transition-all duration-500 ease-fluid hover:border-white/25 hover:text-paper-ink"
+                >
+                  返回知识地图
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
-        {total > 0 && (
-          <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-paper-wash" aria-hidden="true">
-            <div
-              className="h-1 rounded-full bg-paper-ink transition-all duration-500 ease-out"
-              style={{ width: `${total === 0 ? 0 : Math.round((done / total) * 100)}%` }}
-            />
-          </div>
-        )}
-      </div>
+        </aside>
+
+        {/* ===== 右栏：题卡主区 ===== */}
+        <div className="min-w-0">
 
       {phase === 'question' && card !== undefined && variant !== undefined && (
         <DrillQuestion key={card.cardId} card={card} variant={variant} onSubmit={handleSubmit} />
@@ -275,6 +295,8 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
           )}
         </div></section>
       )}
+      </div>
+      </div>
     </main>
   )
 }
