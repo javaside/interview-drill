@@ -1,8 +1,9 @@
-import { splitBlocks, splitBold, splitInlineCode } from '../lib/content/split.js'
+import { splitBlocks, splitBold, splitInlineCode, splitItalic } from '../lib/content/split.js'
 
 /**
- * 行内渲染：先按 `行内代码` 切分（代码段原样呈现，不再解析粗体），
- * 普通段再按 **粗体** 切分——零依赖极简 Markdown 子集的行内层。
+ * 行内渲染三层：先 `行内代码` 切分（代码段原样呈现）；普通段按 **粗体** 切分；
+ * 粗体段原样呈现、普通段再按 *斜体* 切分——数学乘号（31*h + c）都在粗体/代码
+ * 段内，不会被斜体误判。零依赖极简 Markdown 子集，不追求跨层嵌套。
  */
 function Inline({ text }: { text: string }): React.JSX.Element {
   return (
@@ -10,11 +11,18 @@ function Inline({ text }: { text: string }): React.JSX.Element {
       {splitInlineCode(text).map((seg, i) =>
         seg.code
           ? <code key={i} className="rounded bg-white/[0.07] px-1.5 py-0.5 font-mono text-[0.85em] text-paper-ink">{seg.text}</code>
-          : splitBold(seg.text).map((b, j) =>
-              b.bold
-                ? <strong key={`${i}-${j}`} className="font-semibold text-paper-ink">{b.text}</strong>
-                : <span key={`${i}-${j}`}>{b.text}</span>,
-            ),
+          : splitBold(seg.text).map((b, j) => {
+              if (b.bold) return <strong key={`${i}-${j}`} className="font-semibold text-paper-ink">{b.text}</strong>
+              return (
+                <>
+                  {splitItalic(b.text).map((it, k) =>
+                    it.italic
+                      ? <em key={`${i}-${j}-${k}`}>{it.text}</em>
+                      : <span key={`${i}-${j}-${k}`}>{it.text}</span>,
+                  )}
+                </>
+              )
+            }),
       )}
     </>
   )

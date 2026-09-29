@@ -26,6 +26,24 @@ export function splitInlineCode(text: string): Array<{ text: string; code: boole
   return text.split('`').map((seg, i) => ({ text: seg, code: i % 2 === 1 }))
 }
 
+/**
+ * `*斜体*` 标记切段（单星对，论文标题用法）——只对普通段调用：粗体段与
+ * 代码段内部不解析（`31*h + c` 数学乘号、`s[0]*31^n` 公式都在那里，防误判）。
+ * 无闭合的单星自然留在普通段，不炸。
+ */
+export function splitItalic(text: string): Array<{ text: string; italic: boolean }> {
+  const out: Array<{ text: string; italic: boolean }> = []
+  const re = /\*([^*\s][^*]*?)\*/g
+  let last = 0
+  for (const m of text.matchAll(re)) {
+    if (m.index! > last) out.push({ text: text.slice(last, m.index), italic: false })
+    out.push({ text: m[1]!, italic: true })
+    last = m.index! + m[0].length
+  }
+  if (last < text.length) out.push({ text: text.slice(last), italic: false })
+  return out
+}
+
 /** 块级元素：段落 / 无序列表 / 有序列表 / 代码块 / 表格 / 引用 / 标题（讲解正文实际用到的全部语法面） */
 export type Block =
   | { kind: 'p'; text: string }

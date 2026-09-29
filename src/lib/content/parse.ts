@@ -52,5 +52,15 @@ export function parseCard(raw: string, path: string): ParseResult {
     if (seqIssues.length > 0) return { ok: false, issues: seqIssues }
   }
 
+  // 正文标记配对校验：** / ` 奇数个 = 未配对，粗体会整体错位、反引号裸显在页面
+  const boldPairs = (card.detail.match(/\*\*/g) ?? []).length
+  if (boldPairs % 2 === 1) {
+    return { ok: false, issues: [`${path}: 正文 ** 未配对（共 ${boldPairs} 组）——渲染会错位，请修正正文标记`] }
+  }
+  const tickCount = (card.detail.match(/`/g) ?? []).length
+  if (tickCount % 2 === 1) {
+    return { ok: false, issues: [`${path}: 正文 \` 未配对（共 ${tickCount} 个）——会裸显在页面上，请删除或补全`] }
+  }
+
   return { ok: true, card }
 }

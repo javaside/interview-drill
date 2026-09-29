@@ -57,3 +57,15 @@ test('引用块渲染为 blockquote，标题渲染为 heading 元素', () => {
   expect(container.querySelector('h3')).not.toBeNull()
   expect(screen.getByText('正文').closest('p')).not.toBeNull()
 })
+
+test('斜体 *x* 渲染为 em，裸星号不再出现；粗体内乘号不受影响', () => {
+  render(<RichText text={'目标：*In Search of an Understandable Consensus Algorithm*（2013）'} />)
+  const em = screen.getByText(/In Search of an Understandable Consensus Algorithm/)
+  expect(em.tagName).toBe('EM')
+})
+
+test('粗体段内的数学乘号单星不产生 em（回归：hashCode 公式）', () => {
+  render(<RichText text={'公式：**h = 0; 对每个字符 c：h = 31*h + c**——即迭代乘 31'} />)
+  expect(screen.getByText(/31\*h \+ c/).tagName).toBe('STRONG')
+  expect(document.querySelectorAll('em')).toHaveLength(0)
+})

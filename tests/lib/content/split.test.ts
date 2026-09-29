@@ -1,4 +1,4 @@
-import { splitDetail, splitBold, splitBlocks } from '../../../src/lib/content/split.js'
+import { splitDetail, splitBold, splitItalic, splitBlocks } from '../../../src/lib/content/split.js'
 
 test('splitDetail：带分层标记 → 入门版/进阶版', () => {
   const { intro, advanced } = splitDetail('零基础能懂。\n\n<!--advanced-->\n面试深度细节。')
@@ -113,4 +113,17 @@ test('splitBlocks：标题行 → heading 块（保留层级）', () => {
     { kind: 'heading', level: 1, text: '大标题' },
     { kind: 'p', text: '正文' },
   ])
+})
+
+test('splitItalic：普通段内 *斜体* 切分（论文标题用法）', () => {
+  expect(splitItalic('目标是 *In Search of an Understandable Consensus Algorithm* 这篇')).toEqual([
+    { text: '目标是 ', italic: false },
+    { text: 'In Search of an Understandable Consensus Algorithm', italic: true },
+    { text: ' 这篇', italic: false },
+  ])
+})
+
+test('splitItalic：粗体段内的单星（数学乘号）不误判——调用方只对普通段调用', () => {
+  // 31*h + c 中的 * 落在 splitBold 的粗体段内，不会进 splitItalic
+  expect(splitBold('公式：**h = 0; 对每个字符 c：h = 31*h + c**')).toHaveLength(3)
 })

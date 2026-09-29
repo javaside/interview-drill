@@ -171,3 +171,20 @@ test('enumeration 要点带顺序叙述不触发该规则（顺序标号只对 s
   const r = parseCard(SRC.replace('text: 获取锁是对 state 做 CAS，成功即持有', 'text: 获取锁先对 state 做 CAS，成功即持有'), 'x.md')
   expect(r.ok).toBe(true)
 })
+
+test('正文 ** 奇数个被拒——未配对标记会让后续粗体整体错位', () => {
+  // 复刻 thread-pools 卡的真实损坏形状：5 组 **（奇数）
+  const bad = SRC.replace('AQS 是 JUC 的基础同步框架。', '反直觉点在 **先排队、后扩编****：**「宁可攒着」**因为建线程贵。')
+  const r = parseCard(bad, 'content/x/y.md')
+  expect(r.ok).toBe(false)
+  if (r.ok) return
+  expect(r.issues.join()).toContain('未配对')
+})
+
+test('正文 ` 奇数个被拒——模板残留的孤立反引号会裸显在页面上', () => {
+  const bad = SRC.replace('AQS 是 JUC 的基础同步框架。', '收敛范围。`,')
+  const r = parseCard(bad, 'content/x/y.md')
+  expect(r.ok).toBe(false)
+  if (r.ok) return
+  expect(r.issues.join()).toContain('未配对')
+})
