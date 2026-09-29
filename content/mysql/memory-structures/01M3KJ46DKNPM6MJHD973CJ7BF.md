@@ -3,7 +3,7 @@ id: 01M3KJ46DKNPM6MJHD973CJ7BF
 blockId: mysql/memory-structures
 relatedBlocks: []
 question: "自适应哈希索引（AHI）是什么？"
-cardType: atomic
+cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: low
 followUps:
@@ -21,6 +21,16 @@ keyPoints:
       locator: '15'
   - id: kp-mem5-2
     text: "AHI 命中率可在 show engine innodb status 中观测"
+    public: false
+    verifiedAt: '2026-09-28'
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
+      locator: '15'
+  - id: kp-mem5-3
+    text: "高并发写入时保护 AHI 的全局 latch 争抢反成瓶颈，可关闭"
     public: false
     verifiedAt: '2026-09-28'
     excludeAsDistractorFor: []

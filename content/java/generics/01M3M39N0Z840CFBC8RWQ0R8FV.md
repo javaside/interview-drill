@@ -4,7 +4,7 @@ blockId: java/generics
 relatedBlocks:
   []
 question: "什么是桥方法？"
-cardType: atomic
+cardType: enumeration
 appliesTo: Java 17+
 frequency: low
 followUps:
@@ -30,6 +30,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: 'JLS 17'
+  - id: kp-gn5-3
+    text: "父类引用调用落在桥上，桥强转参数后转调擦除前的具体版本"
+    public: false
+    verifiedAt: '2026-09-28'
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
+      locator: 'JLS 17'
 ---
 
 子类重写泛型父类方法时，擦除会把父类方法签名变掉（`compare(T o1)` → `compare(Object)`）——**多态要炸**。编译器默默补一个**桥方法**（synthetic bridge）：
@@ -43,5 +53,5 @@ keyPoints:
 
 **术语速查**：合成方法=编译器生成非人写｜桥=转发维持多态｜synthetic 标记=反射可识别
 
-<!--advanced>>
+<!--advanced-->
 桥同样出现在协变返回类型（父返回 Object 子返回 String）。AnnotationTypeMismatch 与 @Override 对桥的匹配规则由编译器特判。AOP/反射按名字找方法时要过滤 bridge，否则重复触发。

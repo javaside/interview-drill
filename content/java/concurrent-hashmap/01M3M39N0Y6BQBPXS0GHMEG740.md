@@ -4,7 +4,7 @@ blockId: java/concurrent-hashmap
 relatedBlocks:
   []
 question: "ConcurrentHashMap 的 key/value 为什么不允许 null？"
-cardType: atomic
+cardType: enumeration
 appliesTo: Java 17+
 frequency: high
 followUps:
@@ -22,6 +22,16 @@ keyPoints:
       locator: 'JLS 17'
   - id: kp-ch2-2
     text: "HashMap 允许 null 是因为单线程下可用 containsKey 复核语义"
+    public: false
+    verifiedAt: '2026-09-28'
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
+      locator: 'JLS 17'
+  - id: kp-ch2-3
+    text: "并发下 containsKey 与 get 两步之间可能被其他线程改掉，复核语义失效"
     public: false
     verifiedAt: '2026-09-28'
     excludeAsDistractorFor: []
