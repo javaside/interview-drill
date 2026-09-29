@@ -11,7 +11,7 @@ followUps:
   - 为什么 AOP 代理在初始化之后？
 keyPoints:
   - id: kp-bl1-1
-    text: "第 1 步 实例化：构造器造出裸对象"
+    text: "实例化：构造器造出裸对象"
     public: true
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-bl1-2
-    text: "第 2 步 属性填充：@Autowired/@Value 依赖注入"
+    text: "属性填充：@Autowired/@Value 依赖注入"
     public: true
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-bl1-3
-    text: "第 3 步 Aware 回调：BeanName/BeanFactory/ApplicationContext"
+    text: "Aware 回调：BeanName/BeanFactory/ApplicationContext"
     public: true
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-bl1-4
-    text: "第 4 步 初始化前：BeanPostProcessor.postProcessBeforeInitialization（@PostConstruct 在此）"
+    text: "初始化前：BeanPostProcessor.postProcessBeforeInitialization（@PostConstruct 在此）"
     public: true
     order: 4
     verifiedAt: '2026-09-28'
@@ -55,7 +55,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-bl1-5
-    text: "第 5 步 初始化：InitializingBean.afterPropertiesSet 与 init-method"
+    text: "初始化：InitializingBean.afterPropertiesSet 与 init-method"
     public: true
     order: 5
     verifiedAt: '2026-09-28'
@@ -66,7 +66,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-bl1-6
-    text: "第 6 步 初始化后：BPP 的 after 钩子（AOP 代理在此织入）；容器关闭时销毁回调"
+    text: "初始化后：BPP 的 after 钩子（AOP 代理在此织入）；容器关闭时销毁回调"
     public: true
     order: 6
     verifiedAt: '2026-09-28'

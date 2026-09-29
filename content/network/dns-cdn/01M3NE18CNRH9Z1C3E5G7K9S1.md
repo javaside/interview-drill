@@ -12,7 +12,7 @@ followUps:
   - 为什么要有 TTL？
 keyPoints:
   - id: kp-dn1-1
-    text: "第 1 步 查本地缓存链：浏览器 → 系统 hosts → 本地 DNS 服务器"
+    text: "查本地缓存链：浏览器 → 系统 hosts → 本地 DNS 服务器"
     public: false
     order: 1
     verifiedAt: '2026-09-28'
@@ -23,7 +23,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc1034.html
       locator: 'RFC 1034'
   - id: kp-dn1-2
-    text: "第 2 步 本地 DNS 未命中问根服务器：给出顶级域（.com）地址"
+    text: "本地 DNS 未命中问根服务器：给出顶级域（.com）地址"
     public: false
     order: 2
     verifiedAt: '2026-09-28'
@@ -34,7 +34,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc1034.html
       locator: 'RFC 1034'
   - id: kp-dn1-3
-    text: "第 3 步 问顶级域服务器：给出权威 DNS 的地址"
+    text: "问顶级域服务器：给出权威 DNS 的地址"
     public: false
     order: 3
     verifiedAt: '2026-09-28'
@@ -45,7 +45,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc1034.html
       locator: 'RFC 1034'
   - id: kp-dn1-4
-    text: "第 4 步 问权威 DNS：拿到域名 A 记录的正式答案"
+    text: "问权威 DNS：拿到域名 A 记录的正式答案"
     public: false
     order: 4
     verifiedAt: '2026-09-28'
@@ -56,7 +56,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc1034.html
       locator: 'RFC 1034'
   - id: kp-dn1-5
-    text: "第 5 步 本地 DNS 缓存结果（按 TTL）并返回客户端"
+    text: "本地 DNS 缓存结果（按 TTL）并返回客户端"
     public: false
     order: 5
     verifiedAt: '2026-09-28'

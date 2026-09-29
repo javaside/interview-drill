@@ -11,7 +11,7 @@ followUps:
   - 为什么 BFPP 在 Bean 实例化之前跑？
 keyPoints:
   - id: kp-ioc4-1
-    text: "第 1 步 prepareRefresh：容器状态与环境准备"
+    text: "prepareRefresh：容器状态与环境准备"
     public: true
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-ioc4-2
-    text: "第 2 步 obtainBeanFactory：加载 BeanDefinition（扫描注解/解析配置类）"
+    text: "obtainBeanFactory：加载 BeanDefinition（扫描注解/解析配置类）"
     public: true
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-ioc4-3
-    text: "第 3 步 invokeBeanFactoryPostProcessors：BFPP 改造Bean定义（配置类解析在此）"
+    text: "invokeBeanFactoryPostProcessors：BFPP 改造Bean定义（配置类解析在此）"
     public: true
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-ioc4-4
-    text: "第 4 步 registerBeanPostProcessors：注册 Bean 后置处理器"
+    text: "registerBeanPostProcessors：注册 Bean 后置处理器"
     public: true
     order: 4
     verifiedAt: '2026-09-28'
@@ -55,7 +55,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-ioc4-5
-    text: "第 5 步 finishBeanFactoryInitialization：预实例化所有非懒加载单例"
+    text: "finishBeanFactoryInitialization：预实例化所有非懒加载单例"
     public: true
     order: 5
     verifiedAt: '2026-09-28'

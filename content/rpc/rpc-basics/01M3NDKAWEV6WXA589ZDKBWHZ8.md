@@ -11,7 +11,7 @@ followUps:
   - stub 到底是什么？
 keyPoints:
   - id: kp-rb1-1
-    text: "第 1 步 客户端调本地代理（stub）：像调本地方法一样发起"
+    text: "客户端调本地代理（stub）：像调本地方法一样发起"
     public: true
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: 'doc'
   - id: kp-rb1-2
-    text: "第 2 步 序列化：方法名+参数编码成字节流"
+    text: "序列化：方法名+参数编码成字节流"
     public: true
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: 'doc'
   - id: kp-rb1-3
-    text: "第 3 步 网络传输：字节流发往服务端"
+    text: "网络传输：字节流发往服务端"
     public: true
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: 'doc'
   - id: kp-rb1-4
-    text: "第 4 步 服务端反序列化并反射调用真实方法"
+    text: "服务端反序列化并反射调用真实方法"
     public: true
     order: 4
     verifiedAt: '2026-09-28'
@@ -55,7 +55,7 @@ keyPoints:
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: 'doc'
   - id: kp-rb1-5
-    text: "第 5 步 结果原路序列化返回，代理还原给调用方"
+    text: "结果原路序列化返回，代理还原给调用方"
     public: true
     order: 5
     verifiedAt: '2026-09-28'

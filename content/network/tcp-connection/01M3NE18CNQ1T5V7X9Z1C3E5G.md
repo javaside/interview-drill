@@ -12,7 +12,7 @@ followUps:
   - BBR 改了什么？
 keyPoints:
   - id: kp-cc1-1
-    text: "第 1 步 慢启动：cwnd 从小值指数翻倍，直到阈值 ssthresh"
+    text: "慢启动：cwnd 从小值指数翻倍，直到阈值 ssthresh"
     public: false
     order: 1
     verifiedAt: '2026-09-28'
@@ -23,7 +23,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc9293.html
       locator: 'RFC 9293'
   - id: kp-cc1-2
-    text: "第 2 步 拥塞避免：过阈值后每 RTT 只加 1，线性爬升"
+    text: "拥塞避免：过阈值后每 RTT 只加 1，线性爬升"
     public: false
     order: 2
     verifiedAt: '2026-09-28'
@@ -34,7 +34,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc9293.html
       locator: 'RFC 9293'
   - id: kp-cc1-3
-    text: "第 3 步 拥塞发生：超时则 cwnd 打回 1 重来慢启动"
+    text: "拥塞发生：超时则 cwnd 打回 1 重来慢启动"
     public: false
     order: 3
     verifiedAt: '2026-09-28'
@@ -45,7 +45,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc9293.html
       locator: 'RFC 9293'
   - id: kp-cc1-4
-    text: "第 4 步 快速恢复：三次冗余 ACK 则 cwnd 减半继续线性（Reno）"
+    text: "快速恢复：三次冗余 ACK 则 cwnd 减半继续线性（Reno）"
     public: false
     order: 4
     verifiedAt: '2026-09-28'

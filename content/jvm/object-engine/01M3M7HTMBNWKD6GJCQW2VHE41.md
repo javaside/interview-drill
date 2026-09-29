@@ -11,7 +11,7 @@ followUps:
   - 指针碰撞和空闲列表的区别？
 keyPoints:
   - id: kp-oe1-1
-    text: "第 1 步 类加载检查：没初始化的类先触发加载初始化"
+    text: "类加载检查：没初始化的类先触发加载初始化"
     public: true
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: 'JVMS'
   - id: kp-oe1-2
-    text: "第 2 步 分配内存：TLAB 命中则无锁分配，否则 Eden CAS"
+    text: "分配内存：TLAB 命中则无锁分配，否则 Eden CAS"
     public: true
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: 'JVMS'
   - id: kp-oe1-3
-    text: "第 3 步 零值初始化：字段全部置默认值"
+    text: "零值初始化：字段全部置默认值"
     public: true
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: 'JVMS'
   - id: kp-oe1-4
-    text: "第 4 步 设对象头：类型指针/哈希/GC 分代年龄"
+    text: "设对象头：类型指针/哈希/GC 分代年龄"
     public: true
     order: 4
     verifiedAt: '2026-09-28'
@@ -55,7 +55,7 @@ keyPoints:
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: 'JVMS'
   - id: kp-oe1-5
-    text: "第 5 步 执行 <init>：构造方法（字段赋真值）"
+    text: "执行 <init>：构造方法（字段赋真值）"
     public: true
     order: 5
     verifiedAt: '2026-09-28'

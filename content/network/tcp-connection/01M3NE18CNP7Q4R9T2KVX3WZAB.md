@@ -12,7 +12,7 @@ followUps:
   - 初始 seq 为什么随机？
 keyPoints:
   - id: kp-tc1-1
-    text: "第 1 步 客户端发 SYN（seq=x），进 SYN_SENT 状态"
+    text: "客户端发 SYN（seq=x），进 SYN_SENT 状态"
     public: false
     order: 1
     verifiedAt: '2026-09-28'
@@ -23,7 +23,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc9293.html
       locator: 'RFC 9293'
   - id: kp-tc1-2
-    text: "第 2 步 服务端回 SYN+ACK（seq=y，ack=x+1），进 SYN_RCVD"
+    text: "服务端回 SYN+ACK（seq=y，ack=x+1），进 SYN_RCVD"
     public: false
     order: 2
     verifiedAt: '2026-09-28'
@@ -34,7 +34,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc9293.html
       locator: 'RFC 9293'
   - id: kp-tc1-3
-    text: "第 3 步 客户端回 ACK（ack=y+1），双方 ESTABLISHED"
+    text: "客户端回 ACK（ack=y+1），双方 ESTABLISHED"
     public: false
     order: 3
     verifiedAt: '2026-09-28'

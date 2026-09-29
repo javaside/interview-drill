@@ -11,7 +11,7 @@ followUps:
   - 为什么先排队后扩编？
 keyPoints:
   - id: kp-tp2-1
-    text: "第 1 步 线程数 < core：直接新建核心线程执行本任务"
+    text: "线程数 < core：直接新建核心线程执行本任务"
     public: false
     order: 1
     verifiedAt: '2026-09-28'
@@ -23,7 +23,7 @@ keyPoints:
       locator: 'java.util.concurrent'
 
   - id: kp-tp2-2
-    text: "第 2 步 core 满：任务进 workQueue 排队"
+    text: "core 满：任务进 workQueue 排队"
     public: false
     order: 2
     verifiedAt: '2026-09-28'
@@ -35,7 +35,7 @@ keyPoints:
       locator: 'java.util.concurrent'
 
   - id: kp-tp2-3
-    text: "第 3 步 队列满且线程 < max：新建非核心线程立即执行"
+    text: "队列满且线程 < max：新建非核心线程立即执行"
     public: false
     order: 3
     verifiedAt: '2026-09-28'
@@ -47,7 +47,7 @@ keyPoints:
       locator: 'java.util.concurrent'
 
   - id: kp-tp2-4
-    text: "第 4 步 队列满且线程 = max：执行拒绝策略"
+    text: "队列满且线程 = max：执行拒绝策略"
     public: false
     order: 4
     verifiedAt: '2026-09-28'

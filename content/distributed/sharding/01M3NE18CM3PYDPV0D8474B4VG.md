@@ -11,7 +11,7 @@ followUps:
   - 为什么要双写不直接切？
 keyPoints:
   - id: kp-sh4-1
-    text: "第 1 步 双写：新旧两套同时写（旧为主）"
+    text: "双写：新旧两套同时写（旧为主）"
     public: false
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://martin.kleppmann.com/ddia/
       locator: 'DDIA'
   - id: kp-sh4-2
-    text: "第 2 步 存量迁移：历史数据批量刷到新表（增量靠双写追平）"
+    text: "存量迁移：历史数据批量刷到新表（增量靠双写追平）"
     public: false
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://martin.kleppmann.com/ddia/
       locator: 'DDIA'
   - id: kp-sh4-3
-    text: "第 3 步 校验：新旧数据比对（抽样+全量 checksum）"
+    text: "校验：新旧数据比对（抽样+全量 checksum）"
     public: false
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://martin.kleppmann.com/ddia/
       locator: 'DDIA'
   - id: kp-sh4-4
-    text: "第 4 步 切读：灰度把读流量切到新表（可回滚）"
+    text: "切读：灰度把读流量切到新表（可回滚）"
     public: false
     order: 4
     verifiedAt: '2026-09-28'
@@ -55,7 +55,7 @@ keyPoints:
       url: https://martin.kleppmann.com/ddia/
       locator: 'DDIA'
   - id: kp-sh4-5
-    text: "第 5 步 收尾：全量切换后停写旧表，观察期后下线"
+    text: "收尾：全量切换后停写旧表，观察期后下线"
     public: false
     order: 5
     verifiedAt: '2026-09-28'

@@ -11,7 +11,7 @@ followUps:
   - 拦截器在哪一步介入？
 keyPoints:
   - id: kp-mv1-1
-    text: "第 1 步 DispatcherServlet 收请求（前端控制器总入口）"
+    text: "DispatcherServlet 收请求（前端控制器总入口）"
     public: true
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-mv1-2
-    text: "第 2 步 HandlerMapping 找处理器：URL→HandlerExecutionChain（含拦截器）"
+    text: "HandlerMapping 找处理器：URL→HandlerExecutionChain（含拦截器）"
     public: true
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-mv1-3
-    text: "第 3 步 HandlerAdapter 执行 Controller 方法（参数解析/数据绑定）"
+    text: "HandlerAdapter 执行 Controller 方法（参数解析/数据绑定）"
     public: true
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-mv1-4
-    text: "第 4 步 Controller 返回 ModelAndView（@ResponseBody 走 HttpMessageConverter 直接写响应）"
+    text: "Controller 返回 ModelAndView（@ResponseBody 走 HttpMessageConverter 直接写响应）"
     public: true
     order: 4
     verifiedAt: '2026-09-28'
@@ -55,7 +55,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-mv1-5
-    text: "第 5 步 ViewResolver 解析视图 → View 渲染 → 响应"
+    text: "ViewResolver 解析视图 → View 渲染 → 响应"
     public: true
     order: 5
     verifiedAt: '2026-09-28'

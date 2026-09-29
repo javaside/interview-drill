@@ -11,7 +11,7 @@ followUps:
   - 为什么是 GC 线程在烧 CPU？
 keyPoints:
   - id: kp-jt5-1
-    text: "第 1 步 top -Hp <pid>：找到吃 CPU 的线程号"
+    text: "top -Hp <pid>：找到吃 CPU 的线程号"
     public: true
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: 'JVMS'
   - id: kp-jt5-2
-    text: "第 2 步 线程号转 16 进制（printf %x）"
+    text: "线程号转 16 进制（printf %x）"
     public: true
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: 'JVMS'
   - id: kp-jt5-3
-    text: "第 3 步 jstack <pid> | grep -A 20 该 16 进制 nid：定位到代码行"
+    text: "jstack <pid> | grep -A 20 该 16 进制 nid：定位到代码行"
     public: true
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: 'JVMS'
   - id: kp-jt5-4
-    text: "第 4 步 看栈：业务死循环/GC 线程狂转（GC 日志佐证）/正则回溯"
+    text: "看栈：业务死循环/GC 线程狂转（GC 日志佐证）/正则回溯"
     public: true
     order: 4
     verifiedAt: '2026-09-28'

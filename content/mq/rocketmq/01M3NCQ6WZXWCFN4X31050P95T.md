@@ -11,7 +11,7 @@ followUps:
   - 回查失败了怎么办？
 keyPoints:
   - id: kp-rq1-1
-    text: "第 1 步 发送半消息（half message）：对消费者不可见"
+    text: "发送半消息（half message）：对消费者不可见"
     public: true
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://kafka.apache.org/documentation/
       locator: 'doc'
   - id: kp-rq1-2
-    text: "第 2 步 执行本地事务（比如订单落库）"
+    text: "执行本地事务（比如订单落库）"
     public: true
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://kafka.apache.org/documentation/
       locator: 'doc'
   - id: kp-rq1-3
-    text: "第 3 步 提交或回滚半消息（commit 则消息可见）"
+    text: "提交或回滚半消息（commit 则消息可见）"
     public: true
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://kafka.apache.org/documentation/
       locator: 'doc'
   - id: kp-rq1-4
-    text: "第 4 步 回查兜底：broker 未收到二次确认时反查生产者的本地事务状态"
+    text: "回查兜底：broker 未收到二次确认时反查生产者的本地事务状态"
     public: true
     order: 4
     verifiedAt: '2026-09-28'

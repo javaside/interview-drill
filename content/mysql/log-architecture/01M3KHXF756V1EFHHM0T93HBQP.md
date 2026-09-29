@@ -11,7 +11,7 @@ followUps:
 keyPoints:
   - id: kp-log2-1
     order: 1
-    text: "第 1 步：定位并加行锁，写 undo log 记录旧值"
+    text: "定位并加行锁，写 undo log 记录旧值"
     public: true
     verifiedAt: '2026-09-28'
     excludeAsDistractorFor: []
@@ -22,7 +22,7 @@ keyPoints:
       locator: '15'
   - id: kp-log2-2
     order: 2
-    text: "第 2 步：在 buffer pool 中修改数据页成脏页，写 redo 到 log buffer"
+    text: "在 buffer pool 中修改数据页成脏页，写 redo 到 log buffer"
     public: false
     verifiedAt: '2026-09-28'
     excludeAsDistractorFor: []
@@ -33,7 +33,7 @@ keyPoints:
       locator: '15'
   - id: kp-log2-3
     order: 3
-    text: "第 3 步：提交时 redo 写盘标记 prepare，写 binlog 并落盘"
+    text: "提交时 redo 写盘标记 prepare，写 binlog 并落盘"
     public: false
     verifiedAt: '2026-09-28'
     excludeAsDistractorFor: []
@@ -44,7 +44,7 @@ keyPoints:
       locator: '15'
   - id: kp-log2-4
     order: 4
-    text: "第 4 步：redo 标记 commit，返回客户端成功；脏页由后台异步刷盘"
+    text: "redo 标记 commit，返回客户端成功；脏页由后台异步刷盘"
     public: false
     verifiedAt: '2026-09-28'
     excludeAsDistractorFor: []

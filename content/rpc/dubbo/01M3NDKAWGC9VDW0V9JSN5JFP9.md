@@ -11,7 +11,7 @@ followUps:
   - 服务优雅上下线怎么做？
 keyPoints:
   - id: kp-du5-1
-    text: "第 1 步 Provider 启动：暴露服务端口，向注册中心注册（服务名→ip:port+元数据）"
+    text: "Provider 启动：暴露服务端口，向注册中心注册（服务名→ip:port+元数据）"
     public: true
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: 'doc'
   - id: kp-du5-2
-    text: "第 2 步 Consumer 启动：订阅服务名，拉全量+接收后续变更推送"
+    text: "Consumer 启动：订阅服务名，拉全量+接收后续变更推送"
     public: true
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: 'doc'
   - id: kp-du5-3
-    text: "第 3 步 本地缓存地址列表，直连调用（注册中心退出链路）"
+    text: "本地缓存地址列表，直连调用（注册中心退出链路）"
     public: true
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: 'doc'
   - id: kp-du5-4
-    text: "第 4 步 变更感知：Provider 宕机/下线 → 注册中心剔除 → 推送 Consumer 刷新"
+    text: "变更感知：Provider 宕机/下线 → 注册中心剔除 → 推送 Consumer 刷新"
     public: true
     order: 4
     verifiedAt: '2026-09-28'
@@ -55,7 +55,7 @@ keyPoints:
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: 'doc'
   - id: kp-du5-5
-    text: "第 5 步 健康检查：心跳/租约失联判定死节点（主动剔除或过期标记）"
+    text: "健康检查：心跳/租约失联判定死节点（主动剔除或过期标记）"
     public: true
     order: 5
     verifiedAt: '2026-09-28'

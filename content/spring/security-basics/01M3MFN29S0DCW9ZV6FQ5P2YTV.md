@@ -11,7 +11,7 @@ followUps:
   - JWT 怎么实现登出？
 keyPoints:
   - id: kp-sec3-1
-    text: "第 1 步 登录接口校验账号密码 → 签发 JWT（含用户名/角色/过期时间）"
+    text: "登录接口校验账号密码 → 签发 JWT（含用户名/角色/过期时间）"
     public: true
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-sec3-2
-    text: "第 2 步 客户端每次请求带 Authorization: Bearer <token>"
+    text: "客户端每次请求带 Authorization: Bearer <token>"
     public: true
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-sec3-3
-    text: "第 3 步 BearerTokenAuthenticationFilter 解析验签 → 构造 Authentication 入 SecurityContext"
+    text: "BearerTokenAuthenticationFilter 解析验签 → 构造 Authentication 入 SecurityContext"
     public: true
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-sec3-4
-    text: "第 4 步 后续链上鉴权按角色/权限放行"
+    text: "后续链上鉴权按角色/权限放行"
     public: true
     order: 4
     verifiedAt: '2026-09-28'
@@ -55,7 +55,7 @@ keyPoints:
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: 'core'
   - id: kp-sec3-5
-    text: "第 5 步 无状态：不存会话，登出靠客户端删 token（或黑名单）"
+    text: "无状态：不存会话，登出靠客户端删 token（或黑名单）"
     public: true
     order: 5
     verifiedAt: '2026-09-28'

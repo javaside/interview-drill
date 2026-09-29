@@ -11,7 +11,7 @@ followUps:
   - 为什么是过半而不是全部？
 keyPoints:
   - id: kp-cs1-1
-    text: "第 1 步 节点初始为 Follower，超时未闻心跳则变 Candidate 发起选举"
+    text: "节点初始为 Follower，超时未闻心跳则变 Candidate 发起选举"
     public: false
     order: 1
     verifiedAt: '2026-09-28'
@@ -22,7 +22,7 @@ keyPoints:
       url: https://martin.kleppmann.com/ddia/
       locator: 'DDIA'
   - id: kp-cs1-2
-    text: "第 2 步 自增任期号，投自己一票，向其他节点拉票"
+    text: "自增任期号，投自己一票，向其他节点拉票"
     public: false
     order: 2
     verifiedAt: '2026-09-28'
@@ -33,7 +33,7 @@ keyPoints:
       url: https://martin.kleppmann.com/ddia/
       locator: 'DDIA'
   - id: kp-cs1-3
-    text: "第 3 步 收到过半选票则当选 Leader，广播心跳"
+    text: "收到过半选票则当选 Leader，广播心跳"
     public: false
     order: 3
     verifiedAt: '2026-09-28'
@@ -44,7 +44,7 @@ keyPoints:
       url: https://martin.kleppmann.com/ddia/
       locator: 'DDIA'
   - id: kp-cs1-4
-    text: "第 4 步 任期内日志只从 Leader 流向 Follower"
+    text: "任期内日志只从 Leader 流向 Follower"
     public: false
     order: 4
     verifiedAt: '2026-09-28'

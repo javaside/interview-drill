@@ -12,7 +12,7 @@ followUps:
   - 被动方迟迟不发 FIN 会怎样？
 keyPoints:
   - id: kp-tc2-1
-    text: "第 1 步 主动方发 FIN 进 FIN_WAIT_1，表示不再发数据"
+    text: "主动方发 FIN 进 FIN_WAIT_1，表示不再发数据"
     public: false
     order: 1
     verifiedAt: '2026-09-28'
@@ -23,7 +23,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc9293.html
       locator: 'RFC 9293'
   - id: kp-tc2-2
-    text: "第 2 步 被动方回 ACK，进入半关闭：收发只剩单向"
+    text: "被动方回 ACK，进入半关闭：收发只剩单向"
     public: false
     order: 2
     verifiedAt: '2026-09-28'
@@ -34,7 +34,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc9293.html
       locator: 'RFC 9293'
   - id: kp-tc2-3
-    text: "第 3 步 被动方把剩余数据发完，再发自己的 FIN"
+    text: "被动方把剩余数据发完，再发自己的 FIN"
     public: false
     order: 3
     verifiedAt: '2026-09-28'
@@ -45,7 +45,7 @@ keyPoints:
       url: https://www.rfc-editor.org/rfc/rfc9293.html
       locator: 'RFC 9293'
   - id: kp-tc2-4
-    text: "第 4 步 主动方回 ACK 并进 TIME_WAIT，滞留 2MSL 后关闭"
+    text: "主动方回 ACK 并进 TIME_WAIT，滞留 2MSL 后关闭"
     public: false
     order: 4
     verifiedAt: '2026-09-28'
