@@ -26,3 +26,18 @@ test('学完测试入口：链到 /practice?block=（习题在后）', () => {
   const cta = screen.getByRole('link', { name: /开始测试/ })
   expect(cta).toHaveAttribute('href', '/practice?block=mysql/mvcc-undo')
 })
+
+test('未解锁块：显示解锁引导（卡数 + 升级/设为免费块出口），不露题面也不给测试入口', () => {
+  render(
+    <LearnView blockName="进程与线程" cards={[]} blockId="os/process-thread" locked cardCount={30} />,
+  )
+  // 引导文案含真实卡数（卡数在知识地图本就公开，非机密）
+  expect(screen.getByText(/30\s*题/)).toBeInTheDocument()
+  expect(screen.getByText(/还没有解锁/)).toBeInTheDocument()
+  // 两个出口：升级 / 设置里改选免费块
+  expect(screen.getByRole('link', { name: /解锁全部大类/ })).toHaveAttribute('href', '/upgrade')
+  expect(screen.getByRole('link', { name: /设置/ })).toHaveAttribute('href', '/settings')
+  // 没有测试入口，也不出现「没有学习材料」的误导文案
+  expect(screen.queryByRole('link', { name: /开始测试/ })).not.toBeInTheDocument()
+  expect(screen.queryByText(/还没有学习材料/)).not.toBeInTheDocument()
+})

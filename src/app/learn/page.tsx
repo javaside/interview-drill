@@ -5,13 +5,14 @@ import { LearnView } from './LearnView.js'
 import type { LearnCard } from './LearnView.js'
 import { authOptions } from '../../server/auth-config.js'
 import { loadSettings, loadAllCards, entitlementOf } from '../../server/db/adapters.js'
-import { entitledCards } from '../../lib/entitlement/entitlement.js'
+import { entitledCards, isEntitled } from '../../lib/entitlement/entitlement.js'
 
 export const dynamic = 'force-dynamic'
 
 /**
  * 块学习页（教材在前、习题在后）：该块的卡按题面 + 题解讲解通读，
- * 底部进入测试。免费墙：只学解锁块。
+ * 底部进入测试。免费墙：只学解锁块——未解锁块给解锁引导（升级/改选免费块），
+ * 题面与题解绝不下发（§10.1）。
  */
 export default async function LearnPage(
   { searchParams }: { searchParams: Promise<{ block?: string }> },
@@ -26,6 +27,14 @@ export default async function LearnPage(
   const row = await loadSettings(getDb(), userId)
   const ent = entitlementOf(row)
   const { cards } = await loadAllCards(getDb())
+  const inBlockCards = cards.filter(c => c.blockId === block)
+  if (inBlockCards.length === 0) redirect('/map')   // 不存在的块：回地图
+
+  const blockName = inBlockCards[0]?.blockName ?? block
+  if (!isEntitled(ent, block)) {
+    return <LearnView blockName={blockName} cards={[]} blockId={block} locked cardCount={inBlockCards.length} />
+  }
+
   const schedulable = entitledCards(
     ent, cards.map(c => ({ cardId: c.cardId, blockId: c.blockId, frequency: c.frequency })),
   )
@@ -42,6 +51,5 @@ export default async function LearnPage(
     }))
     .sort((a, b) => (a.cardId < b.cardId ? -1 : 1))
 
-  const blockName = cards.find(c => c.blockId === block)?.blockName ?? block
   return <LearnView blockName={blockName} cards={inBlock} blockId={block} />
 }

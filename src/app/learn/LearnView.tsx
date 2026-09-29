@@ -33,43 +33,75 @@ function DetailLayers({ detail }: { detail: string }): React.JSX.Element {
 }
 
 export function LearnView({
-  blockName, cards, blockId,
-}: { blockName: string; cards: LearnCard[]; blockId: string }): React.JSX.Element {
+  blockName, cards, blockId, locked = false, cardCount,
+}: {
+  blockName: string
+  cards: LearnCard[]
+  blockId: string
+  /** 未解锁块：不渲染题面/题解（page 侧本就过滤），给解锁引导而非「没有材料」的误导 */
+  locked?: boolean
+  /** locked 时展示的真实卡数（知识地图公开的同一数字） */
+  cardCount?: number
+}): React.JSX.Element {
   return (
     <main className="mx-auto max-w-2xl px-5 py-8">
       <p className="text-xs tracking-[0.2em] text-paper-muted">学习</p>
       <h1 className="mt-2 font-serif text-2xl font-semibold text-paper-ink">{blockName}</h1>
-      <p className="mt-2 text-sm text-paper-muted">
-        通读下面的讲解，理解了再去做题检验——做题时也能随时回来看。
-      </p>
+      {locked ? (
+        <>
+          <p className="mt-2 text-sm text-paper-muted">
+            这个块有 {cardCount ?? '这些'} 题，你还没有解锁它——解锁后这里就是完整的教材。
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href="/upgrade"
+              className="rounded-md bg-accent px-6 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+            >
+              解锁全部大类
+            </a>
+            <a
+              href="/settings"
+              className="rounded-md border border-paper-line bg-paper-card px-6 py-2 font-medium text-paper-ink transition-colors hover:border-paper-muted"
+            >
+              在设置里把它选为免费块
+            </a>
+          </div>
+        </>
+      ) : (
+        <>
+          <p className="mt-2 text-sm text-paper-muted">
+            通读下面的讲解，理解了再去做题检验——做题时也能随时回来看。
+          </p>
 
-      <div className="mt-8 space-y-8">
-        {cards.map((c, i) => (
-          <article key={c.cardId} className="border-l-2 border-paper-line pl-5">
-            <div className="flex items-baseline gap-3">
-              <span className="tnum font-mono text-xs text-paper-muted">{String(i + 1).padStart(2, '0')}</span>
-              <h2 className="font-serif text-lg font-semibold leading-snug text-paper-ink text-pretty">
-                {c.question}
-              </h2>
-            </div>
-            <div className="mt-1 pl-8 text-xs tracking-[0.2em] text-paper-muted">{FREQ_LABEL[c.frequency]}</div>
-            <DetailLayers detail={c.detail} />
-          </article>
-        ))}
-      </div>
+          <div className="mt-8 space-y-8">
+            {cards.map((c, i) => (
+              <article key={c.cardId} className="border-l-2 border-paper-line pl-5">
+                <div className="flex items-baseline gap-3">
+                  <span className="tnum font-mono text-xs text-paper-muted">{String(i + 1).padStart(2, '0')}</span>
+                  <h2 className="font-serif text-lg font-semibold leading-snug text-paper-ink text-pretty">
+                    {c.question}
+                  </h2>
+                </div>
+                <div className="mt-1 pl-8 text-xs tracking-[0.2em] text-paper-muted">{FREQ_LABEL[c.frequency]}</div>
+                <DetailLayers detail={c.detail} />
+              </article>
+            ))}
+          </div>
 
-      {cards.length === 0 && (
-        <p className="py-16 text-center text-sm text-paper-muted">这个块还没有学习材料</p>
+          {cards.length === 0 && (
+            <p className="py-16 text-center text-sm text-paper-muted">这个块还没有学习材料</p>
+          )}
+
+          <div className="mt-12 text-center">
+            <a
+              href={`/practice?block=${blockId}`}
+              className="inline-block rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+            >
+              学完了，开始测试
+            </a>
+          </div>
+        </>
       )}
-
-      <div className="mt-12 text-center">
-        <a
-          href={`/practice?block=${blockId}`}
-          className="inline-block rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
-        >
-          学完了，开始测试
-        </a>
-      </div>
     </main>
   )
 }
