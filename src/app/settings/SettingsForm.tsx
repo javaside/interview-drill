@@ -98,22 +98,36 @@ export function SettingsForm(
         <legend className="mb-3 text-xs tracking-[0.2em] text-paper-muted">
           块选择{view.plan === 'free' ? `（免费最多 ${FREE_BLOCK_LIMIT} 个）` : ''}
         </legend>
-        <ul className="space-y-2">
-          {view.blocks.map(b => (
-            <li key={b.blockId}>
-              <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
-                <input
-                  type="checkbox"
-                  name={b.blockId}
-                  checked={selected.has(b.blockId)}
-                  onChange={() => toggle(b.blockId)}
-                />
-                <span className="flex-1">{b.blockName}</span>
-                <span className="tnum shrink-0 text-sm text-paper-muted">{b.cardCount} 题</span>
-              </label>
-            </li>
-          ))}
-        </ul>
+        {(() => {
+          // 按大类分组（对齐知识地图的分组视角），保持 view.blocks 的原始顺序
+          const groups = new Map<string, typeof view.blocks>()
+          for (const b of view.blocks) {
+            const arr = groups.get(b.category) ?? []
+            arr.push(b)
+            groups.set(b.category, arr)
+          }
+          return [...groups.entries()].map(([category, list]) => (
+            <section key={category} className="mb-6 last:mb-0">
+              <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-paper-muted">{category}</h3>
+              <ul className="mt-2.5 space-y-2">
+                {list.map(b => (
+                  <li key={b.blockId}>
+                    <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
+                      <input
+                        type="checkbox"
+                        name={b.blockId}
+                        checked={selected.has(b.blockId)}
+                        onChange={() => toggle(b.blockId)}
+                      />
+                      <span className="flex-1">{b.blockName}</span>
+                      <span className="tnum shrink-0 text-sm text-paper-muted">{b.cardCount} 题</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        })()}
       </fieldset>
 
       {overLimit ? (

@@ -5,9 +5,9 @@ import { SettingsForm } from '../../src/app/settings/SettingsForm.js'
 const view = {
   readyByDate: '2026-11-01', dailyCapacity: 45, plan: 'free',
   blocks: [
-    { blockId: 'b1', blockName: 'MySQL', cardCount: 23, selected: true },
-    { blockId: 'b2', blockName: 'Redis', cardCount: 18, selected: false },
-    { blockId: 'b3', blockName: 'JVM', cardCount: 30, selected: false },
+    { blockId: 'b1', blockName: 'MySQL', category: 'mysql', cardCount: 23, selected: true },
+    { blockId: 'b2', blockName: 'Redis', category: 'mysql', cardCount: 18, selected: false },
+    { blockId: 'b3', blockName: 'JVM', category: 'jvm', cardCount: 30, selected: false },
   ],
 } as never
 
@@ -27,6 +27,18 @@ test('预填当前就绪日与容量、块勾选态', () => {
   expect(screen.getByLabelText(/每日容量|容量/)).toHaveValue(45)
   expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeChecked()
   expect(screen.getByRole('checkbox', { name: /Redis/ })).not.toBeChecked()
+})
+
+test('块列表按大类分组展示（组标题 + 各组内块）', () => {
+  render(<SettingsForm view={view} api={mkApi() as never} />)
+  const mysql = screen.getByRole('heading', { name: /mysql/i })
+  const jvm = screen.getByRole('heading', { name: /jvm/i })
+  expect(mysql).toBeInTheDocument()
+  expect(jvm).toBeInTheDocument()
+  // mysql 组内两块、jvm 组内一块：checkbox 只在各自 section 下出现一次
+  expect(screen.getAllByRole('checkbox')).toHaveLength(3)
+  expect(mysql.nextElementSibling?.querySelectorAll('input[type=checkbox]')).toHaveLength(2)
+  expect(jvm.nextElementSibling?.querySelectorAll('input[type=checkbox]')).toHaveLength(1)
 })
 
 test('免费层勾选超过 2 块 → 提交禁用并提示', async () => {

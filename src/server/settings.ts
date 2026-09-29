@@ -25,7 +25,8 @@ export type SettingsView = {
   readyByDate: LocalDate | null
   dailyCapacity: number
   plan: 'free' | 'paid'
-  blocks: Array<{ blockId: string; blockName: string; cardCount: number; selected: boolean }>
+  /** 按 DB 返回顺序的平铺块列表；category 供表单按大类分组渲染 */
+  blocks: Array<{ blockId: string; blockName: string; category: string; cardCount: number; selected: boolean }>
 }
 
 /**
@@ -45,6 +46,7 @@ export async function loadSettingsView(deps: ServerDeps, userId: string): Promis
     blocks: entries.map(e => ({
       blockId: e.blockId,
       blockName: e.blockName,
+      category: e.category,
       cardCount: e.cardCount,
       selected: e.unlocked,
     })),
