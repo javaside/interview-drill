@@ -77,10 +77,10 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
   }
 
   return (
-    <section className="mx-auto max-w-2xl px-5 py-8">
+    <section className="rise mx-auto max-w-2xl px-5 py-8">
       <header className="mb-6">
-        <div className="text-xs tracking-[0.2em] text-paper-muted">{card.blockName}</div>
-        <h1 className="mt-3 font-serif text-2xl font-semibold leading-snug text-paper-ink text-pretty">
+        <div className="eyebrow">{card.blockName}</div>
+        <h1 className="mt-3 font-serif text-[1.75rem] font-semibold leading-tight tracking-tight text-paper-ink text-balance md:text-3xl">
           {card.question}
         </h1>
         {card.detail !== '' && (
@@ -94,7 +94,7 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
               {showDetail ? '收起讲解' : '看不懂术语？看讲解'}
             </button>
             {showDetail && (
-              <div className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
+              <div className="mt-3 rounded-r-md border border-l-2 border-l-accent border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
                 <p className="whitespace-pre-line"><RichText text={splitDetail(card.detail).intro} /></p>
                 {splitDetail(card.detail).advanced !== '' && (
                   <details className="mt-2">
@@ -106,7 +106,7 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
             )}
           </div>
         )}
-        <div className="tnum mt-3 text-2xl font-semibold text-paper-ink">
+        <div className="tnum mt-4 font-serif text-4xl font-semibold tracking-tight text-paper-ink">
           得分 {result.score.num}/{result.score.den}
         </div>
         <div className="tnum mt-1.5 text-sm text-paper-muted">

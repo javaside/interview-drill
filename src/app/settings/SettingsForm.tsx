@@ -56,16 +56,16 @@ export function SettingsForm(
         e.preventDefault()
         void save()
       }}
-      className="mx-auto max-w-2xl px-5 py-8"
+      className="rise mx-auto max-w-2xl px-5 py-8"
     >
-      <h1 className="mb-6 font-serif text-xl font-semibold text-paper-ink">设置</h1>
+      <h1 className="mb-8 font-serif text-3xl font-semibold tracking-tight text-paper-ink">设置</h1>
 
       {view.tracks.length > 0 && (
         <fieldset className="mb-8">
-          <legend className="mb-3 text-xs tracking-[0.2em] text-paper-muted">面试岗位</legend>
+          <legend className="eyebrow mb-3 block">面试岗位</legend>
           <ul className="space-y-2">
             <li>
-              <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
+              <label className="choice">
                 <input
                   type="radio"
                   name="track"
@@ -77,7 +77,7 @@ export function SettingsForm(
             </li>
             {view.tracks.map(t => (
               <li key={t.id}>
-                <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
+                <label className="choice">
                   <input
                     type="radio"
                     name="track"
@@ -136,7 +136,7 @@ export function SettingsForm(
       </div>
 
       <fieldset>
-        <legend className="mb-3 text-xs tracking-[0.2em] text-paper-muted">
+        <legend className="eyebrow mb-3 block">
           块选择{view.plan === 'free' ? `（免费最多 ${FREE_BLOCK_LIMIT} 个）` : ''}
         </legend>
         {(() => {
@@ -153,7 +153,7 @@ export function SettingsForm(
               <ul className="mt-2.5 space-y-2">
                 {list.map(b => (
                   <li key={b.blockId}>
-                    <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
+                    <label className="choice">
                       <input
                         type="checkbox"
                         name={b.blockId}
@@ -178,7 +178,7 @@ export function SettingsForm(
       <button
         type="submit"
         disabled={overLimit}
-        className="mt-8 rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-ink disabled:pointer-events-none disabled:opacity-30"
+        className="btn-primary mt-8 w-full sm:w-auto"
       >
         保存
       </button>
@@ -187,8 +187,8 @@ export function SettingsForm(
         <p className="mt-4 text-sm text-mark-good">已重排 {replanned} 张卡的计划</p>
       ) : null}
 
-      <fieldset className="mt-12 rounded-lg border border-paper-line bg-paper-card px-5 py-5">
-        <legend className="px-1 text-xs tracking-[0.2em] text-paper-muted">临时加密</legend>
+      <fieldset className="paper-card mt-14 px-6 py-6">
+        <legend className="eyebrow px-1">临时加密</legend>
         <p className="mt-1 text-sm leading-relaxed text-paper-muted">
           约到面试了？填上日期，对当前勾选的块在面试前重铺冲刺；面试一过自动回到常备模式。
         </p>

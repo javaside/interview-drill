@@ -92,14 +92,14 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
   }
 
   return (
-    <section className="mx-auto max-w-2xl px-5 py-8">
+    <section className="rise mx-auto max-w-2xl px-5 py-8">
       <header className="mb-6">
-        <div className="flex items-center gap-2 text-xs tracking-[0.2em] text-paper-muted">
+        <div className="eyebrow flex items-center gap-2">
           <span>{card.blockName}</span>
           <span aria-hidden="true">·</span>
           <span>{FREQUENCY_LABEL[card.frequency]}</span>
         </div>
-        <h1 className="mt-3 font-serif text-2xl font-semibold leading-snug text-paper-ink text-pretty">
+        <h1 className="mt-3 font-serif text-[1.75rem] font-semibold leading-tight tracking-tight text-paper-ink text-balance md:text-3xl">
           {card.question}
         </h1>
         {card.detail !== '' && (
@@ -113,7 +113,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
               {showDetail ? '收起讲解' : '不会？先看讲解'}
             </button>
             {showDetail && (
-              <div className="mt-3 rounded-md border border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
+              <div className="mt-3 rounded-r-md border border-l-2 border-l-accent border-paper-line bg-paper-wash px-4 py-3 text-[15px] leading-relaxed text-paper-ink">
                 <p className="whitespace-pre-line"><RichText text={splitDetail(card.detail).intro} /></p>
                 {splitDetail(card.detail).advanced !== '' && (
                   <details className="mt-2">
@@ -134,7 +134,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
             {CONCLUSION_OPTIONS.map(o => (
               <label
                 key={o.value}
-                className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md border border-paper-line bg-paper-card px-3 py-2.5 text-sm transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft has-[:checked]:font-medium hover:border-paper-muted"
+                className="choice flex-1 justify-center px-3 py-2.5 text-sm has-[:checked]:font-medium"
               >
                 <input
                   type="radio"
@@ -156,7 +156,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
           {order.map((optIdx, pos) => (
             <li
               key={optIdx}
-              className="flex items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3"
+              className="choice py-3"
             >
               <span className="tnum w-5 shrink-0 text-right text-sm text-paper-muted">{pos + 1}</span>
               <span className="flex-1 text-[15px] leading-relaxed">{variant.optionTexts[optIdx]}</span>
@@ -165,7 +165,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
                 aria-label="上移"
                 disabled={pos === 0}
                 onClick={() => move(pos, pos - 1)}
-                className="rounded border border-paper-line px-2.5 py-1 text-paper-muted transition-colors hover:border-paper-ink hover:text-paper-ink disabled:opacity-30"
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-paper-line text-paper-muted transition-all duration-200 hover:border-paper-ink hover:bg-paper-ink hover:text-paper disabled:pointer-events-none disabled:opacity-30"
               >
                 ↑
               </button>
@@ -174,7 +174,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
                 aria-label="下移"
                 disabled={pos === order.length - 1}
                 onClick={() => move(pos, pos + 1)}
-                className="rounded border border-paper-line px-2.5 py-1 text-paper-muted transition-colors hover:border-paper-ink hover:text-paper-ink disabled:opacity-30"
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-paper-line text-paper-muted transition-all duration-200 hover:border-paper-ink hover:bg-paper-ink hover:text-paper disabled:pointer-events-none disabled:opacity-30"
               >
                 ↓
               </button>
@@ -185,7 +185,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         <ul className="space-y-2">
           {variant.optionTexts.map((text, i) => (
             <li key={i}>
-              <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] leading-relaxed transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
+              <label className="choice">
                 <input
                   type="radio"
                   name="atomic"
@@ -201,7 +201,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         <ul className="space-y-2">
           {variant.optionTexts.map((text, i) => (
             <li key={i}>
-              <label className="flex cursor-pointer items-center gap-3 rounded-md border border-paper-line bg-paper-card px-4 py-3 text-[15px] leading-relaxed transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent-soft hover:border-paper-muted">
+              <label className="choice">
                 <input type="checkbox" checked={checked[i] ?? false} onChange={() => toggle(i)} />
                 <span>{text}</span>
               </label>
@@ -214,7 +214,7 @@ export function DrillQuestion({ card, variant, onSubmit }: DrillQuestionProps) {
         type="button"
         onClick={submit}
         disabled={disabled}
-        className="mt-8 rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-ink disabled:pointer-events-none disabled:opacity-30"
+        className="btn-primary mt-8 w-full text-base sm:w-auto"
       >
         提交
       </button>

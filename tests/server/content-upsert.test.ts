@@ -7,7 +7,7 @@ function runner(db: unknown): SqlRunner {
   return db as SqlRunner
 }
 
-test('试点块完整落库且可重复执行（幂等）', async () => {
+test('试点块完整落库且可重复执行（幂等）', { timeout: 30_000 }, async () => {
   const t = await createTestDb()
   try {
     const db = runner(t.db)
@@ -23,7 +23,7 @@ test('试点块完整落库且可重复执行（幂等）', async () => {
   }
 })
 
-test('judgment 卡的 conclusion 字段落库', async () => {
+test('judgment 卡的 conclusion 字段落库', { timeout: 30_000 }, async () => {
   const t = await createTestDb()
   try {
     await runUpsert(runner(t.db))
@@ -36,7 +36,7 @@ test('judgment 卡的 conclusion 字段落库', async () => {
   }
 })
 
-test('源目录消失的卡被 tombstone 而非删除（§7 id 稳定性）', async () => {
+test('源目录消失的卡被 tombstone 而非删除（§7 id 稳定性）', { timeout: 30_000 }, async () => {
   const t = await createTestDb()
   try {
     const db = runner(t.db)

@@ -15,26 +15,37 @@ export function NavBar(): React.JSX.Element {
     { href: '/settings', label: '设置' },
   ] as const
   return (
-    <nav className="border-b border-paper-line bg-paper">
-      <div className="mx-auto flex max-w-2xl items-baseline gap-5 px-5 py-4">
-        <span className="font-serif text-lg font-bold tracking-tight">面试刷题</span>
-        {items.map(i => {
-          const active = pathname === i.href
-          return (
-            <a
-              key={i.href}
-              href={i.href}
-              aria-current={active ? 'page' : undefined}
-              className={`text-sm transition-colors ${
-                active
-                  ? 'font-medium text-paper-ink underline decoration-accent decoration-2 underline-offset-8'
-                  : 'text-paper-muted hover:text-paper-ink'
-              }`}
-            >
-              {i.label}
-            </a>
-          )
-        })}
+    <nav className="sticky top-0 z-40 border-b border-paper-line bg-paper/85 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-2xl items-center gap-6 px-5 py-3">
+        <span className="flex items-center gap-2.5">
+          {/* 赭红印章：品牌识别块（纯装饰） */}
+          <span
+            aria-hidden="true"
+            className="flex h-7 w-7 select-none items-center justify-center rounded-[6px] bg-accent font-serif text-[15px] font-bold text-paper shadow-stamp"
+          >
+            题
+          </span>
+          <span className="font-serif text-lg font-bold tracking-tight">面试刷题</span>
+        </span>
+        <div className="flex items-center gap-1">
+          {items.map(i => {
+            const active = pathname === i.href
+            return (
+              <a
+                key={i.href}
+                href={i.href}
+                aria-current={active ? 'page' : undefined}
+                className={`rounded-md px-3 py-1.5 text-sm transition-all duration-200 ${
+                  active
+                    ? 'bg-paper-ink font-medium text-paper shadow-paper'
+                    : 'text-paper-muted hover:bg-paper-wash hover:text-paper-ink'
+                }`}
+              >
+                {i.label}
+              </a>
+            )
+          })}
+        </div>
       </div>
     </nav>
   )

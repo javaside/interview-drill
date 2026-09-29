@@ -44,9 +44,9 @@ export function LearnView({
   cardCount?: number
 }): React.JSX.Element {
   return (
-    <main className="mx-auto max-w-2xl px-5 py-8">
+    <main className="rise mx-auto max-w-2xl px-5 py-8">
       <p className="text-xs tracking-[0.2em] text-paper-muted">学习</p>
-      <h1 className="mt-2 font-serif text-2xl font-semibold text-paper-ink">{blockName}</h1>
+      <h1 className="mt-2 font-serif text-3xl font-semibold tracking-tight text-paper-ink">{blockName}</h1>
       {locked ? (
         <>
           <p className="mt-2 text-sm text-paper-muted">
@@ -55,13 +55,13 @@ export function LearnView({
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href="/upgrade"
-              className="rounded-md bg-accent px-6 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+              className="rounded-md bg-accent px-6 py-2 font-medium text-paper shadow-stamp transition-all duration-200 hover:-translate-y-px hover:opacity-95 active:translate-y-0"
             >
               解锁全部大类
             </a>
             <a
               href="/settings"
-              className="rounded-md border border-paper-line bg-paper-card px-6 py-2 font-medium text-paper-ink transition-colors hover:border-paper-muted"
+              className="btn-ghost px-6 py-2"
             >
               在设置里把它选为免费块
             </a>
@@ -75,7 +75,7 @@ export function LearnView({
 
           <div className="mt-8 space-y-8">
             {cards.map((c, i) => (
-              <article key={c.cardId} className="border-l-2 border-paper-line pl-5">
+              <article key={c.cardId} className="border-l-2 border-paper-line pl-5 transition-colors hover:border-accent">
                 <div className="flex items-baseline gap-3">
                   <span className="tnum font-mono text-xs text-paper-muted">{String(i + 1).padStart(2, '0')}</span>
                   <h2 className="font-serif text-lg font-semibold leading-snug text-paper-ink text-pretty">
@@ -95,7 +95,7 @@ export function LearnView({
           <div className="mt-12 text-center">
             <a
               href={`/practice?block=${blockId}`}
-              className="inline-block rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+              className="btn-primary inline-block px-8"
             >
               学完了，开始测试
             </a>

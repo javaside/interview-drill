@@ -52,8 +52,8 @@ export function KnowledgeMap({
               aria-current={activeTrackId === t.id ? 'page' : undefined}
               className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
                 activeTrackId === t.id
-                  ? 'border-paper-ink bg-paper-ink text-paper'
-                  : 'border-paper-line bg-paper-card text-paper-ink hover:border-paper-muted'
+                  ? 'border-paper-ink bg-paper-ink text-paper shadow-paper'
+                  : 'border-paper-line bg-paper-card text-paper-ink hover:border-paper-muted hover:shadow-paper'
               }`}
             >
               {t.name}
@@ -65,16 +65,20 @@ export function KnowledgeMap({
         <p className="py-16 text-center text-sm text-paper-muted">题库还是空的</p>
       )}
       {[...groups.entries()].map(([category, list]) => (
-        <section key={category} className="mb-8 last:mb-0">
-          <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-paper-muted">{category}</h2>
-          <ul className="mt-3 space-y-2">
+        <section key={category} className="rise mb-9 last:mb-0">
+          <div className="flex items-baseline gap-3">
+            <h2 className="font-serif text-xl font-semibold uppercase tracking-wide text-paper-ink">{category}</h2>
+            <span className="tnum font-mono text-xs text-paper-muted">{String(list.length).padStart(2, '0')} blocks</span>
+            <span aria-hidden="true" className="h-px flex-1 bg-paper-line" />
+          </div>
+          <ul className="mt-4 space-y-2.5">
             {list.map(e => {
               const { label, pct } = masteryView(e)
               return (
                 <li
                   key={e.blockId}
                   data-testid={`block-${e.blockId}`}
-                  className="rounded-md border border-paper-line bg-paper-card px-4 py-3 transition-colors hover:border-paper-muted"
+                  className="paper-card lift px-4 py-3"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <a

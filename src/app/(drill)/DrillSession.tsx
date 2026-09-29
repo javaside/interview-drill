@@ -135,21 +135,31 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-5 pb-16">
-      <div className="flex items-center justify-between py-4 text-sm text-paper-muted">
-        <span>今日进度</span>
-        <div className="flex items-center gap-4">
-          {payload.missesToday > 0 && phase !== 'done' && (
-            <button
-              type="button"
-              onClick={requeueMisses}
-              className="tnum rounded-full border border-accent px-3 py-0.5 text-xs text-accent transition-colors hover:bg-accent-soft"
-            >
-              错题 {payload.missesToday}
-            </button>
-          )}
-          <span data-testid="progress" className="tnum font-medium text-paper-ink">{`${done}/${total}`}</span>
+    <main className="rise mx-auto max-w-2xl px-5 pb-16">
+      <div className="sticky top-[53px] z-30 -mx-5 mb-2 bg-paper/85 px-5 py-3 backdrop-blur-sm">
+        <div className="flex items-center justify-between text-sm text-paper-muted">
+          <span>今日进度</span>
+          <div className="flex items-center gap-4">
+            {payload.missesToday > 0 && phase !== 'done' && (
+              <button
+                type="button"
+                onClick={requeueMisses}
+                className="tnum rounded-full border border-accent px-3 py-0.5 text-xs text-accent transition-colors hover:bg-accent-soft"
+              >
+                错题 {payload.missesToday}
+              </button>
+            )}
+            <span data-testid="progress" className="tnum font-medium text-paper-ink">{`${done}/${total}`}</span>
+          </div>
         </div>
+        {total > 0 && (
+          <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-paper-wash" aria-hidden="true">
+            <div
+              className="h-1 rounded-full bg-paper-ink transition-all duration-500 ease-out"
+              style={{ width: `${total === 0 ? 0 : Math.round((done / total) * 100)}%` }}
+            />
+          </div>
+        )}
       </div>
 
       {phase === 'question' && card !== undefined && variant !== undefined && (
@@ -169,7 +179,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
             <button
               type="button"
               onClick={advance}
-              className="rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-ink"
+              className="btn-primary px-8"
             >
               {isLast ? '完成' : '下一题'}
             </button>
@@ -178,7 +188,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
       )}
 
       {phase === 'done' && done === 0 && total === 0 && payload.mode === 'maintenance' && (
-        <section className="mt-8 rounded-lg border border-paper-line bg-paper-card px-6 py-10 text-center">
+        <section className="paper-card mt-8 px-6 py-12 text-center">
           <h2 className="font-serif text-xl font-semibold text-paper-ink">常备模式 · 今天没有到期卡</h2>
           <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
             滚动间隔复习会按到期日把卡送回队列——答对的间隔越拉越长，答错的明天就来。
@@ -193,7 +203,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
               <button
                 type="button"
                 onClick={requeueMisses}
-                className="rounded-md bg-accent px-5 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+                className="rounded-md bg-accent px-5 py-2 font-medium text-paper shadow-stamp transition-all duration-200 hover:-translate-y-px hover:opacity-95 active:translate-y-0"
               >
                 再练今天的 {payload.missesToday} 张错题
               </button>
@@ -206,7 +216,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
       )}
 
       {phase === 'done' && done === 0 && total === 0 && payload.mode !== 'maintenance' && (
-        <section className="mt-8 rounded-lg border border-paper-line bg-paper-card px-6 py-10 text-center">
+        <section className="paper-card mt-8 px-6 py-12 text-center">
           <h2 className="font-serif text-xl font-semibold text-paper-ink">今日队列是空的</h2>
           <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
             排期由就绪日与所选知识块决定。设定你的面试日期、勾选要刷的块，队列就会出现。
@@ -222,7 +232,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
               <button
                 type="button"
                 onClick={requeueMisses}
-                className="rounded-md bg-accent px-5 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+                className="rounded-md bg-accent px-5 py-2 font-medium text-paper shadow-stamp transition-all duration-200 hover:-translate-y-px hover:opacity-95 active:translate-y-0"
               >
                 再练今天的 {payload.missesToday} 张错题
               </button>
@@ -235,7 +245,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
       )}
 
       {phase === 'done' && (done > 0 || total > 0) && (
-        <section className="mt-8 rounded-lg border border-paper-line bg-paper-card px-6 py-10 text-center">
+        <section className="paper-card mt-8 px-6 py-12 text-center">
           <p className="font-serif text-xl font-semibold text-paper-ink">今日完成</p>
           {total > 0 ? (
             <p className="tnum mt-2 text-sm text-paper-muted">{`${done}/${total} · 明天见`}</p>
