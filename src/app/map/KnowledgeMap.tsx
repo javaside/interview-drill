@@ -35,11 +35,7 @@ export function KnowledgeMap({
   }
   let visible = 0   // 级联入场的序号源（跨组连续递增）
   return (
-    <div className="relative mx-auto max-w-2xl px-5 py-10">
-      {/* 背景淡墨大字：纯氛围装饰 */}
-      <span aria-hidden="true" className="ghost-display absolute right-0 top-24 hidden text-[11rem] lg:block">
-        图
-      </span>
+    <div className="mx-auto max-w-2xl px-5 py-10">
 
       {/* 编辑刊头：不对称双栏——左标题右统计 */}
       <header className="rise relative mb-10 grid gap-8 md:grid-cols-[1fr_auto] md:items-end">

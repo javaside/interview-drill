@@ -2,90 +2,90 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 暖白纸感编辑风全局底 */
+/* 深夜刷题：深底 + 网格纹理 + 青绿光斑 */
 html {
   scroll-behavior: smooth;
 }
 body {
   @apply bg-paper font-sans text-paper-ink antialiased;
-  /* 纸面光：左上暖光沉入右下——打破纯平底色 */
-  background-image: radial-gradient(1100px 500px at 12% -4%, rgba(255, 252, 244, 0.9), transparent 60%),
-    radial-gradient(900px 420px at 100% 108%, rgba(226, 214, 189, 0.35), transparent 55%);
+  /* 氛围光斑：青绿一簇 + 冷蓝一簇，极淡——打破纯平底 */
+  background-image:
+    radial-gradient(900px 480px at 85% -8%, rgba(52, 211, 153, 0.07), transparent 60%),
+    radial-gradient(800px 420px at -10% 110%, rgba(96, 165, 250, 0.05), transparent 55%);
   background-attachment: fixed;
 }
 ::selection {
-  background: #ead9cb;
+  background: rgba(52, 211, 153, 0.25);
 }
 
-/* 纸张纤维：极淡噪点覆盖层，打破数字的绝对平整（fixed 不随滚动、不挡交互） */
-.grain::after {
+/* 蓝图网格：极淡的 1px 网格纹理（fixed，不随滚动重绘） */
+.grain::before {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
-  opacity: 0.5;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, black 30%, transparent 75%);
 }
 
-/* 数据数字（进度/得分/题数/百分比）统一等宽数字，防跳动 */
+/* 数据数字统一等宽 */
 .tnum {
   font-variant-numeric: tabular-nums;
 }
 
-/* 原生控件统一暖墨色（checkbox/radio/date picker 指示色） */
+/* 原生控件：青绿指示 */
 input[type='checkbox'],
 input[type='radio'] {
-  accent-color: #211d16;
+  accent-color: #34d399;
 }
 
-/* 键盘焦点：全站统一的墨色描边（可访问性，非装饰） */
+/* 键盘焦点 */
 :focus-visible {
-  outline: 2px solid #211d16;
+  outline: 2px solid #34d399;
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 @layer components {
-  /* 纸卡：暖白卡 + 染影 + 细线——浮在纸面上的卡 */
+  /* 卡面：深玻璃——提亮边 + 极弱扩散影 */
   .paper-card {
-    @apply rounded-lg border border-paper-line bg-paper-card shadow-paper;
+    @apply rounded-xl border border-paper-line bg-paper-card shadow-paper;
   }
 
-  /* 悬停浮起：卡片在纸面上被轻轻托起（位移 1px，transform 走 GPU） */
   .lift {
-    @apply transition-all duration-200 hover:-translate-y-px hover:shadow-paper-lg;
+    @apply transition-all duration-200 hover:-translate-y-px hover:border-paper-muted hover:shadow-paper-lg;
   }
 
-  /* 眉标（eyebrow）：区块小标签——赭红细体 + 字距，替代泛滥的灰宽距 */
+  /* 眉标：青绿 mono 小标签 */
   .eyebrow {
     @apply font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-accent;
   }
 
-  /* 主按钮：墨底纸字，按下有物理反馈 */
+  /* 主按钮：纸白底墨字（深色 UI 的主 CTA 形态） */
   .btn-primary {
-    @apply rounded-md bg-paper-ink px-8 py-2.5 font-medium text-paper shadow-paper transition-all
-      duration-200 hover:-translate-y-px hover:shadow-paper-lg active:translate-y-0 active:shadow-none
-      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-ink
-      disabled:pointer-events-none disabled:opacity-30 disabled:shadow-none;
-  }
-
-  /* 幽灵按钮：描边纸底 */
-  .btn-ghost {
-    @apply rounded-md border border-paper-line bg-paper-card px-6 py-2.5 font-medium text-paper-ink
-      shadow-paper transition-all duration-200 hover:border-paper-muted hover:-translate-y-px
-      hover:shadow-paper-lg active:translate-y-0 active:shadow-none
-      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper-ink
+    @apply rounded-lg bg-paper-ink px-8 py-2.5 font-semibold text-paper shadow-paper transition-all
+      duration-200 hover:-translate-y-px hover:bg-white active:translate-y-0
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
       disabled:pointer-events-none disabled:opacity-30;
   }
 
-  /* 选项行：纸卡 + 选中时左缘赭红竖批（红笔划过） */
+  .btn-ghost {
+    @apply rounded-lg border border-paper-line bg-paper-card px-6 py-2.5 font-medium text-paper-ink
+      transition-all duration-200 hover:border-paper-muted hover:-translate-y-px
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
+      disabled:pointer-events-none disabled:opacity-30;
+  }
+
+  /* 选项行：选中 = 青绿边 + 深绿面 + 左缘亮条 */
   .choice {
-    @apply relative flex cursor-pointer items-center gap-3 rounded-md border border-paper-line
+    @apply relative flex cursor-pointer items-center gap-3 rounded-lg border border-paper-line
       bg-paper-card px-4 py-3 text-[15px] leading-relaxed shadow-paper transition-all duration-200
       hover:-translate-y-px hover:border-paper-muted hover:shadow-paper-lg
-      has-[:checked]:border-accent has-[:checked]:bg-accent-soft/60 has-[:checked]:shadow-paper;
+      has-[:checked]:border-accent has-[:checked]:bg-accent-soft has-[:checked]:shadow-stamp;
   }
   .choice::before {
     content: '';
@@ -95,7 +95,7 @@ input[type='radio'] {
     bottom: 8px;
     width: 3px;
     border-radius: 2px;
-    background: #9e3a22;
+    background: #34d399;
     opacity: 0;
     transform: scaleY(0.4);
     transition: opacity 0.2s ease, transform 0.2s ease;
@@ -106,7 +106,6 @@ input[type='radio'] {
   }
 }
 
-/* 入场：内容轻浮上来（尊重系统减弱动效设置） */
 @keyframes fade-up {
   0% {
     opacity: 0;
@@ -128,22 +127,15 @@ input[type='radio'] {
   }
 }
 
-/* 标题断行优化：避免孤字悬尾 */
 h1,
 h2,
 h3 {
   text-wrap: balance;
 }
 
-/* ===== 编辑刊头件 ===== */
 @layer components {
-  /* 超大展示字：淡墨衬线，作为章节背景装饰（aria-hidden，纯氛围） */
-  .ghost-display {
-    @apply pointer-events-none select-none font-serif font-bold leading-none text-paper-ink/[0.05];
-  }
-
   /* 统计大数：真数据的衬线展示 */
   .stat-figure {
-    @apply tnum block font-serif text-4xl font-semibold leading-none tracking-tight text-paper-ink md:text-5xl;
+    @apply tnum block font-sans text-4xl font-bold leading-none tracking-tight text-paper-ink md:text-5xl;
   }
 }
