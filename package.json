@@ -8,6 +8,7 @@
     "test:watch": "vitest",
     "dev": "next dev",
     "build": "next build",
+    "start": "next start -H 127.0.0.1 -p 8300",
     "typecheck": "tsc --noEmit",
     "content:new": "tsx tools/content-new/index.ts",
     "content:audit": "tsx tools/audit-cli.ts",
