@@ -33,10 +33,13 @@ function mkCramApi() {
 
 test('预填当前就绪日与容量、块勾选态', () => {
   render(<SettingsForm view={view} api={mkApi() as never} />)
-  expect(screen.getByLabelText(/就绪日/)).toHaveValue('2026-11-01')
-  expect(screen.getByLabelText(/每日容量|容量/)).toHaveValue(45)
+  expect(screen.getByLabelText(/目标日期/)).toHaveValue('2026-11-01')
+  expect(screen.getByLabelText(/每天刷几题/)).toHaveValue(45)
   expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeChecked()
   expect(screen.getByRole('checkbox', { name: /Redis/ })).not.toBeChecked()
+  // sticky 保存条初始态：无变更时明确告知「已保存」
+  expect(screen.getByText('已保存')).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: '保存' })).toBeEnabled()
 })
 
 test('块列表按大类分组展示（组标题 + 各组内块）', () => {
@@ -111,9 +114,9 @@ test('临时加密（§5.8）：填面试日期提交 → 调 postCram 并回显
   const api = mkCramApi()
   render(<SettingsForm view={view} api={api as never} />)
   await u.type(screen.getByLabelText(/^面试日期/), '2026-12-01')
-  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
+  await u.click(screen.getByRole('button', { name: /开始冲刺/ }))
   expect(api.postCram).toHaveBeenCalledWith({ examDate: '2026-12-01', blockIds: ['b1'] })
-  expect(await screen.findByText(/已加密.*5/)).toBeInTheDocument()
+  expect(await screen.findByText(/已重铺.*5/)).toBeInTheDocument()
 })
 
 // ---------- cram 与保存的顺序解耦（已保存块集语义） ----------
@@ -122,18 +125,18 @@ test('cram 只作用于已保存块集：勾选未保存时禁用并提示，恢
   const u = userEvent.setup()
   render(<SettingsForm view={view} api={mkCramApi() as never} />)
   await u.type(screen.getByLabelText(/^面试日期/), '2026-12-01')
-  expect(screen.getByRole('button', { name: /临时加密|加密/ })).toBeEnabled()
+  expect(screen.getByRole('button', { name: /开始冲刺/ })).toBeEnabled()
   await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 有未保存变更
-  expect(screen.getByRole('button', { name: /临时加密|加密/ })).toBeDisabled()
+  expect(screen.getByRole('button', { name: /开始冲刺/ })).toBeDisabled()
   expect(screen.getByText(/先保存/)).toBeInTheDocument()
   await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 回到已保存集
-  expect(screen.getByRole('button', { name: /临时加密|加密/ })).toBeEnabled()
+  expect(screen.getByRole('button', { name: /开始冲刺/ })).toBeEnabled()
 })
 
 test('加密卡片明示作用范围（已保存 N 块）与就绪日副作用', () => {
   render(<SettingsForm view={view} api={mkCramApi() as never} />)
-  expect(screen.getByText(/已保存的 1 个块/)).toBeInTheDocument()
-  expect(screen.getByText(/面试前一天/)).toBeInTheDocument()
+  expect(screen.getByText(/已勾的 1 个块/)).toBeInTheDocument()
+  expect(screen.getByText(/重铺到考前/)).toBeInTheDocument()
 })
 
 test('cram 成功后同步就绪日为返回值（防止后续保存写回旧值销毁加密）', async () => {
@@ -144,9 +147,9 @@ test('cram 成功后同步就绪日为返回值（防止后续保存写回旧值
   }
   render(<SettingsForm view={view} api={api as never} />)
   await u.type(screen.getByLabelText(/^面试日期/), '2026-11-01')
-  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
-  expect(await screen.findByText(/已加密.*5/)).toBeInTheDocument()
-  expect(screen.getByLabelText(/就绪日/)).toHaveValue('2026-10-31')
+  await u.click(screen.getByRole('button', { name: /开始冲刺/ }))
+  expect(await screen.findByText(/已重铺.*5/)).toBeInTheDocument()
+  expect(screen.getByLabelText(/目标日期/)).toHaveValue('2026-10-31')
 })
 
 test('cram 失败 → role=alert 显示服务端错误', async () => {
@@ -157,7 +160,7 @@ test('cram 失败 → role=alert 显示服务端错误', async () => {
   }
   render(<SettingsForm view={view} api={api as never} />)
   await u.type(screen.getByLabelText(/^面试日期/), '2026-12-01')
-  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
+  await u.click(screen.getByRole('button', { name: /开始冲刺/ }))
   expect(await screen.findByRole('alert')).toHaveTextContent(/块未解锁/)
 })
 
@@ -227,7 +230,7 @@ test('保存反馈三态：无变化 / 常备保持 / 已重排', async () => {
   b.postSettings.mockResolvedValueOnce({ replanned: 0, changed: true })
   const { unmount: m2 } = render(<SettingsForm view={view} api={b as never} />)
   await u.click(screen.getByRole('button', { name: /保存/ }))
-  expect(await screen.findByText(/滚动计划保持不变/)).toBeInTheDocument()
+  expect(await screen.findByText(/日常滚动保持不变/)).toBeInTheDocument()
   m2()
   // 有重排
   const c = mkApi()
@@ -242,10 +245,10 @@ test('保存反馈三态：无变化 / 常备保持 / 已重排', async () => {
 test('容量清空或为 0 → 保存禁用并提示 ≥1', async () => {
   const u = userEvent.setup()
   render(<SettingsForm view={view} api={mkApi() as never} />)
-  const cap = screen.getByLabelText(/每日容量|容量/)
+  const cap = screen.getByLabelText(/每天刷几题/)
   await u.clear(cap)
   expect(screen.getByRole('button', { name: /保存/ })).toBeDisabled()
-  expect(screen.getByText(/容量须为 ≥1/)).toBeInTheDocument()
+  expect(screen.getByText(/须为 ≥1/)).toBeInTheDocument()
   await u.type(cap, '0')
   expect(screen.getByRole('button', { name: /保存/ })).toBeDisabled()
 })
@@ -320,8 +323,8 @@ test('未保存变更常驻提示：改动出现、保存成功后消失', async
 test('改容量/岗位同样触发未保存提示', async () => {
   const u = userEvent.setup()
   render(<SettingsForm view={view} api={mkApi() as never} />)
-  await u.clear(screen.getByLabelText(/每日容量|容量/))
-  await u.type(screen.getByLabelText(/每日容量|容量/), '30')
+  await u.clear(screen.getByLabelText(/每天刷几题/))
+  await u.type(screen.getByLabelText(/每天刷几题/), '30')
   expect(screen.getByTestId('dirty-hint')).toBeInTheDocument()
   await u.click(screen.getByRole('radio', { name: /^全部$/ }))
   expect(screen.getByTestId('dirty-hint')).toBeInTheDocument()
@@ -347,11 +350,11 @@ test('cram 成功后基线同步：不误报未保存，结果明示就绪日副
   }
   render(<SettingsForm view={view} api={api as never} />)
   await u.type(screen.getByLabelText(/^面试日期/), '2026-11-01')
-  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
+  await u.click(screen.getByRole('button', { name: /开始冲刺/ }))
   const result = await screen.findByTestId('cram-result')
-  expect(result).toHaveTextContent(/已加密 5 张/)
-  expect(result).toHaveTextContent(/就绪日 → 2026-10-31/)
-  expect(screen.getByLabelText(/就绪日/)).toHaveValue('2026-10-31')
+  expect(result).toHaveTextContent(/已重铺 5 张/)
+  expect(result).toHaveTextContent(/目标日期 → 2026-10-31/)
+  expect(screen.getByLabelText(/目标日期/)).toHaveValue('2026-10-31')
   expect(screen.queryByTestId('dirty-hint')).not.toBeInTheDocument()   // 基线已同步
 })
 
@@ -363,7 +366,7 @@ test('cram 成功后清掉过期的保存反馈', async () => {
   await u.click(screen.getByRole('button', { name: /保存/ }))
   expect(await screen.findByText(/重排.*9/)).toBeInTheDocument()
   await u.type(screen.getByLabelText(/^面试日期/), '2026-12-01')
-  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
+  await u.click(screen.getByRole('button', { name: /开始冲刺/ }))
   await screen.findByTestId('cram-result')
   expect(screen.queryByText(/重排.*9/)).not.toBeInTheDocument()
 })
@@ -374,6 +377,6 @@ test('就绪日 date input 的 min 不早于今天（挡住「填过去日期按
   const d = new Date()
   const mm = String(d.getMonth() + 1).padStart(2, '0')
   const dd = String(d.getDate()).padStart(2, '0')
-  await screen.findByLabelText(/就绪日/)   // 等 useEffect 填充
-  expect(screen.getByLabelText(/就绪日/)).toHaveAttribute('min', `${d.getFullYear()}-${mm}-${dd}`)
+  await screen.findByLabelText(/目标日期/)   // 等 useEffect 填充
+  expect(screen.getByLabelText(/目标日期/)).toHaveAttribute('min', `${d.getFullYear()}-${mm}-${dd}`)
 })

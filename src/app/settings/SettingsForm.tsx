@@ -9,16 +9,20 @@ import type { LocalDate } from '../../lib/scheduler/date.js'
 
 /**
  * 设置屏（§5.5/§10.1，Task 11；交互重整 2026-09-28；反馈语义重整 2026-09-30）——`'use client'`：
- * - **两个独立 form**：设置区（岗位/就绪日/容量/块集/保存）与临时加密区。
- *   此前整页一个 form，加密日期框按 Enter 会误触「保存设置」全局重排。
- * - **已保存基线**：saved（就绪日/容量/岗位）+ savedBlockIds（块集）双向快照，
- *   推导 formDirty 常驻提示「有未保存的变更」——此前改没改、存没存全程无反馈。
- *   保存成功 / cram 写入就绪日后同步基线，提示自动消失且不误报。
- * - **保存反馈按语义分流**：服务端 changed=true（就绪日/容量实际变更）→ 重排三态；
+ * - **整页重排（v3，2026-09-30）**：黑话清零 + sticky 保存条——「临时加密」→「面试冲刺」、
+ *   「冲刺截止日（就绪日）」→「目标日期（可选）」、「每日容量」→「每天刷几题」；
+ *   说明每条压到一行（细节留给动作发生时的反馈）；容量与目标日期并排一行；
+ *   保存按钮 + 状态（错误 > 结果 > 未保存变更 > 已保存）合成 sticky 贴底操作条，
+ *   块列表再长改到哪都能就地保存。顺序 = 岗位 → 节奏 → 块选择 → 保存条 → 面试冲刺。
+ * - **两个独立 form**：设置区与面试冲刺区——此前整页一个 form，冲刺日期框
+ *   按 Enter 会误触「保存设置」全局重排。
+ * - **已保存基线**：saved（目标日期/容量/岗位）+ savedBlockIds（块集）双向快照，
+ *   推导 formDirty——保存成功 / cram 写入目标日期后同步基线，不误报。
+ * - **保存反馈按语义分流**：服务端 changed=true（目标日期/容量实际变更）→ 重排三态；
  *   changed=false 但确有块集/岗位变更 → 「已保存，排期未重排」——此前一律显示
- *   「设置未变化」，用户明明改了块集却说没变（把「排期未变」错说成「设置未变」）。
- * - **cram 作用已保存块集**（savedBlockIds）：勾选有未保存变更时加密禁用并提示先保存；
- *   成功后用返回的 readyByDate 同步表单**并更新基线**，结果明示「就绪日 → X」副作用。
+ *   「设置未变化」，把「排期未变」错说成「设置未变」。
+ * - **cram 作用已保存块集**（savedBlockIds）：有未保存勾选时冲刺禁用；成功后用
+ *   返回的 readyByDate 同步表单**并更新基线**，结果明示「目标日期 → X」副作用。
  * - **岗位联动（无过滤）**：块列表永远全量展示、勾哪刷哪；岗位包含的块常挂
  *   「推荐」徽标 + 一行小字说明——此前「只看岗位内块/推荐-全部视野切换」把内部
  *   概念泄漏给用户（用户实测：看不懂什么叫推荐什么叫全部），过滤还制造
@@ -206,48 +210,49 @@ export function SettingsForm(
               ))}
             </ul>
             <p className="mt-1.5 text-xs text-paper-muted">
-              岗位决定地图与学习的默认视野（块的推荐集合），不影响排期与免费块额度
+              只影响地图/学习页的推荐视野，不影响排期
             </p>
           </fieldset>
         )}
 
-        <div className="mb-6">
-          <label htmlFor="settings-ready-by" className="mb-1.5 block text-xs tracking-[0.2em] text-paper-muted">
-            冲刺截止日（就绪日）
-          </label>
-          <input
-            id="settings-ready-by"
-            type="date"
-            min={today === '' ? undefined : today}
-            value={readyByDate}
-            onChange={e => {
-              setSaveStatus(null)
-              setReadyByDate(e.target.value)
-            }}
-            className="tnum rounded-md border border-paper-line bg-paper-card px-3 py-2 text-paper-ink transition-colors focus:border-paper-ink focus:outline-none"
-          />
-          <p className="mt-1.5 text-xs text-paper-muted">
-            留空 = 常备模式：滚动间隔复习，随时保持题感；填写后保存，全局排期按该日记忆峰值冲刺（改动会重排全部活跃卡的计划）；早于今天的日期按常备处理
-          </p>
-        </div>
-
         <div className="mb-8">
-          <label htmlFor="settings-capacity" className="mb-1.5 block text-xs tracking-[0.2em] text-paper-muted">
-            每日容量（题）
-          </label>
-          <input
-            id="settings-capacity"
-            type="number"
-            min={1}
-            value={dailyCapacity}
-            onChange={e => {
-              setSaveStatus(null)
-              setDailyCapacity(Number(e.target.value))
-            }}
-            className="tnum w-28 rounded-md border border-paper-line bg-paper-card px-3 py-2 text-paper-ink transition-colors focus:border-paper-ink focus:outline-none"
-          />
-          <p className="mt-1.5 text-xs text-paper-muted">排期按此容量把冲刺计划摊到每天（≥1 的整数）</p>
-          {capacityInvalid && <p className="mt-1.5 text-sm text-mark-bad">容量须为 ≥1 的整数</p>}
+          <p className="eyebrow mb-3 block">节奏</p>
+          <div className="flex flex-wrap items-start gap-6">
+            <div>
+              <label htmlFor="settings-capacity" className="mb-1.5 block text-xs tracking-[0.2em] text-paper-muted">
+                每天刷几题
+              </label>
+              <input
+                id="settings-capacity"
+                type="number"
+                min={1}
+                value={dailyCapacity}
+                onChange={e => {
+                  setSaveStatus(null)
+                  setDailyCapacity(Number(e.target.value))
+                }}
+                className="tnum w-28 rounded-md border border-paper-line bg-paper-card px-3 py-2 text-paper-ink transition-colors focus:border-paper-ink focus:outline-none"
+              />
+              {capacityInvalid && <p className="mt-1.5 text-sm text-mark-bad">须为 ≥1 的整数</p>}
+            </div>
+            <div>
+              <label htmlFor="settings-ready-by" className="mb-1.5 block text-xs tracking-[0.2em] text-paper-muted">
+                目标日期（可选）
+              </label>
+              <input
+                id="settings-ready-by"
+                type="date"
+                min={today === '' ? undefined : today}
+                value={readyByDate}
+                onChange={e => {
+                  setSaveStatus(null)
+                  setReadyByDate(e.target.value)
+                }}
+                className="tnum rounded-md border border-paper-line bg-paper-card px-3 py-2 text-paper-ink transition-colors focus:border-paper-ink focus:outline-none"
+              />
+              <p className="mt-1.5 text-xs text-paper-muted">填了就按考前峰值排计划；留空 = 日常滚动</p>
+            </div>
+          </div>
         </div>
 
         <fieldset>
@@ -335,42 +340,48 @@ export function SettingsForm(
           })()}
         </fieldset>
 
-        {formDirty && !saving && (
-          <p className="mt-4 text-sm text-paper-muted" data-testid="dirty-hint">有未保存的变更</p>
-        )}
-
-        <button
-          type="submit"
-          disabled={overLimit || capacityInvalid || saving}
-          className="btn-primary mt-8 w-full sm:w-auto"
-        >
-          {saving ? '保存中…' : '保存设置'}
-        </button>
-
-        {saveError !== null && <p role="alert" className="mt-4 text-sm text-mark-bad">{saveError}</p>}
-
-        {saveStatus !== null && (
-          <p className="mt-4 text-sm text-mark-good" data-testid="save-status">
-            {saveStatus.kind === 'plan'
-              ? saveStatus.replanned > 0
-                ? `已重排 ${saveStatus.replanned} 张卡的计划`
-                : '常备模式：滚动计划保持不变'
-              : saveStatus.kind === 'nav'
-                ? '已保存：块集/岗位已更新，排期未重排'
-                : '设置未变化，排期保持不变'}
-          </p>
-        )}
+        {/* 保存操作条：sticky 贴住视口底——勾块列表很长，用户在任何位置改完都能看到状态、就地保存。
+            状态优先级：错误 > 保存结果 > 未保存变更 > 已保存 */}
+        <div className="sticky bottom-4 z-20 mt-10">
+          <div className="flex items-center gap-4 rounded-xl border border-paper-line bg-paper-card px-5 py-3.5 shadow-lg shadow-black/5">
+            <div className="min-w-0 flex-1 text-sm">
+              {saveError !== null ? (
+                <span role="alert" className="text-mark-bad">{saveError}</span>
+              ) : saveStatus !== null ? (
+                <span data-testid="save-status" className="text-mark-good">
+                  {saveStatus.kind === 'plan'
+                    ? saveStatus.replanned > 0
+                      ? `已重排 ${saveStatus.replanned} 张卡的计划`
+                      : '日常滚动保持不变'
+                    : saveStatus.kind === 'nav'
+                      ? '已保存：块集/岗位已更新，排期未重排'
+                      : '设置未变化，排期保持不变'}
+                </span>
+              ) : formDirty ? (
+                <span data-testid="dirty-hint">有未保存的变更</span>
+              ) : (
+                <span className="text-paper-muted">已保存</span>
+              )}
+            </div>
+            <button
+              type="submit"
+              disabled={overLimit || capacityInvalid || saving}
+              className="btn-primary shrink-0"
+            >
+              {saving ? '保存中…' : '保存'}
+            </button>
+          </div>
+        </div>
       </form>
 
       <form onSubmit={e => { e.preventDefault(); void cram() }} className="card-flat mt-14 px-6 py-6">
         <fieldset>
-          <legend className="eyebrow">临时加密</legend>
+          <legend className="eyebrow">面试冲刺</legend>
           <p className="mt-1 text-sm leading-relaxed text-paper-muted">
-            约到面试了？只对已保存的 {savedBlockIds.size} 个块在面试前重铺冲刺，其他块排期不动；
-            就绪日将自动设为面试前一天，面试过后自动回常备。
+            约到面试了？已勾的 {savedBlockIds.size} 个块将重铺到考前，面试后自动恢复日常。
           </p>
           {blocksDirty && (
-            <p className="mt-1.5 text-sm text-mark-bad">有未保存的块变更，先保存设置再加密</p>
+            <p className="mt-1.5 text-sm text-mark-bad">有未保存的勾选，先保存再开始冲刺</p>
           )}
           <div className="mt-4 flex flex-wrap items-end gap-3">
             <div>
@@ -394,16 +405,16 @@ export function SettingsForm(
               disabled={examDate === '' || savedBlockIds.size === 0 || blocksDirty || cramming}
               className="rounded-md bg-accent px-6 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-30"
             >
-              {cramming ? '加密中…' : '临时加密'}
+              {cramming ? '排期中…' : '开始冲刺'}
             </button>
           </div>
           {cramError !== null && <p role="alert" className="mt-3 text-sm text-mark-bad">{cramError}</p>}
           {cramResult !== null && (
             <p className="tnum mt-3 text-sm" data-testid="cram-result">
-              已加密 {cramResult.crammed} 张
-              {cramResult.excluded > 0 && `（${cramResult.excluded} 张窗口不足）`}
-              {cramResult.overloaded && ' · 部分日子超容量'}
-              {cramResult.readyByDate !== null && ` · 就绪日 → ${cramResult.readyByDate}`}
+              已重铺 {cramResult.crammed} 张到考前
+              {cramResult.excluded > 0 && `（${cramResult.excluded} 张来不及）`}
+              {cramResult.overloaded && ' · 部分日子超量'}
+              {cramResult.readyByDate !== null && ` · 目标日期 → ${cramResult.readyByDate}`}
             </p>
           )}
         </fieldset>
