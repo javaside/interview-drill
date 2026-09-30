@@ -3,6 +3,8 @@ import { pgTable, text, integer, timestamp, date, boolean, jsonb, uniqueIndex, i
 export const users = pgTable('users', {
   id: text('id').primaryKey(),                    // ULID，注册时铸造
   githubId: text('github_id').notNull().unique(),
+  /** GitHub 用户名（后台台账展示「谁兑换」）。可空：存量行待下次登录回填 */
+  login: text('login'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 })
 

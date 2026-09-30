@@ -5,8 +5,8 @@ import { BackstageView } from '../../src/app/backstage/BackstageView.js'
 const api = (over: Partial<Record<'fetchInviteCodes' | 'postMintInvites', unknown>>) => over as never
 
 const ledger = [
-  { id: 'ic1', note: '内测第一批', createdAt: '2026-09-30T10:00:00Z', usedBy: 'u2', usedAt: '2026-09-30T11:00:00Z' },
-  { id: 'ic2', note: '朋友', createdAt: '2026-09-30T12:00:00Z', usedBy: null, usedAt: null },
+  { id: 'ic1', note: '内测第一批', createdAt: '2026-09-30T10:00:00Z', usedByLogin: 'octocat', usedByGithubId: '1187815', usedAt: '2026-09-30T11:00:00Z' },
+  { id: 'ic2', note: '朋友', createdAt: '2026-09-30T12:00:00Z', usedByLogin: null, usedByGithubId: null, usedAt: null },
 ]
 
 test('台账加载：备注 + 状态（未用/已兑换）区分展示', async () => {
@@ -15,8 +15,28 @@ test('台账加载：备注 + 状态（未用/已兑换）区分展示', async (
     postMintInvites: vi.fn(),
   })} />)
   await waitFor(() => expect(screen.getByText('内测第一批')).toBeInTheDocument())
-  expect(screen.getByText(/已兑换/)).toBeInTheDocument()
-  expect(screen.getByText('未用')).toBeInTheDocument()
+  expect(screen.getByText(/兑换/)).toBeInTheDocument()   // ic1 已被兑
+  expect(screen.getByText('未用')).toBeInTheDocument()   // ic2 还在
+})
+
+test('已兑换行显示「被 GitHub 用户名 兑换」', async () => {
+  render(<BackstageView api={api({
+    fetchInviteCodes: vi.fn(async () => ledger),
+    postMintInvites: vi.fn(),
+  })} />)
+  await waitFor(() => expect(screen.getByText('内测第一批')).toBeInTheDocument())
+  expect(screen.getByText(/被 octocat 兑换/)).toBeInTheDocument()
+})
+
+test('login 为空的存量兑换：兜底显示 github 数字 id', async () => {
+  render(<BackstageView api={api({
+    fetchInviteCodes: vi.fn(async () => [
+      { id: 'ic3', note: '老码', createdAt: '2026-09-28T10:00:00Z', usedByLogin: null, usedByGithubId: '1187815', usedAt: '2026-09-28T11:00:00Z' },
+    ]),
+    postMintInvites: vi.fn(),
+  })} />)
+  await waitFor(() => expect(screen.getByText('老码')).toBeInTheDocument())
+  expect(screen.getByText(/被 #1187815 兑换/)).toBeInTheDocument()
 })
 
 test('铸码：数量+备注 → postMintInvites(n, note)，明文码逐张显示带复制按钮', async () => {

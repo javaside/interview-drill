@@ -125,7 +125,9 @@ export function BackstageView({ api }: { api?: Pick<Api, 'fetchInviteCodes' | 'p
                 <span className="min-w-[8rem] flex-1 text-[15px] text-paper-ink">{row.note ?? '（无备注）'}</span>
                 <span className="font-mono text-xs text-paper-muted">铸于 {fmt(row.createdAt)}</span>
                 {row.usedAt !== null ? (
-                  <span className="rounded-md bg-paper-wash px-2.5 py-1 text-xs font-semibold text-paper-muted">已兑换 {fmt(row.usedAt)}</span>
+                  <span className="rounded-md bg-paper-wash px-2.5 py-1 text-xs font-semibold text-paper-muted">
+                    被 {row.usedByLogin ?? `#${row.usedByGithubId}`} 兑换 {fmt(row.usedAt)}
+                  </span>
                 ) : (
                   <span className="rounded-md bg-accent/15 px-2.5 py-1 text-xs font-semibold text-accent">未用</span>
                 )}

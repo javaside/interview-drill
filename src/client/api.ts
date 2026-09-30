@@ -24,8 +24,8 @@ export interface Api {
   postCreateOrder(): Promise<{ orderId: string; amountCents: number; payParams: unknown }>
   /** POST /api/billing/redeem → 邀请码兑换结果（fulfilled=刚解锁 / already=原本就已解锁） */
   postRedeem(code: string): Promise<{ outcome: 'fulfilled' | 'already' }>
-  /** GET /api/backstage/invites → 邀请码台账（无明文，哈希前缀+备注+状态） */
-  fetchInviteCodes(): Promise<Array<{ id: string; hashPrefix: string; note: string | null; createdAt: string; usedBy: string | null; usedAt: string | null }>>
+  /** GET /api/backstage/invites → 邀请码台账（无明文，哈希前缀+备注+兑换者+状态） */
+  fetchInviteCodes(): Promise<Array<{ id: string; hashPrefix: string; note: string | null; createdAt: string; usedByLogin: string | null; usedByGithubId: string | null; usedAt: string | null }>>
   /** POST /api/backstage/invites → 铸 n 张码，明文仅此一次返回 */
   postMintInvites(n: number, note: string): Promise<{ codes: string[] }>
   /** POST /api/cram → 面试临时加密（§5.8）：选中块重铺冲刺的结果 + 写入的新就绪日 */
@@ -90,7 +90,7 @@ export function browserApi(): Api {
       )
     },
     async fetchInviteCodes() {
-      return readJson<Array<{ id: string; hashPrefix: string; note: string | null; createdAt: string; usedBy: string | null; usedAt: string | null }>>(
+      return readJson<Array<{ id: string; hashPrefix: string; note: string | null; createdAt: string; usedByLogin: string | null; usedByGithubId: string | null; usedAt: string | null }>>(
         await fetch('/api/backstage/invites', { method: 'GET' }),
       )
     },

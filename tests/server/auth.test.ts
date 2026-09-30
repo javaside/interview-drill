@@ -38,3 +38,25 @@ test('首次登录铸造用户与默认设置（Asia/Shanghai / free / 45），�
     await t.pg.close()
   }
 })
+
+test('login（GitHub 用户名）：首登写入，之后登录跟随改名更新；幂等路径不丢', async () => {
+  const t = await createTestDb()
+  try {
+    const db = t.db as unknown as SqlRunner
+    const uid = await ensureUser(db, 'gh-1', 'octocat')
+    const first = await t.db.execute<{ login: string | null }>(sql`select login from users where id = ${uid}`)
+    expect(first.rows[0]!.login).toBe('octocat')
+
+    // 老调用方不传 login（可选参数）→ 不清掉已有值
+    await ensureUser(db, 'gh-1')
+    const kept = await t.db.execute<{ login: string | null }>(sql`select login from users where id = ${uid}`)
+    expect(kept.rows[0]!.login).toBe('octocat')
+
+    // GitHub 改名后再登录 → 跟随更新
+    await ensureUser(db, 'gh-1', 'octocat-new')
+    const updated = await t.db.execute<{ login: string | null }>(sql`select login from users where id = ${uid}`)
+    expect(updated.rows[0]!.login).toBe('octocat-new')
+  } finally {
+    await t.pg.close()
+  }
+})
