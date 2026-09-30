@@ -31,9 +31,6 @@ import type { LocalDate } from '../../lib/scheduler/date.js'
  * `api` 可选：server component 不传，client 侧默认 browserApi()。
  */
 
-/** 岗位点选高亮的本地持久化键（仅本设备的 UI 记忆，不进 DB） */
-const TRACK_CHECKS_KEY = 'drill:track-checks'
-
 function msgOf(e: unknown): string {
   return e instanceof Error ? e.message : '请求失败，请重试'
 }
@@ -94,36 +91,21 @@ export function SettingsForm(
     || readyByDate !== saved.readyByDate
     || dailyCapacity !== saved.dailyCapacity
 
-  // 岗位多选：点选即生效并自动保存；高亮状态本地持久化（localStorage，仅本设备）——
-  // 并集（多岗位）无法从勾选集反推是哪几个岗位，刷新后要靠记忆恢复（2026-09-30 用户
-  // 实测「刷新前高亮、刷新后丢了」）。块列表永远全量（分组展示），应用后仍可逐块微调。
+  // 岗位高亮 = **从当前勾选集推导**（2026-09-30 定稿；localStorage 方案已废——它只在
+  // 「点过之后」才有记录，存量选择刷新后依然丢高亮，用户「难道要重新选一遍？」）：
+  // - 付费：岗位的块全部在勾选集里 → 高亮（多岗位并集、全选都正确回放，跨设备一致）；
+  // - 免费：名额截断后勾选集只剩岗位前 2 块 → 「勾选集恰为该岗位名额内前缀」才算选中
+  //   （并集截断后只有真正占到名额的岗位亮——诚实反映「你现在刷的是谁的题」）；
+  // - 岗位的块被手动取消一块 → 该岗位不再高亮（高亮 = 完整勾着的岗位）。
   const knownIds = new Set(view.blocks.map(b => b.blockId))
-  const [trackChecks, setTrackChecks] = useState<ReadonlySet<string>>(() => {
-    // SSR 首渲染兜底：当前勾选集恰为某岗位的块集时预勾（挂载后若有持久化记录则覆盖）
-    const picked = new Set(view.blocks.filter(b => b.selected).map(b => b.blockId))
-    const hit = new Set<string>()
-    for (const t of view.tracks) {
-      const ids = t.blockIds.filter(id => knownIds.has(id))
-      if (ids.length > 0 && ids.length === picked.size && ids.every(id => picked.has(id))) hit.add(t.id)
-    }
-    return hit
-  })
-  // 挂载后恢复上次点选的岗位（仅一次；SSR 兜底与持久化值不同会造成 hydration 抖动，
-  // 故放 effect 而非初始化器）
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(TRACK_CHECKS_KEY)
-      if (raw === null) return
-      const ids = new Set(JSON.parse(raw) as string[])
-      const valid = new Set(view.tracks.filter(t => ids.has(t.id)).map(t => t.id))
-      if (valid.size > 0) setTrackChecks(valid)
-    } catch { /* 损坏数据忽略，保持兜底 */ }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- 仅挂载时恢复一次
-  }, [])
-  function rememberTrackChecks(next: ReadonlySet<string>): void {
-    setTrackChecks(next)
-    try { window.localStorage.setItem(TRACK_CHECKS_KEY, JSON.stringify([...next])) } catch { /* 隐私模式等写入失败忽略 */ }
+  function trackIsOn(t: SettingsView['tracks'][number]): boolean {
+    const ids = t.blockIds.filter(id => knownIds.has(id))
+    if (ids.length === 0) return false
+    if (view.plan === 'paid') return ids.every(id => selected.has(id))
+    const prefix = ids.slice(0, FREE_BLOCK_LIMIT)
+    return prefix.length === selected.size && prefix.every(id => selected.has(id))
   }
+  const onTracks = view.tracks.filter(trackIsOn)
   const cardCountByBlock = new Map(view.blocks.map(b => [b.blockId, b.cardCount] as const))
   const cardsOf = (ids: readonly string[]): number =>
     ids.reduce((n, id) => n + (cardCountByBlock.get(id) ?? 0), 0)
@@ -166,24 +148,21 @@ export function SettingsForm(
     setBulkNote(note)   // 在 save() 同步清空之后设置，保留整批动作的反馈
   }
 
-  /** 点岗位 chip **立即生效**（staging+应用按钮已废：点完 chip 旧勾选纹丝不动，
-   *  用户「其他岗位的题目还勾选着」）：
-   *  - 点亮一个 = 勾选集整批替换为所选岗位（含已亮的）块的并集——只点一个时，
+  /** 点岗位 chip **立即生效**（chip 勾选态由勾选集推导，无独立状态）：
+   *  - 点未亮的 = 勾选集整批替换为「已亮岗位 + 本岗位」块的并集——只点一个时，
    *    其他岗位的题当场全部取消；
-   *  - 点掉一个 = 剩余所选岗位的并集；全部点掉 = 没勾任何题目（勾选集=空）。
+   *  - 点已亮的 = 从并集里去掉它（剩余已亮岗位的并集）；全不亮 = 没勾任何题目。
    *  免费取并集顺序前 2，反馈给升级出路。 */
   function toggleTrack(trackId: string): void {
-    const next = new Set(trackChecks)
-    if (next.has(trackId)) next.delete(trackId)
-    else next.add(trackId)
-    rememberTrackChecks(next)
-
-    const checked = view.tracks.filter(t => next.has(t.id))
+    const clicked = view.tracks.find(t => t.id === trackId)
+    if (clicked === undefined) return
+    const isOn = trackIsOn(clicked)
+    const targets = isOn ? onTracks.filter(t => t.id !== trackId) : [...onTracks, clicked]
     // 并集按岗位列表顺序展开去重（确定序；免费截断取这个顺序的前 2）
-    const union = [...new Set(checked.flatMap(t => t.blockIds))].filter(id => knownIds.has(id))
+    const union = [...new Set(targets.flatMap(t => t.blockIds))].filter(id => knownIds.has(id))
     const picked = view.plan === 'free' ? union.slice(0, FREE_BLOCK_LIMIT) : union
     replaceSelectionAndSave(picked, {
-      kind: 'tracks', names: checked.map(t => t.name),
+      kind: 'tracks', names: targets.map(t => t.name),
       picked: picked.length, total: union.length,
       cards: cardsOf(picked), clamped: picked.length < union.length,
     })
@@ -340,14 +319,14 @@ export function SettingsForm(
                   <label
                     key={t.id}
                     className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-4 py-1.5 text-sm transition-colors duration-150 ease-snap ${
-                      trackChecks.has(t.id)
+                      trackIsOn(t)
                         ? 'border-accent bg-accent/15 font-semibold text-accent'
                         : 'border-paper-line bg-paper text-paper-muted hover:border-paper-muted hover:text-paper-ink'
                     }`}
                   >
                     <input
                       type="checkbox"
-                      checked={trackChecks.has(t.id)}
+                      checked={trackIsOn(t)}
                       onChange={() => toggleTrack(t.id)}
                       className="size-3.5 accent-[var(--color-accent)]"
                     />

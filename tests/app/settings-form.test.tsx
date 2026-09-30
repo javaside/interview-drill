@@ -1,10 +1,7 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SettingsForm } from '../../src/app/settings/SettingsForm.js'
 import type { LocalDate } from '../../src/lib/scheduler/date.js'
-
-// 岗位高亮持久化在 localStorage——用例间必须清，避免点选泄漏到下一个用例的恢复逻辑
-beforeEach(() => { window.localStorage.clear() })
 
 const baseView = {
   readyByDate: '2026-11-01', dailyCapacity: 45, plan: 'free',
@@ -173,30 +170,25 @@ test('当前勾选集恰为某岗位块集时，该岗位 chip 预勾（现在�
   expect(screen.getByRole('checkbox', { name: /Agent 开发/ })).not.toBeChecked()
 })
 
-// ---------- 岗位高亮本地持久化（2026-09-30）：多岗位并集无从精确匹配，刷新靠记忆恢复 ----------
+// ---------- 岗位高亮 = 从勾选集推导（2026-09-30 定稿；localStorage 方案已废）----------
+// 付费：岗位块全在勾选集 → 亮。存量并集（多岗位）刷新后直接回放两个高亮，
+// 不需要重新点选——用户实测 localStorage 只记「点过之后」，存量选择照样丢高亮。
 
-test('点过的岗位刷新（重挂载）后仍高亮——并集也能恢复，不再是只有精确匹配才亮', async () => {
-  const u = userEvent.setup()
+test('已保存的多岗位并集直接回放：两个 chip 都高亮（刷新/换设备不需要重新选）', () => {
   const v = {
     ...baseView, plan: 'paid',
     tracks: [
       { id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b3'] },
       { id: 'agent-dev', name: 'Agent 开发', blockIds: ['b2'] },
     ],
+    blocks: baseView.blocks.map(b => ({ ...b, selected: true })),   // 并集已保存
   } as never
-  const { unmount } = render(<SettingsForm view={v} api={mkApi() as never} />)
-  await u.click(screen.getByRole('checkbox', { name: /Java 后端/ }))
-  await u.click(screen.getByRole('checkbox', { name: /Agent 开发/ }))
-  unmount()
-  // 重挂载 = 刷新：勾选集是并集（b1+b2+b3），精确匹配推导不出——靠 localStorage 恢复两个高亮
   render(<SettingsForm view={v} api={mkApi() as never} />)
-  await waitFor(() => {
-    expect(screen.getByRole('checkbox', { name: /Java 后端/ })).toBeChecked()
-    expect(screen.getByRole('checkbox', { name: /Agent 开发/ })).toBeChecked()
-  })
+  expect(screen.getByRole('checkbox', { name: /Java 后端/ })).toBeChecked()
+  expect(screen.getByRole('checkbox', { name: /Agent 开发/ })).toBeChecked()
 })
 
-test('点掉岗位后持久化同步：重挂载只恢复仍选中的岗位', async () => {
+test('岗位的块被手动取消一块 → 该岗位 chip 不再高亮（高亮 = 完整勾着的岗位）', async () => {
   const u = userEvent.setup()
   const v = {
     ...baseView, plan: 'paid',
@@ -204,17 +196,22 @@ test('点掉岗位后持久化同步：重挂载只恢复仍选中的岗位', as
       { id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b3'] },
       { id: 'agent-dev', name: 'Agent 开发', blockIds: ['b2'] },
     ],
+    blocks: baseView.blocks.map(b => ({ ...b, selected: true })),
   } as never
-  const { unmount } = render(<SettingsForm view={v} api={mkApi() as never} />)
-  await u.click(screen.getByRole('checkbox', { name: /Java 后端/ }))
-  await u.click(screen.getByRole('checkbox', { name: /Agent 开发/ }))
-  await u.click(screen.getByRole('checkbox', { name: /Java 后端/ }))   // 点掉
-  unmount()
   render(<SettingsForm view={v} api={mkApi() as never} />)
-  await waitFor(() => {
-    expect(screen.getByRole('checkbox', { name: /Agent 开发/ })).toBeChecked()
-    expect(screen.getByRole('checkbox', { name: /Java 后端/ })).not.toBeChecked()
-  })
+  expect(screen.getByRole('checkbox', { name: /Java 后端/ })).toBeChecked()
+  await u.click(screen.getByRole('checkbox', { name: /JVM/ }))   // 手动取消 java-backend 的 b3
+  expect(screen.getByRole('checkbox', { name: /Java 后端/ })).not.toBeChecked()
+  expect(screen.getByRole('checkbox', { name: /Agent 开发/ })).toBeChecked()   // 不受影响
+})
+
+test('免费：名额内前缀即选中——点岗位后 chip 保持高亮（截断到 2 块也算选了这个岗位）', async () => {
+  const u = userEvent.setup()
+  render(<SettingsForm view={view} api={mkApi() as never} />)   // 岗位含 b1/b2/b3，初始只勾 b1
+  expect(screen.getByRole('checkbox', { name: /Java 后端/ })).not.toBeChecked()
+  await u.click(screen.getByRole('checkbox', { name: /Java 后端/ }))
+  expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 2 个')   // b1+b2（前缀）
+  expect(screen.getByRole('checkbox', { name: /Java 后端/ })).toBeChecked()
 })
 
 test('付费：全选按钮同样自动保存；免费不提供', async () => {
