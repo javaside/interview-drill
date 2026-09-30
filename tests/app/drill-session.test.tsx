@@ -4,7 +4,7 @@ import { DrillSession } from '../../src/app/(drill)/DrillSession.js'
 import { memoryStore } from '../../src/client/store.js'
 
 const payload = {
-  today: '2026-09-23', mode: 'sprint',
+  today: '2026-09-23', mode: 'sprint', selectedBlocks: 2,
   queue: [{ cardId: 'c1', reason: 'due' }],
   cards: [{ cardId: 'c1', blockId: 'b1', blockName: 'MySQL', cardType: 'enumeration', frequency: 'high', question: 'Q?', keyPoints: [] }],
   prepared: [{ cardId: 'c1', degradedTo: 'none', variants: [{ optionTexts: ['A', 'B', 'C', 'x', 'x', 'x', 'x', 'x', 'x'], correctIndices: [0, 1, 2], distractorKeyPointIds: [] }] }],
@@ -69,7 +69,7 @@ test('空队列且分母正常（刷完了当天全部）→ 今日完成带分�
   expect(screen.getByText('5/5 · 明天见')).toBeInTheDocument()
 })
 
-test('常备模式空队列 → 「常备模式 · 今天没有到期卡」，不误报配置引导', () => {
+test('常备模式空队列（勾选过块）→ 「常备模式 · 今天没有到期卡」，不误报配置引导', () => {
   const p = { ...(payload as object), queue: [], cards: [], prepared: [],
     progress: { done: 0, total: 0 }, mode: 'maintenance', needsDateUpdate: false } as never
   render(<DrillSession payload={p} deps={mkDeps(true) as never} />)
@@ -112,4 +112,25 @@ test('刷题中（phase=question）：进度行旁也有「错题 N」直达入�
   render(<DrillSession payload={p} deps={deps as never} />)
   await u.click(screen.getByRole('button', { name: /错题\s*2/ }))
   expect(postRequeue).toHaveBeenCalledOnce()
+})
+
+// ---------- 没勾题的空态（2026-09-30）：新用户首登看到「常备模式·没有到期卡」会懵——
+// 真实原因是 free_block_ids 空，须明说并引导去设置
+
+test('没勾任何题目（常备模式空队列）→ 「还没勾选题目」+ 去设置勾题，不再误说「没有到期卡」', () => {
+  const p = { ...(payload as object), queue: [], cards: [], prepared: [], selectedBlocks: 0,
+    progress: { done: 0, total: 0 }, mode: 'maintenance', needsDateUpdate: false } as never
+  render(<DrillSession payload={p} deps={mkDeps(true) as never} />)
+  expect(screen.getByText('还没勾选题目')).toBeInTheDocument()
+  expect(screen.getByRole('link', { name: '去设置勾题' })).toHaveAttribute('href', '/settings')
+  expect(screen.queryByText(/常备模式 · 今天没有到期卡/)).toBeNull()
+})
+
+test('没勾任何题目（sprint 空队列）→ 同样「还没勾选题目」+ 去设置勾题', () => {
+  const p = { ...(payload as object), queue: [], cards: [], prepared: [], selectedBlocks: 0,
+    progress: { done: 0, total: 0 }, mode: 'sprint' } as never
+  render(<DrillSession payload={p} deps={mkDeps(true) as never} />)
+  expect(screen.getByText('还没勾选题目')).toBeInTheDocument()
+  expect(screen.getByRole('link', { name: '去设置勾题' })).toBeInTheDocument()
+  expect(screen.queryByText('今日队列是空的')).toBeNull()
 })

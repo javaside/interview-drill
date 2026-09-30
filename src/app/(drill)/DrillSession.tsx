@@ -210,16 +210,35 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
 
       {phase === 'done' && done === 0 && total === 0 && payload.mode === 'maintenance' && (
         <section className="shell mt-8"><div className="core px-6 py-14 text-center" data-shell-close="1">
-          <h2 className="font-serif text-xl font-semibold text-paper-ink">常备模式 · 今天没有到期卡</h2>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
-            滚动间隔复习会按到期日把卡送回队列——答对的间隔越拉越长，答错的明天就来。
-          </p>
+          {payload.selectedBlocks === 0 ? (
+            <>
+              <h2 className="font-serif text-xl font-semibold text-paper-ink">还没勾选题目</h2>
+              <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
+                勾了哪些题，这里就刷哪些题——去设置按岗位一键勾选（也可逐块勾），保存后就会出题。
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="font-serif text-xl font-semibold text-paper-ink">常备模式 · 今天没有到期卡</h2>
+              <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
+                滚动间隔复习会按到期日把卡送回队列——答对的间隔越拉越长，答错的明天就来。
+              </p>
+            </>
+          )}
           {payload.needsDateUpdate && (
             <p className="mt-3 text-sm text-mark-miss" data-testid="needs-date-update">
               就绪日已过，已回到常备模式。约到面试可在设置里临时加密。
             </p>
           )}
           <div className="mt-6 flex items-center justify-center gap-4 text-sm">
+            {payload.selectedBlocks === 0 && (
+              <Link
+                href="/settings"
+                className="rounded-md bg-paper-ink px-5 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
+              >
+                去设置勾题
+              </Link>
+            )}
             {payload.missesToday > 0 && (
               <button
                 type="button"
@@ -238,16 +257,27 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
 
       {phase === 'done' && done === 0 && total === 0 && payload.mode !== 'maintenance' && (
         <section className="shell mt-8"><div className="core px-6 py-14 text-center" data-shell-close="1">
-          <h2 className="font-serif text-xl font-semibold text-paper-ink">今日队列是空的</h2>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
-            排期由就绪日与所选知识块决定。设定你的面试日期、勾选要刷的块，队列就会出现。
-          </p>
+          {payload.selectedBlocks === 0 ? (
+            <>
+              <h2 className="font-serif text-xl font-semibold text-paper-ink">还没勾选题目</h2>
+              <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
+                勾了哪些题，这里就刷哪些题——去设置按岗位一键勾选（也可逐块勾），保存后就会出题。
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="font-serif text-xl font-semibold text-paper-ink">今日队列是空的</h2>
+              <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-paper-muted">
+                排期由就绪日与所选知识块决定。设定你的面试日期、勾选要刷的块，队列就会出现。
+              </p>
+            </>
+          )}
           <div className="mt-6 flex items-center justify-center gap-4 text-sm">
             <Link
               href="/settings"
               className="rounded-md bg-paper-ink px-5 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
             >
-              设定就绪日与知识块
+              {payload.selectedBlocks === 0 ? '去设置勾题' : '设定就绪日与知识块'}
             </Link>
             {payload.missesToday > 0 && (
               <button

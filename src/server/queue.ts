@@ -84,8 +84,11 @@ export type DailyPayload = {
   /** 屏①/屏② 渲染所需的展示元数据（与 queue 一一对应，只含队列内卡自身要点） */
   cards: CardView[]
   progress: { done: number; total: number }
-  /** 今天答错过的不同卡数——「再练错题」入口显隐（v2：初学阶段的密集重练权还给用户） */
+  /** 今天错过的不同卡数——「再练错题」入口显隐（v2：初学阶段的密集重练权还给用户） */
   missesToday: number
+  /** 当前勾选（排期范围）的块数——空态 UI 据此分辨「还没勾题」（该引导去设置）
+   *  与「勾了但今天没到期」（正常滚动节奏），两者文案与下一步完全不同 */
+  selectedBlocks: number
 }
 
 /**
@@ -199,6 +202,7 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
     today, mode: result.mode, needsDateUpdate: result.needsDateUpdate,
     queue: result.todayQueue, prepared, cards: cardViews,
     progress: { done, total }, missesToday,
+    selectedBlocks: selectionBlockIds.size,
   }
 }
 
@@ -211,7 +215,7 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
 export async function practiceQueue(
   deps: DailyPayloadDeps, userId: string, blockId: string,
 ): Promise<DailyPayload> {
-  const { settings, ent } = await deps.loadSettings()
+  const { settings, ent, selectionBlockIds } = await deps.loadSettings()
   const today = localDateOf(deps.serverNowMs, settings.timezone)
   const { cards, categories } = await deps.loadCards()
 
@@ -270,5 +274,6 @@ export async function practiceQueue(
     today, mode: settings.readyByDate === null ? 'maintenance' : 'sprint', needsDateUpdate: false,
     queue, prepared, cards: cardViews,
     progress: { done: 0, total: queue.length }, missesToday,
+    selectedBlocks: selectionBlockIds.size,
   }
 }

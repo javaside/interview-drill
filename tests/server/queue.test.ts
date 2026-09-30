@@ -100,6 +100,7 @@ test('端到端：免费用户取队列——选项集只含可见语料（§11 
   try {
     const p = await buildDailyPayload(mkDeps(t, 'u-free'))
     expect(p.queue.length).toBeGreaterThan(0)
+    expect(p.selectedBlocks).toBe(2)   // 勾选 b1/b2 —— 空态 UI 据此分辨「没勾题」与「没到期」
     const forbidden = await lockedTexts(t)
     for (const prep of p.prepared) {
       for (const v of prep.variants) {
