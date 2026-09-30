@@ -6,6 +6,7 @@ import type { LocalDate } from '../../src/lib/scheduler/date.js'
 const baseView = {
   readyByDate: '2026-11-01', dailyCapacity: 45, plan: 'free',
   trackId: null,
+  tracks: [{ id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b2', 'b3'] }],
   blocks: [
     { blockId: 'b1', blockName: 'MySQL', category: 'mysql', cardCount: 23, selected: true },
     { blockId: 'b2', blockName: 'Redis', category: 'mysql', cardCount: 18, selected: false },
@@ -36,9 +37,9 @@ test('预填当前就绪日与容量、块勾选态', () => {
   expect(screen.getByLabelText(/每天刷几题/)).toHaveValue(45)
   expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeChecked()
   expect(screen.getByRole('checkbox', { name: /Redis/ })).not.toBeChecked()
-  // sticky 保存条初始态：无变更时明确告知「已保存」
+  // sticky 无；保存条初始态：无变更时明确告知「已保存」
   expect(screen.getByText('已保存')).toBeInTheDocument()
-  expect(screen.getByRole('button', { name: '保存' })).toBeEnabled()
+  expect(screen.getByRole('button', { name: '保存设置' })).toBeEnabled()
 })
 
 test('块列表按大类分组展示（组标题 + 各组内块）', () => {
@@ -53,26 +54,54 @@ test('块列表按大类分组展示（组标题 + 各组内块）', () => {
   expect(jvm.nextElementSibling?.querySelectorAll('input[type=checkbox]')).toHaveLength(1)
 })
 
-test('免费墙即时防呆：勾满 2 块当场双提示（行间跟随 + sticky 顶部）并锁住其余块', async () => {
+test('免费墙：勾满 2 块当场提示；点第 3 块不勾上、提示弹在被点行后；取消一块即可再勾', async () => {
   const u = userEvent.setup()
   render(<SettingsForm view={view} api={mkApi() as never} />)
-  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 2/2 满
-  // 行间跟随提示：插在刚勾的那行后面（视线焦点处）；sticky 顶部提示同现
-  expect(screen.getByTestId('inline-cap-status')).toHaveTextContent(/已选满，取消一个可更换/)
-  expect(screen.getByTestId('free-cap-status')).toHaveTextContent(/已选满，取消一个可更换/)
-  for (const link of screen.getAllByRole('link', { name: /升级/ })) {
-    expect(link).toHaveAttribute('href', '/upgrade')
-  }
-  // 未勾选的块被禁用：点不动，不会偷偷超限，拉到保存键才挨骂
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 2/2 满——提示出现在刚勾的行后
+  const redisSection = screen.getByRole('checkbox', { name: /Redis/ }).closest('section')
+  expect(redisSection).toContainElement(screen.getByTestId('inline-cap-status'))
+  // 点第 3 块（另一分组）：不勾上，但提示当场移到被点行的分组里——任何点击必有回应
   const jvm = screen.getByRole('checkbox', { name: /JVM/ })
-  expect(jvm).toBeDisabled()
   await u.click(jvm)
   expect(jvm).not.toBeChecked()
-  expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeEnabled()   // 已勾选的仍可取消更换
-  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))          // 取消一块
-  expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeEnabled()
-  expect(screen.queryByTestId('inline-cap-status')).not.toBeInTheDocument()
-  expect(screen.queryByTestId('free-cap-status')).not.toBeInTheDocument()
+  const jvmSection = jvm.closest('section')
+  expect(jvmSection).toContainElement(screen.getByTestId('inline-cap-status'))
+  expect(screen.getByTestId('free-cap-status')).toHaveTextContent(/已选满，取消一个可更换/)
+  // 取消一块腾出名额 → JVM 立即可勾
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))
+  await u.click(jvm)
+  expect(jvm).toBeChecked()
+})
+
+test('岗位快捷勾选：一键勾上岗位块（免费补满名额为止，只加不减）', async () => {
+  const u = userEvent.setup()
+  const v = {
+    ...baseView,
+    tracks: [{ id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b2', 'b3'] }],
+  } as never
+  render(<SettingsForm view={v} api={mkApi() as never} />)
+  // 免费名额 2：已勾 1 → 点岗位按钮补到 2
+  await u.click(screen.getByRole('button', { name: /Java 后端（3 块）/ }))
+  expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 2 个')
+  expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeChecked()
+  expect(screen.getByRole('checkbox', { name: /JVM/ })).not.toBeChecked()   // 名额上限内只补 1
+  // 已满再点 → 不变（名额状态常驻在保存行提示）
+  await u.click(screen.getByRole('button', { name: /Java 后端（3 块）/ }))
+  expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 2 个')
+  expect(screen.getByTestId('free-cap-status')).toHaveTextContent(/已选满/)
+})
+
+test('付费岗位快捷勾选：岗位内全勾，无名额限制', async () => {
+  const u = userEvent.setup()
+  const v = {
+    ...baseView,
+    plan: 'paid',
+    tracks: [{ id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b2', 'b3'] }],
+  } as never
+  render(<SettingsForm view={v} api={mkApi() as never} />)
+  await u.click(screen.getByRole('button', { name: /Java 后端（3 块）/ }))
+  expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 3 个')
+  expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeChecked()
 })
 
 test('保存：调 postSettings + postBlocks，显示重排条数', async () => {
@@ -97,11 +126,11 @@ test('无块集变更时保存跳过 postBlocks（省一次请求，消掉第二
   expect(await screen.findByText(/设置未变化/)).toBeInTheDocument()
 })
 
-test('岗位设置项已整体移除：页面上不存在任何岗位 radio / 推荐徽标（孤儿概念无实效）', () => {
+test('岗位无设置项：无 radio、无推荐徽标——岗位只以「快速勾选」动作出现', () => {
   render(<SettingsForm view={view} api={mkApi() as never} />)
   expect(screen.queryByRole('radio')).not.toBeInTheDocument()
   expect(screen.queryByText(/推荐/)).not.toBeInTheDocument()
-  expect(screen.queryByText(/岗位/)).not.toBeInTheDocument()
+  expect(screen.getByText(/要刷某个岗位的题/)).toBeInTheDocument()
 })
 
 test('勾选任何块都不受岗位概念影响：列表全量、勾哪刷哪', async () => {

@@ -68,7 +68,7 @@ export function SettingsForm(
   const [savedBlockIds, setSavedBlockIds] = useState<Set<string>>(
     () => new Set(view.blocks.filter(b => b.selected).map(b => b.blockId)),
   )
-  const [lastToggled, setLastToggled] = useState<string | null>(null)   // 勾满提示插在其行后（视线焦点处）
+  const [lastToggled, setLastToggled] = useState<string | null>(null)   // 免费墙提示挂在其行后（勾满瞬间或拒绝点击处）
   const [saving, setSaving] = useState(false)
   const [cramming, setCramming] = useState(false)
   const [saveStatus, setSaveStatus] = useState<{ kind: 'plan' | 'nav' | 'none'; replanned: number } | null>(null)
@@ -91,13 +91,36 @@ export function SettingsForm(
 
   function toggle(blockId: string): void {
     setSaveStatus(null)
-    setCramResult(null)   // 块集变更后旧的加密结果说明已过时
+    setCramResult(null)   // 块集变更后旧的冲刺结果说明已过时
     setCramError(null)
-    setLastToggled(blockId)
+    // 名额已满再点未勾块：拒绝（不勾上），提示条当场弹在被点的行后——任何点击必有回应
+    if (view.plan === 'free' && !selected.has(blockId) && selected.size >= FREE_BLOCK_LIMIT) {
+      setLastToggled(blockId)
+      return
+    }
     setSelected(prev => {
       const next = new Set(prev)
       if (next.has(blockId)) next.delete(blockId)
       else next.add(blockId)
+      return next
+    })
+    const willFull = view.plan === 'free' && (selected.has(blockId) ? selected.size - 1 : selected.size + 1) >= FREE_BLOCK_LIMIT
+    setLastToggled(willFull ? blockId : null)
+  }
+
+  /** 按岗位快速勾选：把岗位包内的块并入勾选集；免费用户只补到名额上限（只加不减，无破坏性） */
+  function quickPick(blockIds: readonly string[]): void {
+    setSaveStatus(null)
+    setCramResult(null)
+    setCramError(null)
+    setLastToggled(null)
+    const limit = view.plan === 'free' ? FREE_BLOCK_LIMIT : Number.POSITIVE_INFINITY
+    setSelected(prev => {
+      const next = new Set(prev)
+      for (const id of blockIds) {
+        if (next.size >= limit) break
+        next.add(id)
+      }
       return next
     })
   }
@@ -215,9 +238,24 @@ export function SettingsForm(
             块选择{view.plan === 'free' ? `（免费最多 ${FREE_BLOCK_LIMIT} 个）` : ''}
             <span className="tnum ml-2 normal-case tracking-normal" data-testid="selected-count">已勾 {selected.size} 个</span>
           </legend>
+          {view.tracks.length > 0 && (
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              <span className="text-xs text-paper-muted">要刷某个岗位的题？一键勾选：</span>
+              {view.tracks.map(t => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => quickPick(t.blockIds)}
+                  className="tnum rounded-md border border-paper-line px-3 py-1.5 text-sm text-paper-ink transition-colors hover:border-paper-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
+                  {t.name}（{t.blockIds.length} 块）
+                </button>
+              ))}
+            </div>
+          )}
           {(() => {
             // 按大类分组（对齐知识地图的分组视角），保持全量块的原始顺序。
-            // 无任何过滤/徽标：岗位是孤儿概念（全项目仅本页消费且无实效），已整体移除
+            // 岗位在此页 = 「按岗位快速勾选」动作的素材（上方按钮），不是过滤也不是状态项
             const groups = new Map<string, typeof view.blocks>()
             for (const b of view.blocks) {
               const arr = groups.get(b.category) ?? []
@@ -236,18 +274,13 @@ export function SettingsForm(
                             type="checkbox"
                             name={b.blockId}
                             checked={selected.has(b.blockId)}
-                            disabled={freeLimitReached && !selected.has(b.blockId)}
-                            title={freeLimitReached && !selected.has(b.blockId)
-                              ? `免费层最多 ${FREE_BLOCK_LIMIT} 个块，先取消一个再更换`
-                              : undefined}
                             onChange={() => toggle(b.blockId)}
                           />
                           <span className="flex-1">{b.blockName}</span>
                           <span className="tnum shrink-0 text-sm text-paper-muted">{b.cardCount} 题</span>
                         </label>
                       </li>
-                      {/* 勾满瞬间的跟随提示：插在刚勾的那行后面——用户视线在哪，反馈就在哪。
-                          此前提示只挂块区顶部，勾列表中部时根本不在视野内（用户实测反馈） */}
+                      {/* 免费墙反馈：插在「刚勾满的那行」或「被拒绝点击的那行」后面——视线在哪，反馈就在哪 */}
                       {view.plan === 'free' && freeLimitReached && b.blockId === lastToggled && (
                         <li className="list-none">
                           <p role="status" data-testid="inline-cap-status"
@@ -265,43 +298,41 @@ export function SettingsForm(
           })()}
         </fieldset>
 
-        {/* 保存操作条：sticky 贴住视口底——勾块列表很长，用户在任何位置改完都能看到状态、就地保存。
-            状态优先级：错误 > 保存结果 > 未保存变更 > 已保存 */}
-        <div className="sticky bottom-4 z-20 mt-10">
-          <div className="flex items-center gap-4 rounded-xl border border-paper-line bg-paper-card px-5 py-3.5 shadow-lg shadow-black/5">
-            <div className="min-w-0 flex-1 space-y-0.5 text-sm">
-              {saveError !== null && (
-                <span role="alert" className="block text-mark-bad">{saveError}</span>
-              )}
-              {(freeLimitReached || overLimit) && (
-                <span role="status" data-testid="free-cap-status" className="block">
-                  免费层最多 {FREE_BLOCK_LIMIT} 个块——已选满，取消一个可更换；
-                  <Link href="/upgrade" className="font-medium underline underline-offset-4 hover:opacity-80">升级解锁全部</Link>
-                </span>
-              )}
-              {saveStatus !== null && (
-                <span data-testid="save-status" className="block text-mark-good">
-                  {saveStatus.kind === 'plan'
-                    ? saveStatus.replanned > 0
-                      ? `已重排 ${saveStatus.replanned} 张卡的计划`
-                      : '日常滚动保持不变'
-                    : saveStatus.kind === 'nav'
-                      ? '已保存：块集已更新，排期未重排'
-                      : '设置未变化，排期保持不变'}
-                </span>
-              )}
-              {saveStatus === null && (formDirty
-                ? <span data-testid="dirty-hint" className="block">有未保存的变更</span>
-                : saveError === null && <span className="block text-paper-muted">已保存</span>)}
-            </div>
-            <button
-              type="submit"
-              disabled={overLimit || capacityInvalid || saving}
-              className="btn-primary shrink-0"
-            >
-              {saving ? '保存中…' : '保存'}
-            </button>
+        {/* 保存行：普通文档流（用户否决悬浮条），紧跟块列表——状态多行共存：
+            错误 / 免费墙名额态 / 保存结果 / 未保存变更 / 已保存 */}
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="min-w-0 flex-1 space-y-0.5 text-sm">
+            {saveError !== null && (
+              <span role="alert" className="block text-mark-bad">{saveError}</span>
+            )}
+            {(freeLimitReached || overLimit) && (
+              <span role="status" data-testid="free-cap-status" className="block">
+                免费层最多 {FREE_BLOCK_LIMIT} 个块——已选满，取消一个可更换；
+                <Link href="/upgrade" className="font-medium underline underline-offset-4 hover:opacity-80">升级解锁全部</Link>
+              </span>
+            )}
+            {saveStatus !== null && (
+              <span data-testid="save-status" className="block text-mark-good">
+                {saveStatus.kind === 'plan'
+                  ? saveStatus.replanned > 0
+                    ? `已重排 ${saveStatus.replanned} 张卡的计划`
+                    : '日常滚动保持不变'
+                  : saveStatus.kind === 'nav'
+                    ? '已保存：块集已更新，排期未重排'
+                    : '设置未变化，排期保持不变'}
+              </span>
+            )}
+            {saveStatus === null && (formDirty
+              ? <span data-testid="dirty-hint" className="block">有未保存的变更</span>
+              : saveError === null && <span className="block text-paper-muted">已保存</span>)}
           </div>
+          <button
+            type="submit"
+            disabled={overLimit || capacityInvalid || saving}
+            className="btn-primary shrink-0"
+          >
+            {saving ? '保存中…' : '保存设置'}
+          </button>
         </div>
       </form>
 
