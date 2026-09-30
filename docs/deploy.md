@@ -16,13 +16,19 @@ interview-drill 与老 xibaojun 项目**共享域名** xibaojun.com，同机不�
 
 ### nginx 分流规则（/etc/nginx/conf.d/xibaojun.com.conf）
 
-- `location ~ ^/api/(auth|backstage|billing|blocks|cram|health|map|queue|review|settings|sync)(/|$)` → **interview-drill**（127.0.0.1:8300）
-  ——正则 location 优先于前缀，新增 drill API 路由时**要把子路径加进这个正则**；
+- `location ~ ^/api/((backstage|billing|blocks|cram|health|map|queue|review|settings|sync)(/|$)|auth/(signin|signout|callback|session|csrf|providers|error)(/|$))` → **interview-drill**（127.0.0.1:8300）；
 - `location /` → **interview-drill**（所有页面：/、/map、/settings、/signin、/learn、/practice、/backstage、/upgrade、/q/...）；
 - `location /api/`（其余）→ 老 xibaojun Spring（127.0.0.1:8081）；
 - `location /admin/`、`/apk/` → 老 xibaojun 静态文件，原样保留。
 
 改 nginx 前先备份：`cp xibaojun.com.conf xibaojun.com.conf.bak-$(date +%Y%m%d-%H%M%S)`，改完 `nginx -t && systemctl reload nginx`。
+
+> **⚠️ 撞车事故（2026-09-30 首日踩过）**：最初把整个 `/api/auth/**` 划给了 drill，
+> 而老站登录接口就是 `/api/auth/login`、`/api/auth/admin/login` → 老站后台/App 登录全 400。
+> 教训：**给 drill 加任何 /api 子路径前，先查老站是否在用**——
+> `grep -oE "\"[A-Z]+ /api/[a-zA-Z0-9_-]+" /var/log/nginx/access.log | sort | uniq -c`
+> （老站真实流量，比看代码可靠）。撞车时像 `/api/auth/` 这样**只接管自己固定端点**，
+> 不要整段拿前缀。新增 drill API 路由同样先把子路径加进上面正则、再验证老站登录/出图/文件接口。
 
 ## 升级步骤（日常发版就做这些）
 
