@@ -37,3 +37,14 @@ test('postRedeem：POST /api/billing/redeem body={code}，2xx 解析 outcome', a
   expect(r.outcome).toBe('fulfilled')
   vi.unstubAllGlobals()
 })
+
+test('后台两接口：GET 台账 / POST 铸码走 /api/backstage/invites', async () => {
+  const fetchMock = vi.fn(async () => new Response(JSON.stringify([]), { status: 200 }))
+  vi.stubGlobal('fetch', fetchMock)
+  await browserApi().fetchInviteCodes()
+  expect(fetchMock).toHaveBeenLastCalledWith('/api/backstage/invites', expect.objectContaining({ method: 'GET' }))
+  await browserApi().postMintInvites(3, '备注')
+  expect(fetchMock).toHaveBeenLastCalledWith('/api/backstage/invites',
+    expect.objectContaining({ method: 'POST', body: JSON.stringify({ n: 3, note: '备注' }) }))
+  vi.unstubAllGlobals()
+})

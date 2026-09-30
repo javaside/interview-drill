@@ -24,6 +24,10 @@ export interface Api {
   postCreateOrder(): Promise<{ orderId: string; amountCents: number; payParams: unknown }>
   /** POST /api/billing/redeem → 邀请码兑换结果（fulfilled=刚解锁 / already=原本就已解锁） */
   postRedeem(code: string): Promise<{ outcome: 'fulfilled' | 'already' }>
+  /** GET /api/backstage/invites → 邀请码台账（无明文，哈希前缀+备注+状态） */
+  fetchInviteCodes(): Promise<Array<{ id: string; hashPrefix: string; note: string | null; createdAt: string; usedBy: string | null; usedAt: string | null }>>
+  /** POST /api/backstage/invites → 铸 n 张码，明文仅此一次返回 */
+  postMintInvites(n: number, note: string): Promise<{ codes: string[] }>
   /** POST /api/cram → 面试临时加密（§5.8）：选中块重铺冲刺的结果 + 写入的新就绪日 */
   postCram(body: { examDate: LocalDate; blockIds: string[] }): Promise<{ crammed: number; excluded: number; overloaded: boolean; readyByDate: LocalDate | null }>
   /** POST /api/queue/requeue → 把今天刷过的卡拉回今天（misses=错题 / all=全部再来一遍） */
@@ -83,6 +87,16 @@ export function browserApi(): Api {
     async postRedeem(code) {
       return readJson<{ outcome: 'fulfilled' | 'already' }>(
         await fetch('/api/billing/redeem', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ code }) }),
+      )
+    },
+    async fetchInviteCodes() {
+      return readJson<Array<{ id: string; hashPrefix: string; note: string | null; createdAt: string; usedBy: string | null; usedAt: string | null }>>(
+        await fetch('/api/backstage/invites', { method: 'GET' }),
+      )
+    },
+    async postMintInvites(n, note) {
+      return readJson<{ codes: string[] }>(
+        await fetch('/api/backstage/invites', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ n, note }) }),
       )
     },
     async postCram(body) {

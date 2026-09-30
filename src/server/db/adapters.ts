@@ -265,6 +265,29 @@ export async function loadBlocks(
   }))
 }
 
+/**
+ * 邀请码台账（后台 /backstage）：全部码按铸造时间倒序。明文不可逆不返回，
+ * codeHash 前 8 位仅作行识别。usedBy/usedAt 为 null = 未用。
+ */
+export async function listInviteCodes(
+  db: SqlRunner,
+): Promise<Array<{
+  id: string; hashPrefix: string; note: string | null
+  createdAt: string; usedBy: string | null; usedAt: string | null
+}>> {
+  const r = await db.execute<{ id: string; code_hash: string; note: string | null; created_at: string; used_by: string | null; used_at: string | null }>(sql`
+    select id, code_hash, note, created_at, used_by, used_at
+    from invite_codes order by created_at desc`)
+  return r.rows.map(row => ({
+    id: row.id,
+    hashPrefix: row.code_hash.slice(0, 8),
+    note: row.note,
+    createdAt: row.created_at,
+    usedBy: row.used_by,
+    usedAt: row.used_at,
+  }))
+}
+
 /** 公开题目页视图（§7 SEO 边界）：题面 + 块名 + 仅 public 要点 + 全部活要点数 */
 export interface PublicCard {
   cardId: string
