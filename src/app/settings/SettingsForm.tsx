@@ -69,6 +69,7 @@ export function SettingsForm(
     () => new Set(view.blocks.filter(b => b.selected).map(b => b.blockId)),
   )
   const [lastToggled, setLastToggled] = useState<string | null>(null)   // 免费墙提示挂在其行后（勾满瞬间或拒绝点击处）
+  const [trackPicked, setTrackPicked] = useState<string | null>(null)   // 岗位配题反馈（已按某岗位勾选 N 块）
   const [saving, setSaving] = useState(false)
   const [cramming, setCramming] = useState(false)
   const [saveStatus, setSaveStatus] = useState<{ kind: 'plan' | 'nav' | 'none'; replanned: number } | null>(null)
@@ -89,8 +90,19 @@ export function SettingsForm(
     || readyByDate !== saved.readyByDate
     || dailyCapacity !== saved.dailyCapacity
 
+  // 当前勾选集命中的岗位（勾选集恰为该岗位块集的名额内前缀）→ 按钮高亮，来回切换差异可见
+  const activeTrackId = (() => {
+    const limit = view.plan === 'free' ? FREE_BLOCK_LIMIT : Number.POSITIVE_INFINITY
+    for (const t of view.tracks) {
+      const prefix = t.blockIds.slice(0, limit)
+      if (selected.size === prefix.length && prefix.every(id => selected.has(id))) return t.id
+    }
+    return null
+  })()
+
   function toggle(blockId: string): void {
     setSaveStatus(null)
+    setTrackPicked(null)   // 手动勾选后岗位配题反馈不再是当前事实
     setCramResult(null)   // 块集变更后旧的冲刺结果说明已过时
     setCramError(null)
     // 名额已满再点未勾块：拒绝（不勾上），提示条当场弹在被点的行后——任何点击必有回应
@@ -108,21 +120,23 @@ export function SettingsForm(
     setLastToggled(willFull ? blockId : null)
   }
 
-  /** 按岗位快速勾选：把岗位包内的块并入勾选集；免费用户只补到名额上限（只加不减，无破坏性） */
-  function quickPick(blockIds: readonly string[]): void {
+  /** 按岗位换题：勾选集替换为该岗位的块（免费取前 2 个=名额内，付费全量）。
+   *  替换而非合并——否则名额满后点按钮毫无变化，三个岗位来回点看不出区别（用户实测）。
+   *  动作完成后在保存行明说「已按某岗位勾选 N 块」，把因果讲给用户 */
+  function pickTrack(trackId: string, blockIds: readonly string[]): void {
     setSaveStatus(null)
     setCramResult(null)
     setCramError(null)
     setLastToggled(null)
     const limit = view.plan === 'free' ? FREE_BLOCK_LIMIT : Number.POSITIVE_INFINITY
-    setSelected(prev => {
-      const next = new Set(prev)
-      for (const id of blockIds) {
-        if (next.size >= limit) break
-        next.add(id)
-      }
-      return next
-    })
+    const picked = blockIds.slice(0, limit)
+    setSelected(new Set(picked))
+    const name = view.tracks.find(t => t.id === trackId)?.name ?? '岗位'
+    setTrackPicked(
+      view.plan === 'free' && blockIds.length > picked.length
+        ? `已按「${name}」勾选 ${picked.length} 个块（免费名额内）；升级解锁全部 ${blockIds.length} 块`
+        : `已按「${name}」勾选 ${picked.length} 个块`,
+    )
   }
 
   async function save(): Promise<void> {
@@ -135,6 +149,7 @@ export function SettingsForm(
     setSaving(true)
     setSaveError(null)
     setSaveStatus(null)
+    setTrackPicked(null)   // 保存后岗位配题反馈完成使命
     try {
       const { replanned, changed } = await client.postSettings({
         readyByDate: snapshot.readyByDate === '' ? null : (snapshot.readyByDate as SettingsView['readyByDate']),
@@ -240,17 +255,27 @@ export function SettingsForm(
           </legend>
           {view.tracks.length > 0 && (
             <div className="mb-4 flex flex-wrap items-center gap-2">
-              <span className="text-xs text-paper-muted">要刷某个岗位的题？一键勾选：</span>
-              {view.tracks.map(t => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => quickPick(t.blockIds)}
-                  className="tnum rounded-md border border-paper-line px-3 py-1.5 text-sm text-paper-ink transition-colors hover:border-paper-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                >
-                  {t.name}（{t.blockIds.length} 块）
-                </button>
-              ))}
+              <span className="text-xs text-paper-muted">
+                要面哪个岗位？点一下换成它的题{view.plan === 'free' ? '（免费取前 2 个）' : ''}：
+              </span>
+              {view.tracks.map(t => {
+                const active = activeTrackId === t.id
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => pickTrack(t.id, t.blockIds)}
+                    className={`tnum rounded-md border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+                      active
+                        ? 'border-accent bg-accent/15 font-medium text-paper-ink'
+                        : 'border-paper-line text-paper-ink hover:border-paper-muted'
+                    }`}
+                  >
+                    {t.name}（{t.blockIds.length} 块）
+                  </button>
+                )
+              })}
             </div>
           )}
           {(() => {
@@ -304,6 +329,11 @@ export function SettingsForm(
           <div className="min-w-0 flex-1 space-y-0.5 text-sm">
             {saveError !== null && (
               <span role="alert" className="block text-mark-bad">{saveError}</span>
+            )}
+            {trackPicked !== null && (
+              <span role="status" data-testid="track-picked" className="block">
+                {trackPicked}
+              </span>
             )}
             {(freeLimitReached || overLimit) && (
               <span role="status" data-testid="free-cap-status" className="block">
