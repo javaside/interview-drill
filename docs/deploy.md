@@ -18,8 +18,8 @@ interview-drill 部署在 https://xibaojun.com/drill（**自有前缀 /drill**�
 
 - `location = /drill` 与 `location /drill/` → **interview-drill**（127.0.0.1:8300，URI 原样
   透传，Next basePath='/drill' 自己认前缀）——drill 的全部页面与 `/drill/api/**` 都在这里；
-- 其余一切归老站原样：`location /api/` → Spring（8081）、`/admin/` `/apk/` → 静态文件、
-  根路径 302 → `/admin/`。
+- 其余一切归老站：`location /api/` → Spring（8081）、`/admin/` `/apk/` → 静态文件；
+  **根路径 302 → `/drill`**（域名首页落地到刷题站，老站后台直接访问 /admin/）。
 
 改 nginx 前先备份：`cp xibaojun.com.conf xibaojun.com.conf.bak-$(date +%Y%m%d-%H%M%S)`，改完 `nginx -t && systemctl reload nginx`。
 
