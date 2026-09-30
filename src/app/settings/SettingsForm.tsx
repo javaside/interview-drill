@@ -21,6 +21,9 @@ import type { LocalDate } from '../../lib/scheduler/date.js'
  *   成功后用返回的 readyByDate 同步表单**并更新基线**，结果明示「就绪日 → X」副作用。
  * - **岗位联动**：选中岗位后默认只看岗位内块（可切全部）；块区常驻「已选 N 个」，
  *   视野外的已选块明示「保存时仍包含」——此前过滤直接藏起勾选块，像选择丢了。
+ * - **免费墙即时防呆**：勾满额度的瞬间在块区顶部提示（role=status + /upgrade 出路），
+ *   并禁用未勾选块（变灰点不动，hover 有 title）——此前超限提示挂在列表底部，
+ *   用户拉到保存键才看见，反馈与勾选动作的视野脱节。
  * - **错误链路**：errorResponse(400 {error}) → readJson 透传中文消息到 role=alert；
  *   两步请求（postSettings → postBlocks）第二步失败时明说「设置已保存，块集未更新」。
  * `api` 可选：server component 不传，client 侧默认 browserApi()。
@@ -70,6 +73,9 @@ export function SettingsForm(
   const today = useLocalToday()
 
   const overLimit = view.plan === 'free' && selected.size > FREE_BLOCK_LIMIT
+  // 免费墙即时防呆：勾满额度那一刻就提示并锁住其余块——
+  // 此前超限提示挂在块列表底部，用户拉到保存键才看见，反馈与动作视野脱节
+  const freeLimitReached = view.plan === 'free' && selected.size >= FREE_BLOCK_LIMIT
   const capacityInvalid = !Number.isInteger(dailyCapacity) || dailyCapacity < 1
   const blocksDirty = selected.size !== savedBlockIds.size
     || [...selected].some(id => !savedBlockIds.has(id))
@@ -251,6 +257,18 @@ export function SettingsForm(
             块选择{view.plan === 'free' ? `（免费最多 ${FREE_BLOCK_LIMIT} 个）` : ''}
             <span className="tnum ml-2 normal-case tracking-normal" data-testid="selected-count">已选 {selected.size} 个</span>
           </legend>
+          {view.plan === 'free' && freeLimitReached && !overLimit && (
+            <p role="status" className="mb-3 text-sm text-paper-muted" data-testid="free-cap-status">
+              免费层最多选 {FREE_BLOCK_LIMIT} 个块——已选满，取消一个可更换；
+              <Link href="/upgrade" className="underline underline-offset-4 hover:opacity-80">升级后解锁全部块</Link>
+            </p>
+          )}
+          {overLimit ? (
+            <p role="alert" className="mb-3 text-sm text-mark-bad">
+              免费层最多选 {FREE_BLOCK_LIMIT} 个块——
+              <Link href="/upgrade" className="underline underline-offset-4 hover:opacity-80">升级后解锁全部块</Link>
+            </p>
+          ) : null}
           {hiddenSelected > 0 && (
             <p className="mb-3 text-xs text-paper-muted" data-testid="hidden-selected">
               另有 {hiddenSelected} 个已选块在当前视野外，保存时仍包含
@@ -291,6 +309,10 @@ export function SettingsForm(
                           type="checkbox"
                           name={b.blockId}
                           checked={selected.has(b.blockId)}
+                          disabled={freeLimitReached && !selected.has(b.blockId)}
+                          title={freeLimitReached && !selected.has(b.blockId)
+                            ? `免费层最多 ${FREE_BLOCK_LIMIT} 个块，先取消一个再更换`
+                            : undefined}
                           onChange={() => toggle(b.blockId)}
                         />
                         <span className="flex-1 underline-offset-4 group-data-[in-track]:decoration-accent group-data-[in-track]:underline">
@@ -305,13 +327,6 @@ export function SettingsForm(
             ))
           })()}
         </fieldset>
-
-        {overLimit ? (
-          <p role="alert" className="mt-4 text-sm text-mark-bad">
-            免费层最多选 {FREE_BLOCK_LIMIT} 个块——
-            <Link href="/upgrade" className="underline underline-offset-4 hover:opacity-80">升级后解锁全部块</Link>
-          </p>
-        ) : null}
 
         {formDirty && !saving && (
           <p className="mt-4 text-sm text-paper-muted" data-testid="dirty-hint">有未保存的变更</p>

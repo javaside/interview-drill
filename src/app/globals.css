@@ -75,6 +75,7 @@ input[type='radio'] {
     @apply relative flex cursor-pointer items-center gap-3 rounded-lg border border-paper-line
       bg-paper-card px-4 py-3.5 text-[15px] leading-relaxed transition-all duration-150 ease-snap
       hover:border-paper-muted
-      has-[:checked]:border-accent has-[:checked]:bg-accent/15 has-[:checked]:text-paper-ink;
+      has-[:checked]:border-accent has-[:checked]:bg-accent/15 has-[:checked]:text-paper-ink
+      has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50 has-[:disabled]:hover:border-paper-line;
   }
 }

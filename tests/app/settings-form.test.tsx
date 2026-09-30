@@ -51,14 +51,22 @@ test('块列表按大类分组展示（组标题 + 各组内块）', () => {
   expect(jvm.nextElementSibling?.querySelectorAll('input[type=checkbox]')).toHaveLength(1)
 })
 
-test('免费层勾选超过 2 块 → 提交禁用并提示（含 /upgrade 出路）', async () => {
+test('免费墙即时防呆：勾满 2 块当场提示并锁住其余块，取消一块恢复可选', async () => {
   const u = userEvent.setup()
   render(<SettingsForm view={view} api={mkApi() as never} />)
-  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))  // 2 块，仍可
-  await u.click(screen.getByRole('checkbox', { name: /JVM/ }))    // 3 块，超限
-  expect(screen.getByRole('button', { name: /保存/ })).toBeDisabled()
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 2/2 满——提示此刻出现
   expect(screen.getByText(/最多.*2.*块/)).toBeInTheDocument()
+  expect(screen.getByText(/已选满，取消一个可更换/)).toBeInTheDocument()
   expect(screen.getByRole('link', { name: /升级/ })).toHaveAttribute('href', '/upgrade')
+  // 未勾选的块被禁用：点不动，不会偷偷超限，拉到保存键才挨骂
+  const jvm = screen.getByRole('checkbox', { name: /JVM/ })
+  expect(jvm).toBeDisabled()
+  await u.click(jvm)
+  expect(jvm).not.toBeChecked()
+  expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeEnabled()   // 已勾选的仍可取消更换
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))          // 取消一块
+  expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeEnabled()
+  expect(screen.queryByText(/已选满/)).not.toBeInTheDocument()
 })
 
 test('保存：调 postSettings + postBlocks，显示重排条数', async () => {
