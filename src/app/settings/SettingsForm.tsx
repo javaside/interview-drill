@@ -58,10 +58,9 @@ export function SettingsForm(
   const client = api ?? browserApi()
   const [readyByDate, setReadyByDate] = useState<string>(view.readyByDate ?? '')
   const [dailyCapacity, setDailyCapacity] = useState<number>(view.dailyCapacity)
-  const [trackId, setTrackId] = useState<string>(view.trackId ?? '')
   // 已保存基线：与表单 state 对比得「未保存变更」；保存/cram 成功后同步
-  const [saved, setSaved] = useState<{ readyByDate: string; dailyCapacity: number; trackId: string }>(
-    () => ({ readyByDate: view.readyByDate ?? '', dailyCapacity: view.dailyCapacity, trackId: view.trackId ?? '' }),
+  const [saved, setSaved] = useState<{ readyByDate: string; dailyCapacity: number }>(
+    () => ({ readyByDate: view.readyByDate ?? '', dailyCapacity: view.dailyCapacity }),
   )
   const [selected, setSelected] = useState<Set<string>>(
     () => new Set(view.blocks.filter(b => b.selected).map(b => b.blockId)),
@@ -89,10 +88,6 @@ export function SettingsForm(
   const formDirty = blocksDirty
     || readyByDate !== saved.readyByDate
     || dailyCapacity !== saved.dailyCapacity
-    || trackId !== saved.trackId
-
-  const track = view.tracks.find(t => t.id === trackId)
-  const trackSet = new Set(track?.blockIds ?? [])
 
   function toggle(blockId: string): void {
     setSaveStatus(null)
@@ -110,9 +105,9 @@ export function SettingsForm(
   async function save(): Promise<void> {
     // 请求前快照本次保存的变更面（pending 期间用户继续改不影响本次反馈与基线）
     const snapshot = {
-      readyByDate, dailyCapacity, trackId,
+      readyByDate, dailyCapacity,
       blocks: new Set(selected),
-      dirty: { date: readyByDate !== saved.readyByDate, cap: dailyCapacity !== saved.dailyCapacity, track: trackId !== saved.trackId, blocks: blocksDirty },
+      dirty: { date: readyByDate !== saved.readyByDate, cap: dailyCapacity !== saved.dailyCapacity, blocks: blocksDirty },
     }
     setSaving(true)
     setSaveError(null)
@@ -121,7 +116,6 @@ export function SettingsForm(
       const { replanned, changed } = await client.postSettings({
         readyByDate: snapshot.readyByDate === '' ? null : (snapshot.readyByDate as SettingsView['readyByDate']),
         dailyCapacity: snapshot.dailyCapacity,
-        trackId: snapshot.trackId === '' ? null : snapshot.trackId,
       })
       if (snapshot.dirty.blocks) {
         try {
@@ -132,10 +126,10 @@ export function SettingsForm(
         }
       }
       setSavedBlockIds(new Set(snapshot.blocks))
-      setSaved({ readyByDate: snapshot.readyByDate, dailyCapacity: snapshot.dailyCapacity, trackId: snapshot.trackId })
-      // 反馈按语义分流：changed（就绪日/容量实际变更）→ 重排三态；
-      // 无排期变更但确有块集/岗位变更 → 「已保存，排期未重排」；啥都没改 → 「未变化」。
-      const anyDirty = snapshot.dirty.date || snapshot.dirty.cap || snapshot.dirty.track || snapshot.dirty.blocks
+      setSaved({ readyByDate: snapshot.readyByDate, dailyCapacity: snapshot.dailyCapacity })
+      // 反馈按语义分流：changed（目标日期/容量实际变更）→ 重排三态；
+      // 无排期变更但确有块集变更 → 「已保存，排期未重排」；啥都没改 → 「未变化」。
+      const anyDirty = snapshot.dirty.date || snapshot.dirty.cap || snapshot.dirty.blocks
       setSaveStatus({
         kind: changed !== false ? 'plan' : anyDirty ? 'nav' : 'none',
         replanned,
@@ -176,45 +170,6 @@ export function SettingsForm(
           void save()
         }}
       >
-        {view.tracks.length > 0 && (
-          <fieldset className="mb-8">
-            <legend className="eyebrow mb-3 block">面试岗位</legend>
-            <ul className="space-y-2">
-              <li>
-                <label className="choice">
-                  <input
-                    type="radio"
-                    name="track"
-                    checked={trackId === ''}
-                    onChange={() => setTrackId('')}
-                  />
-                  <span className="flex-1">全部</span>
-                </label>
-              </li>
-              {view.tracks.map(t => (
-                <li key={t.id}>
-                  <label className="choice">
-                    <input
-                      type="radio"
-                      name="track"
-                      value={t.id}
-                      checked={trackId === t.id}
-                      onChange={() => setTrackId(t.id)}
-                    />
-                    <span className="flex-1">
-                      <span className="font-medium">{t.name}</span>
-                      <span className="ml-2 text-xs text-paper-muted">{t.tagline}</span>
-                    </span>
-                  </label>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-1.5 text-xs text-paper-muted">
-              只影响地图/学习页的推荐视野，不影响排期
-            </p>
-          </fieldset>
-        )}
-
         <div className="mb-8">
           <p className="eyebrow mb-3 block">节奏</p>
           <div className="flex flex-wrap items-start gap-6">
@@ -260,29 +215,9 @@ export function SettingsForm(
             块选择{view.plan === 'free' ? `（免费最多 ${FREE_BLOCK_LIMIT} 个）` : ''}
             <span className="tnum ml-2 normal-case tracking-normal" data-testid="selected-count">已勾 {selected.size} 个</span>
           </legend>
-          {view.plan === 'free' && freeLimitReached && (
-            // sticky：勾满后这条随滚动贴住视口顶，无论用户在列表何处操作都看得见
-            <p role="status" data-testid="free-cap-status"
-              className="sticky top-2 z-10 mb-3 rounded-md border border-accent/60 bg-accent/10 px-4 py-2.5 text-sm text-paper-ink">
-              免费层最多选 {FREE_BLOCK_LIMIT} 个块——已选满，取消一个可更换；
-              <Link href="/upgrade" className="font-medium underline underline-offset-4 hover:opacity-80">升级后解锁全部块</Link>
-            </p>
-          )}
-          {overLimit ? (
-            <p role="alert" className="mb-3 text-sm text-mark-bad">
-              免费层最多选 {FREE_BLOCK_LIMIT} 个块——
-              <Link href="/upgrade" className="underline underline-offset-4 hover:opacity-80">升级后解锁全部块</Link>
-            </p>
-          ) : null}
-          {track !== undefined && (
-            <p className="mb-3 text-xs text-paper-muted">
-              标「推荐」的是 {track.name} 岗位包含的块；勾选 = 要刷的块
-            </p>
-          )}
           {(() => {
-            // 按大类分组（对齐知识地图的分组视角），保持全量块的原始顺序——
-            // 不做视野过滤：此前「只看岗位内块/推荐-全部切换」把内部概念泄漏给用户，
-            // 还制造「视野外已选块」的解释负担；岗位推荐靠徽标标注即可
+            // 按大类分组（对齐知识地图的分组视角），保持全量块的原始顺序。
+            // 无任何过滤/徽标：岗位是孤儿概念（全项目仅本页消费且无实效），已整体移除
             const groups = new Map<string, typeof view.blocks>()
             for (const b of view.blocks) {
               const arr = groups.get(b.category) ?? []
@@ -307,17 +242,7 @@ export function SettingsForm(
                               : undefined}
                             onChange={() => toggle(b.blockId)}
                           />
-                          <span className="flex-1">
-                            {b.blockName}
-                            {/* 岗位推荐徽标：岗位包内的块常标——列表全量展示，勾哪刷哪，
-                                推荐只是标注不是过滤（此前荧光下划线/视野切换均已被证 confusing） */}
-                            {trackSet.has(b.blockId) && (
-                              <span
-                                className="ml-2 inline-block rounded border border-accent/60 px-1.5 py-px align-middle text-xs text-paper-muted"
-                                title={`${track?.name ?? ''}岗位包含此块`}
-                              >推荐</span>
-                            )}
-                          </span>
+                          <span className="flex-1">{b.blockName}</span>
                           <span className="tnum shrink-0 text-sm text-paper-muted">{b.cardCount} 题</span>
                         </label>
                       </li>
@@ -344,24 +269,30 @@ export function SettingsForm(
             状态优先级：错误 > 保存结果 > 未保存变更 > 已保存 */}
         <div className="sticky bottom-4 z-20 mt-10">
           <div className="flex items-center gap-4 rounded-xl border border-paper-line bg-paper-card px-5 py-3.5 shadow-lg shadow-black/5">
-            <div className="min-w-0 flex-1 text-sm">
-              {saveError !== null ? (
-                <span role="alert" className="text-mark-bad">{saveError}</span>
-              ) : saveStatus !== null ? (
-                <span data-testid="save-status" className="text-mark-good">
+            <div className="min-w-0 flex-1 space-y-0.5 text-sm">
+              {saveError !== null && (
+                <span role="alert" className="block text-mark-bad">{saveError}</span>
+              )}
+              {(freeLimitReached || overLimit) && (
+                <span role="status" data-testid="free-cap-status" className="block">
+                  免费层最多 {FREE_BLOCK_LIMIT} 个块——已选满，取消一个可更换；
+                  <Link href="/upgrade" className="font-medium underline underline-offset-4 hover:opacity-80">升级解锁全部</Link>
+                </span>
+              )}
+              {saveStatus !== null && (
+                <span data-testid="save-status" className="block text-mark-good">
                   {saveStatus.kind === 'plan'
                     ? saveStatus.replanned > 0
                       ? `已重排 ${saveStatus.replanned} 张卡的计划`
                       : '日常滚动保持不变'
                     : saveStatus.kind === 'nav'
-                      ? '已保存：块集/岗位已更新，排期未重排'
+                      ? '已保存：块集已更新，排期未重排'
                       : '设置未变化，排期保持不变'}
                 </span>
-              ) : formDirty ? (
-                <span data-testid="dirty-hint">有未保存的变更</span>
-              ) : (
-                <span className="text-paper-muted">已保存</span>
               )}
+              {saveStatus === null && (formDirty
+                ? <span data-testid="dirty-hint" className="block">有未保存的变更</span>
+                : saveError === null && <span className="block text-paper-muted">已保存</span>)}
             </div>
             <button
               type="submit"

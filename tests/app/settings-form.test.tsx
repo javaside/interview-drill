@@ -5,8 +5,7 @@ import type { LocalDate } from '../../src/lib/scheduler/date.js'
 
 const baseView = {
   readyByDate: '2026-11-01', dailyCapacity: 45, plan: 'free',
-  trackId: 'java-backend',
-  tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: '服务端主力岗', blockIds: ['b1', 'b2', 'b3'] }],
+  trackId: null,
   blocks: [
     { blockId: 'b1', blockName: 'MySQL', category: 'mysql', cardCount: 23, selected: true },
     { blockId: 'b2', blockName: 'Redis', category: 'mysql', cardCount: 18, selected: false },
@@ -82,7 +81,7 @@ test('保存：调 postSettings + postBlocks，显示重排条数', async () => 
   render(<SettingsForm view={view} api={api as never} />)
   await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 有块集变更才发 postBlocks
   await u.click(screen.getByRole('button', { name: /保存/ }))
-  expect(api.postSettings).toHaveBeenCalledWith({ readyByDate: '2026-11-01', dailyCapacity: 45, trackId: 'java-backend' })
+  expect(api.postSettings).toHaveBeenCalledWith({ readyByDate: '2026-11-01', dailyCapacity: 45 })
   expect(api.postBlocks).toHaveBeenCalledWith({ blockIds: ['b1', 'b2'] })
   expect(await screen.findByText(/重排.*12/)).toBeInTheDocument()
 })
@@ -98,15 +97,19 @@ test('无块集变更时保存跳过 postBlocks（省一次请求，消掉第二
   expect(await screen.findByText(/设置未变化/)).toBeInTheDocument()
 })
 
-test('岗位单选：预选当前岗位，切到「全部」后保存带 trackId null', async () => {
+test('岗位设置项已整体移除：页面上不存在任何岗位 radio / 推荐徽标（孤儿概念无实效）', () => {
+  render(<SettingsForm view={view} api={mkApi() as never} />)
+  expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+  expect(screen.queryByText(/推荐/)).not.toBeInTheDocument()
+  expect(screen.queryByText(/岗位/)).not.toBeInTheDocument()
+})
+
+test('勾选任何块都不受岗位概念影响：列表全量、勾哪刷哪', async () => {
   const u = userEvent.setup()
-  const api = mkApi()
-  render(<SettingsForm view={view} api={api as never} />)
-  expect(screen.getByRole('radio', { name: /Java 后端/ })).toBeChecked()
-  expect(screen.getByRole('radio', { name: /^全部$/ })).not.toBeChecked()
-  await u.click(screen.getByRole('radio', { name: /^全部$/ }))
-  await u.click(screen.getByRole('button', { name: /保存/ }))
-  expect(api.postSettings).toHaveBeenCalledWith(expect.objectContaining({ trackId: null }))
+  render(<SettingsForm view={view} api={mkApi() as never} />)
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))
+  expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeChecked()
+  expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 2 个')
 })
 
 test('临时加密（§5.8）：填面试日期提交 → 调 postCram 并回显加密结果', async () => {
@@ -255,36 +258,6 @@ test('容量清空或为 0 → 保存禁用并提示 ≥1', async () => {
 
 // ---------- 岗位与块列表联动 ----------
 
-test('岗位联动（无过滤）：列表永远全量展示，岗位块常挂「推荐」徽标', async () => {
-  const u = userEvent.setup()
-  const v = {
-    ...baseView,
-    tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: 'x', blockIds: ['b1', 'b3'] }],
-  } as never
-  render(<SettingsForm view={v} api={mkApi() as never} />)
-  // 全量展示：三个块都在，没有任何视野切换控件
-  expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeInTheDocument()
-  expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeInTheDocument()
-  expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeInTheDocument()
-  expect(screen.queryByRole('group', { name: '块列表视野' })).not.toBeInTheDocument()
-  // 岗位包含的块带「推荐」徽标，岗位外没有；一行小字说明两种标记的语义
-  expect(screen.getByRole('checkbox', { name: /MySQL/ }).closest('label')).toHaveTextContent(/推荐/)
-  expect(screen.getByRole('checkbox', { name: /Redis/ }).closest('label')).not.toHaveTextContent(/推荐/)
-  expect(screen.getByText(/标「推荐」的是 Java 后端 岗位包含的块；勾选 = 要刷的块/)).toBeInTheDocument()
-})
-
-test('切到「全部」岗位：推荐徽标与说明消失（无岗位即无推荐概念）', async () => {
-  const u = userEvent.setup()
-  const v = {
-    ...baseView,
-    tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: 'x', blockIds: ['b1', 'b3'] }],
-  } as never
-  render(<SettingsForm view={v} api={mkApi() as never} />)
-  await u.click(screen.getByRole('radio', { name: /^全部$/ }))
-  expect(screen.getByRole('checkbox', { name: /MySQL/ }).closest('label')).not.toHaveTextContent(/推荐/)
-  expect(screen.queryByText(/标「推荐」的是/)).not.toBeInTheDocument()
-})
-
 // ---------- 反馈语义重整（2026-09-30）：dirty 指示 / 保存反馈分流 / 块计数 / cram 副作用 ----------
 
 test('只改块集保存 → 「已保存，排期未重排」而非说谎的「设置未变化」', async () => {
@@ -294,17 +267,7 @@ test('只改块集保存 → 「已保存，排期未重排」而非说谎的「
   render(<SettingsForm view={view} api={api as never} />)
   await u.click(screen.getByRole('checkbox', { name: /Redis/ }))
   await u.click(screen.getByRole('button', { name: /保存/ }))
-  expect(await screen.findByText(/已保存：块集\/岗位已更新，排期未重排/)).toBeInTheDocument()
-})
-
-test('只改岗位保存 → 同样得到「已保存，排期未重排」', async () => {
-  const u = userEvent.setup()
-  const api = mkApi()
-  api.postSettings.mockResolvedValueOnce({ replanned: 0, changed: false })
-  render(<SettingsForm view={view} api={api as never} />)
-  await u.click(screen.getByRole('radio', { name: /^全部$/ }))
-  await u.click(screen.getByRole('button', { name: /保存/ }))
-  expect(await screen.findByText(/已保存：块集\/岗位已更新，排期未重排/)).toBeInTheDocument()
+  expect(await screen.findByText(/已保存：块集已更新，排期未重排/)).toBeInTheDocument()
 })
 
 test('未保存变更常驻提示：改动出现、保存成功后消失', async () => {
@@ -320,26 +283,17 @@ test('未保存变更常驻提示：改动出现、保存成功后消失', async
   expect(screen.queryByTestId('dirty-hint')).not.toBeInTheDocument()
 })
 
-test('改容量/岗位同样触发未保存提示', async () => {
+test('改容量触发未保存提示', async () => {
   const u = userEvent.setup()
   render(<SettingsForm view={view} api={mkApi() as never} />)
   await u.clear(screen.getByLabelText(/每天刷几题/))
   await u.type(screen.getByLabelText(/每天刷几题/), '30')
   expect(screen.getByTestId('dirty-hint')).toBeInTheDocument()
-  await u.click(screen.getByRole('radio', { name: /^全部$/ }))
-  expect(screen.getByTestId('dirty-hint')).toBeInTheDocument()
 })
 
-test('块区常驻「已勾 N 个」计数——措辞与岗位「推荐」严格分离', () => {
-  const v = {
-    ...baseView,
-    tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: 'x', blockIds: ['b2', 'b3'] }],
-  } as never   // 已勾 b1(MySQL) 不在岗位内 → 有推荐概念但徽标不落在它身上
-  render(<SettingsForm view={v} api={mkApi() as never} />)
+test('块区常驻「已勾 N 个」计数', () => {
+  render(<SettingsForm view={view} api={mkApi() as never} />)
   expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 1 个')
-  // 无任何视野过滤控件与「视野外」提示——列表全量、勾哪刷哪
-  expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeInTheDocument()
-  expect(screen.queryByTestId('hidden-selected')).not.toBeInTheDocument()
 })
 
 test('cram 成功后基线同步：不误报未保存，结果明示就绪日副作用', async () => {

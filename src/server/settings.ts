@@ -5,9 +5,9 @@ import { localDateOf } from './time.js'
 import { diffDays } from '../lib/scheduler/date.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
 import {
-  loadSettings, loadTracks, updateUserSettings, updateFreeBlockIds,
+  loadSettings, updateUserSettings, updateFreeBlockIds,
   clearActivePlans, pauseCardsInBlocks, resumeCardsInBlocks, reviveDoneCards,
-  loadBlocks, type SqlRunner, type TrackRow,
+  loadBlocks, type SqlRunner,
 } from './db/adapters.js'
 import { FREE_BLOCK_LIMIT } from '../lib/entitlement/entitlement.js'
 
@@ -26,10 +26,9 @@ export type SettingsView = {
   readyByDate: LocalDate | null
   dailyCapacity: number
   plan: 'free' | 'paid'
-  /** 当前岗位包；null = 全部。纯导航偏好（不进 entitlement） */
+  /** 当前岗位包；null = 全部。纯导航偏好（不进 entitlement）；设置页 UI 已移除岗位项
+   *（孤儿概念：地图页走 ?track= URL 参数，无人消费此持久值），仅字段保留待未来接入 */
   trackId: string | null
-  /** 可选岗位包列表（id/name/tagline + 块引用集，供单选与块列表联动过滤） */
-  tracks: Array<Pick<TrackRow, 'id' | 'name' | 'tagline' | 'blockIds'>>
   /** 按 DB 返回顺序的平铺块列表；category 供表单按大类分组渲染 */
   blocks: Array<{ blockId: string; blockName: string; category: string; cardCount: number; selected: boolean }>
 }
@@ -41,18 +40,15 @@ export type SettingsView = {
  * trackId 悬空（track 已下线）时归一化为 null——UI 不必处理幽灵值。
  */
 export async function loadSettingsView(deps: ServerDeps, userId: string): Promise<SettingsView> {
-  const [row, entries, tracks] = await Promise.all([
+  const [row, entries] = await Promise.all([
     loadSettings(deps.db, userId),
     buildBlockMap(mapDepsOf(deps.db, userId)),
-    loadTracks(deps.db),
   ])
-  const trackIds = new Set(tracks.map(t => t.id))
   return {
     readyByDate: row.readyByDate,
     dailyCapacity: row.dailyCapacity,
     plan: row.plan,
-    trackId: row.trackId !== null && trackIds.has(row.trackId) ? row.trackId : null,
-    tracks: tracks.map(t => ({ id: t.id, name: t.name, tagline: t.tagline, blockIds: t.blockIds })),
+    trackId: row.trackId,
     blocks: entries.map(e => ({
       blockId: e.blockId,
       blockName: e.blockName,
