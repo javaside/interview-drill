@@ -64,6 +64,9 @@ export function buildAuthOptions(deps: {
   return {
     secret: deps.secret,
     providers: [GitHub({ clientId: deps.githubId, clientSecret: deps.githubSecret })],
+    // 自定义登录页（NextAuth 默认页与本站视觉断裂）：GET /api/auth/signin
+    // 会 302 到 /signin 并自动透传 callbackUrl——全站现有登录链接无需改 href。
+    pages: { signIn: '/signin' },
     session: { strategy: 'jwt' },
     callbacks: {
       async jwt({ token, account, profile }) {

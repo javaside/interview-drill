@@ -1,7 +1,15 @@
 import { sql } from 'drizzle-orm'
 import { createTestDb } from './helpers.js'
-import { requireUserIdWith, ensureUser } from '../../src/server/auth.js'
+import { requireUserIdWith, ensureUser, buildAuthOptions } from '../../src/server/auth.js'
 import type { SqlRunner } from '../../src/server/db/adapters.js'
+
+test('自定义登录页注册：/api/auth/signin 302 到 /signin（callbackUrl 自动透传）', () => {
+  const options = buildAuthOptions({
+    db: () => ({}) as unknown as SqlRunner,
+    githubId: 'id', githubSecret: 'secret', secret: 's',
+  })
+  expect(options.pages?.signIn).toBe('/signin')
+})
 
 test('requireUserId：无会话返回 401，有会话返回 userId（不依赖真实 OAuth）', async () => {
   const res = await requireUserIdWith(new Request('http://x'), async () => null)
