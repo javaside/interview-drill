@@ -61,3 +61,9 @@ test('已 paid 用户：直接显示已解锁态，不出输入框', () => {
   expect(screen.getByText(/已解锁全部题库/)).toBeInTheDocument()
   expect(screen.queryByLabelText(/邀请码/)).not.toBeInTheDocument()
 })
+
+test('已解锁态引导去设置选岗位（解锁保留原勾选，不默认全选）', () => {
+  render(<UpgradeView priceCents={12900} plan="paid" api={api(vi.fn())} />)
+  expect(screen.getByTestId('goto-settings')).toHaveAttribute('href', '/settings')
+  expect(screen.getByText(/每日排期想换岗位，一键勾选/)).toBeInTheDocument()
+})
