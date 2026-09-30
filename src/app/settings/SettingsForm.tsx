@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { FREE_BLOCK_LIMIT } from '../../lib/entitlement/entitlement.js'
 import { browserApi, type Api } from '../../client/api.js'
@@ -8,18 +8,18 @@ import type { SettingsView } from '../../server/settings.js'
 import type { LocalDate } from '../../lib/scheduler/date.js'
 
 /**
- * 设置屏（§5.5/§10.1，Task 11；历次重整至 2026-09-30 岗位一键动作版）——`'use client'`：
+ * 设置屏（§5.5/§10.1，Task 11；历次重整至 2026-09-30 岗位自动保存版）——`'use client'`：
  * - **勾选集 = 每日排期的出题范围**（两档同语义）：免费 ≤2 兼免费墙；付费任意勾，
  *   勾多少排多少。未勾的块付费后仍可在知识地图自由刷——解锁承诺不靠默认全选兑现。
- * - **岗位 = 多选 chips，点了立即生效（无应用按钮）**：点一个岗位 chip = 立刻把勾选集
- *   整批替换为该岗位的题目（其他岗位的题当场取消勾选）；再点第二个 = 并集叠加；
- *   点掉一个 = 剩余所选岗位的并集；全部点掉 = 没勾任何题目（勾选集=空，首页不出新题）。
- *   免费取并集顺序前 2 并给升级出路；当前勾选集恰为某岗位块集时该 chip 预勾。
- *   块列表永远全量+按大类分组，点完仍可逐块微调。
- *   （staging+应用按钮方案已废：点完 chip 旧勾选纹丝不动；tab 过滤方案更早废；
- *   服务端「空集兜底=全部」也已废——勾选集所见即所得，空就是空）
+ * - **岗位 = 多选 chips，点了立即生效且自动保存（2026-09-30 用户拍板：整批动作
+ *   不该让用户滚到底点保存；只有逐块手动勾题才需要手动保存）**：点一个岗位 chip =
+ *   勾选集整批替换为该岗位的题目并落库；再点第二个 = 并集叠加；点掉一个 = 剩余并集；
+ *   全部点掉 = 没勾任何题目（首页不出新题）。自动保存连点时排队串行、末次生效
+ *   （autoSaveQueue）。免费取并集顺序前 2 并给升级出路；当前勾选集恰为某岗位块集时
+ *   该 chip 预勾。全选按钮同为自动保存。
+ * - **逐块手动勾选不自动保存**：出现「有未保存的变更」，由保存行手动提交。
  * - **节奏**：每天刷几题 + 目标日期（可选）并排一行，说明各一句话。
- * - **块选择**：过滤后的列表按大类分组；免费名额勾满瞬间提示弹在刚勾行后、
+ * - **块选择**：列表按大类分组；免费名额勾满瞬间提示弹在刚勾行后、
  *   名额满点其他块不勾上且提示移到被点行后（点哪反馈跟哪）；保存行常驻名额态。
  * - **保存行**（文档流，紧跟块列表）：状态多行共存——错误 / 免费墙名额态 /
  *   保存结果（重排三态或「已保存，排期未重排」或「设置未变化」）/ 未保存变更 / 已保存。
@@ -128,15 +128,22 @@ export function SettingsForm(
     setLastToggled(willFull ? blockId : null)
   }
 
-  /** 块集整批变更的公共收尾：清过时反馈、（免费勾满时）名额墙提示挂到本轮最后勾上的行后 */
-  function replaceSelection(ids: string[], note: BulkNote): void {
+  /** 块集整批变更（岗位 chips / 全选）= **立即生效并自动保存**（2026-09-30 用户拍板：
+   *  整批动作不该让用户滚到底点保存；只有逐块手动勾题才需要手动保存）。
+   *  连点时若上一次自动保存在途 → 排队（autoSaveQueue），完成后以最新集落库（末次生效）。 */
+  const autoSaveQueue = useRef<Set<string> | null>(null)
+
+  function replaceSelectionAndSave(ids: string[], note: BulkNote): void {
     setSelected(new Set(ids))
     setSaveStatus(null)
     setCramResult(null)
     setCramError(null)
-    setBulkNote(note)
     const full = view.plan === 'free' && ids.length >= FREE_BLOCK_LIMIT
     setLastToggled(full ? ids[ids.length - 1] ?? null : null)
+    const sel = new Set(ids)
+    if (saving) autoSaveQueue.current = sel
+    else void save(sel)
+    setBulkNote(note)   // 在 save() 同步清空之后设置，保留整批动作的反馈
   }
 
   /** 点岗位 chip **立即生效**（staging+应用按钮已废：点完 chip 旧勾选纹丝不动，
@@ -155,7 +162,7 @@ export function SettingsForm(
     // 并集按岗位列表顺序展开去重（确定序；免费截断取这个顺序的前 2）
     const union = [...new Set(checked.flatMap(t => t.blockIds))].filter(id => knownIds.has(id))
     const picked = view.plan === 'free' ? union.slice(0, FREE_BLOCK_LIMIT) : union
-    replaceSelection(picked, {
+    replaceSelectionAndSave(picked, {
       kind: 'tracks', names: checked.map(t => t.name),
       picked: picked.length, total: union.length,
       cards: cardsOf(picked), clamped: picked.length < union.length,
@@ -164,23 +171,29 @@ export function SettingsForm(
 
   /** 全选（付费；免费名额 2 无整批意义，不提供。想全不勾 = 把岗位 chips 全部点掉即可） */
   function selectAll(): void {
-    replaceSelection(
+    replaceSelectionAndSave(
       view.blocks.map(b => b.blockId),
       { kind: 'all', count: view.blocks.length, cards: cardsOf(view.blocks.map(b => b.blockId)) },
     )
   }
 
-  async function save(): Promise<void> {
+  /** 保存；sel 缺省 = 手动保存当前表单，整批自动保存传入显式块集（setState 异步读不到） */
+  async function save(sel?: ReadonlySet<string>): Promise<void> {
+    const blocks = sel ?? selected
+    const selBlocksDirty = blocks.size !== savedBlockIds.size
+      || [...blocks].some(id => !savedBlockIds.has(id))
     // 请求前快照本次保存的变更面（pending 期间用户继续改不影响本次反馈与基线）
     const snapshot = {
       readyByDate, dailyCapacity,
-      blocks: new Set(selected),
-      dirty: { date: readyByDate !== saved.readyByDate, cap: dailyCapacity !== saved.dailyCapacity, blocks: blocksDirty },
+      blocks: new Set(blocks),
+      dirty: { date: readyByDate !== saved.readyByDate, cap: dailyCapacity !== saved.dailyCapacity, blocks: selBlocksDirty },
     }
     setSaving(true)
     setSaveError(null)
     setSaveStatus(null)
-    setBulkNote(null)
+    // 整批动作的反馈（已自动保存…）由自动保存路径自己管理，这里不清——排队的自动
+    // 保存若清掉它，连点后反馈就消失；只有手动保存才需要清过时的整批反馈
+    if (sel === undefined) setBulkNote(null)
     try {
       const { replanned, changed } = await client.postSettings({
         readyByDate: snapshot.readyByDate === '' ? null : (snapshot.readyByDate as SettingsView['readyByDate']),
@@ -207,6 +220,12 @@ export function SettingsForm(
       setSaveError(msgOf(e))
     } finally {
       setSaving(false)
+      // 自动保存排队（整批动作连点）：上一次完成后立即以最新集落库——末次生效
+      const queued = autoSaveQueue.current
+      if (queued !== null) {
+        autoSaveQueue.current = null
+        void save(queued)
+      }
     }
   }
 
@@ -294,7 +313,7 @@ export function SettingsForm(
           {view.tracks.length > 0 && (
             <div className="mb-4">
               <p className="mb-2 text-sm text-paper-muted">
-                点岗位 = 立刻勾上它的全部题目，可多选叠加；也可在下面逐块微调
+                点岗位 = 立刻勾上它的全部题目并自动保存，可多选叠加；也可在下面逐块勾（逐块勾选需手动保存）
               </p>
               <div className="flex flex-wrap items-center gap-2">
                 {view.tracks.map(t => (
@@ -332,11 +351,11 @@ export function SettingsForm(
               className="mb-4 rounded-md border border-paper-line bg-paper-card px-4 py-2.5 text-sm text-paper-ink">
               {bulkNote.kind === 'tracks' ? (
                 bulkNote.clamped
-                  ? <>已勾 {bulkNote.picked} 块 · {bulkNote.cards} 题（免费名额内）——<Link href="/upgrade" className="font-medium underline underline-offset-4 hover:opacity-80">升级解锁所选岗位全部 {bulkNote.total} 块</Link></>
+                  ? <>已勾 {bulkNote.picked} 块 · {bulkNote.cards} 题（免费名额内，已自动保存）——<Link href="/upgrade" className="font-medium underline underline-offset-4 hover:opacity-80">升级解锁所选岗位全部 {bulkNote.total} 块</Link></>
                   : bulkNote.picked === 0
-                    ? <>已取消全部岗位——没勾任何题目，保存后首页不出新题</>
-                    : <>已勾 {bulkNote.picked} 块 · {bulkNote.cards} 题（{bulkNote.names.join('、')}）——保存后首页就刷这些</>
-              ) : <>已勾全部 {bulkNote.count} 块 · {bulkNote.cards} 题——保存后首页就刷这些</>}
+                    ? <>已取消全部岗位——没勾任何题目，已自动保存，首页不出新题</>
+                    : <>已勾 {bulkNote.picked} 块 · {bulkNote.cards} 题（{bulkNote.names.join('、')}）——已自动保存，首页就刷这些</>
+              ) : <>已勾全部 {bulkNote.count} 块 · {bulkNote.cards} 题——已自动保存，首页就刷这些</>}
             </p>
           )}
           {(() => {
