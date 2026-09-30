@@ -51,13 +51,16 @@ test('块列表按大类分组展示（组标题 + 各组内块）', () => {
   expect(jvm.nextElementSibling?.querySelectorAll('input[type=checkbox]')).toHaveLength(1)
 })
 
-test('免费墙即时防呆：勾满 2 块当场提示并锁住其余块，取消一块恢复可选', async () => {
+test('免费墙即时防呆：勾满 2 块当场双提示（行间跟随 + sticky 顶部）并锁住其余块', async () => {
   const u = userEvent.setup()
   render(<SettingsForm view={view} api={mkApi() as never} />)
-  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 2/2 满——提示此刻出现
-  expect(screen.getByText(/最多.*2.*块/)).toBeInTheDocument()
-  expect(screen.getByText(/已选满，取消一个可更换/)).toBeInTheDocument()
-  expect(screen.getByRole('link', { name: /升级/ })).toHaveAttribute('href', '/upgrade')
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 2/2 满
+  // 行间跟随提示：插在刚勾的那行后面（视线焦点处）；sticky 顶部提示同现
+  expect(screen.getByTestId('inline-cap-status')).toHaveTextContent(/已选满，取消一个可更换/)
+  expect(screen.getByTestId('free-cap-status')).toHaveTextContent(/已选满，取消一个可更换/)
+  for (const link of screen.getAllByRole('link', { name: /升级/ })) {
+    expect(link).toHaveAttribute('href', '/upgrade')
+  }
   // 未勾选的块被禁用：点不动，不会偷偷超限，拉到保存键才挨骂
   const jvm = screen.getByRole('checkbox', { name: /JVM/ })
   expect(jvm).toBeDisabled()
@@ -66,7 +69,8 @@ test('免费墙即时防呆：勾满 2 块当场提示并锁住其余块，取�
   expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeEnabled()   // 已勾选的仍可取消更换
   await u.click(screen.getByRole('checkbox', { name: /Redis/ }))          // 取消一块
   expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeEnabled()
-  expect(screen.queryByText(/已选满/)).not.toBeInTheDocument()
+  expect(screen.queryByTestId('inline-cap-status')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('free-cap-status')).not.toBeInTheDocument()
 })
 
 test('保存：调 postSettings + postBlocks，显示重排条数', async () => {
@@ -248,27 +252,25 @@ test('容量清空或为 0 → 保存禁用并提示 ≥1', async () => {
 
 // ---------- 岗位与块列表联动 ----------
 
-test('岗位联动：默认只看岗位内块，可切换看全部，岗位块带标记', async () => {
+test('岗位联动（无过滤）：列表永远全量展示，岗位块常挂「推荐」徽标', async () => {
   const u = userEvent.setup()
   const v = {
     ...baseView,
     tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: 'x', blockIds: ['b1', 'b3'] }],
   } as never
   render(<SettingsForm view={v} api={mkApi() as never} />)
-  // 默认过滤：岗位内 MySQL/JVM 可见，Redis 不在列表
+  // 全量展示：三个块都在，没有任何视野切换控件
   expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeInTheDocument()
-  expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeInTheDocument()
-  expect(screen.queryByRole('checkbox', { name: /Redis/ })).not.toBeInTheDocument()
-  // 开关显示岗位块数（2）
-  expect(screen.getByRole('button', { name: /只看岗位内块.*2/ })).toBeInTheDocument()
-  // 关掉过滤 → 全部可见，岗位块带标记
-  await u.click(screen.getByRole('button', { name: /只看岗位内块/ }))
   expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeInTheDocument()
-  expect(screen.getByRole('checkbox', { name: /MySQL/ }).closest('li')).toHaveAttribute('data-in-track')
-  expect(screen.getByRole('checkbox', { name: /Redis/ }).closest('li')).not.toHaveAttribute('data-in-track')
+  expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeInTheDocument()
+  expect(screen.queryByRole('group', { name: '块列表视野' })).not.toBeInTheDocument()
+  // 岗位包含的块带「推荐」徽标，岗位外没有；一行小字说明两种标记的语义
+  expect(screen.getByRole('checkbox', { name: /MySQL/ }).closest('label')).toHaveTextContent(/推荐/)
+  expect(screen.getByRole('checkbox', { name: /Redis/ }).closest('label')).not.toHaveTextContent(/推荐/)
+  expect(screen.getByText(/标「推荐」的是 Java 后端 岗位包含的块；勾选 = 要刷的块/)).toBeInTheDocument()
 })
 
-test('切到「全部」岗位：过滤开关消失，块全量可见', async () => {
+test('切到「全部」岗位：推荐徽标与说明消失（无岗位即无推荐概念）', async () => {
   const u = userEvent.setup()
   const v = {
     ...baseView,
@@ -276,8 +278,8 @@ test('切到「全部」岗位：过滤开关消失，块全量可见', async ()
   } as never
   render(<SettingsForm view={v} api={mkApi() as never} />)
   await u.click(screen.getByRole('radio', { name: /^全部$/ }))
-  expect(screen.queryByRole('button', { name: /只看岗位内块/ })).not.toBeInTheDocument()
-  expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeInTheDocument()
+  expect(screen.getByRole('checkbox', { name: /MySQL/ }).closest('label')).not.toHaveTextContent(/推荐/)
+  expect(screen.queryByText(/标「推荐」的是/)).not.toBeInTheDocument()
 })
 
 // ---------- 反馈语义重整（2026-09-30）：dirty 指示 / 保存反馈分流 / 块计数 / cram 副作用 ----------
@@ -325,15 +327,16 @@ test('改容量/岗位同样触发未保存提示', async () => {
   expect(screen.getByTestId('dirty-hint')).toBeInTheDocument()
 })
 
-test('块区常驻「已选 N 个」计数；岗位过滤下的视野外已选块明示仍包含', () => {
+test('块区常驻「已勾 N 个」计数——措辞与岗位「推荐」严格分离', () => {
   const v = {
     ...baseView,
     tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: 'x', blockIds: ['b2', 'b3'] }],
-  } as never   // 已选 b1(MySQL) 不在岗位内 → 被过滤藏起
+  } as never   // 已勾 b1(MySQL) 不在岗位内 → 有推荐概念但徽标不落在它身上
   render(<SettingsForm view={v} api={mkApi() as never} />)
-  expect(screen.getByTestId('selected-count')).toHaveTextContent('已选 1 个')
-  expect(screen.queryByRole('checkbox', { name: /MySQL/ })).not.toBeInTheDocument()   // 确实被藏
-  expect(screen.getByTestId('hidden-selected')).toHaveTextContent(/另有 1 个已选块在当前视野外，保存时仍包含/)
+  expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 1 个')
+  // 无任何视野过滤控件与「视野外」提示——列表全量、勾哪刷哪
+  expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeInTheDocument()
+  expect(screen.queryByTestId('hidden-selected')).not.toBeInTheDocument()
 })
 
 test('cram 成功后基线同步：不误报未保存，结果明示就绪日副作用', async () => {

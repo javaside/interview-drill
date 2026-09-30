@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { FREE_BLOCK_LIMIT } from '../../lib/entitlement/entitlement.js'
 import { browserApi, type Api } from '../../client/api.js'
@@ -19,11 +19,14 @@ import type { LocalDate } from '../../lib/scheduler/date.js'
  *   「设置未变化」，用户明明改了块集却说没变（把「排期未变」错说成「设置未变」）。
  * - **cram 作用已保存块集**（savedBlockIds）：勾选有未保存变更时加密禁用并提示先保存；
  *   成功后用返回的 readyByDate 同步表单**并更新基线**，结果明示「就绪日 → X」副作用。
- * - **岗位联动**：选中岗位后默认只看岗位内块（可切全部）；块区常驻「已选 N 个」，
- *   视野外的已选块明示「保存时仍包含」——此前过滤直接藏起勾选块，像选择丢了。
- * - **免费墙即时防呆**：勾满额度的瞬间在块区顶部提示（role=status + /upgrade 出路），
- *   并禁用未勾选块（变灰点不动，hover 有 title）——此前超限提示挂在列表底部，
- *   用户拉到保存键才看见，反馈与勾选动作的视野脱节。
+ * - **岗位联动（无过滤）**：块列表永远全量展示、勾哪刷哪；岗位包含的块常挂
+ *   「推荐」徽标 + 一行小字说明——此前「只看岗位内块/推荐-全部视野切换」把内部
+ *   概念泄漏给用户（用户实测：看不懂什么叫推荐什么叫全部），过滤还制造
+ *   「视野外已选块」的解释负担，全部删除。措辞上「勾选 = 要刷的块」与
+ *   「推荐 = 岗位包含」严格分离，不再共用「选」字。
+ * - **免费墙即时防呆**：勾满额度的瞬间提示插在**刚勾的那一行后面**（视线焦点处），
+ *   块区顶部另有 sticky 提示随滚动贴住视口；未勾选块变灰禁用（hover 有 title）——
+ *   此前超限提示挂在列表底部，拉到保存键才看见（用户实测反馈）。
  * - **错误链路**：errorResponse(400 {error}) → readJson 透传中文消息到 role=alert；
  *   两步请求（postSettings → postBlocks）第二步失败时明说「设置已保存，块集未更新」。
  * `api` 可选：server component 不传，client 侧默认 browserApi()。
@@ -62,7 +65,7 @@ export function SettingsForm(
   const [savedBlockIds, setSavedBlockIds] = useState<Set<string>>(
     () => new Set(view.blocks.filter(b => b.selected).map(b => b.blockId)),
   )
-  const [onlyTrack, setOnlyTrack] = useState(true)
+  const [lastToggled, setLastToggled] = useState<string | null>(null)   // 勾满提示插在其行后（视线焦点处）
   const [saving, setSaving] = useState(false)
   const [cramming, setCramming] = useState(false)
   const [saveStatus, setSaveStatus] = useState<{ kind: 'plan' | 'nav' | 'none'; replanned: number } | null>(null)
@@ -86,17 +89,12 @@ export function SettingsForm(
 
   const track = view.tracks.find(t => t.id === trackId)
   const trackSet = new Set(track?.blockIds ?? [])
-  const trackCount = view.blocks.filter(b => trackSet.has(b.blockId)).length
-  const visibleBlocks = track !== undefined && onlyTrack
-    ? view.blocks.filter(b => trackSet.has(b.blockId))
-    : view.blocks
-  const visibleIds = new Set(visibleBlocks.map(b => b.blockId))
-  const hiddenSelected = [...selected].filter(id => !visibleIds.has(id)).length
 
   function toggle(blockId: string): void {
     setSaveStatus(null)
     setCramResult(null)   // 块集变更后旧的加密结果说明已过时
     setCramError(null)
+    setLastToggled(blockId)
     setSelected(prev => {
       const next = new Set(prev)
       if (next.has(blockId)) next.delete(blockId)
@@ -255,12 +253,14 @@ export function SettingsForm(
         <fieldset>
           <legend className="eyebrow mb-3 block">
             块选择{view.plan === 'free' ? `（免费最多 ${FREE_BLOCK_LIMIT} 个）` : ''}
-            <span className="tnum ml-2 normal-case tracking-normal" data-testid="selected-count">已选 {selected.size} 个</span>
+            <span className="tnum ml-2 normal-case tracking-normal" data-testid="selected-count">已勾 {selected.size} 个</span>
           </legend>
-          {view.plan === 'free' && freeLimitReached && !overLimit && (
-            <p role="status" className="mb-3 text-sm text-paper-muted" data-testid="free-cap-status">
+          {view.plan === 'free' && freeLimitReached && (
+            // sticky：勾满后这条随滚动贴住视口顶，无论用户在列表何处操作都看得见
+            <p role="status" data-testid="free-cap-status"
+              className="sticky top-2 z-10 mb-3 rounded-md border border-accent/60 bg-accent/10 px-4 py-2.5 text-sm text-paper-ink">
               免费层最多选 {FREE_BLOCK_LIMIT} 个块——已选满，取消一个可更换；
-              <Link href="/upgrade" className="underline underline-offset-4 hover:opacity-80">升级后解锁全部块</Link>
+              <Link href="/upgrade" className="font-medium underline underline-offset-4 hover:opacity-80">升级后解锁全部块</Link>
             </p>
           )}
           {overLimit ? (
@@ -269,27 +269,17 @@ export function SettingsForm(
               <Link href="/upgrade" className="underline underline-offset-4 hover:opacity-80">升级后解锁全部块</Link>
             </p>
           ) : null}
-          {hiddenSelected > 0 && (
-            <p className="mb-3 text-xs text-paper-muted" data-testid="hidden-selected">
-              另有 {hiddenSelected} 个已选块在当前视野外，保存时仍包含
+          {track !== undefined && (
+            <p className="mb-3 text-xs text-paper-muted">
+              标「推荐」的是 {track.name} 岗位包含的块；勾选 = 要刷的块
             </p>
           )}
-          {track !== undefined && (
-            <div className="mb-4">
-              <button
-                type="button"
-                aria-pressed={onlyTrack}
-                onClick={() => setOnlyTrack(v => !v)}
-                className="rounded-md border border-paper-line px-3 py-1.5 text-sm text-paper-ink transition-colors hover:border-paper-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-              >
-                只看岗位内块（{trackCount}）
-              </button>
-            </div>
-          )}
           {(() => {
-            // 按大类分组（对齐知识地图的分组视角），保持可见块的原始顺序
-            const groups = new Map<string, typeof visibleBlocks>()
-            for (const b of visibleBlocks) {
+            // 按大类分组（对齐知识地图的分组视角），保持全量块的原始顺序——
+            // 不做视野过滤：此前「只看岗位内块/推荐-全部切换」把内部概念泄漏给用户，
+            // 还制造「视野外已选块」的解释负担；岗位推荐靠徽标标注即可
+            const groups = new Map<string, typeof view.blocks>()
+            for (const b of view.blocks) {
               const arr = groups.get(b.category) ?? []
               arr.push(b)
               groups.set(b.category, arr)
@@ -299,28 +289,45 @@ export function SettingsForm(
                 <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-paper-muted">{category}</h3>
                 <ul className="mt-2.5 space-y-2">
                   {list.map(b => (
-                    <li
-                      key={b.blockId}
-                      className="group"
-                      data-in-track={trackSet.has(b.blockId) ? 'true' : undefined}
-                    >
-                      <label className="choice">
-                        <input
-                          type="checkbox"
-                          name={b.blockId}
-                          checked={selected.has(b.blockId)}
-                          disabled={freeLimitReached && !selected.has(b.blockId)}
-                          title={freeLimitReached && !selected.has(b.blockId)
-                            ? `免费层最多 ${FREE_BLOCK_LIMIT} 个块，先取消一个再更换`
-                            : undefined}
-                          onChange={() => toggle(b.blockId)}
-                        />
-                        <span className="flex-1 underline-offset-4 group-data-[in-track]:decoration-accent group-data-[in-track]:underline">
-                          {b.blockName}
-                        </span>
-                        <span className="tnum shrink-0 text-sm text-paper-muted">{b.cardCount} 题</span>
-                      </label>
-                    </li>
+                    <Fragment key={b.blockId}>
+                      <li className="group">
+                        <label className="choice">
+                          <input
+                            type="checkbox"
+                            name={b.blockId}
+                            checked={selected.has(b.blockId)}
+                            disabled={freeLimitReached && !selected.has(b.blockId)}
+                            title={freeLimitReached && !selected.has(b.blockId)
+                              ? `免费层最多 ${FREE_BLOCK_LIMIT} 个块，先取消一个再更换`
+                              : undefined}
+                            onChange={() => toggle(b.blockId)}
+                          />
+                          <span className="flex-1">
+                            {b.blockName}
+                            {/* 岗位推荐徽标：岗位包内的块常标——列表全量展示，勾哪刷哪，
+                                推荐只是标注不是过滤（此前荧光下划线/视野切换均已被证 confusing） */}
+                            {trackSet.has(b.blockId) && (
+                              <span
+                                className="ml-2 inline-block rounded border border-accent/60 px-1.5 py-px align-middle text-xs text-paper-muted"
+                                title={`${track?.name ?? ''}岗位包含此块`}
+                              >推荐</span>
+                            )}
+                          </span>
+                          <span className="tnum shrink-0 text-sm text-paper-muted">{b.cardCount} 题</span>
+                        </label>
+                      </li>
+                      {/* 勾满瞬间的跟随提示：插在刚勾的那行后面——用户视线在哪，反馈就在哪。
+                          此前提示只挂块区顶部，勾列表中部时根本不在视野内（用户实测反馈） */}
+                      {view.plan === 'free' && freeLimitReached && b.blockId === lastToggled && (
+                        <li className="list-none">
+                          <p role="status" data-testid="inline-cap-status"
+                            className="mb-2 rounded-md border border-accent/60 bg-accent/10 px-4 py-2.5 text-sm text-paper-ink">
+                            免费层最多选 {FREE_BLOCK_LIMIT} 个块——已选满，取消一个可更换；
+                            <Link href="/upgrade" className="font-medium underline underline-offset-4 hover:opacity-80">升级后解锁全部块</Link>
+                          </p>
+                        </li>
+                      )}
+                    </Fragment>
                   ))}
                 </ul>
               </section>
