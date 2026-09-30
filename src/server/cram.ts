@@ -28,6 +28,8 @@ export type CramResult = {
   excluded: number
   /** 新计划 + excluded 旧计划的合并负载超容（诚实告警，不阻塞——§11） */
   overloaded: boolean
+  /** cram 写入的新就绪日（= 面试前一天）；全排除未动设置时为 null，供前端同步表单 */
+  readyByDate: LocalDate | null
 }
 
 /**
@@ -92,7 +94,8 @@ export async function applyCram(
       cardId, plan: offsets.map(o => addDays(today, o)),
     })))
     await updateUserSettings(deps.db, userId, { readyByDate: readyBy })
+    return { crammed: plans.size, excluded: excluded.length, overloaded, readyByDate: readyBy }
   }
 
-  return { crammed: plans.size, excluded: excluded.length, overloaded }
+  return { crammed: 0, excluded: excluded.length, overloaded, readyByDate: null }
 }

@@ -109,3 +109,23 @@ test('块不在解锁集 → 拒绝（免费墙边界不被 cram 绕过）', asy
     await t.pg.close()
   }
 })
+
+test('cram 返回值带新就绪日（examDate-1），供前端同步表单状态', async () => {
+  const t = await seedCramFixture()
+  try {
+    const r = await applyCram(mkDeps(t), 'u1', { examDate: plusDays(4), blockIds: ['b1'] })
+    expect(r.readyByDate).toBe(plusDays(3))
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('E<1 全排除：readyByDate 返回 null（前端不同步）', async () => {
+  const t = await seedCramFixture()
+  try {
+    const r = await applyCram(mkDeps(t), 'u1', { examDate: plusDays(1), blockIds: ['b1'] })
+    expect(r.readyByDate).toBeNull()
+  } finally {
+    await t.pg.close()
+  }
+})

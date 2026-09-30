@@ -9,6 +9,7 @@ import {
   clearActivePlans, pauseCardsInBlocks, resumeCardsInBlocks, reviveDoneCards,
   loadBlocks, type SqlRunner, type TrackRow,
 } from './db/adapters.js'
+import { FREE_BLOCK_LIMIT } from '../lib/entitlement/entitlement.js'
 
 /** paid 用户全部块 id（done 复活范围）；free 由 freeBlockIds 决定 */
 async function allBlockIds(db: SqlRunner): Promise<string[]> {
@@ -27,8 +28,8 @@ export type SettingsView = {
   plan: 'free' | 'paid'
   /** 当前岗位包；null = 全部。纯导航偏好（不进 entitlement） */
   trackId: string | null
-  /** 可选岗位包列表（id/name/tagline，供单选） */
-  tracks: Array<Pick<TrackRow, 'id' | 'name' | 'tagline'>>
+  /** 可选岗位包列表（id/name/tagline + 块引用集，供单选与块列表联动过滤） */
+  tracks: Array<Pick<TrackRow, 'id' | 'name' | 'tagline' | 'blockIds'>>
   /** 按 DB 返回顺序的平铺块列表；category 供表单按大类分组渲染 */
   blocks: Array<{ blockId: string; blockName: string; category: string; cardCount: number; selected: boolean }>
 }
@@ -51,7 +52,7 @@ export async function loadSettingsView(deps: ServerDeps, userId: string): Promis
     dailyCapacity: row.dailyCapacity,
     plan: row.plan,
     trackId: row.trackId !== null && trackIds.has(row.trackId) ? row.trackId : null,
-    tracks: tracks.map(t => ({ id: t.id, name: t.name, tagline: t.tagline })),
+    tracks: tracks.map(t => ({ id: t.id, name: t.name, tagline: t.tagline, blockIds: t.blockIds })),
     blocks: entries.map(e => ({
       blockId: e.blockId,
       blockName: e.blockName,
@@ -63,23 +64,33 @@ export async function loadSettingsView(deps: ServerDeps, userId: string): Promis
 }
 
 /**
- * 设置变更入口（§5.5 条件 2/3）：readyByDate 或 dailyCapacity 变更后，**全部有计划的
- * 活跃卡**必须重排——新窗口下旧计划形状无效。实现 = 更新设置 → 清空活跃卡的计划 →
- * 跑 buildDailyPayload 装配核（清空后它们成 fresh，被重新生成落盘）。
- * 返回被重排的卡数（= 清空的活跃计划数）。
+ * 设置变更入口（§5.5 条件 2/3）：readyByDate 或 dailyCapacity **实际变更**后，
+ * 全部有计划的活跃卡必须重排——新窗口下旧计划形状无效。实现 = 更新设置 → 清空
+ * 活跃卡的计划 → 跑 buildDailyPayload 装配核（清空后它们成 fresh，被重新生成落盘）。
+ * 返回被重排的卡数与是否有实际变更（无变化时跳过重排——保护 cram 布局，且
+ * 消除「保存但啥都没改」触发的不必要全局重排）。
  *
  * **常备模式豁免（R-1）**：结果模式为 maintenance（就绪日为空或已过期）时不清空——
  * 维持分支不生成任何计划，清空后无人再种，滚动计划会被永久黑洞（用户实测：常备下
  * 改容量丢全部复习排期）。滚动间隔不依赖窗口形状，容量变更对它无意义，直接跳过。
+ *
+ * **容量校验**：非 ≥1 整数直接拒绝（此前 0 可入库并把重排打进死循环）。
  */
 export async function applySettingsChange(
   deps: ServerDeps, userId: string,
   next: { readyByDate?: LocalDate | null; dailyCapacity?: number; trackId?: string | null },
-): Promise<{ replanned: number }> {
+): Promise<{ replanned: number; changed: boolean }> {
+  if (next.dailyCapacity !== undefined
+    && (!Number.isInteger(next.dailyCapacity) || next.dailyCapacity < 1)) {
+    throw new Error(`每日容量须为 ≥1 的整数，收到 ${next.dailyCapacity}`)
+  }
+  const before = await loadSettings(deps.db, userId)
   await updateUserSettings(deps.db, userId, next)
   // trackId 是纯导航偏好：单独变更不触发重排（改岗位视图不该把排期打乱）
   const touchesPlan = 'readyByDate' in next || next.dailyCapacity !== undefined
-  if (!touchesPlan) return { replanned: 0 }
+  const dateChanged = 'readyByDate' in next && (next.readyByDate ?? null) !== before.readyByDate
+  const capChanged = next.dailyCapacity !== undefined && next.dailyCapacity !== before.dailyCapacity
+  if (!touchesPlan || (!dateChanged && !capChanged)) return { replanned: 0, changed: false }
 
   const row = await loadSettings(deps.db, userId)
   const today = localDateOf(deps.serverNowMs, row.timezone)
@@ -88,11 +99,11 @@ export async function applySettingsChange(
   await reviveDoneCards(deps.db, userId,
     row.plan === 'paid' ? await allBlockIds(deps.db) : row.freeBlockIds, today)
   if (row.readyByDate === null || diffDays(row.readyByDate, today) < 0) {
-    return { replanned: 0 }   // 常备模式：滚动计划原样保留
+    return { replanned: 0, changed: true }   // 常备模式：滚动计划原样保留
   }
   const replanned = await clearActivePlans(deps.db, userId)
   await buildDailyPayload(payloadDepsOf(deps.db, userId, deps.serverNowMs))
-  return { replanned }
+  return { replanned, changed: true }
 }
 
 /**
@@ -101,13 +112,27 @@ export async function applySettingsChange(
  * - 加块：新块卡本无状态行，下次 buildDailyPayload 自然作为 fresh 装配；曾暂停的
  *   （加回）恢复 phase 且 plan 原样保留（plan-once → 往返幂等）。
  * 更新 freeBlockIds。返回暂停/恢复的卡数。
+ *
+ * **服务端免费墙（此前仅 UI 拦截，API 直调可写坏 free_block_ids，令 entitlementOf
+ * 在别处抛异常拖垮地图/cram 页）**：块 id 必须真实存在；free 用户去重后 ≤
+ * FREE_BLOCK_LIMIT。校验在一切写操作之前——拒绝即无副作用。
  */
 export async function applyBlockSelection(
   deps: ServerDeps, userId: string, blockIds: readonly string[],
 ): Promise<{ paused: number; added: number }> {
   const settings = await loadSettings(deps.db, userId)
+  const unique = [...new Set(blockIds)]
+
+  const known = new Set((await loadBlocks(deps.db)).map(b => b.blockId))
+  for (const id of unique) {
+    if (!known.has(id)) throw new Error(`块 id 不存在：${id}`)
+  }
+  if (settings.plan === 'free' && unique.length > FREE_BLOCK_LIMIT) {
+    throw new Error(`免费层最多 ${FREE_BLOCK_LIMIT} 个块，收到 ${unique.length} 个（§10.1）`)
+  }
+
   const oldSet = new Set(settings.freeBlockIds)
-  const newSet = new Set(blockIds)
+  const newSet = new Set(unique)
   const removed = [...oldSet].filter(b => !newSet.has(b))
   const added = [...newSet].filter(b => !oldSet.has(b))
 

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getDb } from '../../../server/db/client.js'
 import { applyCram } from '../../../server/cram.js'
+import { errorResponse } from '../../../server/api-error.js'
 import { requireUserId } from '../../../server/auth-config.js'
 import type { LocalDate } from '../../../lib/scheduler/date.js'
 
@@ -16,6 +17,10 @@ export async function POST(request: Request): Promise<Response> {
   if (userId instanceof Response) return userId
 
   const body = (await request.json()) as { examDate: LocalDate; blockIds: string[] }
-  const result = await applyCram({ db: getDb(), serverNowMs: Date.now() }, userId, body)
-  return NextResponse.json(result)
+  try {
+    const result = await applyCram({ db: getDb(), serverNowMs: Date.now() }, userId, body)
+    return NextResponse.json(result)
+  } catch (e) {
+    return errorResponse(e)   // 块未解锁等业务拒绝 → 400 + { error }
+  }
 }

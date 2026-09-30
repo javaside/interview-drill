@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm'
 import { createTestDb, type TestDb } from './helpers.js'
 import { applySettingsChange, applyBlockSelection, type ServerDeps } from '../../src/server/settings.js'
+import { loadSettings } from '../../src/server/db/adapters.js'
 import { buildDailyPayload } from '../../src/server/queue.js'
 import { payloadDepsOf } from '../../src/server/deps.js'
 import type { SqlRunner } from '../../src/server/db/adapters.js'
@@ -213,6 +214,98 @@ test('done 复活范围按解锁块收敛：未解锁块的 done 卡不动', asy
     const byId = new Map(st.rows.map(r => [r.card_id, r.phase]))
     expect(byId.get('c0')).toBe('learning')   // 解锁块内复活
     expect(byId.get('c9')).toBe('done')       // 未解锁块不动（entitlement 外无意义）
+  } finally {
+    await t.pg.close()
+  }
+})
+
+// ---------- 免费墙（服务端补漏）：applyBlockSelection 直写 freeBlockIds 曾无校验 ----------
+
+test('免费墙：free 提交超过 2 块 → 拒绝且 freeBlockIds 不被写坏', async () => {
+  const t = await seedBlocksFixture()
+  try {
+    await t.db.execute(sql`insert into blocks (id, name, category) values ('b3', 'B3', 'cat-b')`)
+    await expect(applyBlockSelection(mkDeps(t), 'u1', ['b1', 'b2', 'b3']))
+      .rejects.toThrow(/免费层最多 2 个块/)
+    const s = await loadSettings(runner(t), 'u1')
+    expect(s.freeBlockIds).toEqual(['b1', 'b2'])   // 拒绝即无副作用
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('免费墙：块 id 不存在 → 拒绝（防 API 直调写脏数据）', async () => {
+  const t = await seedBlocksFixture()
+  try {
+    await expect(applyBlockSelection(mkDeps(t), 'u1', ['b1', 'ghost']))
+      .rejects.toThrow(/不存在/)
+    const s = await loadSettings(runner(t), 'u1')
+    expect(s.freeBlockIds).toEqual(['b1', 'b2'])
+  } finally {
+    await t.pg.close()
+  }
+})
+
+/** paid 用户 + 3 块各 1 卡：块数不受 FREE_BLOCK_LIMIT 约束 */
+async function seedPaidBlocks(): Promise<TestDb> {
+  const t = await createTestDb()
+  await t.db.execute(sql`insert into users (id, github_id) values ('u1', 'gh-u1')`)
+  await t.db.execute(sql`
+    insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, free_block_ids)
+    values ('u1', null, 45, ${TZ}, 'paid', ${JSON.stringify(['b1'])}::jsonb)`)
+  for (const b of ['b1', 'b2', 'b3']) {
+    await t.db.execute(sql`insert into blocks (id, name, category) values (${b}, ${b}, 'cat-a')`)
+    await addCard(t, `${b}-c0`, b)
+  }
+  return t
+}
+
+test('paid 不受免费块数限制：3 块一次提交正常生效', async () => {
+  const t = await seedPaidBlocks()
+  try {
+    await applyBlockSelection(mkDeps(t), 'u1', ['b1', 'b2', 'b3'])   // 不抛即过
+    const s = await loadSettings(runner(t), 'u1')
+    expect(s.freeBlockIds).toEqual(['b1', 'b2', 'b3'])
+  } finally {
+    await t.pg.close()
+  }
+})
+
+// ---------- 无变化提交跳过重排（保护 cram 布局 / 消除无意义全局重排） ----------
+
+test('设置无变化提交：changed=false 且计划逐字节不变', async () => {
+  const t = await seedWithPlans()   // readyBy=+21d、容量 45
+  try {
+    const before = await allPlans(t)
+    const r = await applySettingsChange(mkDeps(t), 'u1', { readyByDate: plusDays(21), dailyCapacity: 45, trackId: null })
+    expect(r.changed).toBe(false)
+    expect(r.replanned).toBe(0)
+    expect(await allPlans(t)).toEqual(before)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('设置有变化提交：changed=true（现有重排行为保持）', async () => {
+  const t = await seedWithPlans()
+  try {
+    const r = await applySettingsChange(mkDeps(t), 'u1', { readyByDate: plusDays(40) })
+    expect(r.changed).toBe(true)
+    expect(r.replanned).toBe(3)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+// ---------- 容量服务端校验（此前 0/小数可直接入库） ----------
+
+test('容量校验：0 或小数 → 拒绝且设置不动', async () => {
+  const t = await seedWithPlans()
+  try {
+    await expect(applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 0 })).rejects.toThrow(/容量/)
+    await expect(applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 1.5 })).rejects.toThrow(/容量/)
+    const s = await loadSettings(runner(t), 'u1')
+    expect(s.dailyCapacity).toBe(45)
   } finally {
     await t.pg.close()
   }

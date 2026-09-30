@@ -1,25 +1,33 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SettingsForm } from '../../src/app/settings/SettingsForm.js'
+import type { LocalDate } from '../../src/lib/scheduler/date.js'
 
-const view = {
+const baseView = {
   readyByDate: '2026-11-01', dailyCapacity: 45, plan: 'free',
   trackId: 'java-backend',
-  tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: '服务端主力岗' }],
+  tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: '服务端主力岗', blockIds: ['b1', 'b2', 'b3'] }],
   blocks: [
     { blockId: 'b1', blockName: 'MySQL', category: 'mysql', cardCount: 23, selected: true },
     { blockId: 'b2', blockName: 'Redis', category: 'mysql', cardCount: 18, selected: false },
     { blockId: 'b3', blockName: 'JVM', category: 'jvm', cardCount: 30, selected: false },
   ],
-} as never
+}
+const view = baseView as never
+
+type SettingsResult = { replanned: number; changed: boolean }
+type CramResult = { crammed: number; excluded: number; overloaded: boolean; readyByDate: LocalDate | null }
 
 function mkApi() {
-  return { postSettings: vi.fn(async () => ({ replanned: 12 })), postBlocks: vi.fn(async () => ({ paused: 0, added: 1 })) }
+  return {
+    postSettings: vi.fn(async (): Promise<SettingsResult> => ({ replanned: 12, changed: true })),
+    postBlocks: vi.fn(async () => ({ paused: 0, added: 1 })),
+  }
 }
 function mkCramApi() {
   return {
     ...mkApi(),
-    postCram: vi.fn(async () => ({ crammed: 5, excluded: 0, overloaded: false })),
+    postCram: vi.fn(async (): Promise<CramResult> => ({ crammed: 5, excluded: 0, overloaded: false, readyByDate: null })),
   }
 }
 
@@ -43,23 +51,36 @@ test('块列表按大类分组展示（组标题 + 各组内块）', () => {
   expect(jvm.nextElementSibling?.querySelectorAll('input[type=checkbox]')).toHaveLength(1)
 })
 
-test('免费层勾选超过 2 块 → 提交禁用并提示', async () => {
+test('免费层勾选超过 2 块 → 提交禁用并提示（含 /upgrade 出路）', async () => {
   const u = userEvent.setup()
   render(<SettingsForm view={view} api={mkApi() as never} />)
   await u.click(screen.getByRole('checkbox', { name: /Redis/ }))  // 2 块，仍可
   await u.click(screen.getByRole('checkbox', { name: /JVM/ }))    // 3 块，超限
   expect(screen.getByRole('button', { name: /保存/ })).toBeDisabled()
   expect(screen.getByText(/最多.*2.*块/)).toBeInTheDocument()
+  expect(screen.getByRole('link', { name: /升级/ })).toHaveAttribute('href', '/upgrade')
 })
 
 test('保存：调 postSettings + postBlocks，显示重排条数', async () => {
   const u = userEvent.setup()
   const api = mkApi()
   render(<SettingsForm view={view} api={api as never} />)
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 有块集变更才发 postBlocks
   await u.click(screen.getByRole('button', { name: /保存/ }))
   expect(api.postSettings).toHaveBeenCalledWith({ readyByDate: '2026-11-01', dailyCapacity: 45, trackId: 'java-backend' })
-  expect(api.postBlocks).toHaveBeenCalledWith({ blockIds: ['b1'] })
+  expect(api.postBlocks).toHaveBeenCalledWith({ blockIds: ['b1', 'b2'] })
   expect(await screen.findByText(/重排.*12/)).toBeInTheDocument()
+})
+
+test('无块集变更时保存跳过 postBlocks（省一次请求，消掉第二步假错误面）', async () => {
+  const u = userEvent.setup()
+  const api = mkApi()
+  api.postSettings.mockResolvedValueOnce({ replanned: 0, changed: false })
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(api.postSettings).toHaveBeenCalledTimes(1)
+  expect(api.postBlocks).not.toHaveBeenCalled()
+  expect(await screen.findByText(/设置未变化/)).toBeInTheDocument()
 })
 
 test('岗位单选：预选当前岗位，切到「全部」后保存带 trackId null', async () => {
@@ -81,4 +102,267 @@ test('临时加密（§5.8）：填面试日期提交 → 调 postCram 并回显
   await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
   expect(api.postCram).toHaveBeenCalledWith({ examDate: '2026-12-01', blockIds: ['b1'] })
   expect(await screen.findByText(/已加密.*5/)).toBeInTheDocument()
+})
+
+// ---------- cram 与保存的顺序解耦（已保存块集语义） ----------
+
+test('cram 只作用于已保存块集：勾选未保存时禁用并提示，恢复勾选后可用', async () => {
+  const u = userEvent.setup()
+  render(<SettingsForm view={view} api={mkCramApi() as never} />)
+  await u.type(screen.getByLabelText(/^面试日期/), '2026-12-01')
+  expect(screen.getByRole('button', { name: /临时加密|加密/ })).toBeEnabled()
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 有未保存变更
+  expect(screen.getByRole('button', { name: /临时加密|加密/ })).toBeDisabled()
+  expect(screen.getByText(/先保存/)).toBeInTheDocument()
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 回到已保存集
+  expect(screen.getByRole('button', { name: /临时加密|加密/ })).toBeEnabled()
+})
+
+test('加密卡片明示作用范围（已保存 N 块）与就绪日副作用', () => {
+  render(<SettingsForm view={view} api={mkCramApi() as never} />)
+  expect(screen.getByText(/已保存的 1 个块/)).toBeInTheDocument()
+  expect(screen.getByText(/面试前一天/)).toBeInTheDocument()
+})
+
+test('cram 成功后同步就绪日为返回值（防止后续保存写回旧值销毁加密）', async () => {
+  const u = userEvent.setup()
+  const api = {
+    ...mkApi(),
+    postCram: vi.fn(async () => ({ crammed: 5, excluded: 0, overloaded: false, readyByDate: '2026-10-31' })),
+  }
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.type(screen.getByLabelText(/^面试日期/), '2026-11-01')
+  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
+  expect(await screen.findByText(/已加密.*5/)).toBeInTheDocument()
+  expect(screen.getByLabelText(/就绪日/)).toHaveValue('2026-10-31')
+})
+
+test('cram 失败 → role=alert 显示服务端错误', async () => {
+  const u = userEvent.setup()
+  const api = {
+    ...mkApi(),
+    postCram: vi.fn(async () => { throw new Error('块未解锁：b2') }),
+  }
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.type(screen.getByLabelText(/^面试日期/), '2026-12-01')
+  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
+  expect(await screen.findByRole('alert')).toHaveTextContent(/块未解锁/)
+})
+
+test('在加密区日期框按 Enter → 触发加密而非保存设置', async () => {
+  const u = userEvent.setup()
+  const api = mkCramApi()
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.type(screen.getByLabelText(/^面试日期/), '2026-12-01{enter}')
+  expect(api.postCram).toHaveBeenCalledWith(expect.objectContaining({ examDate: '2026-12-01' }))
+  expect(api.postSettings).not.toHaveBeenCalled()
+})
+
+// ---------- 保存的 pending / 错误 / 三态反馈 ----------
+
+test('保存 pending：请求期间按钮禁用显示保存中，完成后恢复', async () => {
+  const u = userEvent.setup()
+  let resolve!: (v: { replanned: number; changed: boolean }) => void
+  const api = {
+    postSettings: vi.fn(() => new Promise<{ replanned: number; changed: boolean }>(res => { resolve = res })),
+    postBlocks: vi.fn(async () => ({ paused: 0, added: 0 })),
+  }
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(screen.getByRole('button', { name: /保存中/ })).toBeDisabled()
+  resolve({ replanned: 0, changed: false })
+  expect(await screen.findByText(/设置未变化/)).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: /^保存/ })).toBeEnabled()
+})
+
+test('保存第一步失败：role=alert 显示错误，块集请求不发出', async () => {
+  const u = userEvent.setup()
+  const api = {
+    postSettings: vi.fn(async () => { throw new Error('容量须为 ≥1 的整数') }),
+    postBlocks: vi.fn(async () => ({ paused: 0, added: 0 })),
+  }
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(await screen.findByRole('alert')).toHaveTextContent(/容量/)
+  expect(api.postBlocks).not.toHaveBeenCalled()
+})
+
+test('保存第二步失败：提示设置已保存但块集未更新', async () => {
+  const u = userEvent.setup()
+  const api = {
+    postSettings: vi.fn(async () => ({ replanned: 3, changed: true })),
+    postBlocks: vi.fn(async () => { throw new Error('块 id 不存在：ghost') }),
+  }
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))   // 有块集变更才会走第二步
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  const alert = await screen.findByRole('alert')
+  expect(alert).toHaveTextContent(/设置已保存/)
+  expect(alert).toHaveTextContent(/不存在/)
+})
+
+test('保存反馈三态：无变化 / 常备保持 / 已重排', async () => {
+  const u = userEvent.setup()
+  // 无变化
+  const a = mkApi()
+  a.postSettings.mockResolvedValueOnce({ replanned: 0, changed: false })
+  const { unmount: m1 } = render(<SettingsForm view={view} api={a as never} />)
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(await screen.findByText(/设置未变化/)).toBeInTheDocument()
+  m1()
+  // 常备模式（changed 但重排 0）
+  const b = mkApi()
+  b.postSettings.mockResolvedValueOnce({ replanned: 0, changed: true })
+  const { unmount: m2 } = render(<SettingsForm view={view} api={b as never} />)
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(await screen.findByText(/滚动计划保持不变/)).toBeInTheDocument()
+  m2()
+  // 有重排
+  const c = mkApi()
+  c.postSettings.mockResolvedValueOnce({ replanned: 7, changed: true })
+  render(<SettingsForm view={view} api={c as never} />)
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(await screen.findByText(/重排.*7/)).toBeInTheDocument()
+})
+
+// ---------- 容量服务端预校验的客户端镜像 ----------
+
+test('容量清空或为 0 → 保存禁用并提示 ≥1', async () => {
+  const u = userEvent.setup()
+  render(<SettingsForm view={view} api={mkApi() as never} />)
+  const cap = screen.getByLabelText(/每日容量|容量/)
+  await u.clear(cap)
+  expect(screen.getByRole('button', { name: /保存/ })).toBeDisabled()
+  expect(screen.getByText(/容量须为 ≥1/)).toBeInTheDocument()
+  await u.type(cap, '0')
+  expect(screen.getByRole('button', { name: /保存/ })).toBeDisabled()
+})
+
+// ---------- 岗位与块列表联动 ----------
+
+test('岗位联动：默认只看岗位内块，可切换看全部，岗位块带标记', async () => {
+  const u = userEvent.setup()
+  const v = {
+    ...baseView,
+    tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: 'x', blockIds: ['b1', 'b3'] }],
+  } as never
+  render(<SettingsForm view={v} api={mkApi() as never} />)
+  // 默认过滤：岗位内 MySQL/JVM 可见，Redis 不在列表
+  expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeInTheDocument()
+  expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeInTheDocument()
+  expect(screen.queryByRole('checkbox', { name: /Redis/ })).not.toBeInTheDocument()
+  // 开关显示岗位块数（2）
+  expect(screen.getByRole('button', { name: /只看岗位内块.*2/ })).toBeInTheDocument()
+  // 关掉过滤 → 全部可见，岗位块带标记
+  await u.click(screen.getByRole('button', { name: /只看岗位内块/ }))
+  expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeInTheDocument()
+  expect(screen.getByRole('checkbox', { name: /MySQL/ }).closest('li')).toHaveAttribute('data-in-track')
+  expect(screen.getByRole('checkbox', { name: /Redis/ }).closest('li')).not.toHaveAttribute('data-in-track')
+})
+
+test('切到「全部」岗位：过滤开关消失，块全量可见', async () => {
+  const u = userEvent.setup()
+  const v = {
+    ...baseView,
+    tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: 'x', blockIds: ['b1', 'b3'] }],
+  } as never
+  render(<SettingsForm view={v} api={mkApi() as never} />)
+  await u.click(screen.getByRole('radio', { name: /^全部$/ }))
+  expect(screen.queryByRole('button', { name: /只看岗位内块/ })).not.toBeInTheDocument()
+  expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeInTheDocument()
+})
+
+// ---------- 反馈语义重整（2026-09-30）：dirty 指示 / 保存反馈分流 / 块计数 / cram 副作用 ----------
+
+test('只改块集保存 → 「已保存，排期未重排」而非说谎的「设置未变化」', async () => {
+  const u = userEvent.setup()
+  const api = mkApi()
+  api.postSettings.mockResolvedValueOnce({ replanned: 0, changed: false })   // 服务端：设置项没变
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(await screen.findByText(/已保存：块集\/岗位已更新，排期未重排/)).toBeInTheDocument()
+})
+
+test('只改岗位保存 → 同样得到「已保存，排期未重排」', async () => {
+  const u = userEvent.setup()
+  const api = mkApi()
+  api.postSettings.mockResolvedValueOnce({ replanned: 0, changed: false })
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.click(screen.getByRole('radio', { name: /^全部$/ }))
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(await screen.findByText(/已保存：块集\/岗位已更新，排期未重排/)).toBeInTheDocument()
+})
+
+test('未保存变更常驻提示：改动出现、保存成功后消失', async () => {
+  const u = userEvent.setup()
+  const api = mkApi()
+  render(<SettingsForm view={view} api={api as never} />)
+  expect(screen.queryByTestId('dirty-hint')).not.toBeInTheDocument()
+  await u.click(screen.getByRole('checkbox', { name: /Redis/ }))
+  expect(screen.getByTestId('dirty-hint')).toHaveTextContent(/有未保存的变更/)
+  api.postSettings.mockResolvedValueOnce({ replanned: 0, changed: false })
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  await screen.findByText(/排期未重排/)
+  expect(screen.queryByTestId('dirty-hint')).not.toBeInTheDocument()
+})
+
+test('改容量/岗位同样触发未保存提示', async () => {
+  const u = userEvent.setup()
+  render(<SettingsForm view={view} api={mkApi() as never} />)
+  await u.clear(screen.getByLabelText(/每日容量|容量/))
+  await u.type(screen.getByLabelText(/每日容量|容量/), '30')
+  expect(screen.getByTestId('dirty-hint')).toBeInTheDocument()
+  await u.click(screen.getByRole('radio', { name: /^全部$/ }))
+  expect(screen.getByTestId('dirty-hint')).toBeInTheDocument()
+})
+
+test('块区常驻「已选 N 个」计数；岗位过滤下的视野外已选块明示仍包含', () => {
+  const v = {
+    ...baseView,
+    tracks: [{ id: 'java-backend', name: 'Java 后端', tagline: 'x', blockIds: ['b2', 'b3'] }],
+  } as never   // 已选 b1(MySQL) 不在岗位内 → 被过滤藏起
+  render(<SettingsForm view={v} api={mkApi() as never} />)
+  expect(screen.getByTestId('selected-count')).toHaveTextContent('已选 1 个')
+  expect(screen.queryByRole('checkbox', { name: /MySQL/ })).not.toBeInTheDocument()   // 确实被藏
+  expect(screen.getByTestId('hidden-selected')).toHaveTextContent(/另有 1 个已选块在当前视野外，保存时仍包含/)
+})
+
+test('cram 成功后基线同步：不误报未保存，结果明示就绪日副作用', async () => {
+  const u = userEvent.setup()
+  const api = {
+    ...mkApi(),
+    postCram: vi.fn(async () => ({ crammed: 5, excluded: 0, overloaded: false, readyByDate: '2026-10-31' })),
+  }
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.type(screen.getByLabelText(/^面试日期/), '2026-11-01')
+  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
+  const result = await screen.findByTestId('cram-result')
+  expect(result).toHaveTextContent(/已加密 5 张/)
+  expect(result).toHaveTextContent(/就绪日 → 2026-10-31/)
+  expect(screen.getByLabelText(/就绪日/)).toHaveValue('2026-10-31')
+  expect(screen.queryByTestId('dirty-hint')).not.toBeInTheDocument()   // 基线已同步
+})
+
+test('cram 成功后清掉过期的保存反馈', async () => {
+  const u = userEvent.setup()
+  const api = mkCramApi()
+  api.postSettings.mockResolvedValueOnce({ replanned: 9, changed: true })
+  render(<SettingsForm view={view} api={api as never} />)
+  await u.click(screen.getByRole('button', { name: /保存/ }))
+  expect(await screen.findByText(/重排.*9/)).toBeInTheDocument()
+  await u.type(screen.getByLabelText(/^面试日期/), '2026-12-01')
+  await u.click(screen.getByRole('button', { name: /临时加密|加密/ }))
+  await screen.findByTestId('cram-result')
+  expect(screen.queryByText(/重排.*9/)).not.toBeInTheDocument()
+})
+
+test('就绪日 date input 的 min 不早于今天（挡住「填过去日期按常备」的困惑）', async () => {
+  const u = userEvent.setup()
+  render(<SettingsForm view={view} api={mkApi() as never} />)
+  const d = new Date()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  await screen.findByLabelText(/就绪日/)   // 等 useEffect 填充
+  expect(screen.getByLabelText(/就绪日/)).toHaveAttribute('min', `${d.getFullYear()}-${mm}-${dd}`)
 })
