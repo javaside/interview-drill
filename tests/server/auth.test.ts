@@ -8,7 +8,7 @@ test('自定义登录页注册：/api/auth/signin 302 到 /signin（callbackUrl 
     db: () => ({}) as unknown as SqlRunner,
     githubId: 'id', githubSecret: 'secret', secret: 's',
   })
-  expect(options.pages?.signIn).toBe('/signin')
+  expect(options.pages?.signIn).toBe('/drill/signin')
 })
 
 test('requireUserId：无会话返回 401，有会话返回 userId（不依赖真实 OAuth）', async () => {

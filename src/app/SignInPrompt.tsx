@@ -1,3 +1,5 @@
+import { withBase } from '../lib/base-path.js'
+import Link from 'next/link'
 /**
  * 登录提示（登录逻辑 v2）：浏览零门槛（首页/知识库默认可见），
  * 动作时刻（刷题/学习）才要身份——给出说明与 GitHub 登录入口，
@@ -16,15 +18,15 @@ export function SignInPrompt({ what }: { what: string }): React.JSX.Element {
           知识库无需登录，随时可以先逛逛。
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-4">
-          <a href="/api/auth/signin" className="btn-primary text-base" data-testid="signin-cta">
+          <Link href={`/api/auth/signin?callbackUrl=${withBase('/')}`} className="btn-primary text-base" data-testid="signin-cta">
             使用 GitHub 登录
-          </a>
-          <a
+          </Link>
+          <Link
             href="/map"
             className="rounded-lg border border-paper-line px-4 py-2.5 text-sm text-paper-muted transition-colors duration-150 ease-snap hover:border-paper-muted hover:text-paper-ink"
           >
             先逛逛知识库
-          </a>
+          </Link>
         </div>
       </section>
     </div>

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { PublicCard } from '../../../server/db/adapters.js'
 
 /**
@@ -21,9 +22,9 @@ export function PublicQuestionView({ card }: { card: PublicCard }): React.JSX.El
         ))}
       </ul>
       <p className="mt-10 text-sm">
-        <a href="/" className="tnum font-medium text-accent underline underline-offset-4 transition-opacity hover:opacity-80">
+        <Link href="/" className="tnum font-medium text-accent underline underline-offset-4 transition-opacity hover:opacity-80">
           完整 {card.totalKeyPoints} 条要点在 App 内
-        </a>
+        </Link>
       </p>
     </main>
   )

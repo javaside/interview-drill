@@ -1,3 +1,5 @@
+import { withBase } from '../../lib/base-path.js'
+import Link from 'next/link'
 /**
  * 未登录首页（站点介绍落地页）：先让人看见本站是什么、有什么不一样，
  * 再给登录入口——「为什么要点登录」由页面自己回答，不靠访客猜。
@@ -47,12 +49,12 @@ export function Landing({ totals, tracks }: {
               每题配白话讲解，零基础也读得懂术语背后的门道。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a href="/api/auth/signin" className="btn-primary text-base" data-testid="signin-cta">
+              <Link href={`/api/auth/signin?callbackUrl=${withBase('/')}`} className="btn-primary text-base" data-testid="signin-cta">
                 用 GitHub 登录 · 免费开始
-              </a>
-              <a href="/map" className="btn-ghost text-base" data-testid="landing-browse">
+              </Link>
+              <Link href="/map" className="btn-ghost text-base" data-testid="landing-browse">
                 先逛逛知识库
-              </a>
+              </Link>
             </div>
           </div>
           <dl className="grid grid-cols-3 gap-6 md:gap-10">
@@ -103,13 +105,13 @@ export function Landing({ totals, tracks }: {
           <p>
             登录即免费刷 2 个完整块（约 30–50 题），走通「学 → 判 → 排」的闭环，
             再决定要不要解锁全部。{' '}
-            <a
-              href="/api/auth/signin"
+            <Link
+              href={`/api/auth/signin?callbackUrl=${withBase('/')}`}
               data-testid="landing-signin-inline"
               className="font-semibold text-accent underline decoration-accent/40 transition-colors duration-150 ease-snap hover:decoration-accent"
             >
               用 GitHub 登录
-            </a>
+            </Link>
           </p>
         </div>
       </section>

@@ -34,7 +34,7 @@ test('无 error 参数不出错误提示；有 error 出 role=alert 友好文案
 test('点提交按钮：signIn("github", { callbackUrl })，无参回首页', async () => {
   render(await page())
   await userEvent.click(screen.getByTestId('signin-submit'))
-  expect(signIn).toHaveBeenCalledWith('github', { callbackUrl: '/' })
+  expect(signIn).toHaveBeenCalledWith('github', { callbackUrl: '/drill' })
 })
 
 test('callbackUrl 透传：从哪来回哪去（OAuth 回跳后再回原页）', async () => {

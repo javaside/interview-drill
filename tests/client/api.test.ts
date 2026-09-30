@@ -4,7 +4,7 @@ test('postReview：POST /api/review，2xx 解析 JSON', async () => {
   const fetchMock = vi.fn(async () => new Response(JSON.stringify({ score: { num: 1, den: 1 } }), { status: 200 }))
   vi.stubGlobal('fetch', fetchMock)
   const r = await browserApi().postReview({ submissionId: 's', cardId: 'c', reviewedAtMs: 0, kind: 'selection', selected: [0] })
-  expect(fetchMock).toHaveBeenCalledWith('/api/review', expect.objectContaining({ method: 'POST' }))
+  expect(fetchMock).toHaveBeenCalledWith('/drill/api/review', expect.objectContaining({ method: 'POST' }))
   expect((r as never as { score: unknown }).score).toEqual({ num: 1, den: 1 })
   vi.unstubAllGlobals()
 })
@@ -32,7 +32,7 @@ test('postRedeem：POST /api/billing/redeem body={code}，2xx 解析 outcome', a
   const fetchMock = vi.fn(async () => new Response(JSON.stringify({ outcome: 'fulfilled' }), { status: 200 }))
   vi.stubGlobal('fetch', fetchMock)
   const r = await browserApi().postRedeem('ABCD-EFGH-JKMN-PQRS')
-  expect(fetchMock).toHaveBeenCalledWith('/api/billing/redeem',
+  expect(fetchMock).toHaveBeenCalledWith('/drill/api/billing/redeem',
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ code: 'ABCD-EFGH-JKMN-PQRS' }) }))
   expect(r.outcome).toBe('fulfilled')
   vi.unstubAllGlobals()
@@ -42,9 +42,9 @@ test('后台两接口：GET 台账 / POST 铸码走 /api/backstage/invites', asy
   const fetchMock = vi.fn(async () => new Response(JSON.stringify([]), { status: 200 }))
   vi.stubGlobal('fetch', fetchMock)
   await browserApi().fetchInviteCodes()
-  expect(fetchMock).toHaveBeenLastCalledWith('/api/backstage/invites', expect.objectContaining({ method: 'GET' }))
+  expect(fetchMock).toHaveBeenLastCalledWith('/drill/api/backstage/invites', expect.objectContaining({ method: 'GET' }))
   await browserApi().postMintInvites(3, '备注')
-  expect(fetchMock).toHaveBeenLastCalledWith('/api/backstage/invites',
+  expect(fetchMock).toHaveBeenLastCalledWith('/drill/api/backstage/invites',
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ n: 3, note: '备注' }) }))
   vi.unstubAllGlobals()
 })

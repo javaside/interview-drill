@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 import { useEffect, useMemo, useState } from 'react'
 import { DrillQuestion } from './DrillQuestion.js'
@@ -168,12 +169,12 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
                     错题 {payload.missesToday}
                   </button>
                 )}
-                <a
+                <Link
                   href="/map"
                   className="block w-full rounded-xl border border-white/[0.08] px-4 py-2.5 text-center text-sm text-paper-muted transition-all duration-500 ease-fluid hover:border-white/25 hover:text-paper-ink"
                 >
                   返回知识地图
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -228,9 +229,9 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
                 再练今天的 {payload.missesToday} 张错题
               </button>
             )}
-            <a href="/map" className="text-paper-muted underline underline-offset-4 transition-colors hover:text-paper-ink">
+            <Link href="/map" className="text-paper-muted underline underline-offset-4 transition-colors hover:text-paper-ink">
               看看知识地图
-            </a>
+            </Link>
           </div>
         </div></section>
       )}
@@ -242,12 +243,12 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
             排期由就绪日与所选知识块决定。设定你的面试日期、勾选要刷的块，队列就会出现。
           </p>
           <div className="mt-6 flex items-center justify-center gap-4 text-sm">
-            <a
+            <Link
               href="/settings"
               className="rounded-md bg-paper-ink px-5 py-2 font-medium text-paper transition-all hover:opacity-90 active:translate-y-px"
             >
               设定就绪日与知识块
-            </a>
+            </Link>
             {payload.missesToday > 0 && (
               <button
                 type="button"
@@ -257,9 +258,9 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
                 再练今天的 {payload.missesToday} 张错题
               </button>
             )}
-            <a href="/map" className="text-paper-muted underline underline-offset-4 transition-colors hover:text-paper-ink">
+            <Link href="/map" className="text-paper-muted underline underline-offset-4 transition-colors hover:text-paper-ink">
               看看知识地图
-            </a>
+            </Link>
           </div>
         </div></section>
       )}

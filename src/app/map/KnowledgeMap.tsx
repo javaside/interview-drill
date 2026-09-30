@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { BlockMapEntry } from '../../server/map.js'
 
 /** mastery → 展示文本 + 百分比数值（untried 无条） */
@@ -50,9 +51,9 @@ export function KnowledgeMap({
               {totals !== undefined && `当前 ${totals.blocks} 个块、${totals.cards} 道题。`}
             </p>
             <div className="mt-7">
-              <a href="/" className="btn-primary text-base">
+              <Link href="/" className="btn-primary text-base">
                 开始今天的刷题
-              </a>
+              </Link>
             </div>
           </div>
           {totals !== undefined && (
@@ -74,7 +75,7 @@ export function KnowledgeMap({
         </div>
         {tracks.length > 0 && (
           <nav aria-label="岗位" className="relative mt-8 flex flex-wrap gap-2 border-t border-paper-line pt-6">
-            <a
+            <Link
               href="/map"
               aria-current={activeTrackId === null ? 'page' : undefined}
               className={`rounded-lg border px-4 py-1.5 text-sm transition-colors duration-150 ease-snap ${
@@ -84,9 +85,9 @@ export function KnowledgeMap({
               }`}
             >
               全部
-            </a>
+            </Link>
             {tracks.map(t => (
-              <a
+              <Link
                 key={t.id}
                 href={`/map?track=${t.id}`}
                 aria-current={activeTrackId === t.id ? 'page' : undefined}
@@ -97,7 +98,7 @@ export function KnowledgeMap({
                 }`}
               >
                 {t.name}
-              </a>
+              </Link>
             ))}
           </nav>
         )}
@@ -121,7 +122,7 @@ export function KnowledgeMap({
               return (
                 <li key={e.blockId} data-testid={`block-${e.blockId}`}>
                   <div className="card-flat flex h-full items-center justify-between gap-4 px-5 py-4 transition-all duration-150 ease-snap hover:border-paper-muted hover:bg-paper-wash">
-                    <a
+                    <Link
                       href={`/learn?block=${e.blockId}`}
                       className="min-w-0"
                     >
@@ -133,31 +134,31 @@ export function KnowledgeMap({
                       ) : (
                         <span className="tnum mt-1 block text-xs text-paper-muted">{e.cardCount} 题</span>
                       )}
-                    </a>
+                    </Link>
                     {!authed ? (
                       // 匿名目录：统一「刷题」入口——未登录点它 → 刷题页提示登录
-                      <a
+                      <Link
                         href={`/practice?block=${e.blockId}`}
                         data-testid="catalog-practice"
                         className="shrink-0 rounded-lg border border-paper-line px-3.5 py-1.5 text-sm text-paper-muted transition-colors duration-150 ease-snap hover:border-accent hover:text-accent"
                       >
                         刷题
-                      </a>
+                      </Link>
                     ) : e.unlocked ? (
-                      <a
+                      <Link
                         href={`/practice?block=${e.blockId}`}
                         className="shrink-0 rounded-lg border border-paper-line px-3.5 py-1.5 text-sm text-paper-muted transition-colors duration-150 ease-snap hover:border-accent hover:text-accent"
                       >
                         {label}
-                      </a>
+                      </Link>
                     ) : (
-                      <a
+                      <Link
                         href="/upgrade"
                         data-testid="locked-block"
                         className="shrink-0 rounded-lg bg-accent/15 px-3.5 py-1.5 text-sm font-semibold text-accent transition-colors duration-150 ease-snap hover:bg-accent/25"
                       >
                         {e.cardCount} 题 · 解锁
-                      </a>
+                      </Link>
                     )}
                   </div>
                 </li>

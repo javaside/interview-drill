@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
+import { withBase } from '../../lib/base-path.js'
 import { getDb } from '../../server/db/client.js'
 import { loadSettingsView } from '../../server/settings.js'
 import { authOptions } from '../../server/auth-config.js'
@@ -15,7 +16,7 @@ export const dynamic = 'force-dynamic'
 export default async function SettingsPage(): Promise<React.JSX.Element> {
   const session = await getServerSession(authOptions)
   const userId = (session as { userId?: string } | null)?.userId
-  if (userId === undefined) redirect('/api/auth/signin')
+  if (userId === undefined) redirect(withBase('/api/auth/signin'))
 
   const view = await loadSettingsView({ db: getDb(), serverNowMs: Date.now() }, userId)
   return <SettingsForm view={view} />

@@ -42,7 +42,7 @@ test('登录态：最右渲染「退出」按钮，点击 signOut({ callbackUrl:
   const right = document.querySelector('nav > div > div')!
   expect(right.lastElementChild).toContainElement(btn)
   await userEvent.click(btn)
-  expect(signOut).toHaveBeenCalledWith({ callbackUrl: '/' })
+  expect(signOut).toHaveBeenCalledWith({ callbackUrl: '/drill' })
 })
 
 test('匿名态：不渲染退出按钮，也不出登录链接（导航保持三入口不变）', () => {

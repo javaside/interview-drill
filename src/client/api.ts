@@ -1,3 +1,4 @@
+import { withBase } from '../lib/base-path.js'
 import type { Submission } from '../server/types.js'
 import type { DailyPayload } from '../server/queue.js'
 import type { ReviewResult } from '../server/review.js'
@@ -57,56 +58,56 @@ async function readJson<T>(res: Response): Promise<T> {
 export function browserApi(): Api {
   return {
     async fetchQueue() {
-      return readJson<DailyPayload>(await fetch('/api/queue', { method: 'GET' }))
+      return readJson<DailyPayload>(await fetch(withBase('/api/queue'), { method: 'GET' }))
     },
     async postReview(s) {
       return readJson<ReviewResult>(
-        await fetch('/api/review', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(s) }),
+        await fetch(withBase('/api/review'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(s) }),
       )
     },
     async postSync(subs) {
       return readJson<SyncResult>(
-        await fetch('/api/sync', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ submissions: subs }) }),
+        await fetch(withBase('/api/sync'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ submissions: subs }) }),
       )
     },
     async postSettings(body) {
       return readJson<{ replanned: number; changed: boolean }>(
-        await fetch('/api/settings', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }),
+        await fetch(withBase('/api/settings'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }),
       )
     },
     async postBlocks(body) {
       return readJson<{ paused: number; added: number }>(
-        await fetch('/api/blocks', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }),
+        await fetch(withBase('/api/blocks'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }),
       )
     },
     async postCreateOrder() {
       return readJson<{ orderId: string; amountCents: number; payParams: unknown }>(
-        await fetch('/api/billing/create-order', { method: 'POST', headers: JSON_HEADERS }),
+        await fetch(withBase('/api/billing/create-order'), { method: 'POST', headers: JSON_HEADERS }),
       )
     },
     async postRedeem(code) {
       return readJson<{ outcome: 'fulfilled' | 'already' }>(
-        await fetch('/api/billing/redeem', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ code }) }),
+        await fetch(withBase('/api/billing/redeem'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ code }) }),
       )
     },
     async fetchInviteCodes() {
       return readJson<Array<{ id: string; hashPrefix: string; note: string | null; createdAt: string; usedByLogin: string | null; usedByGithubId: string | null; usedAt: string | null }>>(
-        await fetch('/api/backstage/invites', { method: 'GET' }),
+        await fetch(withBase('/api/backstage/invites'), { method: 'GET' }),
       )
     },
     async postMintInvites(n, note) {
       return readJson<{ codes: string[] }>(
-        await fetch('/api/backstage/invites', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ n, note }) }),
+        await fetch(withBase('/api/backstage/invites'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ n, note }) }),
       )
     },
     async postCram(body) {
       return readJson<{ crammed: number; excluded: number; overloaded: boolean; readyByDate: LocalDate | null }>(
-        await fetch('/api/cram', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }),
+        await fetch(withBase('/api/cram'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }),
       )
     },
     async postRequeue(scope: 'misses' | 'all' = 'misses') {
       return readJson<{ requeued: number }>(
-        await fetch('/api/queue/requeue', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ scope }) }),
+        await fetch(withBase('/api/queue/requeue'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ scope }) }),
       )
     },
   }

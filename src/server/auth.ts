@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm'
 import { ulid } from 'ulid'
 import GitHub from 'next-auth/providers/github'
 import type { NextAuthOptions } from 'next-auth'
+import { withBase } from '../lib/base-path.js'
 import type { SqlRunner } from './db/adapters.js'
 
 /**
@@ -71,7 +72,9 @@ export function buildAuthOptions(deps: {
     providers: [GitHub({ clientId: deps.githubId, clientSecret: deps.githubSecret })],
     // 自定义登录页（NextAuth 默认页与本站视觉断裂）：GET /api/auth/signin
     // 会 302 到 /signin 并自动透传 callbackUrl——全站现有登录链接无需改 href。
-    pages: { signIn: '/signin' },
+    // /drill 基路径（2026-09-30 共域部署）：pages 路径是站点绝对路径，不随 basePath
+    // 自动前缀，须显式带 /drill
+    pages: { signIn: withBase('/signin') },
     session: { strategy: 'jwt' },
     callbacks: {
       async jwt({ token, account, profile }) {

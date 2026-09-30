@@ -1,6 +1,8 @@
 'use client'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
+import { withBase } from '../lib/base-path.js'
 
 /**
  * 页眉导航：考卷页眉——左品牌右链接，底部粗线压边。
@@ -25,9 +27,10 @@ export function NavBar({ authed = false }: { authed?: boolean }): React.JSX.Elem
         </span>
         <div className="flex items-center gap-1">
           {items.map(i => {
+            // usePathname 返回不带 /drill 前缀的站内路径，与 i.href 同口径可直判 active
             const active = pathname === i.href
             return (
-              <a
+              <Link
                 key={i.href}
                 href={i.href}
                 aria-current={active ? 'page' : undefined}
@@ -38,13 +41,13 @@ export function NavBar({ authed = false }: { authed?: boolean }): React.JSX.Elem
                 }`}
               >
                 {i.label}
-              </a>
+              </Link>
             )
           })}
           {authed && (
             <button
               type="button"
-              onClick={() => { void signOut({ callbackUrl: '/' }) }}
+              onClick={() => { void signOut({ callbackUrl: withBase('/') }) }}
               data-testid="nav-signout"
               className="ml-2 rounded-lg px-3.5 py-1.5 text-sm text-paper-muted transition-colors duration-150 ease-snap hover:bg-paper-wash hover:text-paper-ink"
             >

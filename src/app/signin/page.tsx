@@ -1,3 +1,5 @@
+import Link from 'next/link'
+import { withBase } from '../../lib/base-path.js'
 import { GitHubButton } from './GitHubButton.js'
 
 /**
@@ -39,14 +41,14 @@ export default async function SignInPage(
           </p>
         )}
         <div className="mt-8">
-          <GitHubButton callbackUrl={callbackUrl ?? '/'} />
+          <GitHubButton callbackUrl={callbackUrl ?? withBase('/')} />
         </div>
-        <a
+        <Link
           href="/"
           className="mt-5 inline-block text-sm text-paper-muted underline decoration-paper-line transition-colors duration-150 ease-snap hover:text-paper-ink hover:decoration-paper-muted"
         >
           返回首页
-        </a>
+        </Link>
       </section>
     </div>
   )

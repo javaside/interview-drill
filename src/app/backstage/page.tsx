@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../server/auth-config.js'
 import { getDb } from '../../server/db/client.js'
@@ -22,9 +23,9 @@ export default async function BackstagePage(): Promise<React.JSX.Element> {
         <div className="card-flat p-10 text-center">
           <h1 className="text-lg font-bold text-paper-ink">这里没有你要找的东西</h1>
           <p className="mt-3 text-sm text-paper-muted">页面不存在，或你没有访问权限。</p>
-          <a href="/" className="mt-6 inline-block text-sm text-paper-muted underline decoration-paper-line hover:text-paper-ink">
+          <Link href="/" className="mt-6 inline-block text-sm text-paper-muted underline decoration-paper-line hover:text-paper-ink">
             回首页
-          </a>
+          </Link>
         </div>
       </div>
     )

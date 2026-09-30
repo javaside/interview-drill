@@ -53,7 +53,7 @@ const signedIn = (userId = 'u1') =>
 test('登录提示：动作名入题，GitHub 登录 CTA + 知识库旁路', () => {
   render(<SignInPrompt what="刷题" />)
   expect(screen.getByTestId('signin-prompt')).toHaveTextContent('刷题前，先登录')
-  expect(screen.getByTestId('signin-cta')).toHaveAttribute('href', '/api/auth/signin')
+  expect(screen.getByTestId('signin-cta')).toHaveAttribute('href', '/api/auth/signin?callbackUrl=/drill')
   expect(screen.getByRole('link', { name: '先逛逛知识库' })).toHaveAttribute('href', '/map')
 })
 
@@ -66,7 +66,7 @@ test('匿名访问首页：渲染站点介绍落地页（真实库量），不�
   render(await DrillPage())
   // 价值介绍 + 登录引导，而非一张「先登录」小卡
   expect(screen.getByTestId('landing')).toBeInTheDocument()
-  expect(screen.getByTestId('signin-cta')).toHaveAttribute('href', '/api/auth/signin')
+  expect(screen.getByTestId('signin-cta')).toHaveAttribute('href', '/api/auth/signin?callbackUrl=/drill')
   expect(screen.getByTestId('landing-browse')).toHaveAttribute('href', '/map')
   // 刊头统计 = 真实库量（blocks 夹具 23+18=41 题）
   expect(screen.getByText('41')).toBeInTheDocument()

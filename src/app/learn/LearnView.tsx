@@ -1,3 +1,4 @@
+import Link from 'next/link'
 /**
  * 块学习页视图（教材在前、习题在后）：按卡列出题面 + 分层题解——
  * 入门版（零基础可读）默认展开，进阶版（面试深度）折叠。
@@ -54,15 +55,15 @@ export function LearnView({
             还没有解锁——解锁后这里就是完整的教材。
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
+            <Link
               href="/upgrade"
               className="btn-primary"
             >
               解锁全部大类
-            </a>
-            <a href="/settings" className="btn-ghost py-2">
+            </Link>
+            <Link href="/settings" className="btn-ghost py-2">
               在设置里把它选为免费块
-            </a>
+            </Link>
           </div>
         </div>
       ) : (
@@ -119,12 +120,12 @@ export function LearnView({
           )}
 
           <div className="mt-16 text-center">
-            <a
+            <Link
               href={`/practice?block=${blockId}`}
               className="btn-primary text-base"
             >
               学完了，开始测试
-            </a>
+            </Link>
           </div>
           </div>
           </div>

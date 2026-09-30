@@ -17,7 +17,7 @@ test('首屏价值主张：题海刷不完知识点刷得完 + 真实库量统�
 
 test('双 CTA：GitHub 登录（主）+ 先逛逛知识库（旁路）', () => {
   render(<Landing totals={totals} tracks={tracks} />)
-  expect(screen.getByTestId('signin-cta')).toHaveAttribute('href', '/api/auth/signin')
+  expect(screen.getByTestId('signin-cta')).toHaveAttribute('href', '/api/auth/signin?callbackUrl=/drill')
   expect(screen.getByTestId('landing-browse')).toHaveAttribute('href', '/map')
 })
 

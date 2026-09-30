@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import { useState } from 'react'
 import { browserApi } from '../../client/api.js'
 import type { Api } from '../../client/api.js'
@@ -60,13 +61,13 @@ export function UpgradeView({
             {/* 解锁不改变排期范围（保留原勾选，不默认全选）：下一个动作 = 去设置把整个岗位一键加入 */}
             <p className="mt-4 text-sm text-paper-muted">全部块已可自由刷；每日排期想换岗位，一键勾选</p>
             <p className="mt-2 flex items-center justify-center gap-4">
-              <a href="/settings" data-testid="goto-settings"
+              <Link href="/settings" data-testid="goto-settings"
                 className="text-sm text-paper-muted underline decoration-paper-line transition-colors duration-150 ease-snap hover:text-paper-ink hover:decoration-paper-muted">
                 去设置选岗位
-              </a>
-              <a href="/map" className="text-sm text-paper-muted underline decoration-paper-line transition-colors duration-150 ease-snap hover:text-paper-ink hover:decoration-paper-muted">
+              </Link>
+              <Link href="/map" className="text-sm text-paper-muted underline decoration-paper-line transition-colors duration-150 ease-snap hover:text-paper-ink hover:decoration-paper-muted">
                 去刷题
-              </a>
+              </Link>
             </p>
           </div>
         ) : (
