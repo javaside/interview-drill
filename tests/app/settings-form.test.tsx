@@ -1,7 +1,10 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SettingsForm } from '../../src/app/settings/SettingsForm.js'
 import type { LocalDate } from '../../src/lib/scheduler/date.js'
+
+// 岗位高亮持久化在 localStorage——用例间必须清，避免点选泄漏到下一个用例的恢复逻辑
+beforeEach(() => { window.localStorage.clear() })
 
 const baseView = {
   readyByDate: '2026-11-01', dailyCapacity: 45, plan: 'free',
@@ -168,6 +171,50 @@ test('当前勾选集恰为某岗位块集时，该岗位 chip 预勾（现在�
   render(<SettingsForm view={v} api={mkApi() as never} />)
   expect(screen.getByRole('checkbox', { name: /Java 后端/ })).toBeChecked()
   expect(screen.getByRole('checkbox', { name: /Agent 开发/ })).not.toBeChecked()
+})
+
+// ---------- 岗位高亮本地持久化（2026-09-30）：多岗位并集无从精确匹配，刷新靠记忆恢复 ----------
+
+test('点过的岗位刷新（重挂载）后仍高亮——并集也能恢复，不再是只有精确匹配才亮', async () => {
+  const u = userEvent.setup()
+  const v = {
+    ...baseView, plan: 'paid',
+    tracks: [
+      { id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b3'] },
+      { id: 'agent-dev', name: 'Agent 开发', blockIds: ['b2'] },
+    ],
+  } as never
+  const { unmount } = render(<SettingsForm view={v} api={mkApi() as never} />)
+  await u.click(screen.getByRole('checkbox', { name: /Java 后端/ }))
+  await u.click(screen.getByRole('checkbox', { name: /Agent 开发/ }))
+  unmount()
+  // 重挂载 = 刷新：勾选集是并集（b1+b2+b3），精确匹配推导不出——靠 localStorage 恢复两个高亮
+  render(<SettingsForm view={v} api={mkApi() as never} />)
+  await waitFor(() => {
+    expect(screen.getByRole('checkbox', { name: /Java 后端/ })).toBeChecked()
+    expect(screen.getByRole('checkbox', { name: /Agent 开发/ })).toBeChecked()
+  })
+})
+
+test('点掉岗位后持久化同步：重挂载只恢复仍选中的岗位', async () => {
+  const u = userEvent.setup()
+  const v = {
+    ...baseView, plan: 'paid',
+    tracks: [
+      { id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b3'] },
+      { id: 'agent-dev', name: 'Agent 开发', blockIds: ['b2'] },
+    ],
+  } as never
+  const { unmount } = render(<SettingsForm view={v} api={mkApi() as never} />)
+  await u.click(screen.getByRole('checkbox', { name: /Java 后端/ }))
+  await u.click(screen.getByRole('checkbox', { name: /Agent 开发/ }))
+  await u.click(screen.getByRole('checkbox', { name: /Java 后端/ }))   // 点掉
+  unmount()
+  render(<SettingsForm view={v} api={mkApi() as never} />)
+  await waitFor(() => {
+    expect(screen.getByRole('checkbox', { name: /Agent 开发/ })).toBeChecked()
+    expect(screen.getByRole('checkbox', { name: /Java 后端/ })).not.toBeChecked()
+  })
 })
 
 test('付费：全选按钮同样自动保存；免费不提供', async () => {

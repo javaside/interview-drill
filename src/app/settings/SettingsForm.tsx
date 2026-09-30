@@ -31,6 +31,9 @@ import type { LocalDate } from '../../lib/scheduler/date.js'
  * `api` 可选：server component 不传，client 侧默认 browserApi()。
  */
 
+/** 岗位点选高亮的本地持久化键（仅本设备的 UI 记忆，不进 DB） */
+const TRACK_CHECKS_KEY = 'drill:track-checks'
+
 function msgOf(e: unknown): string {
   return e instanceof Error ? e.message : '请求失败，请重试'
 }
@@ -91,11 +94,12 @@ export function SettingsForm(
     || readyByDate !== saved.readyByDate
     || dailyCapacity !== saved.dailyCapacity
 
-  // 岗位多选（staging）：勾哪几个岗位 → 点「按所选岗位勾选」整批应用并集；
-  // 块列表本身永远全量（分组展示），应用后仍可逐块微调
+  // 岗位多选：点选即生效并自动保存；高亮状态本地持久化（localStorage，仅本设备）——
+  // 并集（多岗位）无法从勾选集反推是哪几个岗位，刷新后要靠记忆恢复（2026-09-30 用户
+  // 实测「刷新前高亮、刷新后丢了」）。块列表永远全量（分组展示），应用后仍可逐块微调。
   const knownIds = new Set(view.blocks.map(b => b.blockId))
   const [trackChecks, setTrackChecks] = useState<ReadonlySet<string>>(() => {
-    // 初始预勾：当前勾选集恰为某岗位的块集——现在刷的是哪个岗位，进页面一眼可见
+    // SSR 首渲染兜底：当前勾选集恰为某岗位的块集时预勾（挂载后若有持久化记录则覆盖）
     const picked = new Set(view.blocks.filter(b => b.selected).map(b => b.blockId))
     const hit = new Set<string>()
     for (const t of view.tracks) {
@@ -104,6 +108,22 @@ export function SettingsForm(
     }
     return hit
   })
+  // 挂载后恢复上次点选的岗位（仅一次；SSR 兜底与持久化值不同会造成 hydration 抖动，
+  // 故放 effect 而非初始化器）
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(TRACK_CHECKS_KEY)
+      if (raw === null) return
+      const ids = new Set(JSON.parse(raw) as string[])
+      const valid = new Set(view.tracks.filter(t => ids.has(t.id)).map(t => t.id))
+      if (valid.size > 0) setTrackChecks(valid)
+    } catch { /* 损坏数据忽略，保持兜底 */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 仅挂载时恢复一次
+  }, [])
+  function rememberTrackChecks(next: ReadonlySet<string>): void {
+    setTrackChecks(next)
+    try { window.localStorage.setItem(TRACK_CHECKS_KEY, JSON.stringify([...next])) } catch { /* 隐私模式等写入失败忽略 */ }
+  }
   const cardCountByBlock = new Map(view.blocks.map(b => [b.blockId, b.cardCount] as const))
   const cardsOf = (ids: readonly string[]): number =>
     ids.reduce((n, id) => n + (cardCountByBlock.get(id) ?? 0), 0)
@@ -156,7 +176,7 @@ export function SettingsForm(
     const next = new Set(trackChecks)
     if (next.has(trackId)) next.delete(trackId)
     else next.add(trackId)
-    setTrackChecks(next)
+    rememberTrackChecks(next)
 
     const checked = view.tracks.filter(t => next.has(t.id))
     // 并集按岗位列表顺序展开去重（确定序；免费截断取这个顺序的前 2）
