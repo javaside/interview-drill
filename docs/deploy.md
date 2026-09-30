@@ -104,13 +104,37 @@ sudo -u postgres pg_dump drill > /root/drill-$(date +%F).dump   # 重大变更�
 sudo -u postgres psql drill                                     # 进库手工查数据
 ```
 
-### 铸邀请码（解锁码）
+### 邀请码（解锁码）的生成与使用
+
+**是什么**：在线支付上线前，用户解锁全部题库（plan→paid）的唯一通道。一码一用，
+明文只在铸造时展示一次（库里只存哈希）。
+
+**给谁用**：拿到码的用户在 `/drill/upgrade` 页输入兑换 → 解锁全部题目。
+
+**谁能生成**：管理员（服务器 env 里 `ADMIN_GITHUB_IDS` 白名单内的 GitHub 账号，逗号分隔；
+空名单 = 无人可进，fail closed）。
+
+#### 生成路径①：网页后台（推荐，日常用这个）
+
+1. 浏览器打开 **https://xibaojun.com/drill/backstage**（本地开发即 http://localhost:3000/drill/backstage）
+2. 用管理员 GitHub 账号登录（没登录或不在白名单 → 只会看到「这里没有你要找的东西」）
+3. 表单填**数量**和**备注**（给谁/干什么用）→ 点铸造
+4. 明文码逐张展示，**仅此一次**——当场点「一键复制」发给用户；关页即不可找回
+5. 页面下方是台账：备注 / 铸造时间 / 状态（未用 或 被谁兑换）
+
+#### 生成路径②：服务器 CLI（批量/自动化用）
 
 ```bash
+ssh -p 22222 root@82.29.72.221
 cd /opt/interview-drill
 pnpm exec tsx --env-file-if-exists=.env.production.local tools/invite-new.ts 3 备注名
-# 注意：pnpm invite:new 脚本只读 .env.local（本地用）；生产必须像上面这样显式指 env 文件
+# 参数：数量 + 备注；明文码打印在终端，同样仅此一次
+# 注意：pnpm invite:new 脚本只读 .env.local（本地开发用）；生产必须像上面显式指 env 文件
 ```
+
+> 管理员名单调整：改 `/opt/interview-drill/.env.production.local` 里的 `ADMIN_GITHUB_IDS`
+> （GitHub 数字 id，逗号分隔）→ `systemctl restart interview-drill` 生效。
+> 兑换记录/台账数据都在 PG 的 invite_codes + users 表里，`sudo -u postgres psql drill` 可查。
 
 ## 生产环境文件（不在 git 里，人工保管）
 
