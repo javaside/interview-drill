@@ -66,6 +66,44 @@ curl -s -o /dev/null -w "%{http_code}\n" https://xibaojun.com/drill   # 期望 2
 
 日志：`journalctl -u interview-drill -f`。
 
+## 运维命令速查
+
+应用进程（systemd 单元 `interview-drill`，开机自启、崩溃自动拉起）：
+
+```bash
+# 重启（改了代码/env 后必须重启才生效）——本地一条命令直达：
+ssh -p 22222 root@82.29.72.221 'systemctl restart interview-drill'
+
+# 或者先登进服务器再操作：
+ssh -p 22222 root@82.29.72.221
+systemctl restart interview-drill     # 重启
+systemctl stop interview-drill        # 停服（老站不受影响，/drill 会 502）
+systemctl start interview-drill       # 启动
+systemctl status interview-drill      # 看状态（运行中/主 PID/内存）
+journalctl -u interview-drill -f      # 跟日志（Ctrl+C 退出）
+journalctl -u interview-drill -n 100  # 看最近 100 行
+```
+
+改完 nginx 配置后 reload（配置在 `/etc/nginx/conf.d/xibaojun.com.conf`）：
+
+```bash
+nginx -t && systemctl reload nginx    # 必须先 -t 校验通过再 reload
+```
+
+健康检查（发完版/重启后各跑一遍）：
+
+```bash
+curl -s https://xibaojun.com/drill/api/health            # 期望 {"ok":true}
+curl -s -o /dev/null -w "%{http_code}\n" https://xibaojun.com/drill   # 期望 200
+```
+
+数据库备份 / 进入 psql：
+
+```bash
+sudo -u postgres pg_dump drill > /root/drill-$(date +%F).dump   # 重大变更前先备份
+sudo -u postgres psql drill                                     # 进库手工查数据
+```
+
 ### 铸邀请码（解锁码）
 
 ```bash
