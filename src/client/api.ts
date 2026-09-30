@@ -22,6 +22,8 @@ export interface Api {
   postBlocks(body: { blockIds: string[] }): Promise<{ paused: number; added: number }>
   /** POST /api/billing/create-order → 订单号 + 服务端定价 + 网关拉起支付参数 */
   postCreateOrder(): Promise<{ orderId: string; amountCents: number; payParams: unknown }>
+  /** POST /api/billing/redeem → 邀请码兑换结果（fulfilled=刚解锁 / already=原本就已解锁） */
+  postRedeem(code: string): Promise<{ outcome: 'fulfilled' | 'already' }>
   /** POST /api/cram → 面试临时加密（§5.8）：选中块重铺冲刺的结果 + 写入的新就绪日 */
   postCram(body: { examDate: LocalDate; blockIds: string[] }): Promise<{ crammed: number; excluded: number; overloaded: boolean; readyByDate: LocalDate | null }>
   /** POST /api/queue/requeue → 把今天刷过的卡拉回今天（misses=错题 / all=全部再来一遍） */
@@ -76,6 +78,11 @@ export function browserApi(): Api {
     async postCreateOrder() {
       return readJson<{ orderId: string; amountCents: number; payParams: unknown }>(
         await fetch('/api/billing/create-order', { method: 'POST', headers: JSON_HEADERS }),
+      )
+    },
+    async postRedeem(code) {
+      return readJson<{ outcome: 'fulfilled' | 'already' }>(
+        await fetch('/api/billing/redeem', { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ code }) }),
       )
     },
     async postCram(body) {

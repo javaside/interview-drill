@@ -126,3 +126,17 @@ export const orders = pgTable('orders', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   paidAt: timestamp('paid_at', { withTimezone: true }),
 }, t => [index('orders_user_idx').on(t.userId)])
+
+/**
+ * 邀请码（在线支付上线前的解锁通道）：一次性，库存哈希。
+ * codeHash = sha256(规整后明文)——库被拖走也泄不了未用码；明文仅生成时打印一次。
+ * usedAt null = 未用；兑现时写 usedBy/usedAt（条件更新原子占用，并发同码只一人赢）。
+ */
+export const inviteCodes = pgTable('invite_codes', {
+  id: text('id').primaryKey(),                    // ULID
+  codeHash: text('code_hash').notNull().unique(), // sha256 hex
+  note: text('note'),                             // 主人备注（发给谁），非用户可见
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  usedBy: text('used_by').references(() => users.id),
+  usedAt: timestamp('used_at', { withTimezone: true }),
+})

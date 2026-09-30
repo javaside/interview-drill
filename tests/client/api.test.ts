@@ -27,3 +27,13 @@ test('非 2xx 无 JSON body → 仍抛 HTTP 状态错误', async () => {
   await expect(browserApi().postSettings({ dailyCapacity: 10 })).rejects.toThrow('HTTP 504')
   vi.unstubAllGlobals()
 })
+
+test('postRedeem：POST /api/billing/redeem body={code}，2xx 解析 outcome', async () => {
+  const fetchMock = vi.fn(async () => new Response(JSON.stringify({ outcome: 'fulfilled' }), { status: 200 }))
+  vi.stubGlobal('fetch', fetchMock)
+  const r = await browserApi().postRedeem('ABCD-EFGH-JKMN-PQRS')
+  expect(fetchMock).toHaveBeenCalledWith('/api/billing/redeem',
+    expect.objectContaining({ method: 'POST', body: JSON.stringify({ code: 'ABCD-EFGH-JKMN-PQRS' }) }))
+  expect(r.outcome).toBe('fulfilled')
+  vi.unstubAllGlobals()
+})
