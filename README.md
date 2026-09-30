@@ -13,8 +13,8 @@
 
 - **目标用户**：准备后端面试的程序员（第一版聚焦 Java 方向）
 - **判分方式**：多选题 + 客观判分——要点本身就是选项，干扰项从同知识块其他题的要点池动态抽取（判分客观、单卡 15-25 秒、干扰项零内容成本）
-- **离线可用**：PWA，离线刷题重连后回放同步
-- **付费模型**：排期免费、题量付费——免费用户选 2 个知识块享完整功能，一次性买断解锁全量（当前为 ¥129 占位价，上线前定）
+- **离线可用**：离线引擎（IndexedDB 本地队列 + 重连回放同步；PWA manifest/Service Worker 尚未接入）
+- **付费模型**：排期免费、题量付费——免费用户选 2 个知识块享完整功能，买断解锁全量（价格 `PRICE_CENTS = 12900` 为占位，上线前定）；在线支付上线前的现实解锁通道是**邀请码**（`/upgrade` 页兑换，管理后台 `/backstage` 铸码，见 docs/deploy.md）
 
 ## 快速开始
 
@@ -36,10 +36,10 @@ DATABASE_URL=postgresql://postgres:dev@localhost:5432/drill pnpm content:upsert
 cp .env.example .env.local
 
 # 5. 启动
-pnpm dev   # → http://localhost:3000
+pnpm dev   # → http://localhost:3000/drill（整站挂 /drill 基路径）
 ```
 
-验证：先访问 `/api/health` 确认 DB 连通；GitHub OAuth App 回调地址填 `http://localhost:3000/api/auth/callback/github`。
+验证：先访问 `/drill/api/health` 确认 DB 连通；GitHub OAuth App 回调地址填 `http://localhost:3000/drill/api/auth/callback/github`（须带 `/drill`），并在 `.env.local` 设 `NEXTAUTH_URL=http://localhost:3000/drill/api/auth`——next-auth v4 在未设该变量时按 `http://localhost:3000/api/auth` 拼回调，缺 `/drill` 会 404。
 
 ### 环境变量
 
@@ -47,7 +47,9 @@ pnpm dev   # → http://localhost:3000
 |---|---|---|
 | `DATABASE_URL` | PostgreSQL 连接串（应用 + content CLI） | ✅ |
 | `AUTH_SECRET` | NextAuth 签名密钥 | ✅ |
+| `NEXTAUTH_URL` | NextAuth 基路径，dev 填 `http://localhost:3000/drill/api/auth`（缺了 GitHub 登录回调 404；生产在服务器 env 里配同名值） | 登录必需 |
 | `GITHUB_ID` / `GITHUB_SECRET` | GitHub OAuth 登录 | 登录必需 |
+| `ADMIN_GITHUB_IDS` | `/backstage` 铸码后台的管理员白名单（GitHub 数字 id，逗号分隔；空 = 无人可进） | 可选 |
 
 ## 常用命令
 
@@ -74,10 +76,11 @@ pnpm review:pairs   # 要点互斥审核工具（tools/review，本地运行产 
   - `entitlement/` 权限纯逻辑（free=选中 2 块 / paid=全量，锁题量不锁功能）
   - `mastery/` 掌握度 · `billing/` 订单状态机（迁移合法性/履约幂等/金额校验）
   - `content/` 题卡源文件解析
-- **`src/server/` 编排层**（注入 IO 的纯核 + `db/adapters.ts`——SQL 只出现在这里）
+- **`src/server/` 编排层**（注入 IO 的纯核；**SQL 只出现在这一层，绝不下沉 lib/app**——主体在 `db/adapters.ts`，`content-upsert/`、`admin.ts`、`invite.ts`、`auth.ts` 各有少量事务内联 SQL）
   - `queue`（今日队列）、`review`（判分）、`sync`（离线回放）、`settings`、`map`（知识地图）
   - `billing.ts` 履约纯核（下单/回调履约/幂等）+ `billing-gateway.ts`（`PaymentGateway` 接口，fake 网关；真实微信/支付宝适配器待商户资质就绪后注册）
-- **`src/app/` 薄壳**：App Router 页面与 API routes（`/` 刷题、`/map` 地图、`/settings`、`/upgrade` 购买页、`/q/[id]` 公开题目页）
+  - `invite.ts` 邀请码铸造/兑换（原子占码防双花）、`admin.ts` 后台白名单
+- **`src/app/` 薄壳**：App Router 页面与 API routes（`/` 刷题·匿名=落地页、`/practice` 自由刷、`/learn` 学习目录、`/map` 地图、`/settings`、`/upgrade` 解锁/兑换、`/q/[id]` 公开题目页、`/signin` 登录页、`/backstage` 铸码后台）
 - **`src/client/`**：浏览器 API 客户端与离线引擎（IndexedDB 队列 + 重连回放）
 - **`content/`**：题库源文件（Markdown + front matter，进 Git 不进 CMS；`大类/知识块/ULID.md`）
 - **`tools/`**：内容生产工具链（脚手架、审计、互斥审核），独立于生产应用
@@ -85,11 +88,12 @@ pnpm review:pairs   # 要点互斥审核工具（tools/review，本地运行产 
 
 ## 测试
 
-vitest 双 project：`node`（纯核单测 + PGlite 集成测试）与 `jsdom`（组件测试）。集成测试用 PGlite 跑真实迁移文件建表，与生产同源；当前 335 个测试全绿。
+vitest 双 project：`node`（纯核单测 + PGlite 集成测试）与 `jsdom`（组件测试）。集成测试用 PGlite 跑真实迁移文件建表，与生产同源；当前 531 个测试全绿（74 文件）。
 
 ## 付费与当前边界
 
-- 转化入口唯一（§10.1）：产品内付费提示只出现在知识地图未解锁块 → `/upgrade` 购买页，刷题主循环绝不打断
+- 转化入口：免费用户 NavBar 常驻「解锁」chip → `/upgrade` 解锁页（2026-09-30 拍板，取代 spec §10.1「导航绝不放付费入口」旧守卫——解锁页原本藏太深用户找不到）；知识地图未解锁块是第二入口；刷题主循环绝不打断
+- **邀请码是当前唯一现实解锁通道**（在线支付未上线）：`/backstage` 后台或服务器 CLI 铸码（只存哈希），用户在 `/upgrade` 兑换；兑换原子占码防并发双花
 - 履约幂等：支付回调重复投递安全（幂等键 = 订单状态）；金额由服务端 `PRICE_CENTS` 决定，webhook 验签是唯一安全边界
 - **轨道外待办**：境内收款资质链条（营业执照 → ICP 备案 → 商户号，线下串行动作）、真实微信/支付宝网关适配器（接口位已留好）、价格数字（当前 `PRICE_CENTS = 12900` 为占位）
 
