@@ -59,11 +59,17 @@ test('登录提示：动作名入题，GitHub 登录 CTA + 知识库旁路', () 
 
 // ===== / 刷题首页 =====
 
-test('匿名访问首页：可见（不重定向），给「刷题前，先登录」提示', async () => {
+test('匿名访问首页：渲染站点介绍落地页（真实库量），不出卷、不重定向', async () => {
   anon()
+  vi.mocked(loadBlocks).mockResolvedValue(blocks)
+  vi.mocked(loadTracks).mockResolvedValue([])
   render(await DrillPage())
-  expect(screen.getByTestId('signin-prompt')).toBeInTheDocument()
+  // 价值介绍 + 登录引导，而非一张「先登录」小卡
+  expect(screen.getByTestId('landing')).toBeInTheDocument()
   expect(screen.getByTestId('signin-cta')).toHaveAttribute('href', '/api/auth/signin')
+  expect(screen.getByTestId('landing-browse')).toHaveAttribute('href', '/map')
+  // 刊头统计 = 真实库量（blocks 夹具 23+18=41 题）
+  expect(screen.getByText('41')).toBeInTheDocument()
   expect(buildDailyPayload).not.toHaveBeenCalled()
 })
 
