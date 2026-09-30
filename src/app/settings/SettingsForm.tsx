@@ -69,7 +69,6 @@ export function SettingsForm(
     () => new Set(view.blocks.filter(b => b.selected).map(b => b.blockId)),
   )
   const [lastToggled, setLastToggled] = useState<string | null>(null)   // 免费墙提示挂在其行后（勾满瞬间或拒绝点击处）
-  const [trackPicked, setTrackPicked] = useState<string | null>(null)   // 岗位配题反馈（已按某岗位勾选 N 块）
   const [saving, setSaving] = useState(false)
   const [cramming, setCramming] = useState(false)
   const [saveStatus, setSaveStatus] = useState<{ kind: 'plan' | 'nav' | 'none'; replanned: number } | null>(null)
@@ -90,19 +89,15 @@ export function SettingsForm(
     || readyByDate !== saved.readyByDate
     || dailyCapacity !== saved.dailyCapacity
 
-  // 当前勾选集命中的岗位（勾选集恰为该岗位块集的名额内前缀）→ 按钮高亮，来回切换差异可见
-  const activeTrackId = (() => {
-    const limit = view.plan === 'free' ? FREE_BLOCK_LIMIT : Number.POSITIVE_INFINITY
-    for (const t of view.tracks) {
-      const prefix = t.blockIds.slice(0, limit)
-      if (selected.size === prefix.length && prefix.every(id => selected.has(id))) return t.id
-    }
-    return null
-  })()
+  // 岗位 tab 过滤（知识地图同款）：null = 全部；勾选状态跨 tab 保持
+  const [trackFilter, setTrackFilter] = useState<string | null>(null)
+  const filterTrack = trackFilter === null ? null : view.tracks.find(t => t.id === trackFilter) ?? null
+  const visibleBlocks = filterTrack === null
+    ? view.blocks
+    : view.blocks.filter(b => filterTrack.blockIds.includes(b.blockId))
 
   function toggle(blockId: string): void {
     setSaveStatus(null)
-    setTrackPicked(null)   // 手动勾选后岗位配题反馈不再是当前事实
     setCramResult(null)   // 块集变更后旧的冲刺结果说明已过时
     setCramError(null)
     // 名额已满再点未勾块：拒绝（不勾上），提示条当场弹在被点的行后——任何点击必有回应
@@ -120,25 +115,6 @@ export function SettingsForm(
     setLastToggled(willFull ? blockId : null)
   }
 
-  /** 按岗位换题：勾选集替换为该岗位的块（免费取前 2 个=名额内，付费全量）。
-   *  替换而非合并——否则名额满后点按钮毫无变化，三个岗位来回点看不出区别（用户实测）。
-   *  动作完成后在保存行明说「已按某岗位勾选 N 块」，把因果讲给用户 */
-  function pickTrack(trackId: string, blockIds: readonly string[]): void {
-    setSaveStatus(null)
-    setCramResult(null)
-    setCramError(null)
-    setLastToggled(null)
-    const limit = view.plan === 'free' ? FREE_BLOCK_LIMIT : Number.POSITIVE_INFINITY
-    const picked = blockIds.slice(0, limit)
-    setSelected(new Set(picked))
-    const name = view.tracks.find(t => t.id === trackId)?.name ?? '岗位'
-    setTrackPicked(
-      view.plan === 'free' && blockIds.length > picked.length
-        ? `已按「${name}」勾选 ${picked.length} 个块（免费名额内）；升级解锁全部 ${blockIds.length} 块`
-        : `已按「${name}」勾选 ${picked.length} 个块`,
-    )
-  }
-
   async function save(): Promise<void> {
     // 请求前快照本次保存的变更面（pending 期间用户继续改不影响本次反馈与基线）
     const snapshot = {
@@ -149,7 +125,6 @@ export function SettingsForm(
     setSaving(true)
     setSaveError(null)
     setSaveStatus(null)
-    setTrackPicked(null)   // 保存后岗位配题反馈完成使命
     try {
       const { replanned, changed } = await client.postSettings({
         readyByDate: snapshot.readyByDate === '' ? null : (snapshot.readyByDate as SettingsView['readyByDate']),
@@ -254,35 +229,41 @@ export function SettingsForm(
             <span className="tnum ml-2 normal-case tracking-normal" data-testid="selected-count">已勾 {selected.size} 个</span>
           </legend>
           {view.tracks.length > 0 && (
-            <div className="mb-4 flex flex-wrap items-center gap-2">
-              <span className="text-xs text-paper-muted">
-                要面哪个岗位？点一下换成它的题{view.plan === 'free' ? '（免费取前 2 个）' : ''}：
-              </span>
-              {view.tracks.map(t => {
-                const active = activeTrackId === t.id
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => pickTrack(t.id, t.blockIds)}
-                    className={`tnum rounded-md border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
-                      active
-                        ? 'border-accent bg-accent/15 font-medium text-paper-ink'
-                        : 'border-paper-line text-paper-ink hover:border-paper-muted'
-                    }`}
-                  >
-                    {t.name}（{t.blockIds.length} 块）
-                  </button>
-                )
-              })}
-            </div>
+            <nav aria-label="岗位过滤" className="mb-4 flex flex-wrap gap-2">
+              <button
+                type="button"
+                aria-pressed={trackFilter === null}
+                onClick={() => setTrackFilter(null)}
+                className={`rounded-lg border px-4 py-1.5 text-sm transition-colors duration-150 ease-snap ${
+                  trackFilter === null
+                    ? 'border-accent bg-accent/15 font-semibold text-accent'
+                    : 'border-paper-line bg-paper text-paper-muted hover:border-paper-muted hover:text-paper-ink'
+                }`}
+              >
+                全部（{view.blocks.length}）
+              </button>
+              {view.tracks.map(t => (
+                <button
+                  key={t.id}
+                  type="button"
+                  aria-pressed={trackFilter === t.id}
+                  onClick={() => setTrackFilter(t.id)}
+                  className={`rounded-lg border px-4 py-1.5 text-sm transition-colors duration-150 ease-snap ${
+                    trackFilter === t.id
+                      ? 'border-accent bg-accent/15 font-semibold text-accent'
+                      : 'border-paper-line bg-paper text-paper-muted hover:border-paper-muted hover:text-paper-ink'
+                  }`}
+                >
+                  {t.name}（{t.blockIds.length}）
+                </button>
+              ))}
+            </nav>
           )}
           {(() => {
-            // 按大类分组（对齐知识地图的分组视角），保持全量块的原始顺序。
-            // 岗位在此页 = 「按岗位快速勾选」动作的素材（上方按钮），不是过滤也不是状态项
-            const groups = new Map<string, typeof view.blocks>()
-            for (const b of view.blocks) {
+            // 岗位 tab 过滤（知识地图同款）：点岗位只看该岗位的块，勾选状态跨 tab 保持。
+            // 按大类分组，保持过滤后块的原始顺序
+            const groups = new Map<string, typeof visibleBlocks>()
+            for (const b of visibleBlocks) {
               const arr = groups.get(b.category) ?? []
               arr.push(b)
               groups.set(b.category, arr)
@@ -329,11 +310,6 @@ export function SettingsForm(
           <div className="min-w-0 flex-1 space-y-0.5 text-sm">
             {saveError !== null && (
               <span role="alert" className="block text-mark-bad">{saveError}</span>
-            )}
-            {trackPicked !== null && (
-              <span role="status" data-testid="track-picked" className="block">
-                {trackPicked}
-              </span>
             )}
             {(freeLimitReached || overLimit) && (
               <span role="status" data-testid="free-cap-status" className="block">

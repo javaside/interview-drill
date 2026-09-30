@@ -73,50 +73,27 @@ test('免费墙：勾满 2 块当场提示；点第 3 块不勾上、提示弹�
   expect(jvm).toBeChecked()
 })
 
-test('岗位换题：点岗位=勾选替换为它的题（免费取前 2），来回切换差异可见、当前岗位高亮', async () => {
+test('岗位 tab 过滤（知识地图同款）：点岗位只看该岗位的块，勾选跨 tab 保持', async () => {
   const u = userEvent.setup()
   const v = {
     ...baseView,
-    tracks: [
-      { id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b2', 'b3'] },
-      { id: 'agent-dev', name: 'Agent 开发', blockIds: ['b3', 'b2'] },
-    ],
+    tracks: [{ id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b3'] }],
   } as never
   render(<SettingsForm view={v} api={mkApi() as never} />)
-  const java = screen.getByRole('button', { name: /Java 后端（3 块）/ })
-  const agent = screen.getByRole('button', { name: /Agent 开发（2 块）/ })
-  // 点 Java 后端 → 勾选替换为它的前 2 个（名额内），保存行明说「已按岗位勾选」
-  await u.click(java)
-  expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 2 个')
-  expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeChecked()
-  expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeChecked()
-  expect(screen.getByTestId('track-picked')).toHaveTextContent(/已按「Java 后端」勾选 2 个块（免费名额内）；升级解锁全部 3 块/)
-  expect(java).toHaveAttribute('aria-pressed', 'true')
-  expect(agent).toHaveAttribute('aria-pressed', 'false')
-  // 切到 Agent 开发 → 勾选整批换成 {JVM, Redis}，高亮跟着走——来回切换差异一目了然
-  await u.click(agent)
+  // 默认「全部」tab：三个块都在
+  expect(screen.getByRole('button', { name: '全部（3）' })).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeInTheDocument()
+  // 点岗位 tab → 只剩该岗位的块
+  await u.click(screen.getByRole('button', { name: 'Java 后端（2）' }))
+  expect(screen.getByRole('button', { name: 'Java 后端（2）' })).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByRole('checkbox', { name: /MySQL/ })).toBeInTheDocument()
+  expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeInTheDocument()
+  expect(screen.queryByRole('checkbox', { name: /Redis/ })).not.toBeInTheDocument()
+  // 过滤视野内勾选 → 切回全部，勾选还在
+  await u.click(screen.getByRole('checkbox', { name: /JVM/ }))
+  await u.click(screen.getByRole('button', { name: '全部（3）' }))
   expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeChecked()
-  expect(screen.getByRole('checkbox', { name: /Redis/ })).toBeChecked()
-  expect(screen.getByRole('checkbox', { name: /MySQL/ })).not.toBeChecked()
-  expect(agent).toHaveAttribute('aria-pressed', 'true')
-  expect(java).toHaveAttribute('aria-pressed', 'false')
-  // 已是该岗位选择时再点 → 幂等（名额态常驻在保存行）
-  await u.click(agent)
   expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 2 个')
-  expect(screen.getByTestId('free-cap-status')).toHaveTextContent(/已选满/)
-})
-
-test('付费岗位快捷勾选：岗位内全勾，无名额限制', async () => {
-  const u = userEvent.setup()
-  const v = {
-    ...baseView,
-    plan: 'paid',
-    tracks: [{ id: 'java-backend', name: 'Java 后端', blockIds: ['b1', 'b2', 'b3'] }],
-  } as never
-  render(<SettingsForm view={v} api={mkApi() as never} />)
-  await u.click(screen.getByRole('button', { name: /Java 后端（3 块）/ }))
-  expect(screen.getByTestId('selected-count')).toHaveTextContent('已勾 3 个')
-  expect(screen.getByRole('checkbox', { name: /JVM/ })).toBeChecked()
 })
 
 test('保存：调 postSettings + postBlocks，显示重排条数', async () => {
@@ -141,11 +118,11 @@ test('无块集变更时保存跳过 postBlocks（省一次请求，消掉第二
   expect(await screen.findByText(/设置未变化/)).toBeInTheDocument()
 })
 
-test('岗位无设置项：无 radio、无推荐徽标——岗位只以「一键换题」动作出现', () => {
+test('岗位无设置项：无 radio、无推荐徽标——岗位只以过滤 tab 出现（知识地图同款）', () => {
   render(<SettingsForm view={view} api={mkApi() as never} />)
   expect(screen.queryByRole('radio')).not.toBeInTheDocument()
   expect(screen.queryByText(/推荐/)).not.toBeInTheDocument()
-  expect(screen.getByText(/要面哪个岗位/)).toBeInTheDocument()
+  expect(screen.getByRole('navigation', { name: '岗位过滤' })).toBeInTheDocument()
 })
 
 test('勾选任何块都不受岗位概念影响：列表全量、勾哪刷哪', async () => {
