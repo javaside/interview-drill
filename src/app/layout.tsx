@@ -1,7 +1,13 @@
 import './globals.css'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../server/auth-config.js'
 import { NavBar } from './NavBar.js'
 export const metadata = { title: '面试刷题' }
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // 登录态从服务端传给 NavBar（全站无 SessionProvider，client useSession 不可用）；
+  // 各页本就 force-dynamic，layout 读会话无静态化损失
+  const session = await getServerSession(authOptions)
+  const authed = (session as { userId?: string } | null)?.userId !== undefined
   return (
     <html lang="zh-CN">
       <body className="grain flex min-h-dvh flex-col">
@@ -11,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           跳到主要内容
         </a>
-        <NavBar />
+        <NavBar authed={authed} />
         <main id="main" className="relative z-[2] flex-1">
           {children}
         </main>
