@@ -24,12 +24,20 @@ test('当前页链接带 aria-current=page', () => {
   expect(screen.getByRole('link', { name: '知识地图' })).not.toHaveAttribute('aria-current')
 })
 
-test('§10.1 守卫：导航绝不出现付费入口（无 /upgrade 链接、无购买/解锁/升级文案）', () => {
+test('「解锁」入口三态（2026-09-30 拍板）：免费常驻 / 付费消失 / 匿名不显示', () => {
+  // 免费：导航常驻「解锁」——解锁页原本只藏在地图锁块/免费墙提示里，用户找不到
+  const free = render(<NavBar authed plan="free" />)
+  expect(screen.getByTestId('nav-upgrade')).toHaveAttribute('href', '/upgrade')
+  expect(screen.getByTestId('nav-upgrade')).toHaveTextContent('解锁')
+  free.unmount()
+  // 付费：已解锁，入口自动消失（不出现任何付费文案）
+  const paid = render(<NavBar authed plan="paid" />)
+  expect(screen.queryByTestId('nav-upgrade')).not.toBeInTheDocument()
+  expect(/解锁|升级|付费/.test(document.body.textContent ?? '')).toBe(false)
+  paid.unmount()
+  // 匿名：不显示（免费口径由落地页自己讲）
   render(<NavBar />)
-  const links = screen.getAllByRole('link')
-  expect(links.every(a => a.getAttribute('href') !== '/upgrade')).toBe(true)
-  const text = document.body.textContent ?? ''
-  expect(/解锁|购买|升级|付费/.test(text)).toBe(false)
+  expect(screen.queryByTestId('nav-upgrade')).not.toBeInTheDocument()
 })
 
 // ===== 登录态：唯一新增元素是退出（登录入口不进导航——浏览零门槛哲学）=====

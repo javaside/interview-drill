@@ -6,11 +6,13 @@ import { withBase } from '../lib/base-path.js'
 
 /**
  * 页眉导航：考卷页眉——左品牌右链接，底部粗线压边。
- * §10.1 约束：**绝不放付费/升级入口**（tests/app/nav.test.tsx 守卫）。
- * 登录态：最右多一个安静的「退出」（signOut 回首页，落在匿名落地页）；
- * 未登录不渲染登录链接——浏览零门槛，登录入口由落地页/动作时刻提示承担。
+ * 登录态：免费用户多一个常驻「解锁」入口（2026-09-30 用户拍板：解锁页原本只藏在
+ * 地图锁块/免费墙提示里，用户找不到；付费后自动消失，匿名不显示——落地页自己会讲免费口径）；
+ * 最右是安静的「退出」（signOut 回首页，落在匿名落地页）。
  */
-export function NavBar({ authed = false }: { authed?: boolean }): React.JSX.Element {
+export function NavBar(
+  { authed = false, plan = null }: { authed?: boolean; plan?: 'free' | 'paid' | null },
+): React.JSX.Element {
   const pathname = usePathname()
   const items = [
     { href: '/', label: '刷题' },
@@ -44,6 +46,15 @@ export function NavBar({ authed = false }: { authed?: boolean }): React.JSX.Elem
               </Link>
             )
           })}
+          {plan === 'free' && (
+            <Link
+              href="/upgrade"
+              data-testid="nav-upgrade"
+              className="ml-1 rounded-lg bg-accent/15 px-3.5 py-1.5 text-sm font-semibold text-accent transition-colors duration-150 ease-snap hover:bg-accent/25"
+            >
+              解锁
+            </Link>
+          )}
           {authed && (
             <button
               type="button"

@@ -1,14 +1,20 @@
 import './globals.css'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../server/auth-config.js'
+import { getDb } from '../server/db/client.js'
+import { loadSettings } from '../server/db/adapters.js'
 import { NavBar } from './NavBar.js'
 import { AuthBridge } from './AuthBridge.js'
 export const metadata = { title: '面试刷题' }
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // 登录态从服务端传给 NavBar；完整 session 传给 AuthBridge（SessionProvider）——
-  // 其唯一职责是给 next-auth/react 的 signIn/signOut 下发 /drill 基路径（见 AuthBridge 注释）
+  // 其唯一职责是给 next-auth/react 的 signIn/signOut 下发 /drill 基路径（见 AuthBridge 注释）。
+  // plan（免费/付费）供 NavBar 的常驻「解锁」入口显隐——免费才显示，付费自动消失。
   const session = await getServerSession(authOptions)
-  const authed = (session as { userId?: string } | null)?.userId !== undefined
+  const userId = (session as { userId?: string } | null)?.userId
+  const plan = userId !== undefined
+    ? (await loadSettings(getDb(), userId)).plan
+    : null
   return (
     <html lang="zh-CN">
       <body className="grain flex min-h-dvh flex-col">
@@ -19,7 +25,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           跳到主要内容
         </a>
         <AuthBridge session={session}>
-          <NavBar authed={authed} />
+          <NavBar authed={userId !== undefined} plan={plan} />
           <main id="main" className="relative z-[2] flex-1">
             {children}
           </main>
