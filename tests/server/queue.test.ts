@@ -65,6 +65,7 @@ function mkDeps(t: TestDb, userId: string): DailyPayloadDeps {
       return {
         settings: { readyByDate: row.readyByDate, dailyCapacity: row.dailyCapacity, timezone: row.timezone },
         ent: entitlementOf(row),
+        selectionBlockIds: new Set(row.freeBlockIds),
       }
     },
     loadCards: () => loadAllCards(db),

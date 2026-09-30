@@ -11,16 +11,14 @@ import {
 } from './db/adapters.js'
 import { FREE_BLOCK_LIMIT } from '../lib/entitlement/entitlement.js'
 
-/** paid 用户全部块 id（done 复活范围）；free 由 freeBlockIds 决定 */
-async function allBlockIds(db: SqlRunner): Promise<string[]> {
-  return (await loadBlocks(db)).map(b => b.blockId)
-}
-
 export type ServerDeps = { db: SqlRunner; serverNowMs: number }
 
 /**
  * 设置屏视图（Task 11）：预填当前就绪日/容量/计划 + 块选择态。
- * blocks 复用 buildBlockMap，`selected = entry.unlocked`（免费=已选块，付费=全部）。
+ * blocks 复用 buildBlockMap；`selected` = 已保存勾选集（free_block_ids，空即空），
+ * 与排期同一口径、所见即所得——不能用 entry.unlocked（entitlement 口径，与勾选
+ * 无关）：付费用户手动收窄勾选后保存，回读若按 unlocked 显示会永远「默认全选」，
+ * 勾选等于白勾。unlocked（解锁边界）与 selected（排期范围）分家：前者归地图/自由刷。
  */
 export type SettingsView = {
   readyByDate: LocalDate | null
@@ -31,15 +29,15 @@ export type SettingsView = {
   trackId: string | null
   /** 岗位包列表（id/name + 块引用集），供块区「按岗位快速勾选」按钮 */
   tracks: Array<Pick<TrackRow, 'id' | 'name' | 'blockIds'>>
-  /** 按 DB 返回顺序的平铺块列表；category 供表单按大类分组渲染 */
+  /** 按大类分组的块列表；category 供表单分组渲染，selected = 已保存勾选（排期范围） */
   blocks: Array<{ blockId: string; blockName: string; category: string; cardCount: number; selected: boolean }>
 }
 
 /**
  * 装配设置屏视图（GET /api/settings 薄壳 + settings page 共用）：
- * loadSettings 取 readyByDate/dailyCapacity/plan/trackId；buildBlockMap 取块列表，
- * selected = unlocked（不发明新查询，复用 Task 9 的映射管线）。
- * trackId 悬空（track 已下线）时归一化为 null——UI 不必处理幽灵值。
+ * loadSettings 取 readyByDate/dailyCapacity/plan/trackId + 勾选集；buildBlockMap 取块列表
+ * （真实题数）。selected 由勾选集判定（见类型注释）；trackId 悬空（track 已下线）时
+ * 归一化为 null——UI 不必处理幽灵值。
  */
 export async function loadSettingsView(deps: ServerDeps, userId: string): Promise<SettingsView> {
   const [row, entries, tracks] = await Promise.all([
@@ -48,6 +46,8 @@ export async function loadSettingsView(deps: ServerDeps, userId: string): Promis
     loadTracks(deps.db),
   ])
   const trackIds = new Set(tracks.map(t => t.id))
+  // 回放与排期同一口径：勾选集本身，空即空——所见即所得，无隐藏兜底
+  const selectedIds = new Set(row.freeBlockIds)
   return {
     readyByDate: row.readyByDate,
     dailyCapacity: row.dailyCapacity,
@@ -59,7 +59,7 @@ export async function loadSettingsView(deps: ServerDeps, userId: string): Promis
       blockName: e.blockName,
       category: e.category,
       cardCount: e.cardCount,
-      selected: e.unlocked,
+      selected: selectedIds.has(e.blockId),
     })),
   }
 }
@@ -96,9 +96,9 @@ export async function applySettingsChange(
   const row = await loadSettings(deps.db, userId)
   const today = localDateOf(deps.serverNowMs, row.timezone)
   // 存量 done 复活（v2 迁移）：v1 自动毕业的卡救回排期（两条模式路径都要；
-  // 常备路径 reviveDoneCards 内部补种滚动计划，sprint 路径由随后的重排接管）
-  await reviveDoneCards(deps.db, userId,
-    row.plan === 'paid' ? await allBlockIds(deps.db) : row.freeBlockIds, today)
+  // 常备路径 reviveDoneCards 内部补种滚动计划，sprint 路径由随后的重排接管）。
+  // 复活范围 = 排期范围同一口径（勾选集）——排期不认的块复活了也没人消费
+  await reviveDoneCards(deps.db, userId, row.freeBlockIds, today)
   if (row.readyByDate === null || diffDays(row.readyByDate, today) < 0) {
     return { replanned: 0, changed: true }   // 常备模式：滚动计划原样保留
   }
@@ -108,11 +108,12 @@ export async function applySettingsChange(
 }
 
 /**
- * 块集变更入口（§5.5 条件 4）：diff 新旧块集。
+ * 块集变更入口（§5.5 条件 4）：diff 新旧块集。勾选集 = 排期范围（两档同语义：
+ * 免费另兼免费墙边界；付费 = 纯排期范围，自由刷/语料不受限）。
  * - 减块：pauseCardsInBlocks（phase→paused，plan 保留，不进今日队列）。
  * - 加块：新块卡本无状态行，下次 buildDailyPayload 自然作为 fresh 装配；曾暂停的
  *   （加回）恢复 phase 且 plan 原样保留（plan-once → 往返幂等）。
- * 更新 freeBlockIds。返回暂停/恢复的卡数。
+ * 更新 freeBlockIds（对付费同样落库——设置页回放勾选态、排期范围都读它）。
  *
  * **服务端免费墙（此前仅 UI 拦截，API 直调可写坏 free_block_ids，令 entitlementOf
  * 在别处抛异常拖垮地图/cram 页）**：块 id 必须真实存在；free 用户去重后 ≤

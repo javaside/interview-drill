@@ -110,7 +110,13 @@ const toSchedulable = (c: CardSnapshot) => ({ id: c.cardId, blockId: c.blockId, 
 
 export type DailyPayloadDeps = {
   userId: string
-  loadSettings(): Promise<{ settings: Settings & { timezone: string }; ent: Entitlement }>
+  loadSettings(): Promise<{
+    settings: Settings & { timezone: string }
+    ent: Entitlement
+    /** 排期范围 = 已保存勾选集（free_block_ids 原样，空即空——没有隐藏兜底；
+     *  ent 只管语料/自由刷边界：付费任意块可在地图自由刷，不受勾选影响） */
+    selectionBlockIds: ReadonlySet<string>
+  }>
   loadCards(): Promise<{ cards: CardSnapshot[]; categories: Map<string, string> }>
   /** 偏移域卡状态（plan 已由 adapter diffDays 转相对 today） */
   loadStates(): Promise<CardState[]>
@@ -122,20 +128,22 @@ export type DailyPayloadDeps = {
 }
 
 /**
- * 今日队列装配（§6/§4.3）：entitlement 过滤 → schedule（plan-once，含 reservedLoad
- * ——已有计划卡占容量，§5.1）→ 新计划转回绝对日期落盘 → 每张队列卡预生成 K 份变体
- * → daily_session 定分母。deps 注入全部 IO（集成测试经 pglite）。
+ * 今日队列装配（§6/§4.3）：**勾选集过滤**（排期范围 = 设置页勾了哪些题，空即空——
+ * 没有隐藏兜底；空集用户首页见「今日队列是空的」引导去设置）→ schedule（plan-once，
+ * 含 reservedLoad——已有计划卡占容量，§5.1）→ 新计划转回绝对日期落盘 → 每张队列卡
+ * 预生成 K 份变体 → daily_session 定分母。deps 注入全部 IO（集成测试经 pglite）。
  *
  * 变体复现口径：预生成用**取队列时**的 s 与 reviewCount（与 /api/sync 回放的
  * 复现契约一致，见 replay.variantAt）。
  */
 export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPayload> {
-  const { settings, ent } = await deps.loadSettings()
+  const { settings, ent, selectionBlockIds } = await deps.loadSettings()
   const today = localDateOf(deps.serverNowMs, settings.timezone)
   const { cards, categories } = await deps.loadCards()
 
-  // 先按 entitlement 过滤（需 blockId），再投影为 SchedulableCard
-  const entitled = entitledCards(ent, cards.map(toSchedulable))
+  // 排期范围 = 已保存勾选集（勾了哪些题就刷哪些题）。ent 保留给干扰项语料
+  // （buildDistractorPools）：付费语料全量，不受勾选影响。
+  const entitled = cards.map(toSchedulable).filter(c => selectionBlockIds.has(c.blockId))
   const states = await deps.loadStates()
 
   const result = schedule(
@@ -207,7 +215,8 @@ export async function practiceQueue(
   const today = localDateOf(deps.serverNowMs, settings.timezone)
   const { cards, categories } = await deps.loadCards()
 
-  // 免费墙：只刷解锁块
+  // 自由刷边界 = entitlement（与排期范围分家）：免费只刷勾选块（免费墙），
+  // 付费任意块可刷——解锁承诺由这里兑现，不受设置页勾选（排期范围）限制
   const inBlock = entitledCards(ent, cards.map(toSchedulable))
     .filter(c => c.blockId === blockId)
   const states = await deps.loadStates()

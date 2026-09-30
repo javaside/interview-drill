@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm'
 import { createTestDb, type TestDb } from './helpers.js'
-import { applySettingsChange, applyBlockSelection, type ServerDeps } from '../../src/server/settings.js'
+import { applySettingsChange, applyBlockSelection, loadSettingsView, type ServerDeps } from '../../src/server/settings.js'
 import { loadSettings } from '../../src/server/db/adapters.js'
 import { buildDailyPayload } from '../../src/server/queue.js'
 import { payloadDepsOf } from '../../src/server/deps.js'
@@ -266,6 +266,126 @@ test('paid 不受免费块数限制：3 块一次提交正常生效', async () =
     await applyBlockSelection(mkDeps(t), 'u1', ['b1', 'b2', 'b3'])   // 不抛即过
     const s = await loadSettings(runner(t), 'u1')
     expect(s.freeBlockIds).toEqual(['b1', 'b2', 'b3'])
+  } finally {
+    await t.pg.close()
+  }
+})
+
+// ---------- 勾选集 = 排期范围（2026-09-30 语义重整）：paid 不再「默认全选、勾了白勾」 ----------
+
+test('paid 设置页勾选态回放真实勾选集（不再是 entitlement 的恒全选）', async () => {
+  const t = await seedPaidBlocks()   // paid、free_block_ids=['b1']、b1/b2/b3 各 1 卡
+  try {
+    const view = await loadSettingsView(mkDeps(t), 'u1')
+    const byId = new Map(view.blocks.map(b => [b.blockId, b.selected]))
+    expect(byId.get('b1')).toBe(true)
+    expect(byId.get('b2')).toBe(false)
+    expect(byId.get('b3')).toBe(false)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('free 设置页勾选态回放不变（免费墙边界 = 勾选集）', async () => {
+  const t = await seedBlocksFixture()   // free、free_block_ids=['b1','b2']
+  try {
+    const view = await loadSettingsView(mkDeps(t), 'u1')
+    const byId = new Map(view.blocks.map(b => [b.blockId, b.selected]))
+    expect(byId.get('b1')).toBe(true)
+    expect(byId.get('b2')).toBe(true)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('paid 排期只认勾选集：未勾块的新卡（fresh）不再涌入排期', async () => {
+  const t = await seedPaidBlocks()   // 三块卡全是 fresh（无 card_state）
+  try {
+    // sprint 窗口下取队列：旧口径（entitlement=全部）会给 3 张卡都种计划
+    await t.db.execute(sql`update user_settings set ready_by_date = ${plusDays(21)} where user_id = 'u1'`)
+    const p = await buildDailyPayload(payloadDepsOf(runner(t), 'u1', SERVER_NOW))
+    expect(p.queue.length).toBeGreaterThan(0)
+    expect(p.queue.every(q => q.cardId.startsWith('b1'))).toBe(true)
+    // fresh 卡的排期落盘范围也只限勾选块——b2/b3 不产生任何卡状态行
+    const rows = await t.db.execute<{ card_id: string }>(sql`select card_id from card_state`)
+    expect(rows.rows.map(r => r.card_id)).toEqual(['b1-c0'])
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('paid done 复活范围 = 勾选集：未勾块的 done 卡不动', async () => {
+  const t = await seedDoneOutsideEntitlement()   // free 夹具：b1 勾选、b2 未勾
+  await t.db.execute(sql`update user_settings set plan = 'paid' where user_id = 'u1'`)
+  try {
+    await applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 30 })
+    const st = await t.db.execute<{ card_id: string; phase: string }>(sql`
+      select card_id, phase from card_state order by card_id`)
+    const byId = new Map(st.rows.map(r => [r.card_id, r.phase]))
+    expect(byId.get('c0')).toBe('learning')   // 勾选块内复活
+    expect(byId.get('c9')).toBe('done')       // 未勾块不动——排期不认它，复活了也没人消费
+  } finally {
+    await t.pg.close()
+  }
+})
+
+// ---------- 勾选集 = 排期范围，所见即所得（2026-09-30 第六轮）：空就是空，无隐藏兜底 ----------
+// 「paid 空集兜底=全部」规则已废：它需要区分「从未表达/显式清空」两种空集，越搞越复杂；
+// 现在勾选集空 → 设置页 0 勾、排期空、首页「今日队列是空的」引导去设置——诚实且简单。
+
+async function seedPaidNeverCurated(): Promise<TestDb> {
+  const t = await seedPaidBlocks()   // b1/b2/b3 各 1 fresh 卡
+  await t.db.execute(sql`
+    update user_settings set free_block_ids = '[]'::jsonb, ready_by_date = ${plusDays(21)}
+    where user_id = 'u1'`)
+  return t
+}
+
+test('paid 空勾选集：设置页回放 0 勾（所见即所得，不弹回全选）', async () => {
+  const t = await seedPaidNeverCurated()
+  try {
+    const view = await loadSettingsView(mkDeps(t), 'u1')
+    expect(view.blocks.every(b => !b.selected)).toBe(true)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('paid 空勾选集：排期为空（勾了哪些题就刷哪些题，没勾就不刷）', async () => {
+  const t = await seedPaidNeverCurated()
+  try {
+    const p = await buildDailyPayload(payloadDepsOf(runner(t), 'u1', SERVER_NOW))
+    expect(p.queue).toHaveLength(0)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('paid 空勾选集：done 复活范围同为空（复活范围=排期范围）', async () => {
+  const t = await seedDoneOutsideEntitlement()   // c0(b1) 与 c9(b2) 均 done
+  await t.db.execute(sql`
+    update user_settings set plan = 'paid', free_block_ids = '[]'::jsonb where user_id = 'u1'`)
+  try {
+    await applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 30 })
+    const st = await t.db.execute<{ card_id: string; phase: string }>(sql`
+      select card_id, phase from card_state order by card_id`)
+    const byId = new Map(st.rows.map(r => [r.card_id, r.phase]))
+    expect(byId.get('c0')).toBe('done')   // 排期范围空 → 谁都不复活
+    expect(byId.get('c9')).toBe('done')
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('显式清空的勾选集可保存（free/paid 皆可）：postBlocks 空数组 = 首页不出新题', async () => {
+  const t = await seedPaidBlocks()
+  try {
+    const r = await applyBlockSelection(mkDeps(t), 'u1', [])
+    expect(r).toEqual({ paused: 0, added: 0 })
+    const s = await loadSettings(runner(t), 'u1')
+    expect(s.freeBlockIds).toEqual([])
+    const view = await loadSettingsView(mkDeps(t), 'u1')
+    expect(view.blocks.every(b => !b.selected)).toBe(true)
   } finally {
     await t.pg.close()
   }
