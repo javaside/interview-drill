@@ -25,7 +25,7 @@ pnpm invite:new N [备注]   # 铸造邀请码（读 .env.local）
 依赖严格单向 **`src/app → src/server → src/lib`**：
 
 - **`src/lib/` 纯核，零 IO**，全部可单测：`scheduler/`（冲刺排期，非通用 SM-2/FSRS）、`options/`（干扰项抽取）、`entitlement/`（免费=2块/付费=全量）、`mastery/`、`billing/`、`content/`（题卡解析）、`base-path.ts`。
-- **`src/server/` 编排层**：纯核注入 IO。**SQL 只允许出现在 `src/server/db/adapters.ts`**。业务错误直接 `throw new Error('中文消息')`，路由薄壳用 `errorResponse()` 转 400 + `{error}`，客户端 `readJson` 透传到 `role=alert`——不要自己发明错误协议。
+- **`src/server/` 编排层**：纯核注入 IO。**SQL 只出现在这一层，绝不下沉 `lib/`/`app/`**——主体集中在 `src/server/db/adapters.ts`，`content-upsert/run.ts`、`admin.ts`、`invite.ts`、`auth.ts` 各有少量事务内联 SQL。业务错误直接 `throw new Error('中文消息')`，路由薄壳用 `errorResponse()` 转 400 + `{error}`，客户端 `readJson` 透传到 `role=alert`——不要自己发明错误协议。
 - **`src/app/` 薄壳**：server component 直接调 server 层函数（不经 HTTP），RSC 边界只传可序列化 payload，绝不传 deps。页面均 `force-dynamic`。路由：`/` 刷题（匿名=落地页 Landing）、`/practice` 自由刷、`/learn` 学习目录、`/map` 知识地图、`/settings`、`/upgrade` 兑换/购买、`/q/[id]` 公开题目页、`/signin`、`/backstage` 管理员铸码后台。
 - **`src/client/`**：浏览器 API 客户端 + 离线引擎（IndexedDB 队列 + 重连回放）。
 - **`content/`**：题库源文件（Markdown + front matter），`大类/知识块/ULID.md`，进 Git 不进 CMS；岗位包在 `content/tracks/*.yml`。
@@ -47,8 +47,8 @@ vitest 双 project：`node`（`tests/**/*.test.ts`，纯核单测 + PGlite 集�
 
 - 正文分「入门版」（零基础类比 + 术语映射「白话（术语名）」+ 末尾术语速查行）与「进阶版」，二者用 `<!--advanced-->` 分隔——**分隔符必须写全**，少个 `--` 不报错，进阶内容会静默混进入门版。
 - 正文 `**` 与反引号必须配对（奇数即被 parse 拒）；扩 markdown 支持前先用解析器穷举内容语法面（`split*.ts`），别靠脑内枚举——表格、斜体都这样漏过。
-- **atomic 卡只写 1 条要点**（多要点改 enumeration，否则第二条只学不考）；enumeration 块池下界 12，每块至少 5 张卡才够；sequence 卡要点 text 不得自带顺序标号（「第N步」会被 checkSequenceKeyPointText 拒）；judgment 卡要 conclusion。
-- 要点文本避开「等」字（审计 KP5 连「等待/幂等」都拒，用「候/同值/排队/重复执行」替代）；块名避开「基础/进阶/其他/高频」（VAGUE_BLOCK_WORDS）。
+- **atomic 卡只写 1 条要点**（多要点改 enumeration，否则第二条只学不考）；同块干扰项池下界按 cardType 分派（`MIN_BLOCK_POOL`：enumeration/comparison 12、judgment 8、atomic 6、sequence 0）——推论是 ready 块至少约 5 张卡；sequence 卡要点 text 不得自带顺序标号（「第N步」会被 checkSequenceKeyPointText 拒）；judgment 卡 front matter 必填 conclusion（schema 强制）。
+- 要点文本避开承载词（KP5 的 CARRIER_WORDS：「等/多种/一系列/若干/之类/诸如/各种」——连「等待/幂等」都命中，措辞用「候/同值/排队/重复执行」替代）；块名避开 VAGUE_BLOCK_WORDS（基础/进阶/高级/其他/常见问题/高频）。
 - YAML 双引号内不能嵌英文双引号（改中文「」）。批量生成用 Python 三引号 + `kp()`/`emit()` 函数模板，别手拼转义。
 - **扩产流程照旧**：python 模板 → `pnpm content:audit` → `DATABASE_URL=... pnpm content:upsert` → `pnpm test` → commit。改了 content/ 记得生产也要重跑 content:upsert。
 
