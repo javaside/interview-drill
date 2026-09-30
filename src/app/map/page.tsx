@@ -4,7 +4,7 @@ import { buildBlockMap, filterEntriesByTrack } from '../../server/map.js'
 import type { BlockMapEntry } from '../../server/map.js'
 import { mapDepsOf } from '../../server/deps.js'
 import { authOptions } from '../../server/auth-config.js'
-import { loadSettings, loadTracks, loadBlocks } from '../../server/db/adapters.js'
+import { loadTracks, loadBlocks } from '../../server/db/adapters.js'
 import { KnowledgeMap } from './KnowledgeMap.js'
 
 export const dynamic = 'force-dynamic'
@@ -52,11 +52,11 @@ export default async function MapPage(
     )
   }
 
-  const [entries, settings] = await Promise.all([
-    buildBlockMap(mapDepsOf(getDb(), userId)),
-    loadSettings(getDb(), userId),
-  ])
-  const trackId = knownTrack(trackParam ?? settings.trackId)
+  const entries = await buildBlockMap(mapDepsOf(getDb(), userId))
+  // 「全部」= 显式无参访问（tab href=/map），不再回退 settings.trackId——
+  // 该字段是历史遗留（设置页岗位设置项已删、无人写入），回退会让「全部」永远
+  // 被旧偏好劫持（用户实测：选全部也高亮架构师）。URL 是 tab 状态的唯一事实来源。
+  const trackId = knownTrack(trackParam ?? null)
   const filtered = filterEntriesByTrack(entries, tracks, trackId)
   // 刊头统计：真实库量（非演示数字）
   const totals = {
