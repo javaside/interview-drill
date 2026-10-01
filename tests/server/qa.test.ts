@@ -1,15 +1,20 @@
 import { sql } from 'drizzle-orm'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { createTestDb, type TestDb } from './helpers.js'
-import { qaHandler, qaConfigOf, resetQaRateLimiterForTest } from '../../src/server/qa.js'
+import { qaHandler, resetQaRateLimiterForTest } from '../../src/server/qa.js'
+import type { ProviderSelection } from '../../src/lib/ai/qa.js'
 import type { SqlRunner } from '../../src/server/db/adapters.js'
 
 /**
  * AI 问答编排层集成测试（PGlite）：免费墙（未解锁块不给问）、
  * 上下文只含目标卡（provider 请求体里没有其他卡的内容）、provider 错误映射、限流。
+ * 供应商选择（各家独立环境变量）在 tests/lib/ai/qa.test.ts 单测。
  */
 
-const CONFIG = { baseUrl: 'https://ai.example/v4', apiKey: 'sk-test', model: 'test-model' }
+const READY: ProviderSelection = {
+  status: 'ready',
+  provider: { id: 'zhipu', label: '智谱', baseUrl: 'https://ai.example/v4', apiKey: 'sk-test', model: 'test-model' },
+}
 
 let t: TestDb
 beforeEach(async () => {
@@ -43,28 +48,25 @@ function call(over: Partial<Parameters<typeof qaHandler>[0]> = {}) {
   return qaHandler({
     db: runner(), userId: 'u1', cardId: 'c1',
     history: [{ role: 'user', content: '这道题没看懂' }],
-    config: CONFIG, fetchImpl: okFetch(),
+    selection: READY, fetchImpl: okFetch(),
     now: () => 1_000,
     ...over,
   })
 }
 
-describe('qaHandler：配置与输入校验', () => {
-  test('缺 AI_API_KEY → 中文配置提示', () => {
-    expect(qaConfigOf({})).toBeNull()
-    expect(qaConfigOf({ AI_API_KEY: '' })).toBeNull()
-    expect(qaConfigOf({ AI_API_KEY: 'k' })).toEqual({
-      baseUrl: 'https://open.bigmodel.cn/api/paas/v4', apiKey: 'k', model: 'glm-4.7-flash',
-    })
-    expect(qaConfigOf({ AI_API_KEY: 'k', AI_BASE_URL: 'https://x/v1/', AI_MODEL: 'm' })).toEqual({
-      baseUrl: 'https://x/v1', apiKey: 'k', model: 'm',
-    })
+describe('qaHandler：供应商选择结果的接线', () => {
+  test('selection=off → 抛下线提示（各家 key 变量名在消息里）', async () => {
+    await expect(call({ selection: { status: 'off', message: 'AI 问答还没有配置（在环境变量里配 ZHIPU_API_KEY 或 DEEPSEEK_API_KEY 即可启用）' } }))
+      .rejects.toThrow('ZHIPU_API_KEY 或 DEEPSEEK_API_KEY')
   })
 
-  test('config=null → 抛配置缺失（功能未配置时不打 provider）', async () => {
-    await expect(call({ config: null })).rejects.toThrow('AI 问答还没有配置')
+  test('selection=misconfigured → 透传纯核拼好的中文消息', async () => {
+    await expect(call({ selection: { status: 'misconfigured', message: 'AI_PROVIDER 指定了 deepseek，但还没有配 DEEPSEEK_API_KEY' } }))
+      .rejects.toThrow('还没有配 DEEPSEEK_API_KEY')
   })
+})
 
+describe('qaHandler：输入校验', () => {
   test('题目不存在 → 抛「题目不存在或已下线」', async () => {
     await expect(call({ cardId: 'nope' })).rejects.toThrow('题目不存在或已下线')
   })
@@ -121,14 +123,14 @@ describe('qaHandler：免费墙与上下文隔离', () => {
 })
 
 describe('qaHandler：provider 错误映射与限流', () => {
-  test('网络异常 → 「AI 服务连不上」', async () => {
+  test('网络异常 → 错误消息带供应商中文名', async () => {
     const broken = vi.fn(async () => { throw new TypeError('fetch failed') }) as unknown as typeof fetch
-    await expect(call({ fetchImpl: broken })).rejects.toThrow('AI 服务连不上')
+    await expect(call({ fetchImpl: broken })).rejects.toThrow('智谱 连不上')
   })
 
-  test('非 2xx → HTTP 状态带进中文消息', async () => {
+  test('非 2xx → 供应商名 + HTTP 状态带进中文消息', async () => {
     const s502 = vi.fn(async () => new Response('bad gateway', { status: 502 })) as unknown as typeof fetch
-    await expect(call({ fetchImpl: s502 })).rejects.toThrow('AI 服务暂时不可用（HTTP 502）')
+    await expect(call({ fetchImpl: s502 })).rejects.toThrow('智谱 暂时不可用（HTTP 502）')
   })
 
   test('2xx 但无内容 → 「AI 没有返回内容」', async () => {

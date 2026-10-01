@@ -1,4 +1,7 @@
-import { sanitizeHistory, buildQaMessages, MAX_HISTORY_MESSAGES, MAX_MESSAGE_CHARS } from '../../../src/lib/ai/qa.js'
+import {
+  sanitizeHistory, buildQaMessages, selectProvider, providerKeyHints,
+  MAX_HISTORY_MESSAGES, MAX_MESSAGE_CHARS,
+} from '../../../src/lib/ai/qa.js'
 
 const card = {
   cardId: 'mysql/mvcc-undo/c1',
@@ -70,4 +73,73 @@ test('末条不是 user（空历史 / assistant 结尾）→ 抛「没有可回�
   expect(() =>
     buildQaMessages(card, [{ role: 'assistant', content: 'a' }]),
   ).toThrow('没有可回答的问题')
+})
+
+describe('selectProvider：每家独立环境变量，配哪家用哪家', () => {
+  test('什么都没配 → off，提示列出各家 key 变量名', () => {
+    const sel = selectProvider({})
+    expect(sel.status).toBe('off')
+    if (sel.status !== 'ready') expect(sel.message).toContain(providerKeyHints())
+  })
+
+  test('只配智谱 → 用智谱默认 base/model', () => {
+    const sel = selectProvider({ ZHIPU_API_KEY: 'zk' })
+    expect(sel).toEqual({
+      status: 'ready',
+      provider: { id: 'zhipu', label: '智谱', baseUrl: 'https://open.bigmodel.cn/api/paas/v4', apiKey: 'zk', model: 'glm-4.7-flash' },
+    })
+  })
+
+  test('只配 DeepSeek → 用 DeepSeek', () => {
+    const sel = selectProvider({ DEEPSEEK_API_KEY: 'dk' })
+    expect(sel.status).toBe('ready')
+    if (sel.status === 'ready') {
+      expect(sel.provider.id).toBe('deepseek')
+      expect(sel.provider.baseUrl).toBe('https://api.deepseek.com')
+      expect(sel.provider.model).toBe('deepseek-flash')
+    }
+  })
+
+  test('两家都配且未指定 AI_PROVIDER → 按注册表顺序取第一家（zhipu）', () => {
+    const sel = selectProvider({ ZHIPU_API_KEY: 'zk', DEEPSEEK_API_KEY: 'dk' })
+    expect(sel.status).toBe('ready')
+    if (sel.status === 'ready') expect(sel.provider.id).toBe('zhipu')
+  })
+
+  test('AI_PROVIDER 显式指定 DeepSeek → 覆盖表序', () => {
+    const sel = selectProvider({ ZHIPU_API_KEY: 'zk', DEEPSEEK_API_KEY: 'dk', AI_PROVIDER: 'deepseek' })
+    expect(sel.status).toBe('ready')
+    if (sel.status === 'ready') expect(sel.provider.id).toBe('deepseek')
+  })
+
+  test('AI_PROVIDER 不认识 → misconfigured 列出可选值', () => {
+    const sel = selectProvider({ AI_PROVIDER: 'kimi' })
+    expect(sel.status).toBe('misconfigured')
+    if (sel.status !== 'ready') expect(sel.message).toContain('zhipu / deepseek')
+  })
+
+  test('AI_PROVIDER 指定了一家但 key 没配 → misconfigured 点名缺哪个变量', () => {
+    const sel = selectProvider({ ZHIPU_API_KEY: 'zk', AI_PROVIDER: 'deepseek' })
+    expect(sel.status).toBe('misconfigured')
+    if (sel.status !== 'ready') expect(sel.message).toContain('DEEPSEEK_API_KEY')
+  })
+
+  test('各家 BASE_URL / MODEL 可独立覆盖（尾斜杠归一）', () => {
+    const sel = selectProvider({
+      DEEPSEEK_API_KEY: 'dk',
+      DEEPSEEK_BASE_URL: 'https://proxy.example/v1/',
+      DEEPSEEK_MODEL: 'deepseek-v4-pro',
+    })
+    expect(sel.status).toBe('ready')
+    if (sel.status === 'ready') {
+      expect(sel.provider.baseUrl).toBe('https://proxy.example/v1')
+      expect(sel.provider.model).toBe('deepseek-v4-pro')
+    }
+  })
+
+  test('AI_PROVIDER 空串 = 未指定（走自动探测）', () => {
+    const sel = selectProvider({ AI_PROVIDER: '  ', DEEPSEEK_API_KEY: 'dk' })
+    expect(sel.status).toBe('ready')
+    if (sel.status === 'ready') expect(sel.provider.id).toBe('deepseek')
+  })
 })

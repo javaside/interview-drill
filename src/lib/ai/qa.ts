@@ -1,11 +1,14 @@
 import { splitDetail } from '../content/split.js'
 
 /**
- * AI 问答纯核（learn 页每题一个问答框）：只做消息装配与历史清洗，零 IO。
+ * AI 问答纯核（learn 页每题一个问答框）：供应商选择 + 消息装配 + 历史清洗，零 IO。
  *
  * 上下文隔离铁律：`buildQaMessages` 的入参**只有一张卡**（题面 + 题解），
  * 结构上不可能混入其他卡——每道题的问答上下文独立，互不污染。
  * 多轮历史由客户端按卡持有、随请求携带，服务端不落库（刷新即清）。
+ *
+ * 供应商选择：每家一组独立环境变量（各自的 key/base/model），配哪家用哪家——
+ * 没有公用 key。加供应商 = 往 PROVIDERS 表加一行，错误提示自动跟随。
  */
 
 export type QaRole = 'user' | 'assistant'
@@ -19,6 +22,85 @@ export type QaCard = {
 }
 
 export type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string }
+
+// ---- 供应商注册表（表驱动：加家 = 加一行） ----
+
+/** 一家供应商的变量约定与默认值（base/model 均可被同名环境变量覆盖） */
+export type ProviderSpec = {
+  id: string
+  /** 中文名，用于错误提示（如「DeepSeek 连不上」） */
+  label: string
+  apiKeyEnv: string
+  baseUrlEnv: string
+  modelEnv: string
+  defaultBaseUrl: string
+  defaultModel: string
+}
+
+export const PROVIDERS: readonly ProviderSpec[] = [
+  {
+    id: 'zhipu', label: '智谱',
+    apiKeyEnv: 'ZHIPU_API_KEY', baseUrlEnv: 'ZHIPU_BASE_URL', modelEnv: 'ZHIPU_MODEL',
+    defaultBaseUrl: 'https://open.bigmodel.cn/api/paas/v4', defaultModel: 'glm-4.7-flash',
+  },
+  {
+    id: 'deepseek', label: 'DeepSeek',
+    apiKeyEnv: 'DEEPSEEK_API_KEY', baseUrlEnv: 'DEEPSEEK_BASE_URL', modelEnv: 'DEEPSEEK_MODEL',
+    defaultBaseUrl: 'https://api.deepseek.com', defaultModel: 'deepseek-flash',
+  },
+]
+
+/** 选中后的运行时配置（baseUrl 已去尾斜杠，可直接拼 /chat/completions） */
+export type QaProviderRuntime = {
+  id: string
+  label: string
+  baseUrl: string
+  apiKey: string
+  model: string
+}
+
+/** 选择结果：ready=可用；off/misconfigured 带 server 直接抛给用户的中文消息 */
+export type ProviderSelection =
+  | { status: 'ready'; provider: QaProviderRuntime }
+  | { status: 'off' | 'misconfigured'; message: string }
+
+/** 各家 key 变量名清单，供「怎么配」提示自动跟随注册表 */
+export function providerKeyHints(): string {
+  return PROVIDERS.map(p => p.apiKeyEnv).join(' 或 ')
+}
+
+function resolve(spec: ProviderSpec, env: Record<string, string | undefined>): QaProviderRuntime {
+  return {
+    id: spec.id,
+    label: spec.label,
+    baseUrl: ((env[spec.baseUrlEnv] ?? '').trim().replace(/\/+$/, '')) || spec.defaultBaseUrl,
+    apiKey: env[spec.apiKeyEnv] ?? '',
+    model: (env[spec.modelEnv] ?? '').trim() || spec.defaultModel,
+  }
+}
+
+/**
+ * 供应商选择（纯函数）：配哪家用哪家。
+ * - 显式 `AI_PROVIDER` → 用指定家（key 没配/名字不认识 = 配置错误，给针对性提示）；
+ * - 未指定 → 按注册表顺序取第一家有 key 的；一家都没有 = 功能下线（off）。
+ */
+export function selectProvider(env: Record<string, string | undefined>): ProviderSelection {
+  const wanted = (env.AI_PROVIDER ?? '').trim()
+  if (wanted !== '') {
+    const spec = PROVIDERS.find(p => p.id === wanted)
+    if (spec === undefined) {
+      return { status: 'misconfigured', message: `AI_PROVIDER=${wanted} 不认识（可选：${PROVIDERS.map(p => p.id).join(' / ')}）` }
+    }
+    if ((env[spec.apiKeyEnv] ?? '') === '') {
+      return { status: 'misconfigured', message: `AI_PROVIDER 指定了 ${spec.id}，但还没有配 ${spec.apiKeyEnv}` }
+    }
+    return { status: 'ready', provider: resolve(spec, env) }
+  }
+  for (const spec of PROVIDERS) {
+    if ((env[spec.apiKeyEnv] ?? '') !== '') return { status: 'ready', provider: resolve(spec, env) }
+  }
+  return { status: 'off', message: `AI 问答还没有配置（在环境变量里配 ${providerKeyHints()} 即可启用）` }
+}
 
 /** 单条消息长度上限：防把 provider 请求撑爆，也防用户粘贴整篇文章当问题 */
 export const MAX_MESSAGE_CHARS = 2000
