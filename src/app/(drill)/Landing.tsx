@@ -11,11 +11,21 @@ export function Landing({ totals, tracks }: {
   totals: { cards: number; blocks: number; categories: number }
   tracks: readonly string[]
 }): React.JSX.Element {
+  // 怎么用：四步一环扣一环。讲「用户要做什么、会得到什么」，与下面的差异点是两个角度。
+  const loop: Array<{ step: string; body: string }> = [
+    { step: '学', body: '按知识块通读教材，先理解再做题——不是上来就考你。' },
+    { step: '练', body: '按排期出题，交卷立刻出结果；想专刷某块也行。' },
+    { step: '判', body: '逐条判到要点，错勾、漏选都指出来——答错的明天优先再来。' },
+    { step: '排', body: '定个目标日期，倒推每天刷几题，到日子刚好就绪。' },
+  ]
+
   const props: Array<{ title: string; body: string }> = [
     {
-      title: '判到要点，不只对错',
-      body: '每题拆成要点逐条判分：答错的明天优先再来，会的少打扰。',
+      title: '不懂就追问 AI',
+      body: '每道题都能追问：这个选项为什么不对、交卷后我错在哪。它只聊这一道题——不跑题，也不会被拿去干别的。',
     },
+    // 注意：「判到要点」已并入上面「怎么用」的「判」一步，此处不再重复列一条
+    // （重复既啰嗦，又会让卖点变成奇数条、双列网格末行留空看着像坏了）。
     {
       title: '白话讲解，零基础能读',
       body: '入门版用类比讲「为什么」，术语带白话映射；进阶内容折叠待展开。',
@@ -46,7 +56,7 @@ export function Landing({ totals, tracks }: {
             </h1>
             <p className="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-paper-muted">
               每道题拆成要点判分：答错的要点明天优先再来；
-              每题配白话讲解，零基础也读得懂术语背后的门道。
+              配白话讲解，不懂就追问 AI——它只聊这一道题。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link href={`/api/auth/signin?callbackUrl=${withBase('/')}`} className="btn-primary text-base" data-testid="signin-cta">
@@ -74,7 +84,24 @@ export function Landing({ totals, tracks }: {
         </div>
       </header>
 
-      {/* ===== 四条价值：安静的编号列表，不搞卡片墙 ===== */}
+      {/* ===== 怎么用：学 → 练 → 判 → 排，四步一环扣一环 ===== */}
+      <section aria-labelledby="landing-loop" className="mt-16">
+        <div className="mb-5 flex items-baseline gap-4">
+          <h2 id="landing-loop" className="text-lg font-bold text-paper-ink">怎么用</h2>
+          <span aria-hidden="true" className="h-px flex-1 bg-paper-line" />
+        </div>
+        <ol data-testid="landing-loop" className="grid gap-x-8 gap-y-6 md:grid-cols-4">
+          {loop.map((s, i) => (
+            <li key={s.step} className="border-t border-paper-line pt-4">
+              <p className="font-mono text-xs text-paper-muted">{String(i + 1).padStart(2, '0')}</p>
+              <h3 className="mt-1.5 text-lg font-bold leading-none text-accent">{s.step}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-paper-muted">{s.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* ===== 价值主张：安静的编号列表，不搞卡片墙 ===== */}
       <section aria-labelledby="landing-different" className="mt-16">
         <div className="mb-5 flex items-baseline gap-4">
           <h2 id="landing-different" className="text-lg font-bold text-paper-ink">有什么不一样</h2>
@@ -103,7 +130,7 @@ export function Landing({ totals, tracks }: {
             用 GitHub 一键登录，几秒钟就能开始。
           </p>
           <p>
-            登录即免费刷 2 个完整块（约 30–50 题），走通「学 → 判 → 排」的闭环，
+            登录即免费刷 2 个完整块（约 30–50 题），走通「学 → 练 → 判 → 排」的闭环，
             再决定要不要解锁全部。{' '}
             <Link
               href={`/api/auth/signin?callbackUrl=${withBase('/')}`}

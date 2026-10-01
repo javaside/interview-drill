@@ -1,4 +1,5 @@
 import './globals.css'
+import Link from 'next/link'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../server/auth-config.js'
 import { getDb } from '../server/db/client.js'
@@ -32,7 +33,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </main>
           <footer className="relative z-[2] border-t border-paper-line/70 bg-paper-deep/60">
             <div className="mx-auto flex max-w-2xl items-center justify-between px-5 py-6 text-xs text-paper-muted">
-              <span className="font-bold tracking-wide">划重点</span>
+              <span className="flex items-center gap-4">
+                <span className="font-bold tracking-wide">划重点</span>
+                {/* 常驻入口：登录后首页是刷题界面，介绍页得有个随时能回看/分享的地址 */}
+                <Link
+                  href="/about"
+                  data-testid="footer-about"
+                  className="transition-colors duration-150 ease-snap hover:text-paper-ink"
+                >
+                  关于
+                </Link>
+              </span>
               <span className="tnum">纸上得来终觉浅 · {new Date().getFullYear()}</span>
             </div>
           </footer>
