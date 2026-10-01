@@ -57,9 +57,10 @@ export function Landing({ totals, tracks }: {
               刷得完
             </h1>
             <p data-testid="landing-hero-copy" className="mt-4 max-w-[54ch] text-[15px] leading-relaxed text-paper-muted">
-              面试前你只有几周，要记的却有好几百道。
-              所以这里不按题库顺序从头刷——按你的面试日期倒着排：每天练哪几道、哪几道回头再练，都替你排好。
-              到面试前几天，每道题你都刚复习过。
+              八股不是背会的，是练会的。
+              你只说哪天面试，题自己会排：最常问的先来，没记住的追着你练，练熟的少打扰。
+              卡住就问 AI，它只讲这一道。
+              到面试前几天，每道题都刚练过。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link href={`/api/auth/signin?callbackUrl=${withBase('/')}`} className="btn-primary text-base" data-testid="signin-cta">
