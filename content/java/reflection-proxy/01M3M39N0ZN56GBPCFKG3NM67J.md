@@ -61,5 +61,5 @@ Spring 的选择逻辑：有接口默认 JDK、没有则 CGLIB；**Spring Boot 2
 
 **术语速查**：接口流派=实现接口转发｜继承流派=生成子类覆盖｜final 免死=final 不可被子类改写
 
-<!--advanced>>
+<!--advanced-->
 CGLIB 底层 ASM 字节码库；FastClass 机制以索引直呼方法避免反射开销。CGLIB 无法代理构造器（Objenesis 绕开实例化）。JDK17+ 对字节码生成的模块限制令内嵌版升级潮（Spring 6 自 fork cglib）。代理对象 equals/hashCode 的语义一致性需拦截器自行维护。

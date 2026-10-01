@@ -65,5 +65,5 @@ keyPoints:
 
 **术语速查**：exchange=路由器｜binding=路由表｜持久化两开关=queue+消息都要
 
-<!--advanced>>
+<!--advanced-->
 confirm 机制（生产确认）与 mandatory/alternate exchange（不可路由兜底）。prefetch 的流控（推模式的背压阀）。镜像队列/quorum queue 的高可用形态。

@@ -63,5 +63,5 @@ keyPoints:
 
 **术语速查**：求值先于返回=值算好放栈上等 finally｜吞异常=原异常被覆盖丢失
 
-<!--advanced>>
+<!--advanced-->
 字节码层 finally 复制到各退出路径（athrow 前/return 前）；JIT 有快速路径。System.exit/halt 与 JVM crash 不执行 finally。finally 中赋值返回值变量同样无效（值已快照）——除非 return 那个变量写在这里（即坑 1）。

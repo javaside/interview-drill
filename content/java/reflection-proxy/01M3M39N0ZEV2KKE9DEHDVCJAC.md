@@ -66,5 +66,5 @@ f.set(obj, value);       // private 也照写
 
 **术语速查**：setAccessible=关闭访问检查的开关｜强封装=JDK 内部默认拒绝反射｜--add-opens=显式放行
 
-<!--advanced>>
+<!--advanced-->
 SecurityManager 存在时 setAccessible 受 checkPermission 制约（17 已废弃 SM）。MethodHandles/Lookup 是更现代的替代（私有需 lookup().privateLookupIn 且目标模块 open）。反射的 JIT 内联优化（inflation：前 N 次原生 Method 调用，后生成字节码类）。

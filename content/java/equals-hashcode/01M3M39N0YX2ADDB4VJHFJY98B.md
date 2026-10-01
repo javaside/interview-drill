@@ -63,5 +63,5 @@ keyPoints:
 
 **术语速查**：单向硬约束=等 ⇒ hash 同｜碰撞=hash 同但不等｜参与字段=equals 用的那组字段
 
-<!--advanced>>
+<!--advanced-->
 HashSet 本质 HashMap 的键集，contains 即 getEntry。合理的 hash：Objects.hash(f1,f2) 或 31 惯例手工；质数乘子分布佳。布尔可用 1231/1237、long 拆 32 位异或。缓存 hash 字段适合不可变对象（String 模式）。
