@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import { splitBlocks, splitBold, splitInlineCode, splitItalic } from '../lib/content/split.js'
 import { isKnownLanguage, tokenize, type TokenKind } from '../lib/content/highlight.js'
 
@@ -28,13 +29,13 @@ function Inline({ text }: { text: string }): React.JSX.Element {
           : splitBold(seg.text).map((b, j) => {
               if (b.bold) return <strong key={`${i}-${j}`} className="font-semibold text-paper-ink">{b.text}</strong>
               return (
-                <>
+                <Fragment key={`${i}-${j}`}>
                   {splitItalic(b.text).map((it, k) =>
                     it.italic
                       ? <em key={`${i}-${j}-${k}`}>{it.text}</em>
                       : <span key={`${i}-${j}-${k}`}>{it.text}</span>,
                   )}
-                </>
+                </Fragment>
               )
             }),
       )}
