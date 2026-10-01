@@ -8,6 +8,7 @@
  * [today+interval] 替换，临时加密第一刷即被销毁。面试日一过 R<0 自动回常备。
  */
 import { cramForInterview, } from '../lib/scheduler/regenerate.js'
+import { bufferOf } from '../lib/scheduler/plan.js'
 import { reservedLoadOf } from '../lib/scheduler/schedule.js'
 import { prefixCheck } from '../lib/scheduler/capacity.js'
 import { entitledBlockIds } from '../lib/entitlement/entitlement.js'
@@ -85,7 +86,7 @@ export async function applyCram(
   }
   const readyBy = addDays(req.examDate, -1)
   const R = diffDays(readyBy, today)
-  const E = Math.max(0, R - (R < 30 ? 1 : R < 50 ? 2 : 3))
+  const E = Math.max(0, R - bufferOf(R))   // 与排期同源，别在本文件内联同一张查表
   const overloaded = prefixCheck(mergedLoad, row.dailyCapacity, E) !== undefined
 
   // 5. 落盘 + 就绪日（crammed>0 才动设置——E<1 全排除时保持常备空值）

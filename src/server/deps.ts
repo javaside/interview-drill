@@ -23,7 +23,8 @@ export function payloadDepsOf(db: SqlRunner, userId: string, serverNowMs: number
       return {
         settings: { readyByDate: row.readyByDate, dailyCapacity: row.dailyCapacity, timezone: row.timezone },
         ent: entitlementOf(row),
-        // 已保存勾选集原样下发；兜底解析（paid 空集=全部）由 buildDailyPayload 统一做
+        // 已保存勾选集原样下发。没有 paid 兜底——空集就是空集（buildDailyPayload 只做
+        // 「按勾选集过滤」，付费用户兑换后勾选被清空时首页不出题，需回设置重勾）。
         selectionBlockIds: new Set(row.freeBlockIds),
       }
     },

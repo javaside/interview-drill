@@ -58,8 +58,9 @@ export function UpgradeView({
             >
               已解锁全部题库
             </p>
-            {/* 解锁不改变排期范围（保留原勾选，不默认全选）：下一个动作 = 去设置把整个岗位一键加入 */}
-            <p className="mt-4 text-sm text-paper-muted">全部块已可自由刷；每日排期想换岗位，一键勾选</p>
+            {/* 解锁不改变排期范围，且兑换会把勾选清空（free_block_ids 置空，不留旧勾选、也不默认全选）：
+                所以下一个动作是去设置把要刷的岗位一键加回来——别写成「保留原勾选」，实际不会。 */}
+            <p className="mt-4 text-sm text-paper-muted">全部块已可自由刷；每日排期要刷哪些，去设置一键勾上</p>
             <p className="mt-2 flex items-center justify-center gap-4">
               <Link href="/settings" data-testid="goto-settings"
                 className="text-sm text-paper-muted underline decoration-paper-line transition-colors duration-150 ease-snap hover:text-paper-ink hover:decoration-paper-muted">

@@ -62,8 +62,9 @@ test('已 paid 用户：直接显示已解锁态，不出输入框', () => {
   expect(screen.queryByLabelText(/邀请码/)).not.toBeInTheDocument()
 })
 
-test('已解锁态引导去设置选岗位（解锁保留原勾选，不默认全选）', () => {
+test('已解锁态引导去设置勾题（解锁会清掉原勾选，所以必须引导重勾，别写成「保留」）', () => {
   render(<UpgradeView priceCents={12900} plan="paid" api={api(vi.fn())} />)
   expect(screen.getByTestId('goto-settings')).toHaveAttribute('href', '/settings')
-  expect(screen.getByText(/每日排期想换岗位，一键勾选/)).toBeInTheDocument()
+  // 兑换把 free_block_ids 置空：原勾选不保留、也不默认全选，用户得回设置重新勾
+  expect(screen.getByText(/每日排期要刷哪些，去设置一键勾上/)).toBeInTheDocument()
 })
