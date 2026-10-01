@@ -151,10 +151,11 @@ describe('selectProvider：每家独立环境变量，配哪家用哪家', () =>
 describe('滥用防护：上限常量与严令提示词', () => {
   test('成本闸门常量：输出上限收敛（DeepSeek 默认思考模式可达 64K，必须显式封顶）', () => {
     expect(QA_MAX_OUTPUT_TOKENS).toBeGreaterThan(0)
-    // 既要远低于 provider 默认的 64K（这才是闸门的意义），
-    // 又要给「思考+正文共用预算」留足余量（太小会把正文挤成 0 字，实测过）
-    expect(QA_MAX_OUTPUT_TOKENS).toBeLessThan(6000)
-    expect(QA_MAX_OUTPUT_TOKENS).toBeGreaterThanOrEqual(2000)
+    // 远低于 provider 默认的 64K（闸门的意义），但要远高于正常用量：
+    // 实测详细回答「思考 1841 字 + 正文 571 字」仅 1235 tokens 且 finish_reason=stop。
+    // 压太小会因「思考+正文共用预算」把正文挤没（实测 max_tokens=400 时正文 0 字）。
+    expect(QA_MAX_OUTPUT_TOKENS).toBeLessThan(32000)
+    expect(QA_MAX_OUTPUT_TOKENS).toBeGreaterThanOrEqual(4000)
   })
 
   test('每日配额：付费高于免费，两者都有限', () => {
@@ -172,6 +173,15 @@ describe('滥用防护：上限常量与严令提示词', () => {
   test('单条超长被截断到新上限（粘贴长文失去可用性）', () => {
     const out = sanitizeHistory([{ role: 'user', content: 'x'.repeat(5000) }])
     expect(out[0]?.content).toHaveLength(MAX_MESSAGE_CHARS)
+  })
+
+  test('提示词不催短：正规回答可充分展开（曾因「尽量简短/不要长篇大论」拉低质量）', () => {
+    const sys = buildQaMessages(card, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(sys).not.toContain('尽量简短')
+    expect(sys).not.toContain('不要长篇大论')
+    expect(sys).toContain('讲透')
+    // 但拒答仍要求简短——成本保护在拒答那条上，不在正规回答上
+    expect(sys).toContain('不要展开')
   })
 
   test('提示词严令：明确只答本题、无关一律拒答、点名禁止写代码/翻译/代做任务', () => {
