@@ -5,7 +5,8 @@ import { getDb } from '../server/db/client.js'
 import { loadSettings } from '../server/db/adapters.js'
 import { NavBar } from './NavBar.js'
 import { AuthBridge } from './AuthBridge.js'
-export const metadata = { title: '面试刷题' }
+// 标签页/搜索结果里要能认出「是干嘛的」：品牌 + 品类词，别只留品牌名
+export const metadata = { title: '划重点 · 后端面试题' }
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // 登录态从服务端传给 NavBar；完整 session 传给 AuthBridge（SessionProvider）——
   // 其唯一职责是给 next-auth/react 的 signIn/signOut 下发 /drill 基路径（见 AuthBridge 注释）。
@@ -31,7 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </main>
           <footer className="relative z-[2] border-t border-paper-line/70 bg-paper-deep/60">
             <div className="mx-auto flex max-w-2xl items-center justify-between px-5 py-6 text-xs text-paper-muted">
-              <span className="font-bold tracking-wide">面试刷题</span>
+              <span className="font-bold tracking-wide">划重点</span>
               <span className="tnum">纸上得来终觉浅 · {new Date().getFullYear()}</span>
             </div>
           </footer>

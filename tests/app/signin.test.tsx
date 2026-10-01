@@ -14,7 +14,7 @@ const page = (params: Record<string, string | undefined> = {}) =>
 test('登录卡渲染：品牌 + 标题 + 说明 + 提交按钮 + 返回首页', async () => {
   render(await page())
   const card = screen.getByTestId('signin-card')
-  expect(card).toHaveTextContent('面试刷题')
+  expect(card).toHaveTextContent('划重点')
   expect(card).toHaveTextContent('一键登录')
   expect(card).toHaveTextContent('进度跟你走')
   expect(card).toHaveTextContent('换设备接着刷')

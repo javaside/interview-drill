@@ -20,7 +20,7 @@ export default async function SignInPage(
       >
         <p className="flex items-center gap-2.5">
           <span aria-hidden="true" className="h-2.5 w-2.5 rotate-45 rounded-[2px] bg-accent" />
-          <span className="text-[15px] font-bold tracking-tight text-paper-ink">面试刷题</span>
+          <span className="text-[15px] font-bold tracking-tight text-paper-ink">划重点</span>
         </p>
         <p className="eyebrow mt-8">登录</p>
         <h1 className="mt-3 font-sans text-3xl font-extrabold leading-tight tracking-tight text-paper-ink">

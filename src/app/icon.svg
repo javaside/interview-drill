@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#9E3A22"/>
-  <text x="32" y="44" font-family="Songti SC, Noto Serif SC, Georgia, serif" font-size="34" font-weight="700" fill="#FAF8F3" text-anchor="middle">备</text>
+  <!-- 品牌「划重点」取「重」字：图纸蓝底 + 荧光黄字 = 全站「图纸蓝 + 荧光笔」最小化表达。
+       旧版是「备」+ 砖红/米白（改版前遗留，且属设计禁令的 cream+terracotta 组合）。 -->
+  <rect width="64" height="64" rx="14" fill="#0F1826"/>
+  <text x="32" y="45" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif" font-size="34" font-weight="800" fill="#FACC15" text-anchor="middle">重</text>
 </svg>

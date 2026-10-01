@@ -25,7 +25,7 @@ export function NavBar(
         <span className="flex items-center gap-2.5">
           {/* 荧光笔点：品牌标记（纯装饰） */}
           <span aria-hidden="true" className="h-2.5 w-2.5 rotate-45 rounded-[2px] bg-accent" />
-          <span className="text-[15px] font-bold tracking-tight">面试刷题</span>
+          <span className="text-[15px] font-bold tracking-tight">划重点</span>
         </span>
         <div className="flex items-center gap-1">
           {items.map(i => {
