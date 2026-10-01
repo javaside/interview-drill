@@ -24,7 +24,9 @@ test('首屏正文：核心 + 有日期（冲刺）+ 没日期也行（常备/�
   expect(hero).not.toContain('八股')
   expect(screen.getByTestId('landing').textContent ?? '').not.toContain('八股')
   // **推荐逻辑**（产品核心，不能因为改别的句子被挤掉）：题怎么排不用用户挑
-  expect(hero).toContain('填了面试日期，题自己会排')
+  // 用「自动排」而不是「题自己会排」——后者把系统的活说成题自己有灵性，不准确
+  expect(hero).toContain('填了面试日期，就自动排好')
+  expect(hero).not.toContain('题自己会排')
   // 三条规则逐条对应代码（见下方注释），改文案时不许删：
   //   高频优先 → assignFinalDays 按 frequency 降序从 E 往前填，高频拿最靠近面试的日子
   expect(hero).toContain('最常问的先来')
@@ -38,7 +40,7 @@ test('首屏正文：核心 + 有日期（冲刺）+ 没日期也行（常备/�
   // 时照样出题，按 MAINTAIN_INTERVALS 滚动）。此前文案写「你只说哪天面试」把这条
   // 路径说没了，会把没定日期的用户劝退——必须显式写出来
   expect(hero).toContain('不填日期也能刷')
-  expect(hero).toContain('该复习的自己回来')
+  expect(hero).toContain('该复习的到时自动回来')
   // 自由刷（/practice?block=，不看排期、不占今日分母）
   expect(hero).toContain('想单刷哪一块随时挑')
   // AI：像老师一样——不懂直接问、能多轮追问（不是一问一答就结束）

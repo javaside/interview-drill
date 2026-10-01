@@ -58,8 +58,8 @@ export function Landing({ totals, tracks }: {
             </h1>
             <p data-testid="landing-hero-copy" className="mt-4 max-w-[54ch] text-[15px] leading-relaxed text-paper-muted">
               知识点不是背会的，是练会的。
-              填了面试日期，题自己会排：最常问的先来，没记住的追着你练，练熟的少打扰；到面试前，每道题都刚练过。
-              不填日期也能刷：该复习的自己回来，想单刷哪一块随时挑。
+              填了面试日期，就自动排好：最常问的先来，没记住的追着你练，练熟的少打扰；到面试前，每道题都刚练过。
+              不填日期也能刷：该复习的到时自动回来，想单刷哪一块随时挑。
               不懂的题，直接问 AI——像问老师一样，问到懂。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
