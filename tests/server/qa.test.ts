@@ -54,7 +54,7 @@ describe('qaHandler：配置与输入校验', () => {
     expect(qaConfigOf({})).toBeNull()
     expect(qaConfigOf({ AI_API_KEY: '' })).toBeNull()
     expect(qaConfigOf({ AI_API_KEY: 'k' })).toEqual({
-      baseUrl: 'https://open.bigmodel.cn/api/paas/v4', apiKey: 'k', model: 'glm-4-flash',
+      baseUrl: 'https://open.bigmodel.cn/api/paas/v4', apiKey: 'k', model: 'glm-4.7-flash',
     })
     expect(qaConfigOf({ AI_API_KEY: 'k', AI_BASE_URL: 'https://x/v1/', AI_MODEL: 'm' })).toEqual({
       baseUrl: 'https://x/v1', apiKey: 'k', model: 'm',

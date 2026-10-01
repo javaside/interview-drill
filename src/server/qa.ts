@@ -20,7 +20,7 @@ export function qaConfigOf(env: Record<string, string | undefined>): QaConfig | 
   return {
     baseUrl: (env.AI_BASE_URL ?? '').replace(/\/+$/, '') || 'https://open.bigmodel.cn/api/paas/v4',
     apiKey,
-    model: env.AI_MODEL ?? 'glm-4-flash',
+    model: env.AI_MODEL ?? 'glm-4.7-flash',
   }
 }
 
