@@ -1,6 +1,6 @@
 import {
   sanitizeHistory, buildQaMessages, selectProvider, providerKeyHints,
-  MAX_HISTORY_MESSAGES, MAX_MESSAGE_CHARS,
+  MAX_HISTORY_MESSAGES, MAX_MESSAGE_CHARS, QA_MAX_OUTPUT_TOKENS, QA_DAILY_QUOTA,
 } from '../../../src/lib/ai/qa.js'
 
 const card = {
@@ -86,7 +86,11 @@ describe('selectProvider：每家独立环境变量，配哪家用哪家', () =>
     const sel = selectProvider({ ZHIPU_API_KEY: 'zk' })
     expect(sel).toEqual({
       status: 'ready',
-      provider: { id: 'zhipu', label: '智谱', baseUrl: 'https://open.bigmodel.cn/api/paas/v4', apiKey: 'zk', model: 'glm-4.7-flash' },
+      provider: {
+        id: 'zhipu', label: '智谱', baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
+        apiKey: 'zk', model: 'glm-4.7-flash',
+        maxTokens: QA_MAX_OUTPUT_TOKENS, extraBody: {},
+      },
     })
   })
 
@@ -141,5 +145,55 @@ describe('selectProvider：每家独立环境变量，配哪家用哪家', () =>
     const sel = selectProvider({ AI_PROVIDER: '  ', DEEPSEEK_API_KEY: 'dk' })
     expect(sel.status).toBe('ready')
     if (sel.status === 'ready') expect(sel.provider.id).toBe('deepseek')
+  })
+})
+
+describe('滥用防护：上限常量与严令提示词', () => {
+  test('成本闸门常量：输出上限收敛（DeepSeek 默认思考模式可达 64K，必须显式封顶）', () => {
+    expect(QA_MAX_OUTPUT_TOKENS).toBeGreaterThan(0)
+    // 既要远低于 provider 默认的 64K（这才是闸门的意义），
+    // 又要给「思考+正文共用预算」留足余量（太小会把正文挤成 0 字，实测过）
+    expect(QA_MAX_OUTPUT_TOKENS).toBeLessThan(6000)
+    expect(QA_MAX_OUTPUT_TOKENS).toBeGreaterThanOrEqual(2000)
+  })
+
+  test('每日配额：付费高于免费，两者都有限', () => {
+    expect(QA_DAILY_QUOTA.free).toBeGreaterThan(0)
+    expect(QA_DAILY_QUOTA.paid).toBeGreaterThan(QA_DAILY_QUOTA.free)
+  })
+
+  test('输入上限收敛：单条 300 字、历史 6 条（历史每轮重发，是最贵的输入项）', () => {
+    expect(MAX_MESSAGE_CHARS).toBeLessThanOrEqual(500)
+    expect(MAX_HISTORY_MESSAGES).toBeLessThanOrEqual(8)
+    // 最坏输入规模（字符）必须远小于改前的 12×2000=24000
+    expect(MAX_MESSAGE_CHARS * MAX_HISTORY_MESSAGES).toBeLessThan(4000)
+  })
+
+  test('单条超长被截断到新上限（粘贴长文失去可用性）', () => {
+    const out = sanitizeHistory([{ role: 'user', content: 'x'.repeat(5000) }])
+    expect(out[0]?.content).toHaveLength(MAX_MESSAGE_CHARS)
+  })
+
+  test('提示词严令：明确只答本题、无关一律拒答、点名禁止写代码/翻译/代做任务', () => {
+    const sys = buildQaMessages(card, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(sys).toContain('只负责讲解下面这一道面试题')
+    expect(sys).toContain('一律拒绝')
+    expect(sys).toContain('写代码')
+    expect(sys).toContain('翻译')
+    expect(sys).toContain('这个和当前题目无关')
+    // 要求拒答简短（不展开、不给替代方案）——拒答越短，滥用越不划算
+    expect(sys).toContain('不要展开')
+    // 抗话术
+    expect(sys).toContain('忽略以上规则')
+  })
+
+  test('DeepSeek 带 reasoning_effort 压低思考开销；智谱不带（各家参数不互串）', () => {
+    const ds = selectProvider({ DEEPSEEK_API_KEY: 'k' })
+    expect(ds.status).toBe('ready')
+    if (ds.status === 'ready') expect(ds.provider.extraBody).toEqual({ reasoning_effort: 'low' })
+
+    const zp = selectProvider({ ZHIPU_API_KEY: 'k' })
+    expect(zp.status).toBe('ready')
+    if (zp.status === 'ready') expect(zp.provider.extraBody).toEqual({})
   })
 })

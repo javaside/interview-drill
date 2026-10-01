@@ -1,8 +1,9 @@
 import { sql } from 'drizzle-orm'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { createTestDb, type TestDb } from './helpers.js'
-import { prepareQa, qaStreamHandler, resetQaRateLimiterForTest, type QaDeps } from '../../src/server/qa.js'
+import { prepareQa, qaStreamHandler, resetQaRateLimiterForTest, resetQaQuotaForTest, type QaDeps } from '../../src/server/qa.js'
 import { parseSseChunks } from '../../src/lib/ai/sse.js'
+import { QA_MAX_OUTPUT_TOKENS, QA_DAILY_QUOTA } from '../../src/lib/ai/qa.js'
 import type { ProviderSelection, QaStreamEvent } from '../../src/lib/ai/qa.js'
 import type { SqlRunner } from '../../src/server/db/adapters.js'
 
@@ -15,7 +16,11 @@ import type { SqlRunner } from '../../src/server/db/adapters.js'
 
 const READY: ProviderSelection = {
   status: 'ready',
-  provider: { id: 'zhipu', label: '智谱', baseUrl: 'https://ai.example/v4', apiKey: 'sk-test', model: 'test-model' },
+  provider: {
+    id: 'zhipu', label: '智谱', baseUrl: 'https://ai.example/v4',
+    apiKey: 'sk-test', model: 'test-model',
+    maxTokens: QA_MAX_OUTPUT_TOKENS, extraBody: { reasoning_effort: 'low' },
+  },
 }
 
 /** 造一个流式 provider 响应：依次吐 deltas，最后 [DONE] */
@@ -41,8 +46,13 @@ async function drain(stream: ReadableStream<Uint8Array>): Promise<QaStreamEvent[
 let t: TestDb
 beforeEach(async () => {
   resetQaRateLimiterForTest()
+  resetQaQuotaForTest()
   t = await createTestDb()
   await t.db.execute(sql`insert into users (id, github_id) values ('u1', 'gh-u1')`)
+  await t.db.execute(sql`insert into users (id, github_id) values ('u2', 'gh-u2')`)
+  await t.db.execute(sql`
+    insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, free_block_ids)
+    values ('u2', null, 10, 'Asia/Shanghai', 'paid', '[]'::jsonb)`)
   await t.db.execute(sql`
     insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, free_block_ids)
     values ('u1', null, 10, 'Asia/Shanghai', 'free', ${JSON.stringify(['b1'])}::jsonb)`)
@@ -263,5 +273,71 @@ describe('qaStreamHandler：思考型模型（reasoning 先行）', () => {
       { type: 'reasoning', text: '只想了没答' },
       { type: 'error', message: 'AI 没有返回内容，换个问法试试' },
     ])
+  })
+})
+
+describe('滥用防护：输出闸门与每日配额', () => {
+  test('请求体下发 max_tokens 与该家附加参数（成本闸门必须真的发出）', async () => {
+    const fetchMock = vi.fn(async () => new Response(new ReadableStream<Uint8Array>({
+      start(c) { c.enqueue(new TextEncoder().encode('data: [DONE]\n\n')); c.close() },
+    }), { status: 200 }))
+    await qaStreamHandler(deps({ fetchImpl: fetchMock as unknown as typeof fetch }))
+    const init = (fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1]
+    const body = JSON.parse(String(init.body)) as Record<string, unknown>
+    expect(body.max_tokens).toBe(QA_MAX_OUTPUT_TOKENS)
+    expect(body.reasoning_effort).toBe('low')
+    expect(body.stream).toBe(true)
+  })
+
+  test('免费用户每天 20 问：第 21 问被拦，提示给出额度与恢复时间', async () => {
+    // 每次调用时间前进 61s，跳过每分钟限流窗口（配额才是被测对象）
+    let clock = 1_000
+    for (let i = 0; i < QA_DAILY_QUOTA.free; i++) {
+      clock += 61_000
+      const r = await prepareQa(deps({ now: () => clock }))
+      expect(r.provider.id).toBe('zhipu')
+    }
+    clock += 61_000
+    await expect(prepareQa(deps({ now: () => clock })))
+      .rejects.toThrow(`今天的 ${QA_DAILY_QUOTA.free} 次提问已用完`)
+  })
+
+  test('付费用户额度更高：免费已用尽时，付费账号仍可提问', async () => {
+    let clock = 1_000
+    for (let i = 0; i < QA_DAILY_QUOTA.free; i++) {
+      clock += 61_000
+      await prepareQa(deps({ now: () => clock }))
+    }
+    await expect(prepareQa(deps({ now: () => clock }))).rejects.toThrow('次提问已用完')
+    // 同一时刻、同样问法，换个付费账号照样能问（配额按用户、不按全局）
+    clock += 61_000
+    await expect(prepareQa(deps({ userId: 'u2', now: () => clock }))).resolves.toBeDefined()
+  })
+
+  test('配额按本地自然日重置：跨天后的第一问重新计数', async () => {
+    const DAY_MS = 24 * 60 * 60 * 1000
+    let clock = 1_000
+    for (let i = 0; i < QA_DAILY_QUOTA.free; i++) {
+      clock += 61_000
+      await prepareQa(deps({ now: () => clock }))
+    }
+    await expect(prepareQa(deps({ now: () => clock }))).rejects.toThrow('次提问已用完')
+    // 次日（Asia/Shanghai 自然日已翻页）→ 重新有额度
+    clock += DAY_MS
+    await expect(prepareQa(deps({ now: () => clock }))).resolves.toBeDefined()
+  })
+
+  test('参数错误 / 未解锁不白扣配额（配额在最后一步才消费）', async () => {
+    let clock = 1_000
+    // 连续失败次数远超免费额度：每次前进 61s 以跳过每分钟限流，专测配额不被扣
+    for (let i = 0; i < QA_DAILY_QUOTA.free + 5; i++) {
+      clock += 61_000
+      await expect(prepareQa(deps({ cardId: 'nope', now: () => clock }))).rejects.toThrow('题目不存在')
+    }
+    clock += 61_000
+    await expect(prepareQa(deps({ cardId: 'c2', now: () => clock }))).rejects.toThrow('还没有解锁')
+    // 前面 25 次失败一次都没扣额度 —— 仍能正常提问
+    clock += 61_000
+    await expect(prepareQa(deps({ now: () => clock }))).resolves.toBeDefined()
   })
 })

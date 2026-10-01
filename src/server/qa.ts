@@ -1,8 +1,9 @@
 import type { SqlRunner } from './db/adapters.js'
 import { loadSettings, loadCardSnapshots, entitlementOf } from './db/adapters.js'
 import { isEntitled } from '../lib/entitlement/entitlement.js'
+import { localDateOf } from './time.js'
 import {
-  sanitizeHistory, buildQaMessages, selectProvider,
+  sanitizeHistory, buildQaMessages, selectProvider, QA_DAILY_QUOTA,
   type QaMessage, type ChatMessage, type ProviderSelection, type QaProviderRuntime, type QaStreamEvent,
 } from '../lib/ai/qa.js'
 import { parseSseChunks, encodeSseFrame, sseDeltaOf, sseReasoningOf, chatAnswerOf } from '../lib/ai/sse.js'
@@ -43,6 +44,35 @@ export function resetQaRateLimiterForTest(): void {
   hitsByUser.clear()
 }
 
+// ---- 每日配额（防单账号刷量；按用户本地自然日重置） ----
+// 与每分钟限流同样放内存：单进程 systemd 部署够用。代价是重启/发版会重置当天计数——
+// 可接受的松弛（用户无法触发重启），换来零 DB 写入与零迁移。
+const usageByUser = new Map<string, { date: string; count: number }>()
+
+/**
+ * 记账式判定：未超限则**消费一次**并返回 false。
+ * 只在「即将真正调用 provider」时调用，这样参数错误/未解锁的请求不白扣次数。
+ */
+function quotaExceeded(
+  userId: string, plan: 'free' | 'paid', timezone: string, nowMs: number,
+): boolean {
+  const date = localDateOf(nowMs, timezone)
+  const limit = QA_DAILY_QUOTA[plan]
+  const used = usageByUser.get(userId)
+  const count = used !== undefined && used.date === date ? used.count : 0
+  if (count >= limit) {
+    usageByUser.set(userId, { date, count })
+    return true
+  }
+  usageByUser.set(userId, { date, count: count + 1 })
+  return false
+}
+
+/** 测试专用：清空每日配额计数 */
+export function resetQaQuotaForTest(): void {
+  usageByUser.clear()
+}
+
 export type QaDeps = {
   db: SqlRunner
   userId: string
@@ -68,19 +98,30 @@ export async function prepareQa(deps: QaDeps): Promise<PreparedQa> {
   const { provider } = sel
 
   const now = deps.now ?? Date.now
-  if (rateLimited(deps.userId, now())) throw new Error('提问太快了，歇一分钟再问')
+  const nowMs = now()
+  if (rateLimited(deps.userId, nowMs)) throw new Error('提问太快了，歇一分钟再问')
+
+  const settings = await loadSettings(deps.db, deps.userId)
 
   const history: QaMessage[] = sanitizeHistory(deps.history)
   const card = (await loadCardSnapshots(deps.db, [deps.cardId])).get(deps.cardId)
   if (card === undefined) throw new Error('题目不存在或已下线')
 
-  const ent = entitlementOf(await loadSettings(deps.db, deps.userId))
+  const ent = entitlementOf(settings)
   if (!isEntitled(ent, card.blockId)) throw new Error('这个块还没有解锁，先去解锁才能提问')
 
   const messages = buildQaMessages(
     { cardId: card.cardId, question: card.question ?? '', detail: card.detail ?? '' },
     history,
   )
+
+  // 配额放最后：只有真要打 provider 的请求才扣次数（参数错/未解锁不白扣）
+  if (quotaExceeded(deps.userId, settings.plan, settings.timezone, nowMs)) {
+    throw new Error(
+      `今天的 ${QA_DAILY_QUOTA[settings.plan]} 次提问已用完——明天恢复。` +
+      '想深入某道题，可以先看题解或加入学习页复习。',
+    )
+  }
   return { provider, messages }
 }
 
@@ -101,7 +142,15 @@ export async function qaStreamHandler(deps: QaDeps): Promise<ReadableStream<Uint
         authorization: `Bearer ${provider.apiKey}`,
         accept: 'text/event-stream',
       },
-      body: JSON.stringify({ model: provider.model, messages, stream: true }),
+      body: JSON.stringify({
+        model: provider.model,
+        messages,
+        stream: true,
+        // 成本闸门：不限的话 DeepSeek 思考模式默认可生成 64K tokens
+        max_tokens: provider.maxTokens,
+        // 家特有参数（如 DeepSeek 的 reasoning_effort）——不能全局下发，见 ProviderSpec
+        ...provider.extraBody,
+      }),
     })
   } catch {
     throw new Error(`${provider.label} 连不上，请稍后再试`)
