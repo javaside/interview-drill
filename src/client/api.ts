@@ -4,7 +4,8 @@ import type { DailyPayload } from '../server/queue.js'
 import type { ReviewResult } from '../server/review.js'
 import type { SyncResult } from '../server/sync.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
-import type { QaMessage } from '../lib/ai/qa.js'
+import type { QaMessage, QaStreamEvent } from '../lib/ai/qa.js'
+import { parseSseChunks } from '../lib/ai/sse.js'
 
 /**
  * API 客户端接口（§8.3）：消费 4a 的五个端点。抽象成接口便于 sync-engine
@@ -34,8 +35,15 @@ export interface Api {
   postCram(body: { examDate: LocalDate; blockIds: string[] }): Promise<{ crammed: number; excluded: number; overloaded: boolean; readyByDate: LocalDate | null }>
   /** POST /api/queue/requeue → 把今天刷过的卡拉回今天（misses=错题 / all=全部再来一遍） */
   postRequeue(scope?: 'misses' | 'all'): Promise<{ requeued: number }>
-  /** POST /api/qa → 就单卡向 AI 提问（history 含本轮提问；上下文只含该卡，服务端不落库） */
-  postQa(cardId: string, history: QaMessage[]): Promise<{ answer: string }>
+  /**
+   * POST /api/qa → 就单卡向 AI 提问（history 含本轮提问；上下文只含该卡，服务端不落库）。
+   * 流式：每收到一段增量就回调 onDelta；任何失败（含流中途的 error 事件）抛错，
+   * 且抛出的 Error 一律携带中文消息，可直接进 role=alert。
+   */
+  postQaStream(
+    cardId: string, history: QaMessage[],
+    onDelta: (text: string) => void, signal?: AbortSignal,
+  ): Promise<void>
 }
 
 const JSON_HEADERS = { 'content-type': 'application/json' } as const
@@ -113,10 +121,43 @@ export function browserApi(): Api {
         await fetch(withBase('/api/queue/requeue'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ scope }) }),
       )
     },
-    async postQa(cardId, history) {
-      return readJson<{ answer: string }>(
-        await fetch(withBase('/api/qa'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ cardId, history }) }),
-      )
+    async postQaStream(cardId, history, onDelta, signal) {
+      const res = await fetch(withBase('/api/qa'), {
+        method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ cardId, history }),
+        ...(signal ? { signal } : {}),
+      })
+      // 流开始之前的一切失败仍是既有协议：非 2xx 带 { error } 中文消息
+      if (!res.ok) throw await errorOf(res)
+      if (res.body === null) throw new Error('AI 没有返回内容，换个问法试试')
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+      let gotDelta = false
+
+      for (;;) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const { frames, rest } = parseSseChunks(buffer)
+        buffer = rest
+        for (const frame of frames) {
+          let event: QaStreamEvent
+          try {
+            event = JSON.parse(frame.data) as QaStreamEvent
+          } catch {
+            continue   // 认不出的帧跳过，不让脏数据打断整段回答
+          }
+          if (event.type === 'delta') {
+            gotDelta = true
+            onDelta(event.text)
+          } else if (event.type === 'error') {
+            throw new Error(event.message)
+          }
+        }
+      }
+      // 一条增量都没有、也没有 error 事件：服务端流异常收尾
+      if (!gotDelta) throw new Error('AI 没有返回内容，换个问法试试')
     },
   }
 }

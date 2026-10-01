@@ -23,6 +23,16 @@ export type QaCard = {
 
 export type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string }
 
+/**
+ * `/api/qa` 的流式事件协议（服务端与客户端共用一份定义）。
+ * 业务拒绝（未配置/未解锁/限流/题目不存在）**发生在流开始之前**，仍走既有的
+ * 400 + { error } 中文协议；只有流**开始之后**的故障才用 error 事件在带内上报。
+ */
+export type QaStreamEvent =
+  | { type: 'delta'; text: string }
+  | { type: 'done' }
+  | { type: 'error'; message: string }
+
 // ---- 供应商注册表（表驱动：加家 = 加一行） ----
 
 /** 一家供应商的变量约定与默认值（base/model 均可被同名环境变量覆盖） */

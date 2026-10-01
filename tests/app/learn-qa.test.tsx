@@ -13,16 +13,25 @@ const cards: LearnCard[] = [
   { cardId: 'c2', question: 'ReadView 生成时机？', frequency: 'mid', detail: 'ReadView 讲解' },
 ]
 
-function stubFetch(answer: string): ReturnType<typeof vi.fn> {
-  return vi.fn(async () =>
-    new Response(JSON.stringify({ answer }), { status: 200 }))
+/** 造一个流式 /api/qa 响应：把整段回答切成 chunks 逐帧下发（模拟真实流式） */
+function sseResponse(chunks: string[], status = 200): Response {
+  const enc = new TextEncoder()
+  return new Response(new ReadableStream<Uint8Array>({
+    start(c) {
+      for (const chunk of chunks) {
+        c.enqueue(enc.encode(`data: ${JSON.stringify({ type: 'delta', text: chunk })}\n\n`))
+      }
+      c.enqueue(enc.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`))
+      c.close()
+    },
+  }), { status, headers: { 'content-type': 'text/event-stream' } })
 }
 
 afterEach(() => vi.unstubAllGlobals())
 
 test('每张卡各有一个折叠问答框，点开可提问，回答上屏', async () => {
   const user = userEvent.setup()
-  const fetchMock = stubFetch('**undo log 是回滚与 MVCC 的基础**')
+  const fetchMock = vi.fn(async () => sseResponse(['**undo log 是回滚与 MVCC 的基础**']))
   vi.stubGlobal('fetch', fetchMock)
   render(<LearnView blockName="MVCC" cards={cards} blockId="b1" />)
 
@@ -46,7 +55,7 @@ test('每张卡各有一个折叠问答框，点开可提问，回答上屏', as
 
 test('独立上下文：在 c1 提问并得到回答后，c2 的框是干净的', async () => {
   const user = userEvent.setup()
-  const fetchMock = stubFetch('c1 的回答')
+  const fetchMock = vi.fn(async () => sseResponse(['c1 的回答']))
   vi.stubGlobal('fetch', fetchMock)
   render(<LearnView blockName="MVCC" cards={cards} blockId="b1" />)
 
@@ -74,8 +83,7 @@ test('独立上下文：在 c1 提问并得到回答后，c2 的框是干净的'
 test('多轮：第二次提问携带本卡的第一轮问答', async () => {
   const user = userEvent.setup()
   let n = 0
-  const fetchMock = vi.fn(async () =>
-    new Response(JSON.stringify({ answer: `第${++n}答` }), { status: 200 }))
+  const fetchMock = vi.fn(async () => sseResponse([`第${++n}答`]))
   vi.stubGlobal('fetch', fetchMock)
   render(<LearnView blockName="MVCC" cards={[cards[0]!]} blockId="b1" />)
 

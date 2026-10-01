@@ -8,6 +8,20 @@ import { memoryStore } from '../../src/client/store.js'
  * 上下文只含当前卡——换题必须重置，对话绝不串到下一题。
  */
 
+/** 造一个流式 /api/qa 响应：把整段回答切成 chunks 逐帧下发（模拟真实流式） */
+function sseResponse(chunks: string[], status = 200): Response {
+  const enc = new TextEncoder()
+  return new Response(new ReadableStream<Uint8Array>({
+    start(c) {
+      for (const chunk of chunks) {
+        c.enqueue(enc.encode(`data: ${JSON.stringify({ type: 'delta', text: chunk })}\n\n`))
+      }
+      c.enqueue(enc.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`))
+      c.close()
+    },
+  }), { status, headers: { 'content-type': 'text/event-stream' } })
+}
+
 const V = () => ({ optionTexts: ['A', 'B', 'C', 'x', 'x', 'x', 'x', 'x', 'x'], correctIndices: [0, 1, 2], distractorKeyPointIds: [] })
 const mkCard = (id: string) => ({
   cardId: id, blockId: 'b1', blockName: 'MySQL', cardType: 'enumeration',
@@ -63,7 +77,7 @@ afterEach(() => vi.unstubAllGlobals())
 
 test('刷题页每题有 AI 问答，请求只带当前题的 cardId 与本轮提问', async () => {
   const u = userEvent.setup()
-  const fetchMock = vi.fn(async () => new Response(JSON.stringify({ answer: 'c1 的回答' }), { status: 200 }))
+  const fetchMock = vi.fn(async () => sseResponse(['c1 ', '的回答']))
   vi.stubGlobal('fetch', fetchMock)
   render(<DrillSession payload={payloadOf(['c1', 'c2'])} deps={depsOf() as never} />)
 
@@ -77,7 +91,7 @@ test('刷题页每题有 AI 问答，请求只带当前题的 cardId 与本轮�
 
 test('换到下一题：问答框重置，上一题的问答不出现，cardId 跟着换', async () => {
   const u = userEvent.setup()
-  const fetchMock = vi.fn(async () => new Response(JSON.stringify({ answer: '回答' }), { status: 200 }))
+  const fetchMock = vi.fn(async () => sseResponse(['回答']))
   vi.stubGlobal('fetch', fetchMock)
   render(<DrillSession payload={payloadOf(['c1', 'c2'])} deps={depsOf() as never} />)
 
@@ -99,7 +113,7 @@ test('换到下一题：问答框重置，上一题的问答不出现，cardId �
 
 test('屏① 问过的到屏② 仍在（交卷不丢对话），且此时仍能继续追问', async () => {
   const u = userEvent.setup()
-  const fetchMock = vi.fn(async () => new Response(JSON.stringify({ answer: '第一轮回答' }), { status: 200 }))
+  const fetchMock = vi.fn(async () => sseResponse(['第一轮回答']))
   vi.stubGlobal('fetch', fetchMock)
   render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
 
@@ -128,7 +142,7 @@ test('屏① 问过的到屏② 仍在（交卷不丢对话），且此时仍能
 
 test('主循环不被问答打断：「下一题」按钮始终在问答入口之前', async () => {
   const u = userEvent.setup()
-  vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ answer: 'x' }), { status: 200 })))
+  vi.stubGlobal('fetch', vi.fn(async () => sseResponse(['x'])))
   render(<DrillSession payload={payloadOf(['c1', 'c2'])} deps={depsOf() as never} />)
 
   await submitCurrent(u)
@@ -156,7 +170,7 @@ test('离线时不发请求，直接提示恢复联网', async () => {
 
 test('完成态不再渲染问答框', async () => {
   const u = userEvent.setup()
-  vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ answer: 'x' }), { status: 200 })))
+  vi.stubGlobal('fetch', vi.fn(async () => sseResponse(['x'])))
   render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
 
   await submitCurrent(u)
@@ -171,4 +185,62 @@ test('每屏只渲染当前题一个问答框（不把整队题目都挂上）',
   expect(screen.getAllByRole('button', { name: /问 AI/ })).toHaveLength(1)
   const article = within(document.body)
   expect(article.queryByText('Q-c2')).not.toBeInTheDocument()
+})
+
+test('流式增量渲染：先到的片段先上屏，不必等整段回答完', async () => {
+  const u = userEvent.setup()
+  // 手控流：第一个分片到达后暂停，等断言完再放后续
+  let releaseSecond: (() => void) | null = null
+  const gate = new Promise<void>(resolve => { releaseSecond = resolve })
+  const enc = new TextEncoder()
+  const fetchMock = vi.fn(async () => new Response(new ReadableStream<Uint8Array>({
+    async start(c) {
+      c.enqueue(enc.encode(`data: ${JSON.stringify({ type: 'delta', text: '第一段' })}\n\n`))
+      await gate                                  // ← 卡住：此时只有第一段到达
+      c.enqueue(enc.encode(`data: ${JSON.stringify({ type: 'delta', text: '第二段' })}\n\n`))
+      c.enqueue(enc.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`))
+      c.close()
+    },
+  }), { status: 200, headers: { 'content-type': 'text/event-stream' } }))
+  vi.stubGlobal('fetch', fetchMock)
+  render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
+
+  await u.click(screen.getByRole('button', { name: /问 AI/ }))
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '流式问题')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+
+  // 整段回答尚未到达，但第一段已经可见（这正是流式相对一次性返回的价值）
+  await waitFor(() => expect(screen.getByText('第一段')).toBeInTheDocument())
+  expect(screen.queryByText(/第二段/)).not.toBeInTheDocument()
+  // 未产出内容时才显示「AI 正在想」——开始吐字后不再显示
+  expect(screen.queryByText(/AI 正在想/)).not.toBeInTheDocument()
+
+  releaseSecond!()
+  await waitFor(() => expect(screen.getByText(/第一段第二段/)).toBeInTheDocument())
+})
+
+test('流中途报错：已吐出的部分保留在屏上，错误进 role=alert', async () => {
+  const u = userEvent.setup()
+  const enc = new TextEncoder()
+  let pulled = 0
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(new ReadableStream<Uint8Array>({
+    pull(c) {
+      if (pulled++ === 0) {
+        c.enqueue(enc.encode(`data: ${JSON.stringify({ type: 'delta', text: '半截回答' })}\n\n`))
+      } else {
+        c.enqueue(enc.encode(`data: ${JSON.stringify({ type: 'error', message: 'DeepSeek 连接中断，请重试' })}\n\n`))
+        c.close()
+      }
+    },
+  }), { status: 200, headers: { 'content-type': 'text/event-stream' } })))
+  render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
+
+  await u.click(screen.getByRole('button', { name: /问 AI/ }))
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '会断的问题')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+
+  expect(await screen.findByRole('alert')).toHaveTextContent('DeepSeek 连接中断，请重试')
+  // 已产出的半截回答不因报错消失；问题也不退回输入框（避免重复提问的困惑）
+  expect(screen.getByText('半截回答')).toBeInTheDocument()
+  expect(screen.getByRole('textbox', { name: /向 AI 提问/ })).toHaveValue('')
 })

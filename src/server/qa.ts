@@ -3,16 +3,21 @@ import { loadSettings, loadCardSnapshots, entitlementOf } from './db/adapters.js
 import { isEntitled } from '../lib/entitlement/entitlement.js'
 import {
   sanitizeHistory, buildQaMessages, selectProvider,
-  type QaMessage, type ProviderSelection,
+  type QaMessage, type ChatMessage, type ProviderSelection, type QaProviderRuntime, type QaStreamEvent,
 } from '../lib/ai/qa.js'
+import { parseSseChunks, encodeSseFrame, sseDeltaOf, chatAnswerOf } from '../lib/ai/sse.js'
 
 /**
- * AI 问答编排层：纯核（lib/ai/qa）注入 IO——DB 读卡、entitlement 校验、
- * OpenAI 兼容 chat/completions 调用、内存限流。SQL 走 adapters，本层零 SQL。
+ * AI 问答编排层：纯核（lib/ai）注入 IO——DB 读卡、entitlement 校验、
+ * OpenAI 兼容 chat/completions 流式调用、内存限流。SQL 走 adapters，本层零 SQL。
  *
- * 供应商：每家一组独立环境变量（ZHIPU_API_KEY / DEEPSEEK_API_KEY ……），
- * 配哪家用哪家（纯核 selectProvider，多家同配可用 AI_PROVIDER 指定）。
+ * 分两段，边界就是「错误怎么回」：
+ * - prepareQa：鉴权之后的全部业务校验。抛错时**流还没开始**，路由照旧回 400 + 中文。
+ * - qaStreamHandler：连 provider（fetch 只在收到响应头时 resolve，故「连不上 / provider
+ *   非 2xx」仍属准备段，照样回 400），之后把 provider 的 SSE 转成我们自己的事件流。
+ *   流开始之后的故障只能带内上报（error 事件）——此时 HTTP 状态已发出，改不了了。
  *
+ * 供应商：每家一组独立环境变量（ZHIPU_API_KEY / DEEPSEEK_API_KEY ……），配哪家用哪家。
  * 免费墙：未解锁块的卡不给问（题面/题解不下发，AI 也不能当旁路泄漏）。
  * 上下文只含目标一卡（纯核保证）；历史由客户端按卡携带，服务端不落库。
  */
@@ -51,19 +56,19 @@ export type QaDeps = {
   now?: () => number
 }
 
+export type PreparedQa = { provider: QaProviderRuntime; messages: ChatMessage[] }
+
 /**
- * 问答主流程：选供应商 → 限流 → 读卡 + 免费墙 → 纯核装配消息 → 调 provider。
- * 返回 { answer }；业务拒绝直接 throw new Error('中文消息')，路由薄壳转 400。
+ * 准备段：选供应商 → 限流 → 读卡 + 免费墙 → 纯核装配消息。
+ * 任何业务拒绝都在这句 throw（中文消息），此时尚未向 provider 发请求、更未开流。
  */
-export async function qaHandler(deps: QaDeps): Promise<{ answer: string }> {
+export async function prepareQa(deps: QaDeps): Promise<PreparedQa> {
   const sel = deps.selection ?? selectProvider(process.env)
   if (sel.status !== 'ready') throw new Error(sel.message)
   const { provider } = sel
 
   const now = deps.now ?? Date.now
-  if (rateLimited(deps.userId, now())) {
-    throw new Error('提问太快了，歇一分钟再问')
-  }
+  if (rateLimited(deps.userId, now())) throw new Error('提问太快了，歇一分钟再问')
 
   const history: QaMessage[] = sanitizeHistory(deps.history)
   const card = (await loadCardSnapshots(deps.db, [deps.cardId])).get(deps.cardId)
@@ -76,26 +81,95 @@ export async function qaHandler(deps: QaDeps): Promise<{ answer: string }> {
     { cardId: card.cardId, question: card.question ?? '', detail: card.detail ?? '' },
     history,
   )
+  return { provider, messages }
+}
+
+/**
+ * 流式问答：准备（可抛 400 级错误）→ 连接 provider（校验响应头）→ 返回可读流。
+ * 返回后的一切故障都走带内 error 事件。
+ */
+export async function qaStreamHandler(deps: QaDeps): Promise<ReadableStream<Uint8Array>> {
+  const { provider, messages } = await prepareQa(deps)
 
   const fetchImpl = deps.fetchImpl ?? fetch
   let res: Response
   try {
     res = await fetchImpl(`${provider.baseUrl}/chat/completions`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${provider.apiKey}` },
-      body: JSON.stringify({ model: provider.model, messages }),
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Bearer ${provider.apiKey}`,
+        accept: 'text/event-stream',
+      },
+      body: JSON.stringify({ model: provider.model, messages, stream: true }),
     })
   } catch {
     throw new Error(`${provider.label} 连不上，请稍后再试`)
   }
   if (!res.ok) throw new Error(`${provider.label} 暂时不可用（HTTP ${res.status}），请稍后再试`)
 
-  const data = (await res.json().catch(() => null)) as {
-    choices?: Array<{ message?: { content?: unknown } }>
-  } | null
-  const answer = data?.choices?.[0]?.message?.content
-  if (typeof answer !== 'string' || answer.trim() === '') {
-    throw new Error('AI 没有返回内容，换个问法试试')
-  }
-  return { answer }
+  return pumpProviderStream(res, provider.label)
+}
+
+/** 把 provider 的 SSE 转成我们自己的事件流（delta → done，故障 → error） */
+function pumpProviderStream(res: Response, label: string): ReadableStream<Uint8Array> {
+  const encoder = new TextEncoder()
+  const decoder = new TextDecoder()
+  const reader = res.body?.getReader()
+
+  return new ReadableStream<Uint8Array>({
+    async start(controller) {
+      const send = (event: QaStreamEvent): void => {
+        controller.enqueue(encoder.encode(encodeSseFrame(JSON.stringify(event))))
+      }
+      let buffer = ''   // 未凑满一帧的尾巴
+      let raw = ''      // 原始字节全文（provider 忽略 stream 时的兜底解析用）
+      let answer = ''
+
+      const handleText = (text: string): void => {
+        raw += text
+        buffer += text
+        const { frames, rest } = parseSseChunks(buffer)
+        buffer = rest
+        for (const frame of frames) {
+          const delta = sseDeltaOf(frame.data)
+          if (delta !== null) {
+            answer += delta
+            send({ type: 'delta', text: delta })
+          }
+        }
+      }
+
+      try {
+        if (reader === undefined) {
+          send({ type: 'error', message: 'AI 没有返回内容，换个问法试试' })
+          return
+        }
+        for (;;) {
+          const { done, value } = await reader.read()
+          if (done) break
+          handleText(decoder.decode(value, { stream: true }))
+        }
+        handleText(decoder.decode())   // 冲掉解码器里残留的多字节尾部
+
+        if (answer === '') {
+          // provider 无视了 stream：整包 JSON 兜底，一次补齐
+          const whole = chatAnswerOf(raw)
+          if (whole === null) {
+            send({ type: 'error', message: 'AI 没有返回内容，换个问法试试' })
+            return
+          }
+          send({ type: 'delta', text: whole })
+        }
+        send({ type: 'done' })
+      } catch {
+        send({ type: 'error', message: `${label} 连接中断，请重试` })
+      } finally {
+        controller.close()
+      }
+    },
+    cancel() {
+      void reader?.cancel()
+    },
+  })
 }

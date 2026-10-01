@@ -48,3 +48,71 @@ test('后台两接口：GET 台账 / POST 铸码走 /api/backstage/invites', asy
     expect.objectContaining({ method: 'POST', body: JSON.stringify({ n: 3, note: '备注' }) }))
   vi.unstubAllGlobals()
 })
+
+/** 造流式响应体（SSE 帧） */
+function sseBody(frames: string[]): ReadableStream<Uint8Array> {
+  const enc = new TextEncoder()
+  return new ReadableStream<Uint8Array>({
+    start(c) { for (const f of frames) c.enqueue(enc.encode(f)); c.close() },
+  })
+}
+
+test('postQaStream：逐段回调 delta，请求带 /drill 前缀与 cardId', async () => {
+  const fetchMock = vi.fn(async () => new Response(sseBody([
+    'data: {"type":"delta","text":"第一"}\n\n',
+    'data: {"type":"delta","text":"第二"}\n\n',
+    'data: {"type":"done"}\n\n',
+  ]), { status: 200 }))
+  vi.stubGlobal('fetch', fetchMock)
+
+  const got: string[] = []
+  await browserApi().postQaStream('c1', [{ role: 'user', content: 'q' }], t => got.push(t))
+
+  expect(got).toEqual(['第一', '第二'])
+  expect((fetchMock.mock.calls[0] as unknown[])[0]).toBe('/drill/api/qa')
+  vi.unstubAllGlobals()
+})
+
+test('postQaStream：帧被任意切分也能拼回（增量边界）', async () => {
+  const raw = 'data: {"type":"delta","text":"完整内容"}\n\ndata: {"type":"done"}\n\n'
+  const fetchMock = vi.fn(async () => new Response(sseBody(raw.split('').map(ch => ch)), { status: 200 }))
+  vi.stubGlobal('fetch', fetchMock)
+  const got: string[] = []
+  await browserApi().postQaStream('c1', [], t => got.push(t))
+  expect(got).toEqual(['完整内容'])
+  vi.unstubAllGlobals()
+})
+
+test('postQaStream：流开始前的失败仍是 400 中文协议（readJson 同款）', async () => {
+  vi.stubGlobal('fetch', vi.fn(async () =>
+    new Response(JSON.stringify({ error: '这个块还没有解锁，先去解锁才能提问' }), { status: 400 })))
+  await expect(browserApi().postQaStream('c1', [], () => {})).rejects.toThrow('这个块还没有解锁')
+  vi.unstubAllGlobals()
+})
+
+test('postQaStream：带内 error 事件 → 抛中文错误（可直达 role=alert）', async () => {
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(sseBody([
+    'data: {"type":"delta","text":"半截"}\n\n',
+    'data: {"type":"error","message":"智谱 连接中断，请重试"}\n\n',
+  ]), { status: 200 })))
+  await expect(browserApi().postQaStream('c1', [], () => {})).rejects.toThrow('智谱 连接中断，请重试')
+  vi.unstubAllGlobals()
+})
+
+test('postQaStream：一条增量都没有 → 抛「没有返回内容」；脏帧被跳过不打断', async () => {
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(sseBody([
+    'data: {"type":"done"}\n\n',
+  ]), { status: 200 })))
+  await expect(browserApi().postQaStream('c1', [], () => {})).rejects.toThrow('AI 没有返回内容')
+  vi.unstubAllGlobals()
+
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(sseBody([
+    'data: 这不是 JSON\n\n',
+    'data: {"type":"delta","text":"仍然可用"}\n\n',
+    'data: {"type":"done"}\n\n',
+  ]), { status: 200 })))
+  const got: string[] = []
+  await browserApi().postQaStream('c1', [], t => got.push(t))
+  expect(got).toEqual(['仍然可用'])
+  vi.unstubAllGlobals()
+})
