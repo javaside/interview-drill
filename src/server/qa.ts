@@ -3,7 +3,7 @@ import { loadSettings, loadCardSnapshots, entitlementOf } from './db/adapters.js
 import { isEntitled } from '../lib/entitlement/entitlement.js'
 import { localDateOf } from './time.js'
 import {
-  sanitizeHistory, sanitizeOptions, buildQaMessages, selectProvider, QA_DAILY_QUOTA,
+  sanitizeHistory, sanitizeOptions, sanitizeAttempt, buildQaMessages, selectProvider, QA_DAILY_QUOTA,
   type QaMessage, type ChatMessage, type ProviderSelection, type QaProviderRuntime, type QaStreamEvent,
 } from '../lib/ai/qa.js'
 import { parseSseChunks, encodeSseFrame, sseDeltaOf, sseReasoningOf, chatAnswerOf } from '../lib/ai/sse.js'
@@ -85,6 +85,11 @@ export type QaDeps = {
    * 违背本项目「判分与展示同卷」的口径。服务端只清洗（条数/长度上限），题型另取自 DB。
    */
   options?: unknown
+  /**
+   * 用户的作答与判分结果（仅屏②提供）。屏① 用户还没作答，客户端传 null——
+   * 那正是「不剧透答案」的结构保证，服务端不需要额外判断。
+   */
+  attempt?: unknown
   /** 注入测试；缺省 selectProvider(process.env)（各家独立环境变量） */
   selection?: ProviderSelection
   /** 注入测试；缺省全局 fetch */
@@ -123,6 +128,7 @@ export async function prepareQa(deps: QaDeps): Promise<PreparedQa> {
       detail: card.detail ?? '',
       options: sanitizeOptions(deps.options),
       cardType: card.cardType,   // 服务端权威（cards 表），不取自客户端
+      attempt: sanitizeAttempt(deps.attempt),
     },
     history,
   )

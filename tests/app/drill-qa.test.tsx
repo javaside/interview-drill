@@ -354,3 +354,67 @@ test('换题后发的是新题的选项（不串上一题的）', async () => {
   const body = JSON.parse(String(((fetchMock.mock.calls[0] as unknown[])[1] as RequestInit).body)) as { cardId: string }
   expect(body.cardId).toBe('c2')
 })
+
+test('屏① 提问不带作答（结构上不剧透答案）', async () => {
+  const u = userEvent.setup()
+  const fetchMock = vi.fn(async () => sseResponse(['回答']))
+  vi.stubGlobal('fetch', fetchMock)
+  render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
+
+  await u.click(screen.getByRole('button', { name: /问 AI/ }))
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '这题选什么？')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+  await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
+
+  const body = JSON.parse(String(((fetchMock.mock.calls[0] as unknown[])[1] as RequestInit).body)) as Record<string, unknown>
+  expect(body.attempt).toBeUndefined()
+})
+
+test('屏② 提问带作答与判分结果（AI 才能答「我为什么选错了」）', async () => {
+  const u = userEvent.setup()
+  const fetchMock = vi.fn(async () => sseResponse(['回答']))
+  vi.stubGlobal('fetch', fetchMock)
+  render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
+
+  // 交卷：勾前 3 条（fixture 的正确答案就是 [0,1,2]，故勾对 3、错勾 0、漏选 0）
+  const boxes = screen.getAllByRole('checkbox')
+  await u.click(boxes[0]!); await u.click(boxes[1]!); await u.click(boxes[2]!)
+  await u.click(screen.getByRole('button', { name: /交卷/ }))
+
+  await u.click(await screen.findByRole('button', { name: /问 AI/ }))
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '我为什么选错了？')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+  await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
+
+  const body = JSON.parse(String(((fetchMock.mock.calls[0] as unknown[])[1] as RequestInit).body)) as {
+    attempt?: { selected?: number[]; correctChecked: number; wrongChecked: number; missed: number }
+  }
+  // 0-based 勾选 [0,1,2] → 界面序号 [1,2,3]
+  expect(body.attempt).toEqual({
+    correctChecked: 3, wrongChecked: 0, missed: 0, selected: [1, 2, 3],
+  })
+})
+
+test('屏① 问过再交卷：屏② 的追问才带上作答（同一对话内切换）', async () => {
+  const u = userEvent.setup()
+  const fetchMock = vi.fn(async () => sseResponse(['回答']))
+  vi.stubGlobal('fetch', fetchMock)
+  render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
+
+  await u.click(screen.getByRole('button', { name: /问 AI/ }))
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '屏①的问题')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+  await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
+  const first = JSON.parse(String(((fetchMock.mock.calls[0] as unknown[])[1] as RequestInit).body)) as Record<string, unknown>
+  expect(first.attempt).toBeUndefined()
+
+  const boxes = screen.getAllByRole('checkbox')
+  await u.click(boxes[0]!); await u.click(boxes[1]!); await u.click(boxes[2]!)
+  await u.click(screen.getByRole('button', { name: /交卷/ }))
+
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '屏②的追问')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+  await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2))
+  const second = JSON.parse(String(((fetchMock.mock.calls[1] as unknown[])[1] as RequestInit).body)) as { attempt?: unknown }
+  expect(second.attempt).toBeDefined()
+})

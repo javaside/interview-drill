@@ -19,14 +19,15 @@ export async function POST(request: Request): Promise<Response> {
   if (userId instanceof Response) return userId
 
   const body = (await request.json().catch(() => null)) as
-    { cardId?: unknown; history?: unknown; options?: unknown } | null
+    { cardId?: unknown; history?: unknown; options?: unknown; attempt?: unknown } | null
   if (body === null || typeof body.cardId !== 'string' || body.cardId === '') {
     return Response.json({ error: '缺少题目参数' }, { status: 400 })
   }
 
   try {
     const stream = await qaStreamHandler({
-      db: getDb(), userId, cardId: body.cardId, history: body.history, options: body.options,
+      db: getDb(), userId, cardId: body.cardId, history: body.history,
+      options: body.options, attempt: body.attempt,
     })
     return new Response(stream, {
       headers: {

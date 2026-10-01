@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { browserApi } from '../client/api.js'
-import type { QaMessage } from '../lib/ai/qa.js'
+import type { QaMessage, QaAttempt } from '../lib/ai/qa.js'
 import { RichText } from './RichText.js'
 
 /**
@@ -21,10 +21,15 @@ import { RichText } from './RichText.js'
 type Turn = QaMessage & { reasoning?: string }
 
 export function CardQA(
-  { cardId, options }: {
+  { cardId, options, attempt }: {
     cardId: string
     /** 当前题在界面上展示的选项（刷题页传、learn 页无）——AI 靠它回答「这个选项为什么不对」 */
     options?: readonly string[]
+    /**
+     * 已交卷的作答与结果。**只有屏② 传**——屏① 用户还没作答，没有这份数据，
+     * 从结构上就不会把答案提前告诉 AI。
+     */
+    attempt?: QaAttempt | null
   },
 ): React.JSX.Element {
   const [open, setOpen] = useState(false)
@@ -88,7 +93,7 @@ export function CardQA(
           gotReasoning = true
           if (aliveRef.current) append('reasoning', text)
         },
-      }, options, controller.signal)
+      }, options, attempt ?? null, controller.signal)
     } catch (e) {
       if (!aliveRef.current) return
       setError(e instanceof Error ? e.message : '提问失败，请重试')

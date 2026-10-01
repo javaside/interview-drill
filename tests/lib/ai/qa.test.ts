@@ -1,7 +1,7 @@
 import {
   sanitizeHistory, buildQaMessages, selectProvider, providerKeyHints,
   MAX_HISTORY_MESSAGES, MAX_MESSAGE_CHARS, QA_MAX_OUTPUT_TOKENS, QA_DAILY_QUOTA,
-  sanitizeOptions, MAX_OPTIONS, MAX_OPTION_CHARS,
+  sanitizeOptions, MAX_OPTIONS, MAX_OPTION_CHARS, sanitizeAttempt, attemptFrom,
 } from '../../../src/lib/ai/qa.js'
 
 const card = {
@@ -272,5 +272,115 @@ describe('sanitizeOptions：客户端传来的选项要清洗', () => {
   test('正常选项原样保留（含前导空格被 trim）', () => {
     expect(sanitizeOptions(['  undo log 记录前像  ', '用于崩溃恢复']))
       .toEqual(['undo log 记录前像', '用于崩溃恢复'])
+  })
+})
+
+describe('用户作答上下文：AI 得能回答「我为什么选错了」', () => {
+  const attempt = {
+    selected: [2, 5],
+    correctChecked: 1,
+    wrongChecked: 1,
+    missed: 2,
+  }
+  const withAttempt = { ...card, options: ['甲', '乙', '丙', '丁'], cardType: 'enumeration', attempt }
+
+  test('作答进上下文：勾了哪几条 + 判分统计', () => {
+    const sys = buildQaMessages(withAttempt, [{ role: 'user', content: '我为什么选错了？' }])[0]?.content ?? ''
+    expect(sys).toContain('# 用户的作答')
+    expect(sys).toContain('勾选项：第 2 条、第 5 条')
+    expect(sys).toContain('勾对 1 条、错勾 1 条、漏选 2 条')
+  })
+
+  test('明说「用户已知结果」——否则 AI 可能把「不剧透」误当约束而拒答', () => {
+    const sys = buildQaMessages(withAttempt, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(sys).toContain('已交卷')
+    expect(sys).toContain('用户已知结果')
+  })
+
+  test('范围规则点名「作答错在哪」——否则会被当跑题拒掉', () => {
+    const sys = buildQaMessages(withAttempt, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(sys).toContain('用户这次作答错在哪')
+  })
+
+  test('屏② 之前（attempt=null）没有作答段——结构上不剧透', () => {
+    for (const a of [null, undefined]) {
+      const sys = buildQaMessages({ ...card, options: ['甲'], attempt: a }, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+      expect(sys).not.toContain('# 用户的作答')
+      expect(sys).not.toContain('勾选项')
+    }
+  })
+
+  test('判断题：带结论的白话读法', () => {
+    const sys = buildQaMessages(
+      { ...card, attempt: { ...attempt, conclusion: 2, selected: [1] } },
+      [{ role: 'user', content: 'q' }],
+    )[0]?.content ?? ''
+    expect(sys).toContain('结论选了：取决于')
+  })
+
+  test('排序题：说成「第几位放第几条」，不甩裸序号串', () => {
+    const sys = buildQaMessages(
+      { ...card, cardType: 'sequence', attempt: { order: [3, 1, 2], correctChecked: 0, wrongChecked: 1, missed: 0 } },
+      [{ role: 'user', content: 'q' }],
+    )[0]?.content ?? ''
+    expect(sys).toContain('第 1 位放第 3 条')
+    expect(sys).toContain('第 2 位放第 1 条')
+    expect(sys).toContain('第 3 位放第 2 条')
+  })
+
+  test('不发每条的对错状态（那等于把正确集合明文写进提示词）', () => {
+    const sys = buildQaMessages(withAttempt, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(sys).not.toContain('correctIndices')
+    expect(sys).not.toMatch(/正确答案|哪些是对的/)
+  })
+})
+
+describe('attemptFrom：0-based 下标 → 界面 1-based 序号', () => {
+  const fb = { correctChecked: 2, wrongChecked: 1, missed: 0 }
+
+  test('多选/判断：序号 +1 并排序', () => {
+    expect(attemptFrom({ kind: 'selection', selected: [4, 0, 2], ...fb }))
+      .toEqual({ ...fb, selected: [1, 3, 5] })
+  })
+
+  test('判断：额外带 conclusion', () => {
+    expect(attemptFrom({ kind: 'judgment', selected: [1], conclusion: 0, ...fb }))
+      .toEqual({ ...fb, selected: [2], conclusion: 0 })
+  })
+
+  test('单选：单个下标转成单位数组成员', () => {
+    expect(attemptFrom({ kind: 'atomic', selected: [2], ...fb }))
+      .toEqual({ ...fb, selected: [3] })
+  })
+
+  test('排序：保持顺序语义（第 i 位放哪条），只做 +1', () => {
+    expect(attemptFrom({ kind: 'sequence', order: [2, 0, 1], ...fb }))
+      .toEqual({ ...fb, order: [3, 1, 2] })
+  })
+})
+
+describe('sanitizeAttempt：脏数据退化为「无作答」', () => {
+  test('非对象 / 空作答 → null', () => {
+    expect(sanitizeAttempt(undefined)).toBeNull()
+    expect(sanitizeAttempt(null)).toBeNull()
+    expect(sanitizeAttempt('x')).toBeNull()
+    expect(sanitizeAttempt({ correctChecked: 1, wrongChecked: 0, missed: 0 })).toBeNull()
+    expect(sanitizeAttempt({ selected: [], order: [] })).toBeNull()
+  })
+
+  test('非法序号被剔除：非整数、越界（<1 或 >MAX_OPTIONS）、重复', () => {
+    const a = sanitizeAttempt({ selected: [1, 1, 0, -3, 2.5, 999, '3', 4] })
+    expect(a?.selected).toEqual([1, 4])
+  })
+
+  test('结论只接受 0/1/2；计数非负整数且封顶', () => {
+    const a = sanitizeAttempt({ selected: [1], conclusion: 7, correctChecked: -1, wrongChecked: 2.5, missed: 1e9 })
+    expect(a?.conclusion).toBeUndefined()
+    expect(a).toMatchObject({ correctChecked: 0, wrongChecked: 0, missed: 999 })
+  })
+
+  test('合法输入原样通过', () => {
+    expect(sanitizeAttempt({ selected: [2, 5], correctChecked: 1, wrongChecked: 1, missed: 2 }))
+      .toEqual({ selected: [2, 5], correctChecked: 1, wrongChecked: 1, missed: 2 })
   })
 })

@@ -27,6 +27,8 @@ export type QaCard = {
   options?: readonly string[]
   /** 题型（服务端权威，不取自客户端）：决定选项该怎么读——多选/单选/排序/判断 */
   cardType?: string
+  /** 用户已交卷的作答与结果（仅屏②；屏① 传 null，天然不剧透） */
+  attempt?: QaAttempt | null
 }
 
 /** 选项条数上限（enum 型 9 条、atomic 4 条、sequence 为本题要点数，12 足够且防灌水） */
@@ -55,6 +57,105 @@ const TYPE_HINT: Record<string, string> = {
   judgment: '判断：先定结论（会/不会/取决于），再勾出所有属于这道题的要点',
   sequence: '排序：把下方的条目排成正确的先后顺序',
   atomic: '单选：选出唯一正确的一项',
+}
+
+/**
+ * 用户的作答与判分结果（**仅屏② 有**）。屏① 用户还没作答，结构上就没有这份数据——
+ * 天然不会剧透答案。
+ *
+ * 只发「用户做了什么」+「结果统计」，**不发每条的对错状态**：后者等于把正确集合
+ * 明文写进提示词。用户交卷后屏幕上已染色显示对错（DrillFeedback 的 correct/missed/wrong），
+ * 本就没有保密可言，但让 AI 依据题解自行推理「哪条错」更有教学价值。
+ * 序号一律 1-based，与界面上的选项序号一致，用户说「第二条」时两边对得上。
+ */
+export type QaAttempt = {
+  /** 勾选的选项序号（enumeration/comparison/judgment） */
+  selected?: readonly number[]
+  /** 判断题的结论：0=会 1=不会 2=取决于 */
+  conclusion?: number
+  /** 排序题的作答顺序（序号排列） */
+  order?: readonly number[]
+  correctChecked: number
+  wrongChecked: number
+  missed: number
+}
+
+/** 作答序号列表的清洗上限（与 MAX_OPTIONS 同量级） */
+export function sanitizeIndexList(raw: unknown): number[] {
+  if (!Array.isArray(raw)) return []
+  const out: number[] = []
+  for (const item of raw) {
+    if (typeof item !== 'number' || !Number.isInteger(item)) continue
+    if (item < 1 || item > MAX_OPTIONS) continue
+    if (out.includes(item)) continue
+    out.push(item)
+    if (out.length >= MAX_OPTIONS) break
+  }
+  return out
+}
+
+/** 清洗客户端传来的作答：任何畸形输入都退化为「无作答」，绝不抛错。 */
+export function sanitizeAttempt(raw: unknown): QaAttempt | null {
+  if (typeof raw !== 'object' || raw === null) return null
+  const { selected, conclusion, order, correctChecked, wrongChecked, missed } = raw as Record<string, unknown>
+  const count = (v: unknown): number =>
+    typeof v === 'number' && Number.isInteger(v) && v >= 0 ? Math.min(v, 999) : 0
+  const sel = sanitizeIndexList(selected)
+  const ord = sanitizeIndexList(order)
+  const concl = typeof conclusion === 'number' && Number.isInteger(conclusion) && conclusion >= 0 && conclusion <= 2
+    ? conclusion
+    : undefined
+
+  // 三样都没给 = 不是作答（屏① 或 learn 页），按无作答处理而不是塞一个空壳
+  if (sel.length === 0 && ord.length === 0 && concl === undefined) return null
+
+  return {
+    ...(sel.length > 0 ? { selected: sel } : {}),
+    ...(concl !== undefined ? { conclusion: concl } : {}),
+    ...(ord.length > 0 ? { order: ord } : {}),
+    correctChecked: count(correctChecked),
+    wrongChecked: count(wrongChecked),
+    missed: count(missed),
+  }
+}
+
+/** 判断题结论的白话读法（与 DrillQuestion 的「会/不会/取决于」一致） */
+const CONCLUSION_LABEL: Record<number, string> = { 0: '会', 1: '不会', 2: '取决于' }
+
+/**
+ * 作答 → QaAttempt：把 0-based 的作答下标转成**界面上的 1-based 序号**，
+ * 这样 AI 说「第 3 条」时与用户屏幕上看到的完全一致。
+ * 纯函数、不依赖 Submission 类型（调用方负责解构），便于单测。
+ */
+export function attemptFrom(input: {
+  kind: 'selection' | 'sequence' | 'judgment' | 'atomic'
+  selected?: readonly number[]
+  order?: readonly number[]
+  conclusion?: number
+  correctChecked: number
+  wrongChecked: number
+  missed: number
+}): QaAttempt {
+  const base = {
+    correctChecked: input.correctChecked,
+    wrongChecked: input.wrongChecked,
+    missed: input.missed,
+  }
+  const toDisplay = (i: number): number => i + 1
+
+  if (input.kind === 'sequence') {
+    // order 语义是「第 i 位放的是哪个选项」——转序号后仍是这个含义
+    return { ...base, order: (input.order ?? []).map(toDisplay) }
+  }
+  if (input.kind === 'atomic') {
+    return { ...base, selected: (input.selected ?? []).map(toDisplay) }
+  }
+  // selection / judgment：勾选项序号排序后更好读
+  return {
+    ...base,
+    selected: (input.selected ?? []).map(toDisplay).sort((a, b) => a - b),
+    ...(input.conclusion !== undefined ? { conclusion: input.conclusion } : {}),
+  }
 }
 
 export type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string }
@@ -226,7 +327,7 @@ export function buildQaMessages(card: QaCard, history: QaMessage[]): ChatMessage
     '',
     '必须遵守的规则：',
     '1. 只回答与这道题直接相关的问题：题目本身、题解细节、选项为什么对或错、',
-    '   相关概念辨析、记忆方法。',
+    '   用户这次作答错在哪、相关概念辨析、记忆方法。',
     '2. 与这道题无关的任何请求一律拒绝——包括写代码或改代码、翻译、写作、闲聊、',
     '   与本题无关的技术问题、以及一切「帮我做某件事」的委托。',
     '   拒绝时只说一句「这个和当前题目无关，我们回到这道题」，',
@@ -251,6 +352,30 @@ export function buildQaMessages(card: QaCard, history: QaMessage[]): ChatMessage
       '注意：选项里混有干扰项，用户可能问某一条为什么对或错。',
       '不要直接报答案清单，讲清判断依据——用户是在练题，不是对答案。',
     )
+  }
+
+  // 用户作答（仅屏②）：让他能问「我为什么选错了」。界面上已染色显示对错，
+  // 故这里说清「用户已知结果」，避免 AI 把「不要剧透」误当成约束而拒答。
+  const attempt = card.attempt ?? null
+  if (attempt !== null) {
+    const lines = ['', '# 用户的作答（已交卷，界面上已染色显示对错，用户已知结果）']
+    if (attempt.conclusion !== undefined) {
+      lines.push(`结论选了：${CONCLUSION_LABEL[attempt.conclusion] ?? attempt.conclusion}`)
+    }
+    if (attempt.selected !== undefined && attempt.selected.length > 0) {
+      lines.push(`勾选项：${attempt.selected.map(n => `第 ${n} 条`).join('、')}`)
+    }
+    if (attempt.order !== undefined && attempt.order.length > 0) {
+      // 说成「第几位放第几条」而不是裸序号串——后者 AI 容易把位置与选项搞反
+      lines.push(`排列：${attempt.order.map((opt, pos) => `第 ${pos + 1} 位放第 ${opt} 条`).join('、')}`)
+    }
+    lines.push(
+      `判分：勾对 ${attempt.correctChecked} 条、错勾 ${attempt.wrongChecked} 条、漏选 ${attempt.missed} 条`,
+      '',
+      '用户可能问「我为什么选错了」。请指出他判断错在哪、依据是什么——',
+      '先讲这条为什么不属于本题，再给一个下次能自己判断的抓手。',
+    )
+    sections.push(...lines)
   }
 
   sections.push('', `# 题解（入门版）\n${intro}`)

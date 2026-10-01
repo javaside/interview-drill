@@ -6,6 +6,7 @@ import { DrillQuestion } from './DrillQuestion.js'
 import type { SubmissionPayload } from './DrillQuestion.js'
 import { DrillFeedback } from './DrillFeedback.js'
 import { CardQA } from '../CardQA.js'
+import { attemptFrom } from '../../lib/ai/qa.js'
 import { newSubmission, submitOne } from '../../client/sync-engine.js'
 import { scoreLocal } from '../../client/scoring.js'
 import { browserApi } from '../../client/api.js'
@@ -138,6 +139,28 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
 
   const progressPct = total === 0 ? 0 : Math.round((done / total) * 100)
 
+  /**
+   * 屏② 的作答（供 AI 回答「我为什么选错了」）：把 Submission 的 0-based 下标
+   * 转成界面上的 1-based 序号。屏① 或尚未判分时返回 null——AI 拿不到作答，
+   * 就不可能提前把答案说出去。
+   */
+  const qaAttempt = useMemo(() => {
+    if (phase !== 'feedback' || submission === null || result === null) return null
+    const fb = result.feedback
+    const base = {
+      correctChecked: fb.correctChecked, wrongChecked: fb.wrongChecked, missed: fb.missed,
+    }
+    switch (submission.kind) {
+      case 'sequence': return attemptFrom({ kind: 'sequence', order: submission.order, ...base })
+      case 'atomic': return attemptFrom({ kind: 'atomic', selected: [submission.selected], ...base })
+      case 'judgment':
+        return attemptFrom({
+          kind: 'judgment', selected: submission.selected, conclusion: submission.conclusion, ...base,
+        })
+      default: return attemptFrom({ kind: 'selection', selected: submission.selected, ...base })
+    }
+  }, [phase, submission, result])
+
   return (
     <main className="rise mx-auto max-w-6xl px-6 pb-24">
       <div className="grid gap-10 md:grid-cols-[260px_1fr]">
@@ -216,7 +239,13 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
       */}
       {(phase === 'question' || phase === 'feedback') && card !== undefined && (
         <div className={phase === 'feedback' ? 'mx-auto max-w-2xl px-5' : ''}>
-          <CardQA key={card.cardId} cardId={card.cardId} options={variant?.optionTexts} />
+          <CardQA
+            key={card.cardId}
+            cardId={card.cardId}
+            options={variant?.optionTexts}
+            // 只有屏② 传作答（屏① 用户还没答，没这份数据 → 结构上不会剧透答案）
+            attempt={qaAttempt}
+          />
         </div>
       )}
 

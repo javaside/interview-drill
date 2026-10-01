@@ -4,7 +4,7 @@ import type { DailyPayload } from '../server/queue.js'
 import type { ReviewResult } from '../server/review.js'
 import type { SyncResult } from '../server/sync.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
-import type { QaMessage, QaStreamEvent } from '../lib/ai/qa.js'
+import type { QaMessage, QaStreamEvent, QaAttempt } from '../lib/ai/qa.js'
 import { parseSseChunks } from '../lib/ai/sse.js'
 
 /**
@@ -45,6 +45,8 @@ export interface Api {
     handlers: { onDelta: (text: string) => void; onReasoning?: (text: string) => void },
     /** 界面上的选项原文（刷题页才有）——AI 靠它回答「这个选项为什么不对」 */
     options?: readonly string[],
+    /** 已交卷的作答与结果（仅屏②）——AI 靠它回答「我为什么选错了」；屏① 传 null */
+    attempt?: QaAttempt | null,
     signal?: AbortSignal,
   ): Promise<void>
 }
@@ -124,10 +126,14 @@ export function browserApi(): Api {
         await fetch(withBase('/api/queue/requeue'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ scope }) }),
       )
     },
-    async postQaStream(cardId, history, handlers, options, signal) {
+    async postQaStream(cardId, history, handlers, options, attempt, signal) {
       const res = await fetch(withBase('/api/qa'), {
         method: 'POST', headers: JSON_HEADERS,
-        body: JSON.stringify({ cardId, history, ...(options ? { options } : {}) }),
+        body: JSON.stringify({
+          cardId, history,
+          ...(options ? { options } : {}),
+          ...(attempt ? { attempt } : {}),
+        }),
         ...(signal ? { signal } : {}),
       })
       // 流开始之前的一切失败仍是既有协议：非 2xx 带 { error } 中文消息
