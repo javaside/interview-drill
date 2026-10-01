@@ -60,7 +60,7 @@ export function Landing({ totals, tracks }: {
               八股不是背会的，是练会的。
               填了面试日期，题自己会排：最常问的先来，没记住的追着你练，练熟的少打扰；到面试前，每道题都刚练过。
               不填日期也能刷：该复习的自己回来，想单刷哪一块随时挑。
-              卡住就问 AI，它只讲这一道。
+              不懂的题，直接问 AI——像问老师一样，问到懂。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link href={`/api/auth/signin?callbackUrl=${withBase('/')}`} className="btn-primary text-base" data-testid="signin-cta">

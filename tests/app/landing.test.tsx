@@ -38,9 +38,10 @@ test('首屏正文：核心 + 有日期（冲刺）+ 没日期也行（常备/�
   expect(hero).toContain('该复习的自己回来')
   // 自由刷（/practice?block=，不看排期、不占今日分母）
   expect(hero).toContain('想单刷哪一块随时挑')
-  // AI：卡住当场问，只讲这一道
-  expect(hero).toContain('卡住就问 AI')
-  expect(hero).toContain('它只讲这一道')
+  // AI：像老师一样——不懂直接问、能多轮追问（不是一问一答就结束）
+  expect(hero).toContain('不懂的题，直接问 AI')
+  expect(hero).toContain('像问老师一样')
+  expect(hero).toContain('问到懂')
   // 结构守卫：不是「所以这里 A：… B：… C：…」式罗列，也不写操作步骤
   expect(hero).not.toContain('所以这里')
   expect(hero).not.toContain('先圈定')
