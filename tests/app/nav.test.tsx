@@ -11,11 +11,14 @@ vi.mock('next-auth/react', () => ({
   signOut: (...args: unknown[]) => signOut(...args),
 }))
 
-test('导航含三个功能模块入口：刷题/知识地图/设置', () => {
+test('导航含四个入口：刷题/知识地图/设置/关于', () => {
   render(<NavBar />)
   expect(screen.getByRole('link', { name: '刷题' })).toHaveAttribute('href', '/')
   expect(screen.getByRole('link', { name: '知识地图' })).toHaveAttribute('href', '/map')
   expect(screen.getByRole('link', { name: '设置' })).toHaveAttribute('href', '/settings')
+  // 关于：2026-10-01 用户要求从页脚移到顶部导航（登录后首页是刷题界面，
+  // 介绍页得有随时够得着的入口，也更容易转发）；页脚不再重复放
+  expect(screen.getByRole('link', { name: '关于' })).toHaveAttribute('href', '/about')
 })
 
 test('当前页链接带 aria-current=page', () => {
@@ -53,9 +56,9 @@ test('登录态：最右渲染「退出」按钮，点击 signOut({ callbackUrl:
   expect(signOut).toHaveBeenCalledWith({ callbackUrl: '/drill' })
 })
 
-test('匿名态：不渲染退出按钮，也不出登录链接（导航保持三入口不变）', () => {
+test('匿名态：不渲染退出按钮，也不出登录链接（导航保持四个入口不变）', () => {
   render(<NavBar />)
   expect(screen.queryByRole('button', { name: '退出' })).not.toBeInTheDocument()
   expect(screen.queryByRole('link', { name: '登录' })).not.toBeInTheDocument()
-  expect(screen.getAllByRole('link')).toHaveLength(3)
+  expect(screen.getAllByRole('link')).toHaveLength(4)
 })
