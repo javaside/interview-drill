@@ -15,18 +15,29 @@ test('首屏价值主张：题海刷不完知识点刷得完 + 真实库量统�
   expect(root).toHaveTextContent('12')
 })
 
-test('首屏说人话：讲清实际动作与核心差异，且不出现内部术语', () => {
+test('首屏先戳痛点再给解法：没用过的人也能立刻对上号', () => {
   render(<Landing totals={totals} tracks={tracks} />)
   const hero = screen.getByTestId('landing').querySelector('header')?.textContent ?? ''
-  // 实际要做什么：九个说法里勾出所有对的
-  expect(hero).toContain('九个说法')
+  // 痛点：背了就忘 / 看答案觉得会、真被追问就答不上（准备面试的人共同体验）
+  expect(hero).toContain('背了就忘')
+  expect(hero).toContain('真被追问又答不上来')
+  // 解法：不让你看答案，让你勾（主动回忆，不是描述功能参数）
+  expect(hero).toContain('不让你直接看答案')
   expect(hero).toContain('勾出所有对的')
-  // 核心差异：告诉你错在哪一条（而不是只说答错了）
+  // 结果：错在哪一条 + 答错的会回来
   expect(hero).toContain('漏了哪条')
-  expect(hero).toContain('错勾了哪条')
-  // 内部术语不得进用户可见文案：「要点判分」是数据模型词
-  expect(hero).not.toContain('要点判分')
-  expect(hero).not.toContain('要点明天')   // 且排期是按题的，不能说按要点
+  expect(hero).toContain('答错的明天再来')
+})
+
+test('卖点标题写成「用户会问自己的那句话」，而不是功能名', () => {
+  render(<Landing totals={totals} tracks={tracks} />)
+  const titles = Array.from(
+    screen.getByTestId('landing').querySelectorAll('ol.grid.md\\:grid-cols-2 li h3'),
+  ).map(el => el.textContent ?? '')
+  expect(titles).toHaveLength(4)
+  for (const t of titles) {
+    expect(t, `卖点标题「${t}」不是问题导向（应写成用户会问自己的那句话）`).toMatch(/？$/)
+  }
 })
 
 test('卖点与「怎么用」不重复：面试冲刺讲「临时加急」，排讲「长期倒推」', () => {
@@ -34,7 +45,7 @@ test('卖点与「怎么用」不重复：面试冲刺讲「临时加急」，�
   const root = screen.getByTestId('landing')
   const loop = screen.getByTestId('landing-loop').textContent ?? ''
   const sprint = Array.from(root.querySelectorAll('ol.grid.md\\:grid-cols-2 li'))
-    .map(li => li.textContent ?? '').find(t => t.includes('面试冲刺')) ?? ''
+    .map(li => li.textContent ?? '').find(t => t.includes('面试就剩几天')) ?? ''
   // 冲刺卖点讲重铺计划（cram 场景）
   expect(sprint).toContain('重铺成冲刺计划')
   // 而「倒推每天刷几题」只归「排」一步，避免两处说同一句话
@@ -57,13 +68,13 @@ test('双 CTA：GitHub 登录（主）+ 先逛逛知识库（旁路）', () => {
   expect(screen.getByTestId('landing-browse')).toHaveAttribute('href', '/map')
 })
 
-test('价值主张：AI 追问 / 白话讲解 / 岗位一键 / 面试冲刺', () => {
+test('价值主张：四个卖点', () => {
   render(<Landing totals={totals} tracks={tracks} />)
   const root = screen.getByTestId('landing')
-  expect(root).toHaveTextContent('不懂就追问 AI')
-  expect(root).toHaveTextContent('白话讲解')
-  expect(root).toHaveTextContent('岗位一键')
-  expect(root).toHaveTextContent('面试冲刺')
+  expect(root).toHaveTextContent('卡住了没人问？')
+  expect(root).toHaveTextContent('看不懂术语？')
+  expect(root).toHaveTextContent('不知道从哪刷起？')
+  expect(root).toHaveTextContent('面试就剩几天？')
   // 岗位名来自库（tracks 传入），不硬编码漂移
   expect(root).toHaveTextContent('Java 后端 / 架构师 / Agent 开发')
 })
@@ -87,7 +98,7 @@ test('AI 卖点讲清边界：只聊这道题（把约束讲成卖点，不吹�
   expect(root).toHaveTextContent('这个选项为什么不对')
   expect(root).toHaveTextContent('交卷后我错在哪')
   // 边界写成正面的专注表述（与产品实际行为一致：只围绕本题回答）
-  expect(root).toHaveTextContent('只围绕这道题回答')
+  expect(root).toHaveTextContent('只围绕这道题讲')
 })
 
 test('怎么用：学 → 练 → 判 → 排 四步都在，讲的是产品形态', () => {

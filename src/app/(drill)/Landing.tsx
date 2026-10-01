@@ -20,25 +20,25 @@ export function Landing({ totals, tracks }: {
   ]
 
   const props: Array<{ title: string; body: string }> = [
+    // 标题一律写成「用户会问自己的那句话」——扫一眼就能对号入座，
+    // 而不是「我们有什么功能」。用过的人懂，没用过的人也能立刻懂。
     {
-      title: '不懂就追问 AI',
-      body: '每道题都能追问：这个选项为什么不对、交卷后我错在哪。它只围绕这道题回答，不讲套话。',
+      title: '卡住了没人问？',
+      body: '每题都能追问 AI：这个选项为什么不对、交卷后我错在哪。它只围绕这道题讲。',
     },
-    // 注意：「判到要点」已并入上面「怎么用」的「判」一步，此处不再重复列一条
-    // （重复既啰嗦，又会让卖点变成奇数条、双列网格末行留空看着像坏了）。
     {
-      title: '白话讲解，零基础能读',
-      body: '先用大白话讲清「为什么」，再对应上正式的面试说法；更深的折起来，想看再展开。',
+      title: '看不懂术语？',
+      body: '先用大白话讲清「为什么」，再对应上正式的面试说法。零基础也读得懂。',
     },
     ...(tracks.length > 0 ? [{
-      title: '岗位一键勾齐',
-      body: `${tracks.join(' / ')}：点一下，这个岗位要刷的知识块全勾上。`,
+      title: '不知道从哪刷起？',
+      body: `${tracks.join(' / ')}：点一下，这个岗位该刷的块全勾上。`,
     }] : []),
     {
-      title: '面试冲刺',
       // 讲的是「临时加急」这个场景（cram：把选中块重铺成冲刺计划），
       // 与上面「排」一步的常规倒推排期是两件事，别写成同一句。
-      body: '面试就剩几天？把要考的块重铺成冲刺计划，集中过一遍还没掌握的。',
+      title: '面试就剩几天？',
+      body: '把要考的块重铺成冲刺计划，集中过一遍还没掌握的。',
     },
   ]
   return (
@@ -56,10 +56,10 @@ export function Landing({ totals, tracks }: {
               </span>
               刷得完
             </h1>
-            <p className="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-paper-muted">
-              一道题给你九个说法，对错混在一起——勾出所有对的。
-              漏了哪条、错勾了哪条都告诉你，而不是只说一句「答错了」。
-              每题配白话讲解，不懂还能追问 AI。
+            <p className="mt-4 max-w-[54ch] text-[15px] leading-relaxed text-paper-muted">
+              八股文不是背不会，是背了就忘——看答案时觉得懂了，真被追问又答不上来。
+              所以这里不让你直接看答案：一道题九个说法，勾出所有对的。
+              漏了哪条、错勾了哪条都指给你，答错的明天再来。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link href={`/api/auth/signin?callbackUrl=${withBase('/')}`} className="btn-primary text-base" data-testid="signin-cta">
