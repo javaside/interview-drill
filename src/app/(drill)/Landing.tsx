@@ -56,10 +56,10 @@ export function Landing({ totals, tracks }: {
               </span>
               刷得完
             </h1>
-            <p className="mt-4 max-w-[54ch] text-[15px] leading-relaxed text-paper-muted">
-              八股文不是背不会，是背了就忘——看答案时觉得懂了，真被追问又答不上来。
-              所以这里不让你直接看答案：一道题九个说法，勾出所有对的。
-              漏了哪条、错勾了哪条都指给你，答错的明天再来。
+            <p data-testid="landing-hero-copy" className="mt-4 max-w-[54ch] text-[15px] leading-relaxed text-paper-muted">
+              面试前你只有几周，要记的却有好几百道。
+              所以这里不按题库顺序从头刷——按你的面试日期倒着排：每天练哪几道、哪几道回头再练，都替你排好。
+              到面试前几天，每道题你都刚复习过。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link href={`/api/auth/signin?callbackUrl=${withBase('/')}`} className="btn-primary text-base" data-testid="signin-cta">

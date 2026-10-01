@@ -15,18 +15,26 @@ test('首屏价值主张：题海刷不完知识点刷得完 + 真实库量统�
   expect(root).toHaveTextContent('12')
 })
 
-test('首屏先戳痛点再给解法：没用过的人也能立刻对上号', () => {
+test('首屏正文：用户处境 → 我们的做法 → 面试那天的结果，不写操作步骤', () => {
   render(<Landing totals={totals} tracks={tracks} />)
-  const hero = screen.getByTestId('landing').querySelector('header')?.textContent ?? ''
-  // 痛点：背了就忘 / 看答案觉得会、真被追问就答不上（准备面试的人共同体验）
-  expect(hero).toContain('背了就忘')
-  expect(hero).toContain('真被追问又答不上来')
-  // 解法：不让你看答案，让你勾（主动回忆，不是描述功能参数）
-  expect(hero).toContain('不让你直接看答案')
-  expect(hero).toContain('勾出所有对的')
-  // 结果：错在哪一条 + 答错的会回来
-  expect(hero).toContain('漏了哪条')
-  expect(hero).toContain('答错的明天再来')
+  const hero = screen.getByTestId('landing-hero-copy').textContent ?? ''
+  // ① 处境：时间少、要记的多（用户自己的话，不是产品自述）
+  expect(hero).toContain('面试前你只有几周')
+  expect(hero).toContain('要记的却有好几百道')
+  // ② 做法：按面试日期倒着排（这是产品唯一真正的机制，用用户语言说）
+  expect(hero).toContain('不按题库顺序从头刷')
+  expect(hero).toContain('按你的面试日期倒着排')
+  expect(hero).toContain('都替你排好')
+  // ③ 结果：面试前几天全部刚复习过（用户要的那件事）
+  expect(hero).toContain('到面试前几天，每道题你都刚复习过')
+  // 不写「先……再……然后……」的操作流程——那是说明书，读起来像流水账
+  expect(hero).not.toContain('先圈定')
+  expect(hero).not.toContain('再定下')
+  // 不讲产品机制词，也不复述标题里已说的「题海/知识点」
+  for (const jargon of ['干扰项', '排期', '要点', '掌握度', '保质期']) {
+    expect(hero, `首屏正文出现机制词「${jargon}」`).not.toContain(jargon)
+  }
+  expect(hero).not.toContain('题海')
 })
 
 test('卖点标题写成「用户会问自己的那句话」，而不是功能名', () => {
