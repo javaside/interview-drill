@@ -58,9 +58,9 @@ export function Landing({ totals, tracks }: {
             </h1>
             <p data-testid="landing-hero-copy" className="mt-4 max-w-[54ch] text-[15px] leading-relaxed text-paper-muted">
               八股不是背会的，是练会的。
-              你只说哪天面试，题自己会排：最常问的先来，没记住的追着你练，练熟的少打扰。
+              填了面试日期，就按那天倒着排，到面试前每道题都刚练过。
+              不填日期也能刷：该复习的自己回来，想单刷哪一块随时挑。
               卡住就问 AI，它只讲这一道。
-              到面试前几天，每道题都刚练过。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link href={`/api/auth/signin?callbackUrl=${withBase('/')}`} className="btn-primary text-base" data-testid="signin-cta">

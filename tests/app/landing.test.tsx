@@ -15,31 +15,32 @@ test('首屏价值主张：题海刷不完知识点刷得完 + 真实库量统�
   expect(root).toHaveTextContent('12')
 })
 
-test('首屏正文：核心（练会）+ 推荐逻辑（不用你挑）+ AI + 结果，四块齐', () => {
+test('首屏正文：核心 + 有日期（冲刺）+ 没日期也行（常备/自由刷）+ AI', () => {
   render(<Landing totals={totals} tracks={tracks} />)
   const hero = screen.getByTestId('landing-hero-copy').textContent ?? ''
   // 核心主张：不是「看会」是「练会」
   expect(hero).toContain('八股不是背会的，是练会的')
-  // **推荐逻辑**（产品核心，此前几版一直漏）：题怎么排、用户不用自己挑
-  expect(hero).toContain('你只说哪天面试，题自己会排')
-  // 推荐的三条实际规则，逐条对应代码：
-  //   高频优先（assignFinalDays 按 frequency 降序，高频拿最靠近 E 的日子）
-  expect(hero).toContain('最常问的先来')
-  //   答错重排进档 0 从明天起（regenerateAfterFailure）→ 没记住的反复出现
-  expect(hero).toContain('没记住的追着你练')
-  //   掌握度越高起始档越高、间隔越长（startTier + INTERVALS）→ 练熟的少打扰
-  expect(hero).toContain('练熟的少打扰')
+  // 有面试日期 → 冲刺排期（倒排）：末次压在面试前（E = R − buffer）
+  expect(hero).toContain('填了面试日期，就按那天倒着排')
+  expect(hero).toContain('到面试前每道题都刚练过')
+  // **没有日期也能刷**（schedule.ts:122 的 maintenance 分支：readyByDate 为空或已过
+  // 时照样出题，按 MAINTAIN_INTERVALS 滚动）。此前文案写「你只说哪天面试」把这条
+  // 路径说没了，会把没定日期的用户劝退——必须显式写出来
+  expect(hero).toContain('不填日期也能刷')
+  expect(hero).toContain('该复习的自己回来')
+  // 自由刷（/practice?block=，不看排期、不占今日分母）
+  expect(hero).toContain('想单刷哪一块随时挑')
   // AI：卡住当场问，只讲这一道
   expect(hero).toContain('卡住就问 AI')
   expect(hero).toContain('它只讲这一道')
-  // 结果：末次压在面试前几天（E = R − buffer）
-  expect(hero).toContain('到面试前几天，每道题都刚练过')
   // 结构守卫：不是「所以这里 A：… B：… C：…」式罗列，也不写操作步骤
   expect(hero).not.toContain('所以这里')
   expect(hero).not.toContain('先圈定')
   expect(hero).not.toContain('再定下')
+  // 反向守卫：不能暗示「必须先有面试日期」（这是本轮修掉的错）
+  expect(hero).not.toContain('你只说哪天面试')
   // 不讲产品机制词，也不复述标题里已说的「题海/知识点」
-  for (const jargon of ['干扰项', '排期', '要点', '掌握度', '保质期']) {
+  for (const jargon of ['干扰项', '排期', '要点', '掌握度', '保质期', '常备模式', '就绪日']) {
     expect(hero, `首屏正文出现机制词「${jargon}」`).not.toContain(jargon)
   }
   expect(hero).not.toContain('题海')
