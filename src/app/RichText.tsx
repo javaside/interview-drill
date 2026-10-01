@@ -1,4 +1,18 @@
 import { splitBlocks, splitBold, splitInlineCode, splitItalic } from '../lib/content/split.js'
+import { isKnownLanguage, tokenize, type TokenKind } from '../lib/content/highlight.js'
+
+/**
+ * 代码着色：单色阶荧光笔——关键字=荧光黄（代码骨架就是重点）、字面量=同色降透明、
+ * 注释=蓝灰斜体、其余=粉笔白。刻意不引第二色相：全站荧光黄是唯一强调色，
+ * 彩虹代码配色既是 AI 视觉指纹，也会与判分语义色（mark.good/miss/bad）撞车。
+ */
+const TOKEN_CLASS: Record<TokenKind, string> = {
+  plain: '',
+  comment: 'text-paper-muted italic',
+  keyword: 'text-accent',
+  string: 'text-accent/70',
+  number: 'text-accent/70',
+}
 
 /**
  * 行内渲染三层：先 `行内代码` 切分（代码段原样呈现）；普通段按 **粗体** 切分；
@@ -38,10 +52,24 @@ export function RichText({ text }: { text: string }): React.JSX.Element {
     <>
       {splitBlocks(text).map((block, i) => {
         if (block.kind === 'code') {
+          const tokens = tokenize(block.code, block.lang)
+          // 语言标签只认得出的显示（写错了语言名就不装懂）
+          const labeled = block.lang !== '' && isKnownLanguage(block.lang)
           return (
-            <pre key={i} className="overflow-x-auto rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 font-mono text-[13px] leading-relaxed text-paper-ink">
-              <code>{block.code}</code>
-            </pre>
+            <div key={i} className="relative z-[1] overflow-hidden rounded-xl border border-paper-line bg-paper-deep">
+              {labeled && (
+                <div className="flex justify-end border-b border-paper-line/60 px-3 py-1">
+                  <span className="font-mono text-[11px] text-paper-muted">{block.lang}</span>
+                </div>
+              )}
+              <pre className="overflow-x-auto px-4 py-3 font-mono text-[13px] leading-relaxed text-paper-ink">
+                <code>
+                  {tokens.map((t, j) => (
+                    <span key={j} className={TOKEN_CLASS[t.kind]}>{t.text}</span>
+                  ))}
+                </code>
+              </pre>
+            </div>
           )
         }
         if (block.kind === 'table') {
