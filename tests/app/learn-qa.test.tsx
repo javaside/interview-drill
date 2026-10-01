@@ -119,3 +119,18 @@ test('服务端拒绝（400 + 中文 error）→ role=alert 展示，问题退�
   // 失败不吞问题：退回输入框便于重发
   await waitFor(() => expect(screen.getByRole('textbox', { name: /向 AI 提问/ })).toHaveValue('越权问题'))
 })
+
+test('learn 页不传选项（那边本来就没有选项，不该凭空塞）', async () => {
+  const user = userEvent.setup()
+  const fetchMock = vi.fn(async () => sseResponse(['回答']))
+  vi.stubGlobal('fetch', fetchMock)
+  render(<LearnView blockName="MVCC" cards={[cards[0]!]} blockId="b1" />)
+
+  await user.click(screen.getByRole('button', { name: /问 AI/ }))
+  await user.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), 'q')
+  await user.click(screen.getByRole('button', { name: '提问' }))
+  await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
+
+  const body = JSON.parse(String(((fetchMock.mock.calls[0] as unknown[])[1] as RequestInit).body)) as Record<string, unknown>
+  expect(body.options).toBeUndefined()
+})

@@ -3,7 +3,7 @@ import { loadSettings, loadCardSnapshots, entitlementOf } from './db/adapters.js
 import { isEntitled } from '../lib/entitlement/entitlement.js'
 import { localDateOf } from './time.js'
 import {
-  sanitizeHistory, buildQaMessages, selectProvider, QA_DAILY_QUOTA,
+  sanitizeHistory, sanitizeOptions, buildQaMessages, selectProvider, QA_DAILY_QUOTA,
   type QaMessage, type ChatMessage, type ProviderSelection, type QaProviderRuntime, type QaStreamEvent,
 } from '../lib/ai/qa.js'
 import { parseSseChunks, encodeSseFrame, sseDeltaOf, sseReasoningOf, chatAnswerOf } from '../lib/ai/sse.js'
@@ -79,6 +79,12 @@ export type QaDeps = {
   cardId: string
   /** 该卡的对话历史（含本轮提问，末位须为 user）；服务端只清洗不持久化 */
   history: unknown
+  /**
+   * 用户在界面上看到的选项原文（刷题页才有）。**由客户端提供**——服务端重算变体
+   * 会依赖 userId/reviewIndex 的 seed，算错就变成「AI 聊的选项和用户屏幕上的不是一份」，
+   * 违背本项目「判分与展示同卷」的口径。服务端只清洗（条数/长度上限），题型另取自 DB。
+   */
+  options?: unknown
   /** 注入测试；缺省 selectProvider(process.env)（各家独立环境变量） */
   selection?: ProviderSelection
   /** 注入测试；缺省全局 fetch */
@@ -111,7 +117,13 @@ export async function prepareQa(deps: QaDeps): Promise<PreparedQa> {
   if (!isEntitled(ent, card.blockId)) throw new Error('这个块还没有解锁，先去解锁才能提问')
 
   const messages = buildQaMessages(
-    { cardId: card.cardId, question: card.question ?? '', detail: card.detail ?? '' },
+    {
+      cardId: card.cardId,
+      question: card.question ?? '',
+      detail: card.detail ?? '',
+      options: sanitizeOptions(deps.options),
+      cardType: card.cardType,   // 服务端权威（cards 表），不取自客户端
+    },
     history,
   )
 

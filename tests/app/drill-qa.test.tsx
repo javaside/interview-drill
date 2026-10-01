@@ -315,3 +315,42 @@ test('每轮思考各归各轮：第二轮提问不串上一轮的思考', async
   expect(screen.getByText('第2轮思考')).toBeInTheDocument()
   expect(screen.getAllByText('思考过程')).toHaveLength(2)
 })
+
+test('刷题页把当前题的选项一并发给 AI（否则「这个选项为什么不对」答不了）', async () => {
+  const u = userEvent.setup()
+  const fetchMock = vi.fn(async () => sseResponse(['回答']))
+  vi.stubGlobal('fetch', fetchMock)
+  render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
+
+  await u.click(screen.getByRole('button', { name: /问 AI/ }))
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '第二个选项为什么不对？')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+  await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
+
+  const body = JSON.parse(String(((fetchMock.mock.calls[0] as unknown[])[1] as RequestInit).body)) as {
+    cardId: string; options?: string[]
+  }
+  expect(body.cardId).toBe('c1')
+  // 与屏幕上展示的是同一份（fixture 的 V() 有 9 个选项）
+  expect(body.options).toEqual(['A', 'B', 'C', 'x', 'x', 'x', 'x', 'x', 'x'])
+})
+
+test('换题后发的是新题的选项（不串上一题的）', async () => {
+  const u = userEvent.setup()
+  const fetchMock = vi.fn(async () => sseResponse(['回答']))
+  vi.stubGlobal('fetch', fetchMock)
+  render(<DrillSession payload={payloadOf(['c1', 'c2'])} deps={depsOf() as never} />)
+
+  const boxes = screen.getAllByRole('checkbox')
+  await u.click(boxes[0]!); await u.click(boxes[1]!); await u.click(boxes[2]!)
+  await u.click(screen.getByRole('button', { name: /交卷/ }))
+  await u.click(await screen.findByRole('button', { name: /下一题/ }))
+
+  await u.click(screen.getByRole('button', { name: /问 AI/ }))
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), 'q')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+  await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1))
+
+  const body = JSON.parse(String(((fetchMock.mock.calls[0] as unknown[])[1] as RequestInit).body)) as { cardId: string }
+  expect(body.cardId).toBe('c2')
+})

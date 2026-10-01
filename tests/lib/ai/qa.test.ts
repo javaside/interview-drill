@@ -1,6 +1,7 @@
 import {
   sanitizeHistory, buildQaMessages, selectProvider, providerKeyHints,
   MAX_HISTORY_MESSAGES, MAX_MESSAGE_CHARS, QA_MAX_OUTPUT_TOKENS, QA_DAILY_QUOTA,
+  sanitizeOptions, MAX_OPTIONS, MAX_OPTION_CHARS,
 } from '../../../src/lib/ai/qa.js'
 
 const card = {
@@ -205,5 +206,71 @@ describe('滥用防护：上限常量与严令提示词', () => {
     const zp = selectProvider({ ZHIPU_API_KEY: 'k' })
     expect(zp.status).toBe('ready')
     if (zp.status === 'ready') expect(zp.provider.extraBody).toEqual({})
+  })
+})
+
+describe('选项上下文：AI 得能回答「这个选项为什么不对」', () => {
+  const withOptions = {
+    ...card,
+    options: ['undo log 记录前像', 'undo log 用于崩溃恢复', '长事务导致 undo 膨胀'],
+    cardType: 'enumeration',
+  }
+
+  test('选项进上下文：带序号 + 题型提示（界面无字母标号，靠序号对话）', () => {
+    const sys = buildQaMessages(withOptions, [{ role: 'user', content: '第二个为什么不对？' }])[0]?.content ?? ''
+    expect(sys).toContain('# 选项')
+    expect(sys).toContain('1. undo log 记录前像')
+    expect(sys).toContain('2. undo log 用于崩溃恢复')
+    expect(sys).toContain('3. 长事务导致 undo 膨胀')
+    expect(sys).toContain('多选：勾出所有属于这道题的要点')   // 题型读法
+  })
+
+  test('不发答案：上下文里没有 correctIndices 之类「哪几条正确」的信息', () => {
+    const sys = buildQaMessages(withOptions, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(sys).not.toContain('correctIndices')
+    expect(sys).not.toContain('正确答案')
+    // 反而明确要求「讲判断依据、不报答案清单」
+    expect(sys).toContain('不要直接报答案清单')
+  })
+
+  test('范围规则点名「选项」——否则聊选项会被当跑题拒掉', () => {
+    const sys = buildQaMessages(withOptions, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(sys).toContain('选项为什么对或错')
+  })
+
+  test('learn 页（无选项）不产生选项段，上下文保持原样', () => {
+    const sys = buildQaMessages(card, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(sys).not.toContain('# 选项')
+    expect(sys).toContain('# 题解（入门版）')
+  })
+
+  test('空选项数组 / 未知题型：不产生选项段、不塞未定义提示', () => {
+    const empty = buildQaMessages({ ...card, options: [] }, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(empty).not.toContain('# 选项')
+
+    const unknownType = buildQaMessages({ ...card, options: ['A'], cardType: 'weird' }, [{ role: 'user', content: 'q' }])[0]?.content ?? ''
+    expect(unknownType).toContain('# 选项')
+    expect(unknownType).not.toContain('undefined')
+  })
+})
+
+describe('sanitizeOptions：客户端传来的选项要清洗', () => {
+  test('非数组 / 非字符串项 / 空白项一律丢弃', () => {
+    expect(sanitizeOptions(undefined)).toEqual([])
+    expect(sanitizeOptions('not-array')).toEqual([])
+    expect(sanitizeOptions([1, null, {}, '  ', '有效项'])).toEqual(['有效项'])
+  })
+
+  test('条数与长度都有上限（防灌水进提示词）', () => {
+    const many = Array.from({ length: MAX_OPTIONS + 5 }, (_, i) => `选项${i}`)
+    expect(sanitizeOptions(many)).toHaveLength(MAX_OPTIONS)
+
+    const long = sanitizeOptions(['x'.repeat(MAX_OPTION_CHARS + 100)])
+    expect(long[0]).toHaveLength(MAX_OPTION_CHARS)
+  })
+
+  test('正常选项原样保留（含前导空格被 trim）', () => {
+    expect(sanitizeOptions(['  undo log 记录前像  ', '用于崩溃恢复']))
+      .toEqual(['undo log 记录前像', '用于崩溃恢复'])
   })
 })

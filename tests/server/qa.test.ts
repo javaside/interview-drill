@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { createTestDb, type TestDb } from './helpers.js'
 import { prepareQa, qaStreamHandler, resetQaRateLimiterForTest, resetQaQuotaForTest, type QaDeps } from '../../src/server/qa.js'
 import { parseSseChunks } from '../../src/lib/ai/sse.js'
-import { QA_MAX_OUTPUT_TOKENS, QA_DAILY_QUOTA } from '../../src/lib/ai/qa.js'
+import { QA_MAX_OUTPUT_TOKENS, QA_DAILY_QUOTA, MAX_OPTIONS, MAX_OPTION_CHARS } from '../../src/lib/ai/qa.js'
 import type { ProviderSelection, QaStreamEvent } from '../../src/lib/ai/qa.js'
 import type { SqlRunner } from '../../src/server/db/adapters.js'
 
@@ -339,5 +339,43 @@ describe('滥用防护：输出闸门与每日配额', () => {
     // 前面 25 次失败一次都没扣额度 —— 仍能正常提问
     clock += 61_000
     await expect(prepareQa(deps({ now: () => clock }))).resolves.toBeDefined()
+  })
+})
+
+describe('选项贯通（刷题页）', () => {
+  test('客户端传来的选项进上下文，题型取自 DB（不信客户端）', async () => {
+    const { messages } = await prepareQa(deps({
+      options: ['记录前像', '用于崩溃恢复', '长事务导致膨胀'],
+    }))
+    const sys = messages[0]?.content ?? ''
+    expect(sys).toContain('# 选项')
+    expect(sys).toContain('1. 记录前像')
+    expect(sys).toContain('3. 长事务导致膨胀')
+    // cardType 来自 fixture 建卡时的 'enumeration'，不在 deps 里传
+    expect(sys).toContain('多选：勾出所有属于这道题的要点')
+  })
+
+  test('不传选项（learn 页）→ 上下文不含选项段', async () => {
+    const { messages } = await prepareQa(deps())
+    expect(messages[0]?.content ?? '').not.toContain('# 选项')
+  })
+
+  test('脏选项被清洗：非字符串/空白丢弃，条数与长度都封顶', async () => {
+    const { messages } = await prepareQa(deps({
+      options: [123, null, '  ', ' 有效选项 ', 'x'.repeat(500), ...Array.from({ length: 20 }, (_, i) => `灌水${i}`)],
+    }))
+    const sys = messages[0]?.content ?? ''
+    expect(sys).toContain('1. 有效选项')          // 有效项在，且被 trim 后置首
+    expect(sys).not.toContain('123')             // 非字符串丢弃
+    expect(sys).not.toContain('null')
+
+    // 真正的上限不变量：选项条数 ≤ MAX_OPTIONS、每条 ≤ MAX_OPTION_CHARS
+    const section = sys.split('# 选项')[1]?.split('# 题解')[0] ?? ''
+    const lines = section.split('\n').filter(l => /^\d+\. /.test(l))
+    expect(lines.length).toBeGreaterThan(0)
+    expect(lines.length).toBeLessThanOrEqual(MAX_OPTIONS)
+    for (const l of lines) {
+      expect(l.replace(/^\d+\. /, '').length).toBeLessThanOrEqual(MAX_OPTION_CHARS)
+    }
   })
 })

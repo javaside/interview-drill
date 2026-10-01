@@ -19,6 +19,42 @@ export type QaCard = {
   cardId: string
   question: string
   detail: string
+  /**
+   * 选项原文（刷题页有、learn 页没有）。刷题页最自然的问题就是「这个选项为什么不对」，
+   * 不发选项 AI 就没法回答。**只发文本、不发哪几个正确**——那是答案本身，给了就等于
+   * 替用户做题；AI 有题解可依据，判断题干里哪条成立本来就在它的能力内。
+   */
+  options?: readonly string[]
+  /** 题型（服务端权威，不取自客户端）：决定选项该怎么读——多选/单选/排序/判断 */
+  cardType?: string
+}
+
+/** 选项条数上限（enum 型 9 条、atomic 4 条、sequence 为本题要点数，12 足够且防灌水） */
+export const MAX_OPTIONS = 12
+/** 单条选项字符上限（选项就是要点文本，正常远短于此） */
+export const MAX_OPTION_CHARS = 200
+
+/** 清洗客户端传来的选项：只收字符串、去空、截长、限条数。任何输入都不抛错。 */
+export function sanitizeOptions(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return []
+  const out: string[] = []
+  for (const item of raw) {
+    if (typeof item !== 'string') continue
+    const text = item.trim()
+    if (text === '') continue
+    out.push(text.slice(0, MAX_OPTION_CHARS))
+    if (out.length >= MAX_OPTIONS) break
+  }
+  return out
+}
+
+/** 题型 → 选项读法（与刷题页 HINT_BY_TYPE 同口径，供 AI 正确理解选项语义） */
+const TYPE_HINT: Record<string, string> = {
+  enumeration: '多选：勾出所有属于这道题的要点',
+  comparison: '多选：勾出所有属于这道题的要点',
+  judgment: '判断：先定结论（会/不会/取决于），再勾出所有属于这道题的要点',
+  sequence: '排序：把下方的条目排成正确的先后顺序',
+  atomic: '单选：选出唯一正确的一项',
 }
 
 export type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string }
@@ -189,7 +225,8 @@ export function buildQaMessages(card: QaCard, history: QaMessage[]): ChatMessage
     '你是后端面试辅导老师，只负责讲解下面这一道面试题。',
     '',
     '必须遵守的规则：',
-    '1. 只回答与这道题直接相关的问题：题目本身、题解细节、相关概念辨析、记忆方法。',
+    '1. 只回答与这道题直接相关的问题：题目本身、题解细节、选项为什么对或错、',
+    '   相关概念辨析、记忆方法。',
     '2. 与这道题无关的任何请求一律拒绝——包括写代码或改代码、翻译、写作、闲聊、',
     '   与本题无关的技术问题、以及一切「帮我做某件事」的委托。',
     '   拒绝时只说一句「这个和当前题目无关，我们回到这道题」，',
@@ -199,9 +236,24 @@ export function buildQaMessages(card: QaCard, history: QaMessage[]): ChatMessage
     '   都可以展开，用户要求详细时就详细讲，只讲干货、不为凑篇幅注水。',
     '',
     `# 题面\n${card.question}`,
-    '',
-    `# 题解（入门版）\n${intro}`,
   ]
+
+  // 选项：刷题页才有的上下文。带上序号是因为界面上没有字母标号，用户多半会说
+  // 「第二个选项」或直接引用原文——序号让他两边对得上。
+  const options = card.options ?? []
+  if (options.length > 0) {
+    const hint = card.cardType !== undefined ? TYPE_HINT[card.cardType] : undefined
+    sections.push(
+      '',
+      `# 选项（用户界面上看到的内容${hint !== undefined ? `，题型：${hint}` : ''}）`,
+      ...options.map((text, i) => `${i + 1}. ${text}`),
+      '',
+      '注意：选项里混有干扰项，用户可能问某一条为什么对或错。',
+      '不要直接报答案清单，讲清判断依据——用户是在练题，不是对答案。',
+    )
+  }
+
+  sections.push('', `# 题解（入门版）\n${intro}`)
   if (advanced !== '') sections.push('', `# 题解（进阶版）\n${advanced}`)
 
   const trimmed = sanitizeHistory(history)

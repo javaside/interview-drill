@@ -216,7 +216,7 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
       */}
       {(phase === 'question' || phase === 'feedback') && card !== undefined && (
         <div className={phase === 'feedback' ? 'mx-auto max-w-2xl px-5' : ''}>
-          <CardQA key={card.cardId} cardId={card.cardId} />
+          <CardQA key={card.cardId} cardId={card.cardId} options={variant?.optionTexts} />
         </div>
       )}
 

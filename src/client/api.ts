@@ -43,6 +43,8 @@ export interface Api {
   postQaStream(
     cardId: string, history: QaMessage[],
     handlers: { onDelta: (text: string) => void; onReasoning?: (text: string) => void },
+    /** 界面上的选项原文（刷题页才有）——AI 靠它回答「这个选项为什么不对」 */
+    options?: readonly string[],
     signal?: AbortSignal,
   ): Promise<void>
 }
@@ -122,9 +124,10 @@ export function browserApi(): Api {
         await fetch(withBase('/api/queue/requeue'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ scope }) }),
       )
     },
-    async postQaStream(cardId, history, handlers, signal) {
+    async postQaStream(cardId, history, handlers, options, signal) {
       const res = await fetch(withBase('/api/qa'), {
-        method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ cardId, history }),
+        method: 'POST', headers: JSON_HEADERS,
+        body: JSON.stringify({ cardId, history, ...(options ? { options } : {}) }),
         ...(signal ? { signal } : {}),
       })
       // 流开始之前的一切失败仍是既有协议：非 2xx 带 { error } 中文消息

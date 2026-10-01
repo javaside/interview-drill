@@ -20,7 +20,13 @@ import { RichText } from './RichText.js'
 /** 一轮对话：正文 +（思考型模型）该轮的推理内容，两者同生同灭 */
 type Turn = QaMessage & { reasoning?: string }
 
-export function CardQA({ cardId }: { cardId: string }): React.JSX.Element {
+export function CardQA(
+  { cardId, options }: {
+    cardId: string
+    /** 当前题在界面上展示的选项（刷题页传、learn 页无）——AI 靠它回答「这个选项为什么不对」 */
+    options?: readonly string[]
+  },
+): React.JSX.Element {
   const [open, setOpen] = useState(false)
   const [turns, setTurns] = useState<Turn[]>([])
   const [input, setInput] = useState('')
@@ -82,7 +88,7 @@ export function CardQA({ cardId }: { cardId: string }): React.JSX.Element {
           gotReasoning = true
           if (aliveRef.current) append('reasoning', text)
         },
-      }, controller.signal)
+      }, options, controller.signal)
     } catch (e) {
       if (!aliveRef.current) return
       setError(e instanceof Error ? e.message : '提问失败，请重试')
