@@ -142,7 +142,13 @@ export function splitBlocks(text: string): Block[] {
       blocks.push({ kind: 'ol', items })
       continue
     }
-    const para: string[] = []
+    // 走到这里说明当前行既不是围栏/列表/引用/标题，也不是合法表格——它必然是段落行，
+    // 故**至少消费一行**。这一步是终止性的关键：原先用「整段 while」判定，遇到
+    // 「以 | 开头但不是表格」的行（流式半截 markdown 的常见中间态：表头到了、
+    // 分隔行还没到）会出现循环体一次都不执行、i 永不前进 → 外层 while 死循环，
+    // 每轮 push 一个空段落直到内存爆掉（实测 4GB OOM、浏览器标签页卡死）。
+    const para: string[] = [lines[i]!]
+    i++
     while (
       i < lines.length && lines[i]!.trim() !== '' &&
       !FENCE.test(lines[i]!) && !UL.test(lines[i]!) && !OL.test(lines[i]!) &&

@@ -143,3 +143,17 @@ test('相邻同类片段合并：输出里没有相邻同类别片段（少 DOM 
   expect(kinds(tokenize('if (a) { return 1; }', 'java')))
     .toBe('keyword,plain,keyword,plain,number,plain')
 })
+
+test('终止性不变量：代码块的任意前缀（流式中间态）都必须有限时间返回', () => {
+  // 流式会让 tokenize 吃到「代码块只到一半」的内容；任何前缀都不许让扫描器卡住。
+  const full = 'public void f() {\n    // 注释\n    String s = "a\\"b";\n    /* 块注释 */\n    int n = 0x1F;\n}'
+  for (let n = 0; n <= full.length; n++) {
+    const tokens = tokenize(full.slice(0, n), 'java')
+    expect(tokens.map(t => t.text).join('')).toBe(full.slice(0, n))   // 无损 + 不卡
+  }
+  // 未闭合的几种极端情形
+  for (const partial of ['"未闭合', '/* 未闭合', '\\', '"""', '0x']) {
+    expect(tokenize(partial, 'java').map(t => t.text).join('')).toBe(partial)
+    expect(tokenize(partial, 'python').map(t => t.text).join('')).toBe(partial)
+  }
+})
