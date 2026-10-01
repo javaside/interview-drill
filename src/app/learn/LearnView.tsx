@@ -6,7 +6,7 @@ import Link from 'next/link'
  */
 import { splitDetail } from '../../lib/content/split.js'
 import { RichText } from '../RichText.js'
-import { CardQA } from './CardQA.js'
+import { CardQA } from '../CardQA.js'
 
 export type LearnCard = {
   cardId: string

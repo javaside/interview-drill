@@ -1,14 +1,14 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { browserApi } from '../../client/api.js'
-import type { QaMessage } from '../../lib/ai/qa.js'
-import { RichText } from '../RichText.js'
+import { browserApi } from '../client/api.js'
+import type { QaMessage } from '../lib/ai/qa.js'
+import { RichText } from './RichText.js'
 
 /**
- * 单卡 AI 问答框（learn 页每题一个）：状态全在组件实例内——
+ * 单卡 AI 问答框（learn 页每题一个、刷题页当前题一个）：状态全在组件实例内——
  * 每道题的对话历史天然独立，请求只携带本卡历史，服务端上下文只含本卡。
- * 折叠起步（教材优先，问答按需展开）；错误走 role=alert（项目错误协议）。
+ * 折叠起步（教材/答题优先，问答按需展开）；错误走 role=alert（项目错误协议）。
  */
 export function CardQA({ cardId }: { cardId: string }): React.JSX.Element {
   const [open, setOpen] = useState(false)
@@ -21,6 +21,11 @@ export function CardQA({ cardId }: { cardId: string }): React.JSX.Element {
   async function ask(): Promise<void> {
     const question = input.trim()
     if (question === '' || busy) return
+    // 离线直接说清楚，不让用户干等一次网络超时（刷题常在弱网）
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      setError('现在没有网络——恢复联网后再问')
+      return
+    }
     setError('')
     setBusy(true)
     // 先把本轮提问上屏（乐观渲染），历史副本随请求发出

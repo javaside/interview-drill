@@ -43,13 +43,15 @@ export type SessionUser = { userId: string } | null
 /**
  * 会话 → userId 的可注入内核（测试绕过真实 OAuth）：
  * 无会话 → 401 Response；有会话 → userId 字符串。
+ * 401 也用中文消息：这条链上的错误会经 readJson.errorOf 直达到 role=alert，
+ * 裸 'unauthenticated' 对用户毫无意义（会话过期时用户该知道是重新登录，不是重试）。
  */
 export async function requireUserIdWith(
   _req: Request, getSession: (req: Request) => Promise<SessionUser>,
 ): Promise<string | Response> {
   const session = await getSession(_req)
   if (session === null) {
-    return new Response(JSON.stringify({ error: 'unauthenticated' }), {
+    return new Response(JSON.stringify({ error: '登录状态已失效，请重新登录后再试' }), {
       status: 401, headers: { 'content-type': 'application/json' },
     })
   }

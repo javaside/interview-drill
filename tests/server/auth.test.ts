@@ -19,6 +19,13 @@ test('requireUserId：无会话返回 401，有会话返回 userId（不依赖�
   expect(ok).toBe('u1')
 })
 
+test('401 带中文消息（会话过期时用户看到的是「重新登录」而不是 unauthenticated）', async () => {
+  const res = (await requireUserIdWith(new Request('http://x'), async () => null)) as Response
+  const body = (await res.json()) as { error: string }
+  expect(body.error).toBe('登录状态已失效，请重新登录后再试')
+  expect(body.error).not.toMatch(/[a-zA-Z]/)   // 正文不得出现英文，免得又漏回裸码
+})
+
 test('首次登录铸造用户与默认设置（Asia/Shanghai / free / 45），且幂等', async () => {
   const t = await createTestDb()
   try {

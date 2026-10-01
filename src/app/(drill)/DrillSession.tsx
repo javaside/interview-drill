@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { DrillQuestion } from './DrillQuestion.js'
 import type { SubmissionPayload } from './DrillQuestion.js'
 import { DrillFeedback } from './DrillFeedback.js'
+import { CardQA } from '../CardQA.js'
 import { newSubmission, submitOne } from '../../client/sync-engine.js'
 import { scoreLocal } from '../../client/scoring.js'
 import { browserApi } from '../../client/api.js'
@@ -205,6 +206,17 @@ export function DrillSession({ payload, deps: depsProp }: DrillSessionProps) {
               {isLast ? '完成' : '下一题'}
             </button>
           </div>
+        </div>
+      )}
+
+      {/*
+        单题 AI 问答：上下文只含当前卡（服务端按 cardId 装配题面+题解，不掺别的题）。
+        key 绑 cardId —— 换题即重置，对话绝不串到下一题；位置固定在两屏内容之后，
+        故屏① 问过的到屏② 还在（不打断「下一题」主循环：按钮始终在它上方）。
+      */}
+      {(phase === 'question' || phase === 'feedback') && card !== undefined && (
+        <div className={phase === 'feedback' ? 'mx-auto max-w-2xl px-5' : ''}>
+          <CardQA key={card.cardId} cardId={card.cardId} />
         </div>
       )}
 
