@@ -20,9 +20,17 @@ test('首屏正文：核心 + 有日期（冲刺）+ 没日期也行（常备/�
   const hero = screen.getByTestId('landing-hero-copy').textContent ?? ''
   // 核心主张：不是「看会」是「练会」
   expect(hero).toContain('八股不是背会的，是练会的')
-  // 有面试日期 → 冲刺排期（倒排）：末次压在面试前（E = R − buffer）
-  expect(hero).toContain('填了面试日期，就按那天倒着排')
-  expect(hero).toContain('到面试前每道题都刚练过')
+  // **推荐逻辑**（产品核心，不能因为改别的句子被挤掉）：题怎么排不用用户挑
+  expect(hero).toContain('填了面试日期，题自己会排')
+  // 三条规则逐条对应代码（见下方注释），改文案时不许删：
+  //   高频优先 → assignFinalDays 按 frequency 降序从 E 往前填，高频拿最靠近面试的日子
+  expect(hero).toContain('最常问的先来')
+  //   答错重排 → regenerateAfterFailure：得分 <1/2 起始档归零、从明天起，所以追着你练
+  expect(hero).toContain('没记住的追着你练')
+  //   掌握度调间隔 → startTier + INTERVALS=[1,2,4,8,16,32,64]，越熟起跳越靠后
+  expect(hero).toContain('练熟的少打扰')
+  // 结果：末次压在面试前（E = R − buffer）
+  expect(hero).toContain('到面试前，每道题都刚练过')
   // **没有日期也能刷**（schedule.ts:122 的 maintenance 分支：readyByDate 为空或已过
   // 时照样出题，按 MAINTAIN_INTERVALS 滚动）。此前文案写「你只说哪天面试」把这条
   // 路径说没了，会把没定日期的用户劝退——必须显式写出来
