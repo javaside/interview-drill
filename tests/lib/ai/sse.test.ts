@@ -1,4 +1,4 @@
-import { parseSseChunks, encodeSseFrame, sseDeltaOf, chatAnswerOf } from '../../../src/lib/ai/sse.js'
+import { parseSseChunks, encodeSseFrame, sseDeltaOf, sseReasoningOf, chatAnswerOf } from '../../../src/lib/ai/sse.js'
 
 /** 把整段文本按固定长度切碎（模拟网络任意切分），逐块喂给解析器 */
 function feedInChunks(text: string, size: number): string[] {
@@ -89,4 +89,24 @@ test('chatAnswerOf：整包（非流式）响应取 message.content 兜底', () 
   expect(chatAnswerOf(JSON.stringify({ choices: [{ message: { content: '   ' } }] }))).toBeNull()
   expect(chatAnswerOf('{ bad json')).toBeNull()
   expect(chatAnswerOf(JSON.stringify({ choices: [] }))).toBeNull()
+})
+
+test('sseReasoningOf：取思考增量；正文帧/空值/坏 JSON 一律 null', () => {
+  const frame = (delta: unknown): string => JSON.stringify({ choices: [{ delta }] })
+  expect(sseReasoningOf(frame({ reasoning_content: '让我想想' }))).toBe('让我想想')
+  expect(sseReasoningOf(frame({ reasoning_content: '' }))).toBeNull()
+  expect(sseReasoningOf(frame({ content: '正文' }))).toBeNull()      // 正文帧不算思考
+  expect(sseReasoningOf(frame({ reasoning_content: null }))).toBeNull()
+  expect(sseReasoningOf('[DONE]')).toBeNull()
+  expect(sseReasoningOf('bad json')).toBeNull()
+})
+
+test('sseDeltaOf 与 sseReasoningOf 互不串台（DeepSeek 思考帧 content=null）', () => {
+  const reasoningFrame = JSON.stringify({ choices: [{ delta: { content: null, reasoning_content: '思考' } }] })
+  expect(sseReasoningOf(reasoningFrame)).toBe('思考')
+  expect(sseDeltaOf(reasoningFrame)).toBeNull()
+
+  const contentFrame = JSON.stringify({ choices: [{ delta: { content: '正文', reasoning_content: null } }] })
+  expect(sseDeltaOf(contentFrame)).toBe('正文')
+  expect(sseReasoningOf(contentFrame)).toBeNull()
 })

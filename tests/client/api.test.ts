@@ -66,7 +66,7 @@ test('postQaStream：逐段回调 delta，请求带 /drill 前缀与 cardId', as
   vi.stubGlobal('fetch', fetchMock)
 
   const got: string[] = []
-  await browserApi().postQaStream('c1', [{ role: 'user', content: 'q' }], t => got.push(t))
+  await browserApi().postQaStream('c1', [{ role: 'user', content: 'q' }], { onDelta: t => got.push(t) })
 
   expect(got).toEqual(['第一', '第二'])
   expect((fetchMock.mock.calls[0] as unknown[])[0]).toBe('/drill/api/qa')
@@ -78,7 +78,7 @@ test('postQaStream：帧被任意切分也能拼回（增量边界）', async ()
   const fetchMock = vi.fn(async () => new Response(sseBody(raw.split('').map(ch => ch)), { status: 200 }))
   vi.stubGlobal('fetch', fetchMock)
   const got: string[] = []
-  await browserApi().postQaStream('c1', [], t => got.push(t))
+  await browserApi().postQaStream('c1', [], { onDelta: t => got.push(t) })
   expect(got).toEqual(['完整内容'])
   vi.unstubAllGlobals()
 })
@@ -86,7 +86,7 @@ test('postQaStream：帧被任意切分也能拼回（增量边界）', async ()
 test('postQaStream：流开始前的失败仍是 400 中文协议（readJson 同款）', async () => {
   vi.stubGlobal('fetch', vi.fn(async () =>
     new Response(JSON.stringify({ error: '这个块还没有解锁，先去解锁才能提问' }), { status: 400 })))
-  await expect(browserApi().postQaStream('c1', [], () => {})).rejects.toThrow('这个块还没有解锁')
+  await expect(browserApi().postQaStream('c1', [], { onDelta: () => {} })).rejects.toThrow('这个块还没有解锁')
   vi.unstubAllGlobals()
 })
 
@@ -95,7 +95,7 @@ test('postQaStream：带内 error 事件 → 抛中文错误（可直达 role=al
     'data: {"type":"delta","text":"半截"}\n\n',
     'data: {"type":"error","message":"智谱 连接中断，请重试"}\n\n',
   ]), { status: 200 })))
-  await expect(browserApi().postQaStream('c1', [], () => {})).rejects.toThrow('智谱 连接中断，请重试')
+  await expect(browserApi().postQaStream('c1', [], { onDelta: () => {} })).rejects.toThrow('智谱 连接中断，请重试')
   vi.unstubAllGlobals()
 })
 
@@ -103,7 +103,7 @@ test('postQaStream：一条增量都没有 → 抛「没有返回内容」；脏
   vi.stubGlobal('fetch', vi.fn(async () => new Response(sseBody([
     'data: {"type":"done"}\n\n',
   ]), { status: 200 })))
-  await expect(browserApi().postQaStream('c1', [], () => {})).rejects.toThrow('AI 没有返回内容')
+  await expect(browserApi().postQaStream('c1', [], { onDelta: () => {} })).rejects.toThrow('AI 没有返回内容')
   vi.unstubAllGlobals()
 
   vi.stubGlobal('fetch', vi.fn(async () => new Response(sseBody([
@@ -112,7 +112,31 @@ test('postQaStream：一条增量都没有 → 抛「没有返回内容」；脏
     'data: {"type":"done"}\n\n',
   ]), { status: 200 })))
   const got: string[] = []
-  await browserApi().postQaStream('c1', [], t => got.push(t))
+  await browserApi().postQaStream('c1', [], { onDelta: t => got.push(t) })
   expect(got).toEqual(['仍然可用'])
+  vi.unstubAllGlobals()
+})
+
+test('postQaStream：reasoning 事件走 onReasoning，与正文分开回调', async () => {
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(sseBody([
+    'data: {"type":"reasoning","text":"先思考"}\n\n',
+    'data: {"type":"reasoning","text":"再作答"}\n\n',
+    'data: {"type":"delta","text":"正文"}\n\n',
+    'data: {"type":"done"}\n\n',
+  ]), { status: 200 })))
+  const deltas: string[] = []
+  const thoughts: string[] = []
+  await browserApi().postQaStream('c1', [], { onDelta: t => deltas.push(t), onReasoning: t => thoughts.push(t) })
+  expect(thoughts).toEqual(['先思考', '再作答'])
+  expect(deltas).toEqual(['正文'])
+  vi.unstubAllGlobals()
+})
+
+test('postQaStream：只有 reasoning、没有正文也算「没有返回内容」', async () => {
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(sseBody([
+    'data: {"type":"reasoning","text":"只想了没答"}\n\n',
+    'data: {"type":"done"}\n\n',
+  ]), { status: 200 })))
+  await expect(browserApi().postQaStream('c1', [], { onDelta: () => {} })).rejects.toThrow('AI 没有返回内容')
   vi.unstubAllGlobals()
 })

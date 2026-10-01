@@ -218,3 +218,50 @@ describe('qaStreamHandler：流式转发', () => {
       .toEqual([{ type: 'delta', text: '真正内容' }, { type: 'done' }])
   })
 })
+
+describe('qaStreamHandler：思考型模型（reasoning 先行）', () => {
+  test('思考增量与正文增量各自转发，且顺序保持', async () => {
+    const enc = new TextEncoder()
+    const frames = [
+      { choices: [{ delta: { reasoning_content: '先看题目' } }] },
+      { choices: [{ delta: { reasoning_content: '，需要区分两者' } }] },
+      { choices: [{ delta: { content: null, reasoning_content: '，想到 undo 与 redo' } }] },
+      { choices: [{ delta: { content: 'undo log 记前像' } }] },
+      { choices: [{ delta: { content: '，redo log 记后像' } }] },
+    ]
+    const provider = vi.fn(async () => new Response(new ReadableStream<Uint8Array>({
+      start(c) {
+        for (const f of frames) c.enqueue(enc.encode(`data: ${JSON.stringify(f)}\n\n`))
+        c.enqueue(enc.encode('data: [DONE]\n\n'))
+        c.close()
+      },
+    }), { status: 200 })) as unknown as typeof fetch
+
+    const events = await drain(await qaStreamHandler(deps({ fetchImpl: provider })))
+    expect(events).toEqual([
+      { type: 'reasoning', text: '先看题目' },
+      { type: 'reasoning', text: '，需要区分两者' },
+      { type: 'reasoning', text: '，想到 undo 与 redo' },
+      { type: 'delta', text: 'undo log 记前像' },
+      { type: 'delta', text: '，redo log 记后像' },
+      { type: 'done' },
+    ])
+  })
+
+  test('只有思考、没有正文 → 仍报「没有返回内容」（思考不算回答）', async () => {
+    const enc = new TextEncoder()
+    const provider = vi.fn(async () => new Response(new ReadableStream<Uint8Array>({
+      start(c) {
+        c.enqueue(enc.encode(`data: ${JSON.stringify({ choices: [{ delta: { reasoning_content: '只想了没答' } }] })}\n\n`))
+        c.enqueue(enc.encode('data: [DONE]\n\n'))
+        c.close()
+      },
+    }), { status: 200 })) as unknown as typeof fetch
+
+    const events = await drain(await qaStreamHandler(deps({ fetchImpl: provider })))
+    expect(events).toEqual([
+      { type: 'reasoning', text: '只想了没答' },
+      { type: 'error', message: 'AI 没有返回内容，换个问法试试' },
+    ])
+  })
+})

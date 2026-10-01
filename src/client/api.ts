@@ -37,12 +37,13 @@ export interface Api {
   postRequeue(scope?: 'misses' | 'all'): Promise<{ requeued: number }>
   /**
    * POST /api/qa → 就单卡向 AI 提问（history 含本轮提问；上下文只含该卡，服务端不落库）。
-   * 流式：每收到一段增量就回调 onDelta；任何失败（含流中途的 error 事件）抛错，
-   * 且抛出的 Error 一律携带中文消息，可直接进 role=alert。
+   * 流式：正文增量走 onDelta，思考型模型的推理增量走 onReasoning（先于正文到达）。
+   * 任何失败（含流中途的 error 事件）抛错，Error 一律携带中文消息，可直接进 role=alert。
    */
   postQaStream(
     cardId: string, history: QaMessage[],
-    onDelta: (text: string) => void, signal?: AbortSignal,
+    handlers: { onDelta: (text: string) => void; onReasoning?: (text: string) => void },
+    signal?: AbortSignal,
   ): Promise<void>
 }
 
@@ -121,7 +122,7 @@ export function browserApi(): Api {
         await fetch(withBase('/api/queue/requeue'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ scope }) }),
       )
     },
-    async postQaStream(cardId, history, onDelta, signal) {
+    async postQaStream(cardId, history, handlers, signal) {
       const res = await fetch(withBase('/api/qa'), {
         method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ cardId, history }),
         ...(signal ? { signal } : {}),
@@ -150,7 +151,9 @@ export function browserApi(): Api {
           }
           if (event.type === 'delta') {
             gotDelta = true
-            onDelta(event.text)
+            handlers.onDelta(event.text)
+          } else if (event.type === 'reasoning') {
+            handlers.onReasoning?.(event.text)
           } else if (event.type === 'error') {
             throw new Error(event.message)
           }

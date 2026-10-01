@@ -244,3 +244,74 @@ test('流中途报错：已吐出的部分保留在屏上，错误进 role=alert
   expect(screen.getByText('半截回答')).toBeInTheDocument()
   expect(screen.getByRole('textbox', { name: /向 AI 提问/ })).toHaveValue('')
 })
+
+test('思考过程：思考期间实时可见（不必等正文），正文开始后收进可展开的「思考过程」', async () => {
+  const u = userEvent.setup()
+  let releaseAnswer: (() => void) | null = null
+  const gate = new Promise<void>(resolve => { releaseAnswer = resolve })
+  const enc = new TextEncoder()
+  const frame = (obj: unknown): Uint8Array => enc.encode(`data: ${JSON.stringify(obj)}\n\n`)
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(new ReadableStream<Uint8Array>({
+    async start(c) {
+      c.enqueue(frame({ type: 'reasoning', text: '先看题目要求' }))
+      c.enqueue(frame({ type: 'reasoning', text: '，undo 与 redo 的区别' }))
+      await gate                                   // 卡在「只思考、无正文」的状态
+      c.enqueue(frame({ type: 'delta', text: '正文开始了' }))
+      c.enqueue(frame({ type: 'done' }))
+      c.close()
+    },
+  }), { status: 200, headers: { 'content-type': 'text/event-stream' } })))
+  render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
+
+  await u.click(screen.getByRole('button', { name: /问 AI/ }))
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '思考型提问')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+
+  // 正文还没来，思考已经铺开（填住等待期——这正是本次改动的目的）
+  expect(await screen.findByText(/先看题目要求/)).toBeInTheDocument()
+  expect(screen.getByText('思考中…')).toBeInTheDocument()
+  expect(screen.queryByText(/正文开始了/)).not.toBeInTheDocument()
+  // 思考来了就不该再显示笼统的「AI 正在想……」
+  expect(screen.queryByText(/AI 正在想/)).not.toBeInTheDocument()
+
+  releaseAnswer!()
+  expect(await screen.findByText(/正文开始了/)).toBeInTheDocument()
+  // 正文开始：实况思考收成折叠块
+  await waitFor(() => expect(screen.queryByText('思考中…')).not.toBeInTheDocument())
+  expect(screen.getByText('思考过程')).toBeInTheDocument()
+  // 思考内容仍可查阅（收在 details 里，没丢）
+  expect(screen.getByText(/undo 与 redo 的区别/)).toBeInTheDocument()
+})
+
+test('每轮思考各归各轮：第二轮提问不串上一轮的思考', async () => {
+  const u = userEvent.setup()
+  let round = 0
+  const enc = new TextEncoder()
+  const frame = (obj: unknown): Uint8Array => enc.encode(`data: ${JSON.stringify(obj)}\n\n`)
+  vi.stubGlobal('fetch', vi.fn(async () => {
+    round++
+    return new Response(new ReadableStream<Uint8Array>({
+      start(c) {
+        c.enqueue(frame({ type: 'reasoning', text: `第${round}轮思考` }))
+        c.enqueue(frame({ type: 'delta', text: `第${round}轮正文` }))
+        c.enqueue(frame({ type: 'done' }))
+        c.close()
+      },
+    }), { status: 200, headers: { 'content-type': 'text/event-stream' } })
+  }))
+  render(<DrillSession payload={payloadOf(['c1'])} deps={depsOf() as never} />)
+
+  await u.click(screen.getByRole('button', { name: /问 AI/ }))
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '第一问')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+  expect(await screen.findByText('第1轮正文')).toBeInTheDocument()
+
+  await u.type(screen.getByRole('textbox', { name: /向 AI 提问/ }), '第二问')
+  await u.click(screen.getByRole('button', { name: '提问' }))
+  expect(await screen.findByText('第2轮正文')).toBeInTheDocument()
+
+  // 两轮各自的思考都在（不覆盖、不串）
+  expect(screen.getByText('第1轮思考')).toBeInTheDocument()
+  expect(screen.getByText('第2轮思考')).toBeInTheDocument()
+  expect(screen.getAllByText('思考过程')).toHaveLength(2)
+})

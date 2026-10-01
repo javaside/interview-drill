@@ -5,7 +5,7 @@ import {
   sanitizeHistory, buildQaMessages, selectProvider,
   type QaMessage, type ChatMessage, type ProviderSelection, type QaProviderRuntime, type QaStreamEvent,
 } from '../lib/ai/qa.js'
-import { parseSseChunks, encodeSseFrame, sseDeltaOf, chatAnswerOf } from '../lib/ai/sse.js'
+import { parseSseChunks, encodeSseFrame, sseDeltaOf, sseReasoningOf, chatAnswerOf } from '../lib/ai/sse.js'
 
 /**
  * AI 问答编排层：纯核（lib/ai）注入 IO——DB 读卡、entitlement 校验、
@@ -132,6 +132,9 @@ function pumpProviderStream(res: Response, label: string): ReadableStream<Uint8A
         const { frames, rest } = parseSseChunks(buffer)
         buffer = rest
         for (const frame of frames) {
+          // 思考型模型先吐 reasoning、后吐正文：两者各自转发（同一帧也可能都带）
+          const reasoning = sseReasoningOf(frame.data)
+          if (reasoning !== null) send({ type: 'reasoning', text: reasoning })
           const delta = sseDeltaOf(frame.data)
           if (delta !== null) {
             answer += delta

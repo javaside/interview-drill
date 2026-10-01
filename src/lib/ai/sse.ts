@@ -68,6 +68,24 @@ export function sseDeltaOf(data: string): string | null {
 }
 
 /**
+ * 从 provider 的流式帧里抽**思考**增量（DeepSeek 等推理模型的 reasoning_content）。
+ * 思考型模型会先吐几秒思考再吐正文——把这段显示出来，用户不必对着空白等
+ * （实测 DeepSeek：思考 594ms 就开始到达，正文要等到约 5s）。
+ */
+export function sseReasoningOf(data: string): string | null {
+  if (data === '[DONE]') return null
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(data)
+  } catch {
+    return null
+  }
+  const content = (parsed as { choices?: Array<{ delta?: { reasoning_content?: unknown } }> })
+    ?.choices?.[0]?.delta?.reasoning_content
+  return typeof content === 'string' && content !== '' ? content : null
+}
+
+/**
  * 兼容兜底：从**整包**（非流式）响应里取正文 choices[0].message.content。
  * 用在「provider 忽略了 stream 参数」的场景——拿到的是完整 JSON 而非 SSE 帧。
  */

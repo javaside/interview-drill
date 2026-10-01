@@ -30,6 +30,8 @@ export type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: stri
  */
 export type QaStreamEvent =
   | { type: 'delta'; text: string }
+  /** 思考型模型（如 DeepSeek）的推理内容：先于 delta 到达，供 UI 填住等待期 */
+  | { type: 'reasoning'; text: string }
   | { type: 'done' }
   | { type: 'error'; message: string }
 
