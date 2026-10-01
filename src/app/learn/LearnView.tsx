@@ -6,6 +6,7 @@ import Link from 'next/link'
  */
 import { splitDetail } from '../../lib/content/split.js'
 import { RichText } from '../RichText.js'
+import { CardQA } from './CardQA.js'
 
 export type LearnCard = {
   cardId: string
@@ -111,6 +112,7 @@ export function LearnView({
                 </h2>
                 <div className="mt-1.5 eyebrow">{FREQ_LABEL[c.frequency]}</div>
                 <DetailLayers detail={c.detail} indent={false} />
+                <CardQA cardId={c.cardId} />
               </article>
             ))}
           </div>

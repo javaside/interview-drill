@@ -4,6 +4,7 @@ import type { DailyPayload } from '../server/queue.js'
 import type { ReviewResult } from '../server/review.js'
 import type { SyncResult } from '../server/sync.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
+import type { QaMessage } from '../lib/ai/qa.js'
 
 /**
  * API 客户端接口（§8.3）：消费 4a 的五个端点。抽象成接口便于 sync-engine
@@ -33,6 +34,8 @@ export interface Api {
   postCram(body: { examDate: LocalDate; blockIds: string[] }): Promise<{ crammed: number; excluded: number; overloaded: boolean; readyByDate: LocalDate | null }>
   /** POST /api/queue/requeue → 把今天刷过的卡拉回今天（misses=错题 / all=全部再来一遍） */
   postRequeue(scope?: 'misses' | 'all'): Promise<{ requeued: number }>
+  /** POST /api/qa → 就单卡向 AI 提问（history 含本轮提问；上下文只含该卡，服务端不落库） */
+  postQa(cardId: string, history: QaMessage[]): Promise<{ answer: string }>
 }
 
 const JSON_HEADERS = { 'content-type': 'application/json' } as const
@@ -108,6 +111,11 @@ export function browserApi(): Api {
     async postRequeue(scope: 'misses' | 'all' = 'misses') {
       return readJson<{ requeued: number }>(
         await fetch(withBase('/api/queue/requeue'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ scope }) }),
+      )
+    },
+    async postQa(cardId, history) {
+      return readJson<{ answer: string }>(
+        await fetch(withBase('/api/qa'), { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify({ cardId, history }) }),
       )
     },
   }
