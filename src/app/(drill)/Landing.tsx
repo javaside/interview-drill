@@ -14,29 +14,31 @@ export function Landing({ totals, tracks }: {
   // 怎么用：四步一环扣一环。讲「用户要做什么、会得到什么」，与下面的差异点是两个角度。
   const loop: Array<{ step: string; body: string }> = [
     { step: '学', body: '按知识块通读教材，先理解再做题——不是上来就考你。' },
-    { step: '练', body: '按排期出题，交卷立刻出结果；想专刷某块也行。' },
-    { step: '判', body: '逐条判到要点，错勾、漏选都指出来——答错的明天优先再来。' },
+    { step: '练', body: '按计划出题，交卷立刻出结果；想专门练某一块也行。' },
+    { step: '判', body: '逐条判给你看：漏了哪条、错勾了哪条——答错的明天就回来。' },
     { step: '排', body: '定个目标日期，倒推每天刷几题，到日子刚好就绪。' },
   ]
 
   const props: Array<{ title: string; body: string }> = [
     {
       title: '不懂就追问 AI',
-      body: '每道题都能追问：这个选项为什么不对、交卷后我错在哪。它只聊这一道题——不跑题，也不会被拿去干别的。',
+      body: '每道题都能追问：这个选项为什么不对、交卷后我错在哪。它只围绕这道题回答，不讲套话。',
     },
     // 注意：「判到要点」已并入上面「怎么用」的「判」一步，此处不再重复列一条
     // （重复既啰嗦，又会让卖点变成奇数条、双列网格末行留空看着像坏了）。
     {
       title: '白话讲解，零基础能读',
-      body: '入门版用类比讲「为什么」，术语带白话映射；进阶内容折叠待展开。',
+      body: '先用大白话讲清「为什么」，再对应上正式的面试说法；更深的折起来，想看再展开。',
     },
     ...(tracks.length > 0 ? [{
       title: '岗位一键勾齐',
-      body: `${tracks.join(' / ')}：一键展开该岗位要刷的全部块。`,
+      body: `${tracks.join(' / ')}：点一下，这个岗位要刷的知识块全勾上。`,
     }] : []),
     {
-      title: '面试冲刺，有日子就有进度',
-      body: '定个目标日期，按「每天刷几题」排好，到日子刚好就绪。',
+      title: '面试冲刺',
+      // 讲的是「临时加急」这个场景（cram：把选中块重铺成冲刺计划），
+      // 与上面「排」一步的常规倒推排期是两件事，别写成同一句。
+      body: '面试就剩几天？把要考的块重铺成冲刺计划，集中过一遍还没掌握的。',
     },
   ]
   return (
@@ -55,8 +57,9 @@ export function Landing({ totals, tracks }: {
               刷得完
             </h1>
             <p className="mt-4 max-w-[52ch] text-[15px] leading-relaxed text-paper-muted">
-              每道题拆成要点判分：答错的要点明天优先再来；
-              配白话讲解，不懂就追问 AI——它只聊这一道题。
+              一道题给你九个说法，对错混在一起——勾出所有对的。
+              漏了哪条、错勾了哪条都告诉你，而不是只说一句「答错了」。
+              每题配白话讲解，不懂还能追问 AI。
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link href={`/api/auth/signin?callbackUrl=${withBase('/')}`} className="btn-primary text-base" data-testid="signin-cta">
@@ -126,11 +129,11 @@ export function Landing({ totals, tracks }: {
         </div>
         <div className="max-w-[68ch] space-y-3 text-[15px] leading-relaxed text-paper-muted">
           <p>
-            进度、判分、复习排期都跟着账号走——换台设备也能接着刷。
+            进度、判分、复习计划都跟着账号走——换台设备也能接着刷。
             用 GitHub 一键登录，几秒钟就能开始。
           </p>
           <p>
-            登录即免费刷 2 个完整块（约 30–50 题），走通「学 → 练 → 判 → 排」的闭环，
+            登录即免费刷 2 个知识块（约 30–50 题），完整走一遍「学 → 练 → 判 → 排」，
             再决定要不要解锁全部。{' '}
             <Link
               href={`/api/auth/signin?callbackUrl=${withBase('/')}`}

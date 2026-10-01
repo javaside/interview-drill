@@ -15,6 +15,42 @@ test('首屏价值主张：题海刷不完知识点刷得完 + 真实库量统�
   expect(root).toHaveTextContent('12')
 })
 
+test('首屏说人话：讲清实际动作与核心差异，且不出现内部术语', () => {
+  render(<Landing totals={totals} tracks={tracks} />)
+  const hero = screen.getByTestId('landing').querySelector('header')?.textContent ?? ''
+  // 实际要做什么：九个说法里勾出所有对的
+  expect(hero).toContain('九个说法')
+  expect(hero).toContain('勾出所有对的')
+  // 核心差异：告诉你错在哪一条（而不是只说答错了）
+  expect(hero).toContain('漏了哪条')
+  expect(hero).toContain('错勾了哪条')
+  // 内部术语不得进用户可见文案：「要点判分」是数据模型词
+  expect(hero).not.toContain('要点判分')
+  expect(hero).not.toContain('要点明天')   // 且排期是按题的，不能说按要点
+})
+
+test('卖点与「怎么用」不重复：面试冲刺讲「临时加急」，排讲「长期倒推」', () => {
+  render(<Landing totals={totals} tracks={tracks} />)
+  const root = screen.getByTestId('landing')
+  const loop = screen.getByTestId('landing-loop').textContent ?? ''
+  const sprint = Array.from(root.querySelectorAll('ol.grid.md\\:grid-cols-2 li'))
+    .map(li => li.textContent ?? '').find(t => t.includes('面试冲刺')) ?? ''
+  // 冲刺卖点讲重铺计划（cram 场景）
+  expect(sprint).toContain('重铺成冲刺计划')
+  // 而「倒推每天刷几题」只归「排」一步，避免两处说同一句话
+  expect(loop).toContain('倒推每天刷几题')
+  expect(sprint).not.toContain('倒推每天刷几题')
+})
+
+test('全文不出现内部术语（用户看不懂的词）', () => {
+  render(<Landing totals={totals} tracks={tracks} />)
+  const root = screen.getByTestId('landing').textContent ?? ''
+  // 逐个都是真实踩过的：数据模型词 / 黑话 / 产品内部动作名
+  for (const jargon of ['要点', '闭环', '映射', '专刷', '排期']) {
+    expect(root, `出现内部术语「${jargon}」`).not.toContain(jargon)
+  }
+})
+
 test('双 CTA：GitHub 登录（主）+ 先逛逛知识库（旁路）', () => {
   render(<Landing totals={totals} tracks={tracks} />)
   expect(screen.getByTestId('signin-cta')).toHaveAttribute('href', '/api/auth/signin?callbackUrl=/drill')
@@ -50,8 +86,8 @@ test('AI 卖点讲清边界：只聊这道题（把约束讲成卖点，不吹�
   // 两个真实可用场景
   expect(root).toHaveTextContent('这个选项为什么不对')
   expect(root).toHaveTextContent('交卷后我错在哪')
-  // 边界（与产品实际行为一致：跑题一律拒答）
-  expect(root).toHaveTextContent('只聊这一道题')
+  // 边界写成正面的专注表述（与产品实际行为一致：只围绕本题回答）
+  expect(root).toHaveTextContent('只围绕这道题回答')
 })
 
 test('怎么用：学 → 练 → 判 → 排 四步都在，讲的是产品形态', () => {
@@ -60,16 +96,16 @@ test('怎么用：学 → 练 → 判 → 排 四步都在，讲的是产品形�
   const steps = Array.from(loop.querySelectorAll('h3')).map(el => el.textContent)
   expect(steps).toEqual(['学', '练', '判', '排'])
   expect(loop).toHaveTextContent('先理解再做题')
-  expect(loop).toHaveTextContent('逐条判到要点')   // 「判到要点」并入此步，卖点区不再重复
-  expect(loop).toHaveTextContent('答错的明天优先再来')
+  expect(loop).toHaveTextContent('逐条判给你看')
+  expect(loop).toHaveTextContent('答错的明天就回来')
   expect(loop).toHaveTextContent('倒推每天刷几题')
 })
 
 test('登录理由与免费口径：跟账号走 + 免费 2 个完整块 + 闭环口径与「怎么用」一致', () => {
   render(<Landing totals={totals} tracks={tracks} />)
   const root = screen.getByTestId('landing')
-  expect(root).toHaveTextContent('进度、判分、复习排期都跟着账号走')
-  expect(root).toHaveTextContent('免费刷 2 个完整块')
+  expect(root).toHaveTextContent('进度、判分、复习计划都跟着账号走')
+  expect(root).toHaveTextContent('免费刷 2 个知识块')
   expect(root).toHaveTextContent('学 → 练 → 判 → 排')
 })
 
