@@ -19,7 +19,10 @@ test('首屏正文：核心 + 有日期（冲刺）+ 没日期也行（常备/�
   render(<Landing totals={totals} tracks={tracks} />)
   const hero = screen.getByTestId('landing-hero-copy').textContent ?? ''
   // 核心主张：不是「看会」是「练会」
-  expect(hero).toContain('八股不是背会的，是练会的')
+  expect(hero).toContain('知识点不是背会的，是练会的')
+  // 用户明确不喜欢「八股」这个词，落地页文案里不许再出现
+  expect(hero).not.toContain('八股')
+  expect(screen.getByTestId('landing').textContent ?? '').not.toContain('八股')
   // **推荐逻辑**（产品核心，不能因为改别的句子被挤掉）：题怎么排不用用户挑
   expect(hero).toContain('填了面试日期，题自己会排')
   // 三条规则逐条对应代码（见下方注释），改文案时不许删：
