@@ -8,7 +8,7 @@ import { ulid } from 'ulid'
 import { transition, fulfillmentDecision, assertAmount, PASS_PRICE_CENTS } from '../lib/billing/order.js'
 import type { OrderEvent } from '../lib/billing/order.js'
 import {
-  insertOrder, loadOrder, markOrderPaid, markOrderStatus, upgradeToPaid,
+  insertOrder, loadOrder, markOrderPaid, markOrderStatus, extendPass,
 } from './db/adapters.js'
 import type { SqlRunner } from './db/adapters.js'
 
@@ -63,7 +63,7 @@ export async function fulfillOrder(
   }
   assertAmount(cb.amountCents)
   await markOrderPaid(deps.db, cb.orderId, cb.gatewayTxnId)
-  await upgradeToPaid(deps.db, order.userId)
+  await extendPass(deps.db, order.userId)
   return { outcome: 'fulfilled' }
 }
 

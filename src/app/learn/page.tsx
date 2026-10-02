@@ -26,8 +26,9 @@ export default async function LearnPage(
   if (block === undefined) redirect('/map')
   if (userId === undefined) return <SignInPrompt what="学习" />
 
-  const row = await loadSettings(getDb(), userId)
-  const ent = entitlementOf(row)
+  const nowMs = Date.now()
+  const row = await loadSettings(getDb(), userId, nowMs)
+  const ent = entitlementOf(row, nowMs)
   const { cards } = await loadAllCards(getDb())
   const inBlockCards = cards.filter(c => c.blockId === block)
   if (inBlockCards.length === 0) redirect('/map')   // 不存在的块：回地图

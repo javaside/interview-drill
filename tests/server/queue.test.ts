@@ -61,10 +61,10 @@ function mkDeps(t: TestDb, userId: string): DailyPayloadDeps {
     userId,
     serverNowMs: SERVER_NOW,
     async loadSettings() {
-      const row = await loadSettings(db, userId)
+      const row = await loadSettings(db, userId, SERVER_NOW)
       return {
         settings: { readyByDate: row.readyByDate, dailyCapacity: row.dailyCapacity, timezone: row.timezone },
-        ent: entitlementOf(row),
+        ent: entitlementOf(row, SERVER_NOW),
         selectionBlockIds: new Set(row.freeBlockIds),
       }
     },

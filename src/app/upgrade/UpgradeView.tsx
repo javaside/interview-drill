@@ -8,7 +8,7 @@ import type { Api } from '../../client/api.js'
  * 解锁页视图（§10.1 唯一转化入口的落地页——产品内仅此一处付费提示）。
  * 在线支付未上线（假网关），现阶段唯一可用通道 = 邀请码兑换：
  * - plan='paid'：已解锁态，不出输入框；
- * - plan='free'：输码 → postRedeem；fulfilled/already 都落已解锁态；
+ * - plan='free'：输码 → postRedeem（通行证 +30 天，可叠加）；
  *   服务端中文错误（无效/已用）经 readJson.errorOf 进 role=alert，可重试；
  * - plan=null（匿名）：可看页可输码，点兑换时提示先登录（动作时刻要身份）。
  */
@@ -35,7 +35,7 @@ export function UpgradeView({
     setError(null)
     try {
       await a.postRedeem(code)
-      setUnlocked(true)   // fulfilled 与 already 都算已解锁
+      setUnlocked(true)   // 兑换成功即落已解锁态
     } catch (e) {
       setError(e instanceof Error ? e.message : '兑换失败，请重试')
     } finally {

@@ -157,6 +157,7 @@ test('已登录知识库：完整视图不变（掌握度 + 解锁位）', async
   vi.mocked(loadSettings).mockResolvedValue({
     readyByDate: null, dailyCapacity: 45, timezone: 'Asia/Shanghai',
     plan: 'free', freeBlockIds: ['b1'], trackId: null,
+    paidUntil: null, graceUntil: null, graceBlockIds: [],
   })
   render(await MapPage({ searchParams: Promise.resolve({}) }))
   expect(screen.getByTestId('block-b1')).toHaveTextContent('掌握 50%')

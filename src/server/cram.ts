@@ -52,7 +52,7 @@ export async function applyCram(
   const { cards } = await loadAllCards(deps.db)
 
   // 1. 免费墙边界：cram 的块必须在解锁集内
-  const ent = entitlementOf(row)
+  const ent = entitlementOf(row, deps.serverNowMs)
   const unlocked = new Set(entitledBlockIds(ent, [...new Set(cards.map(c => c.blockId))]))
   for (const b of req.blockIds) {
     if (!unlocked.has(b)) throw new Error(`块未解锁：${b}`)

@@ -251,8 +251,8 @@ async function seedPaidBlocks(): Promise<TestDb> {
   const t = await createTestDb()
   await t.db.execute(sql`insert into users (id, github_id) values ('u1', 'gh-u1')`)
   await t.db.execute(sql`
-    insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, free_block_ids)
-    values ('u1', null, 45, ${TZ}, 'paid', ${JSON.stringify(['b1'])}::jsonb)`)
+    insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, paid_until, free_block_ids)
+    values ('u1', null, 45, ${TZ}, 'paid', '2099-01-01T00:00:00Z'::timestamptz, ${JSON.stringify(['b1'])}::jsonb)`)
   for (const b of ['b1', 'b2', 'b3']) {
     await t.db.execute(sql`insert into blocks (id, name, category) values (${b}, ${b}, 'cat-a')`)
     await addCard(t, `${b}-c0`, b)
@@ -316,7 +316,7 @@ test('paid 排期只认勾选集：未勾块的新卡（fresh）不再涌入排�
 
 test('paid done 复活范围 = 勾选集：未勾块的 done 卡不动', async () => {
   const t = await seedDoneOutsideEntitlement()   // free 夹具：b1 勾选、b2 未勾
-  await t.db.execute(sql`update user_settings set plan = 'paid' where user_id = 'u1'`)
+  await t.db.execute(sql`update user_settings set plan = 'paid', paid_until = '2099-01-01T00:00:00Z'::timestamptz where user_id = 'u1'`)
   try {
     await applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 30 })
     const st = await t.db.execute<{ card_id: string; phase: string }>(sql`
@@ -364,7 +364,7 @@ test('paid 空勾选集：排期为空（勾了哪些题就刷哪些题，没勾
 test('paid 空勾选集：done 复活范围同为空（复活范围=排期范围）', async () => {
   const t = await seedDoneOutsideEntitlement()   // c0(b1) 与 c9(b2) 均 done
   await t.db.execute(sql`
-    update user_settings set plan = 'paid', free_block_ids = '[]'::jsonb where user_id = 'u1'`)
+    update user_settings set plan = 'paid', paid_until = '2099-01-01T00:00:00Z'::timestamptz, free_block_ids = '[]'::jsonb where user_id = 'u1'`)
   try {
     await applySettingsChange(mkDeps(t), 'u1', { dailyCapacity: 30 })
     const st = await t.db.execute<{ card_id: string; phase: string }>(sql`

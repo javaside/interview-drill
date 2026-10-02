@@ -51,8 +51,8 @@ beforeEach(async () => {
   await t.db.execute(sql`insert into users (id, github_id) values ('u1', 'gh-u1')`)
   await t.db.execute(sql`insert into users (id, github_id) values ('u2', 'gh-u2')`)
   await t.db.execute(sql`
-    insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, free_block_ids)
-    values ('u2', null, 10, 'Asia/Shanghai', 'paid', '[]'::jsonb)`)
+    insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, paid_until, free_block_ids)
+    values ('u2', null, 10, 'Asia/Shanghai', 'paid', '2099-01-01T00:00:00Z'::timestamptz, '[]'::jsonb)`)
   await t.db.execute(sql`
     insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, free_block_ids)
     values ('u1', null, 10, 'Asia/Shanghai', 'free', ${JSON.stringify(['b1'])}::jsonb)`)

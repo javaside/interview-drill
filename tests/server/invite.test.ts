@@ -20,7 +20,21 @@ const planOf = async (db: SqlRunner, uid: string) => {
   return r.rows[0]!.plan
 }
 
-test('free 用户兑有效码：fulfilled，plan 置 paid，码记 used_by/used_at', async () => {
+/** 通行证到期时刻（权限的唯一依据，见 lib/entitlement/expiry.ts） */
+const paidUntilOf = async (db: SqlRunner, uid: string): Promise<Date | null> => {
+  const r = await db.execute<{ paid_until: string | null }>(sql`
+    select paid_until from user_settings where user_id = ${uid}`)
+  const v = r.rows[0]!.paid_until
+  return v === null ? null : new Date(v)
+}
+
+/** 距今天数（四舍五入到整天，供叠加断言） */
+const daysLeftOf = async (db: SqlRunner, uid: string) => {
+  const d = await paidUntilOf(db, uid)
+  return d === null ? null : Math.round((d.getTime() - Date.now()) / 86400_000)
+}
+
+test('free 用户兑有效码：fulfilled，通行证 +30 天，码记 used_by/used_at', async () => {
   const t = await createTestDb()
   try {
     const db = t.db as unknown as SqlRunner
@@ -29,6 +43,7 @@ test('free 用户兑有效码：fulfilled，plan 置 paid，码记 used_by/used_
     const out = await redeemInvite({ db }, uid, 'ABCD-EFGH-JKMN-PQRS')
     expect(out).toBe('fulfilled')
     expect(await planOf(db, uid)).toBe('paid')
+    expect(await daysLeftOf(db, uid)).toBe(30)
     const row = await db.execute<{ used_by: string; used_at: string }>(sql`
       select used_by, used_at from invite_codes where id = ${codeId}`)
     expect(row.rows[0]!.used_by).toBe(uid)
@@ -44,7 +59,7 @@ test('输入规整：小写/空格/无横线都能兑同一张码', async () => 
     await seedCode(db, 'ABCD-EFGH-JKMN-PQRS')
     const out = await redeemInvite({ db }, uid, '  abcd efgh-jkmnpqrs ')
     expect(out).toBe('fulfilled')
-    expect(await planOf(db, uid)).toBe('paid')
+    expect(await daysLeftOf(db, uid)).toBe(30)
   } finally { await t.pg.close() }
 })
 
@@ -70,18 +85,43 @@ test('无效码 / 已用码：抛同一句中文（不区分，防枚举），pl
   } finally { await t.pg.close() }
 })
 
-test('已 paid 用户：already 且不消耗码（used_at 仍空，码可留给别人）', async () => {
+test('有效期内再兑一张：叠加 30 天（不再有 already 早退），码被消耗', async () => {
   const t = await createTestDb()
   try {
     const db = t.db as unknown as SqlRunner
     const uid = await ensureUser(db, 'gh-1')
-    await db.execute(sql`update user_settings set plan = 'paid' where user_id = ${uid}`)
     const codeId = await seedCode(db, 'ABCD-EFGH-JKMN-PQRS')
+    // 已有 10 天剩余
+    await db.execute(sql`
+      update user_settings set plan = 'paid',
+             paid_until = now() + interval '10 days' where user_id = ${uid}`)
+
     const out = await redeemInvite({ db }, uid, 'ABCD-EFGH-JKMN-PQRS')
-    expect(out).toBe('already')
+    expect(out).toBe('fulfilled')
+    expect(await daysLeftOf(db, uid)).toBe(40)   // 10 + 30：剩余时间被保留，不被覆盖
     const row = await db.execute<{ used_at: string | null }>(sql`
       select used_at from invite_codes where id = ${codeId}`)
-    expect(row.rows[0]!.used_at).toBeNull()
+    expect(row.rows[0]!.used_at).not.toBeNull()   // 叠加场景下码正常消耗
+  } finally { await t.pg.close() }
+})
+
+test('过期后再兑：从当下起算 30 天（不「倒扣」），并清掉宽限结算态', async () => {
+  const t = await createTestDb()
+  try {
+    const db = t.db as unknown as SqlRunner
+    const uid = await ensureUser(db, 'gh-1')
+    await db.execute(sql`
+      update user_settings set plan = 'paid', paid_until = now() - interval '100 days',
+             grace_until = current_date, grace_block_ids = '["b1"]'::jsonb
+      where user_id = ${uid}`)
+    await seedCode(db, 'ABCD-EFGH-JKMN-PQRS')
+
+    expect(await redeemInvite({ db }, uid, 'ABCD-EFGH-JKMN-PQRS')).toBe('fulfilled')
+    expect(await daysLeftOf(db, uid)).toBe(30)
+    const g = await db.execute<{ grace_until: string | null; grace_block_ids: string[] }>(sql`
+      select grace_until, grace_block_ids from user_settings where user_id = ${uid}`)
+    expect(g.rows[0]!.grace_until).toBeNull()          // 重新付费 → 宽限作废
+    expect(g.rows[0]!.grace_block_ids).toEqual([])
   } finally { await t.pg.close() }
 })
 

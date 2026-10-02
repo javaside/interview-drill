@@ -5,10 +5,14 @@ import { rat } from '../../lib/scheduler/types.js'
 import type { CardState, Rational } from '../../lib/scheduler/types.js'
 import { diffDays } from '../../lib/scheduler/date.js'
 import type { LocalDate } from '../../lib/scheduler/date.js'
-import { makeFreeEntitlement, makePaidEntitlement } from '../../lib/entitlement/entitlement.js'
+import { makeFreeEntitlement, makePaidEntitlement, FREE_BLOCK_LIMIT } from '../../lib/entitlement/entitlement.js'
 import type { Entitlement } from '../../lib/entitlement/entitlement.js'
+import { accessStateOf, expiryAction } from '../../lib/entitlement/expiry.js'
+import type { AccessState } from '../../lib/entitlement/expiry.js'
+import { PASS_DAYS } from '../../lib/billing/order.js'
 import type { OrderStatus } from '../../lib/billing/order.js'
 import { ALGO_VERSION } from '../version.js'
+import { localDateOf } from '../time.js'
 import type { CardSnapshot, Settings } from '../types.js'
 import type { ReplaySnapshot, ReplayLogRow } from '../replay.js'
 
@@ -28,18 +32,30 @@ function inList(values: string[]): SQL {
 
 export type UserSettingsRow = Settings & {
   timezone: string
+  /** 遗留列：'paid' = 买过（含已过期）。**不用于判定权限**，见 lib/entitlement/expiry.ts */
   plan: 'free' | 'paid'
+  /** 勾选集 = 排期范围。宽限期内语义见 selectionBlockIdsOf */
   freeBlockIds: string[]
+  /** 通行证到期时刻（null = 从未付费）——权限判定的唯一依据 */
+  paidUntil: Date | null
+  /** 宽限截止（本地日）。null = 未结算 */
+  graceUntil: LocalDate | null
+  /** 到期结算冻结的宽限块 */
+  graceBlockIds: string[]
   trackId: string | null
 }
 
-/** user_settings → 内存设置（readyByDate 可空 = 维持模式） */
-export async function loadSettings(db: SqlRunner, userId: string): Promise<UserSettingsRow> {
-  const r = await db.execute<{
-    ready_by_date: string | null; daily_capacity: number; timezone: string
-    plan: string; free_block_ids: string[]; track_id: string | null
-  }>(sql`
-    select ready_by_date, daily_capacity, timezone, plan, free_block_ids, track_id
+type RawSettingsRow = {
+  ready_by_date: string | null; daily_capacity: number; timezone: string
+  plan: string; free_block_ids: string[]; track_id: string | null
+  paid_until: string | null; grace_until: string | null; grace_block_ids: string[] | null
+}
+
+/** 纯读，不做任何结算——供 loadSettings 包装 */
+async function readSettingsRow(db: SqlRunner, userId: string): Promise<UserSettingsRow> {
+  const r = await db.execute<RawSettingsRow>(sql`
+    select ready_by_date, daily_capacity, timezone, plan, free_block_ids, track_id,
+           paid_until, grace_until, grace_block_ids
     from user_settings where user_id = ${userId}`)
   const row = r.rows[0]
   if (row === undefined) throw new Error(`用户设置缺失：${userId}`)
@@ -49,8 +65,83 @@ export async function loadSettings(db: SqlRunner, userId: string): Promise<UserS
     timezone: row.timezone,
     plan: row.plan === 'paid' ? 'paid' : 'free',
     freeBlockIds: row.free_block_ids ?? [],
+    paidUntil: row.paid_until === null ? null : new Date(row.paid_until),
+    graceUntil: row.grace_until ?? null,
+    graceBlockIds: row.grace_block_ids ?? [],
     trackId: row.track_id,
   }
+}
+
+/**
+ * 读设置 + **惰性结算通行证到期**（user_settings → 内存设置，readyByDate 可空 = 维持模式）。
+ *
+ * 到期后的第一次读取会把宽限快照落库（见 lib/entitlement/expiry.ts 的「为什么要结算」）。
+ * 只对「已到期且未结算」的行多一次 card_state 查询 + 一次 UPDATE，其余用户零开销。
+ * 并发安全：结算 UPDATE 带 `grace_until is null` 守卫，重复执行 no-op。
+ *
+ * ⚠️ 本函数**可能写库**——所有读设置的地方都会成为结算触发点，这是有意的
+ * （入口多才好保证「谁先来看谁结算」）。
+ */
+export async function loadSettings(
+  db: SqlRunner, userId: string, nowMs: number = Date.now(),
+): Promise<UserSettingsRow> {
+  const row = await readSettingsRow(db, userId)
+  const today = localDateOf(nowMs, row.timezone)
+  const unpaid = row.paidUntil !== null && row.paidUntil.getTime() <= nowMs
+  const scheduled = unpaid && row.graceUntil === null
+    ? await loadScheduledLastDates(db, userId)
+    : []
+  const action = expiryAction({
+    paidUntilMs: row.paidUntil?.getTime() ?? null,
+    graceUntil: row.graceUntil,
+    nowMs,
+    today,
+    readyByDate: row.readyByDate,
+    selection: row.freeBlockIds,
+    scheduled,
+  })
+  if (action.kind === 'none') return row
+
+  if (action.kind === 'settle') {
+    await db.execute(sql`
+      update user_settings
+      set grace_until = ${action.graceUntil},
+          grace_block_ids = ${JSON.stringify(action.graceBlockIds)}::jsonb,
+          free_block_ids = ${JSON.stringify(action.freeBlockIds)}::jsonb,
+          updated_at = now()
+      where user_id = ${userId} and grace_until is null`)
+    return {
+      ...row,
+      graceUntil: action.graceUntil,
+      graceBlockIds: action.graceBlockIds,
+      freeBlockIds: action.freeBlockIds,
+    }
+  }
+
+  await db.execute(sql`
+    update user_settings
+    set free_block_ids = ${JSON.stringify(action.freeBlockIds)}::jsonb, updated_at = now()
+    where user_id = ${userId}`)
+  return { ...row, freeBlockIds: action.freeBlockIds }
+}
+
+/**
+ * 到期结算用：仍有未完成排期的卡所属块 + 该块内最晚排期日。
+ * plan 是 'YYYY-MM-DD' 的 jsonb 数组，ISO 日期按字典序 max 即正确。
+ * 按 block_id 升序返回——保证 expiryAction 的「宽限块前 2 个进免费层」可预测、可测。
+ */
+export async function loadScheduledLastDates(
+  db: SqlRunner, userId: string,
+): Promise<Array<{ blockId: string; lastPlannedDate: LocalDate }>> {
+  const r = await db.execute<{ block_id: string; last_date: string }>(sql`
+    select c.block_id, max(d.day) as last_date
+    from card_state s
+    join cards c on c.id = s.card_id
+    cross join lateral jsonb_array_elements_text(s.plan) as d(day)
+    where s.user_id = ${userId} and s.plan <> '[]'::jsonb
+    group by c.block_id
+    order by c.block_id`)
+  return r.rows.map(x => ({ blockId: x.block_id, lastPlannedDate: x.last_date }))
 }
 
 export type TrackRow = { id: string; name: string; tagline: string; blockIds: string[] }
@@ -62,9 +153,50 @@ export async function loadTracks(db: SqlRunner): Promise<TrackRow[]> {
   return r.rows.map(t => ({ id: t.id, name: t.name, tagline: t.tagline, blockIds: t.block_ids ?? [] }))
 }
 
-/** UserSettingsRow → Entitlement（付费恒空 freeBlockIds） */
-export function entitlementOf(row: UserSettingsRow): Entitlement {
-  return row.plan === 'paid' ? makePaidEntitlement() : makeFreeEntitlement(row.freeBlockIds)
+/** 档位：paid（有效期内）/ grace（宽限期内）/ free。UI 与配额读它，别读遗留的 plan 列 */
+export function accessStateOfRow(row: UserSettingsRow, nowMs: number): AccessState {
+  return accessStateOf({
+    paidUntilMs: row.paidUntil?.getTime() ?? null,
+    graceUntil: row.graceUntil,
+    nowMs,
+    today: localDateOf(nowMs, row.timezone),
+  })
+}
+
+/**
+ * 配额 / 勾选档位口径：宽限期内**仍算 'paid'**（用户 2026-10-02 拍板：宽限期 AI 配额
+ * 按付费档；设置页宽限期内也可任意勾选）。
+ * 与 entitlementOf 的全量放行**不是一回事**——别混用。
+ */
+export function planOf(row: UserSettingsRow, nowMs: number): 'free' | 'paid' {
+  return accessStateOfRow(row, nowMs) === 'free' ? 'free' : 'paid'
+}
+
+/**
+ * UserSettingsRow → Entitlement。付费（有效期内）= 全量；否则 free 勾选 ∪ 宽限块。
+ *
+ * 读取侧对勾选取前 FREE_BLOCK_LIMIT 个是**兜底截断**：写入侧（applyBlockSelection
+ * 与到期结算）已强校验，这里只保证任何历史脏行都不会让 makeFreeEntitlement 抛错
+ * 把整页 500（该故障类型本项目真实发生过两次，见 AGENTS.md 免费墙条目）。
+ */
+export function entitlementOf(row: UserSettingsRow, nowMs: number): Entitlement {
+  if (accessStateOfRow(row, nowMs) === 'paid') return makePaidEntitlement()
+  return makeFreeEntitlement(
+    row.freeBlockIds.slice(0, FREE_BLOCK_LIMIT),
+    row.graceBlockIds,
+  )
+}
+
+/**
+ * 排期范围（勾选集）口径：
+ * - paid / free：已保存勾选（空即空，无隐藏兜底）
+ * - **宽限期：勾选 ∪ 宽限块**——否则勾选被收敛到 2 块后，剩下的宽限排期会被
+ *   勾选集过滤掉，「让在期排的题跑完」当场失效（2026-10-02 查证）。
+ *   设置页的读与写两侧都必须用本函数，否则保存设置会把宽限排期当「减块」pause 掉。
+ */
+export function selectionBlockIdsOf(row: UserSettingsRow, nowMs: number): string[] {
+  if (accessStateOfRow(row, nowMs) !== 'grace') return [...row.freeBlockIds]
+  return [...new Set([...row.freeBlockIds, ...row.graceBlockIds])]
 }
 
 /** cards + key_points → CardSnapshot（判分/装配所需的最小投影） */
@@ -627,11 +759,26 @@ export async function markOrderStatus(
 }
 
 /**
- * 权限升级（§10.1 锁题量不锁功能）：只改 plan 与 free_block_ids——
- * paid 恒空数组（与 lib/entitlement 契约一致），幂等（重复执行结果不变）。
+ * 延长通行证（§10.1 v3 唯一解锁写入路径：支付履约与邀请码兑换共用）：
+ * 从「现有到期日与当下较晚者」+ PASS_DAYS，**叠加不覆盖**（用户拍板）——
+ * 提前续期的用户不会亏掉剩余时间；已过期很久的用户也不会被「倒扣」到过去。
+ *
+ * 同时清空结算态（重新付费 → 宽限作废）与勾选（解锁不改变排期范围，需回设置重勾，
+ * 与既有语义一致）。plan 同步写 'paid'：遗留列，仅为 app 回滚时旧代码能读到。
+ *
+ * 时间参数走 ISO 字符串 + 显式 cast（coalesce/greatest 都是 timestamptz 域），
+ * PGlite 与真 PG 都能吃；别改成 `now() + interval`——那样测不了时间旅行。
  */
-export async function upgradeToPaid(db: SqlRunner, userId: string): Promise<void> {
+export async function extendPass(db: SqlRunner, userId: string, nowMs: number = Date.now()): Promise<void> {
+  const nowIso = new Date(nowMs).toISOString()
   await db.execute(sql`
-    update user_settings set plan = 'paid', free_block_ids = '[]'::jsonb, updated_at = now()
+    update user_settings
+    set plan = 'paid',
+        paid_until = greatest(coalesce(paid_until, ${nowIso}::timestamptz), ${nowIso}::timestamptz)
+                     + make_interval(days => ${PASS_DAYS}),
+        grace_until = null,
+        grace_block_ids = '[]'::jsonb,
+        free_block_ids = '[]'::jsonb,
+        updated_at = now()
     where user_id = ${userId}`)
 }

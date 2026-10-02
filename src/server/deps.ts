@@ -19,10 +19,10 @@ export function payloadDepsOf(db: SqlRunner, userId: string, serverNowMs: number
     userId,
     serverNowMs,
     async loadSettings() {
-      const row = await loadSettings(db, userId)
+      const row = await loadSettings(db, userId, serverNowMs)
       return {
         settings: { readyByDate: row.readyByDate, dailyCapacity: row.dailyCapacity, timezone: row.timezone },
-        ent: entitlementOf(row),
+        ent: entitlementOf(row, serverNowMs),
         // 已保存勾选集原样下发。没有 paid 兜底——空集就是空集（buildDailyPayload 只做
         // 「按勾选集过滤」，付费用户兑换后勾选被清空时首页不出题，需回设置重勾）。
         selectionBlockIds: new Set(row.freeBlockIds),
@@ -54,7 +54,8 @@ export function mapDepsOf(db: SqlRunner, userId: string): BlockMapDeps {
       return loadAllCardStates(db, userId, localDateOf(Date.now(), row.timezone))
     },
     async loadEnt() {
-      return entitlementOf(await loadSettings(db, userId))
+      const nowMs = Date.now()
+      return entitlementOf(await loadSettings(db, userId, nowMs), nowMs)
     },
     async loadCardBlocks() {
       const { cards } = await loadAllCards(db)
@@ -71,8 +72,9 @@ export function mapDepsOf(db: SqlRunner, userId: string): BlockMapDeps {
 export async function poolsOfFor(
   db: SqlRunner, userId: string,
 ): Promise<(cardId: string) => DistractorPools> {
-  const settingsRow = await loadSettings(db, userId)
-  const ent = entitlementOf(settingsRow)
+  const nowMs = Date.now()
+  const settingsRow = await loadSettings(db, userId, nowMs)
+  const ent = entitlementOf(settingsRow, nowMs)
   const { cards, categories } = await loadAllCards(db)
   const byId = new Map(cards.map(c => [c.cardId, c] as const))
   return (cardId: string): DistractorPools => {

@@ -112,13 +112,13 @@ export async function prepareQa(deps: QaDeps): Promise<PreparedQa> {
   const nowMs = now()
   if (rateLimited(deps.userId, nowMs)) throw new Error('提问太快了，歇一分钟再问')
 
-  const settings = await loadSettings(deps.db, deps.userId)
+  const settings = await loadSettings(deps.db, deps.userId, nowMs)
 
   const history: QaMessage[] = sanitizeHistory(deps.history)
   const card = (await loadCardSnapshots(deps.db, [deps.cardId])).get(deps.cardId)
   if (card === undefined) throw new Error('题目不存在或已下线')
 
-  const ent = entitlementOf(settings)
+  const ent = entitlementOf(settings, nowMs)
   if (!isEntitled(ent, card.blockId)) throw new Error('这个块还没有解锁，先去解锁才能提问')
 
   const messages = buildQaMessages(

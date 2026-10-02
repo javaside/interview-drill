@@ -3,18 +3,21 @@
  * 一次性码、库存只存 sha256 哈希（库被拖走泄不了未用码）。
  *
  * 兑换语义（redeemInvite，事务内）：
- * 1. 已 paid → already，**不消耗码**（码留给别人，重复兑不吓已解锁用户）；
- * 2. 条件更新原子占码（used_at is null 才中）——并发同码只有一人赢；
- * 3. 占码成功 → plan 置 paid（与 upgradeToPaid 同语义，同事务提交）；
- * 4. 占不着（不存在/已用/格式不对）→ 统一抛「邀请码无效或已被使用」——
+ * 1. 条件更新原子占码（used_at is null 才中）——并发同码只有一人赢，无 TOCTOU；
+ * 2. 占码成功 → extendPass（+30 天，**叠加不覆盖**）；
+ * 3. 占不着（不存在/已用/格式不对）→ 统一抛「邀请码无效或已被使用」——
  *    不区分原因，防枚举探测。
+ *
+ * 2026-10-02 v3：删除「已 paid → already 且不消耗码」的早退分支。通行证可叠加，
+ * 有效期内再兑一张 = 续 30 天，不存在「把码浪费掉」的情形；早退分支连同它的
+ * 两个读点一起消失，占码先于一切读状态，只剩一条路径。
  */
 import { createHash, randomBytes } from 'node:crypto'
 import { sql } from 'drizzle-orm'
 import { ulid } from 'ulid'
-import type { SqlRunner } from './db/adapters.js'
+import { extendPass, type SqlRunner } from './db/adapters.js'
 
-export type RedeemOutcome = 'fulfilled' | 'already'
+export type RedeemOutcome = 'fulfilled'
 
 export const INVITE_INVALID = '邀请码无效或已被使用'
 
@@ -44,29 +47,23 @@ export function generateInviteCode(): string {
 
 /**
  * 兑换：核心安全边界在「条件更新占码」——不存在 TOCTOU（占码与读结果原子）。
- * 已 paid 早退在事务外语义等价（占码写入只发生在 free 路径）。
+ * 占码成功才 extendPass，且两者同事务：码没占上就不会送时长。
  */
 export async function redeemInvite(
-  deps: { db: SqlRunner }, userId: string, rawCode: string,
+  deps: { db: SqlRunner }, userId: string, rawCode: string, nowMs: number = Date.now(),
 ): Promise<RedeemOutcome> {
   const normalized = normalizeInviteCode(rawCode)
   if (normalized.length !== CODE_BODY_LEN) throw new Error(INVITE_INVALID)
   const hash = inviteCodeHash(normalized)
 
   return deps.db.transaction(async tx => {
-    const planRow = await tx.execute<{ plan: string }>(sql`
-      select plan from user_settings where user_id = ${userId}`)
-    if (planRow.rows[0]?.plan === 'paid') return 'already' as const
-
     const claimed = await tx.execute<{ id: string }>(sql`
       update invite_codes set used_by = ${userId}, used_at = now()
       where code_hash = ${hash} and used_at is null
       returning id`)
     if (claimed.rows.length === 0) throw new Error(INVITE_INVALID)
 
-    await tx.execute(sql`
-      update user_settings set plan = 'paid', free_block_ids = '[]'::jsonb, updated_at = now()
-      where user_id = ${userId}`)
+    await extendPass(tx, userId, nowMs)
     return 'fulfilled' as const
   })
 }

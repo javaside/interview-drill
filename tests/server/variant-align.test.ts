@@ -43,7 +43,7 @@ async function seed(): Promise<TestDb> {
 /** 真实干扰池装配（同 deps.poolsOfFor 口径） */
 async function realPools(t: TestDb): Promise<(cardId: string) => DistractorPools> {
   const row = await loadSettings(runner(t), 'u1')
-  const ent = entitlementOf(row)
+  const ent = entitlementOf(row, Date.now())
   const { cards, categories } = await loadAllCards(runner(t))
   const byId = new Map(cards.map(c => [c.cardId, c] as const))
   return (cardId: string): DistractorPools => {
