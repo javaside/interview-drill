@@ -188,6 +188,17 @@ export function entitlementOf(row: UserSettingsRow, nowMs: number): Entitlement 
 }
 
 /**
+ * 剩余天数（向上取整、至少 1）——**全站唯一实现**，导航 chip 与 /upgrade 共用，
+ * 别在页面里各算一遍（两处算不一致就会出现「导航说 12 天、页面说 13 天」）。
+ * 至少 1 天的理由：还剩 3 小时时显示「0 天」，读起来像已过期。
+ * 非 paid（free/grace）返回 null——已过期的人不该看到「还剩 0 天」。
+ */
+export function daysLeftOf(row: UserSettingsRow, nowMs: number): number | null {
+  if (accessStateOfRow(row, nowMs) !== 'paid' || row.paidUntil === null) return null
+  return Math.max(1, Math.ceil((row.paidUntil.getTime() - nowMs) / 86_400_000))
+}
+
+/**
  * 排期范围（勾选集）口径：
  * - paid / free：已保存勾选（空即空，无隐藏兜底）
  * - **宽限期：勾选 ∪ 宽限块**——否则勾选被收敛到 2 块后，剩下的宽限排期会被

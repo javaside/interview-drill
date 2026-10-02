@@ -1,8 +1,8 @@
 import { sql } from 'drizzle-orm'
 import { createTestDb, type TestDb } from './helpers.js'
 import {
-  loadSettings, entitlementOf, planOf, selectionBlockIdsOf, accessStateOfRow, extendPass,
-  loadScheduledLastDates, type SqlRunner,
+  loadSettings, entitlementOf, planOf, selectionBlockIdsOf, accessStateOfRow, daysLeftOf,
+  extendPass, loadScheduledLastDates, type SqlRunner,
 } from '../../src/server/db/adapters.js'
 import { isEntitled, FREE_BLOCK_LIMIT } from '../../src/lib/entitlement/entitlement.js'
 import { localDateOf } from '../../src/server/time.js'
@@ -217,5 +217,24 @@ test('extendPass 清掉宽限：宽限期内续期 → 立即回到 paid 且排�
     expect(accessStateOfRow(row, SERVER_NOW)).toBe('paid')
     expect(row.graceUntil).toBeNull()
     expect(entitlementOf(row, SERVER_NOW).plan).toBe('paid')
+  } finally { await t.pg.close() }
+})
+
+test('daysLeftOf（导航 chip 与解锁页的唯一实现）：向上取整、至少 1 天、非 paid 为 null', async () => {
+  const t = await seed({ plan: 'paid', paidUntilIso: futureIso(12) })
+  try {
+    const db = runner(t)
+    const row = await loadSettings(db, 'u1', SERVER_NOW)
+    // 12 天整 + 一点余量 → 向上取整成 13（宁可显示多一天，也不提前说「剩 12」）
+    expect(daysLeftOf({ ...row, paidUntil: new Date(SERVER_NOW + 12 * DAY + 3 * 3_600_000) }, SERVER_NOW))
+      .toBe(13)
+    // 不足一天 → 1，而不是 0（「剩 0 天」读起来像已过期）
+    expect(daysLeftOf({ ...row, paidUntil: new Date(SERVER_NOW + 3 * 3_600_000) }, SERVER_NOW)).toBe(1)
+    // 已过期 → null（宽限期不该看到「还剩 0 天」）
+    expect(daysLeftOf({ ...row, paidUntil: new Date(SERVER_NOW - DAY) }, SERVER_NOW)).toBeNull()
+    // 从未付费 → null
+    expect(daysLeftOf({ ...row, paidUntil: null }, SERVER_NOW)).toBeNull()
+    // 边界：恰好在到期时刻 → 已过期（paid 判定是严格大于）
+    expect(daysLeftOf({ ...row, paidUntil: new Date(SERVER_NOW) }, SERVER_NOW)).toBeNull()
   } finally { await t.pg.close() }
 })

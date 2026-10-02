@@ -10,9 +10,11 @@ import { withBase } from '../lib/base-path.js'
  * 「解锁」（免费常驻，2026-09-30 拍板：解锁页原本只藏在地图锁块里，用户找不到）、
  * 「退出」（登录态最右，signOut 回首页落匿名落地页）。
  *
- * 2026-10-02 v3：通行证到期后进入宽限，chip 改叫「续期」并**照常显示**——
- * 同样的发现性问题（用户找不到 /upgrade），且宽限期正是续期的自然时机；
- * 藏起来等于让宽限静默过期。这不是「第二处付费提示」：仍是导航里同一个入口。
+ * 2026-10-02 v3：chip 是**导航里唯一的付费相关入口**，标签随档位变——
+ * free「解锁」/ grace「续期」/ paid「剩 N 天」，三者都指向 /upgrade。
+ * 为什么 paid 也要显示：用户实测反馈「找不到自己剩多少天」——藏起来等于把到期日
+ * 变成无法查询的状态。paid 态用弱色（status 而非 CTA），且**不进刷题主循环**，
+ * 所以仍是「产品内只有一处付费信息」，不违反 §10.1 的原意。
  *
  * 「关于」原本只在页脚。移上来（2026-10-01 用户要求）后页脚不再重复；
  * 它是全站唯一介绍产品的稳定地址（登录后首页是刷题界面），放导航随时够得着、
@@ -24,8 +26,13 @@ import { withBase } from '../lib/base-path.js'
  * 多数机型两行内排得下。
  */
 export function NavBar(
-  { authed = false, access = null }:
-  { authed?: boolean; access?: 'free' | 'paid' | 'grace' | null },
+  { authed = false, access = null, daysLeft = null }:
+  {
+    authed?: boolean
+    access?: 'free' | 'paid' | 'grace' | null
+    /** access='paid' 时的剩余天数（adapters.daysLeftOf 算，别在这层再算一遍） */
+    daysLeft?: number | null
+  },
 ): React.JSX.Element {
   const pathname = usePathname()
   const items = [
@@ -68,6 +75,16 @@ export function NavBar(
               className="ml-1 shrink-0 whitespace-nowrap rounded-lg bg-accent/15 px-2.5 py-1.5 text-[13px] font-semibold text-accent transition-colors duration-150 ease-snap hover:bg-accent/25 sm:px-3.5 sm:text-sm"
             >
               {access === 'grace' ? '续期' : '解锁'}
+            </Link>
+          )}
+          {/* 有效期内：只报状态，不催办——弱色、无强调底，避免读成 CTA */}
+          {access === 'paid' && (
+            <Link
+              href="/upgrade"
+              data-testid="nav-pass-days"
+              className="tnum ml-1 shrink-0 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[13px] text-paper-muted transition-colors duration-150 ease-snap hover:bg-paper-wash hover:text-paper-ink sm:px-3.5 sm:text-sm"
+            >
+              {daysLeft === null ? '通行证' : `剩 ${daysLeft} 天`}
             </Link>
           )}
           {authed && (

@@ -27,20 +27,32 @@ test('当前页链接带 aria-current=page', () => {
   expect(screen.getByRole('link', { name: '知识地图' })).not.toHaveAttribute('aria-current')
 })
 
-test('「解锁」入口三态（2026-09-30 拍板）：免费常驻 / 付费消失 / 匿名不显示', () => {
+test('「解锁」入口三态（2026-09-30 拍板「用户找不到」，2026-10-02 扩展三态）', () => {
   // 免费：导航常驻「解锁」——解锁页原本只藏在地图锁块/免费墙提示里，用户找不到
   const free = render(<NavBar authed access="free" />)
   expect(screen.getByTestId('nav-upgrade')).toHaveAttribute('href', '/upgrade')
   expect(screen.getByTestId('nav-upgrade')).toHaveTextContent('解锁')
   free.unmount()
-  // 付费：已解锁，入口自动消失（不出现任何付费文案）
-  const paid = render(<NavBar authed access="paid" />)
-  expect(screen.queryByTestId('nav-upgrade')).not.toBeInTheDocument()
-  expect(/解锁|升级|付费|续期/.test(document.body.textContent ?? '')).toBe(false)
-  paid.unmount()
   // 匿名：不显示（免费口径由落地页自己讲）
   render(<NavBar />)
   expect(screen.queryByTestId('nav-upgrade')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('nav-pass-days')).not.toBeInTheDocument()
+})
+
+test('有效期内：显示「剩 N 天」并可点回 /upgrade（用户实测反馈找不到剩余时间）', () => {
+  render(<NavBar authed access="paid" daysLeft={12} />)
+  const chip = screen.getByTestId('nav-pass-days')
+  expect(chip).toHaveTextContent('剩 12 天')
+  expect(chip).toHaveAttribute('href', '/upgrade')
+  // 不是 CTA：不出强调色底、不叫「解锁/续期」
+  expect(chip.className).toContain('text-paper-muted')
+  expect(chip.className).not.toContain('bg-accent')
+  expect(screen.queryByTestId('nav-upgrade')).not.toBeInTheDocument()
+})
+
+test('有效期内但算不出天数（防御）：退化为「通行证」而不是「剩 null 天」', () => {
+  render(<NavBar authed access="paid" daysLeft={null} />)
+  expect(screen.getByTestId('nav-pass-days')).toHaveTextContent('通行证')
 })
 
 test('通行证到期（grace）：chip 改叫「续期」而非消失——宽限期正是续期的自然时机', () => {
