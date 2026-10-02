@@ -20,3 +20,21 @@ test('迁移建出全部表与关键约束', async () => {
     await t.pg.close()
   }
 })
+
+test('通行证三列与 orders.pass_days 就位（§10.1 v3）', async () => {
+  const t = await createTestDb()
+  try {
+    const r = await t.db.execute<{ column_name: string }>(sql`
+      select column_name from information_schema.columns
+      where table_name = 'user_settings'
+        and column_name in ('paid_until', 'grace_until', 'grace_block_ids')`)
+    expect(r.rows.map(x => x.column_name).sort())
+      .toEqual(['grace_block_ids', 'grace_until', 'paid_until'])
+    const o = await t.db.execute<{ column_name: string }>(sql`
+      select column_name from information_schema.columns
+      where table_name = 'orders' and column_name = 'pass_days'`)
+    expect(o.rows).toHaveLength(1)
+  } finally {
+    await t.pg.close()
+  }
+})

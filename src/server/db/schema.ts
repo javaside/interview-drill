@@ -14,7 +14,19 @@ export const userSettings = pgTable('user_settings', {
   readyByDate: date('ready_by_date'),             // null = 未设 → 维持模式
   dailyCapacity: integer('daily_capacity').notNull().default(45),
   timezone: text('timezone').notNull().default('Asia/Shanghai'),
+  /**
+   * 遗留列，**只写不读**：'paid' 表示买过（含已过期）。判定权限一律看 paid_until
+   * （见 lib/entitlement/expiry.ts）。保留它是为了 app 代码回滚时旧逻辑仍能读到
+   * 'paid'——宁可多给几天访问，也不能让已付款用户在回滚窗口内被拒。
+   * 待新路径在生产验证稳定后再单独发一次 drop 迁移。
+   */
   plan: text('plan').notNull().default('free'),   // 'free' | 'paid'
+  /** 通行证到期时刻（null = 从未付费）。权限判定的唯一依据 */
+  paidUntil: timestamp('paid_until', { withTimezone: true }),
+  /** 宽限截止（本地日）。null = 未结算（未到期或从未付费） */
+  graceUntil: date('grace_until'),
+  /** 到期结算时冻结的宽限块（= 仍有未完成排期的块） */
+  graceBlockIds: jsonb('grace_block_ids').$type<string[]>().notNull().default([]),
   freeBlockIds: jsonb('free_block_ids').$type<string[]>().notNull().default([]),
   /** 当前岗位包（tracks.id）；null = 全部。纯导航偏好，不进 entitlement */
   trackId: text('track_id'),
@@ -122,6 +134,8 @@ export const orders = pgTable('orders', {
   id: text('id').primaryKey(),                    // ULID
   userId: text('user_id').notNull().references(() => users.id),
   amountCents: integer('amount_cents').notNull(),
+  /** 本单售出的通行证天数——客服查单/对账用（叠加不覆盖，见 adapters.extendPass） */
+  passDays: integer('pass_days').notNull().default(30),
   status: text('status').notNull().default('pending'),   // OrderStatus
   gateway: text('gateway').notNull(),             // 'wechat' | 'alipay' | 'fake'
   gatewayTxnId: text('gateway_txn_id'),           // 网关流水号，回调时写
