@@ -29,18 +29,25 @@ test('当前页链接带 aria-current=page', () => {
 
 test('「解锁」入口三态（2026-09-30 拍板）：免费常驻 / 付费消失 / 匿名不显示', () => {
   // 免费：导航常驻「解锁」——解锁页原本只藏在地图锁块/免费墙提示里，用户找不到
-  const free = render(<NavBar authed plan="free" />)
+  const free = render(<NavBar authed access="free" />)
   expect(screen.getByTestId('nav-upgrade')).toHaveAttribute('href', '/upgrade')
   expect(screen.getByTestId('nav-upgrade')).toHaveTextContent('解锁')
   free.unmount()
   // 付费：已解锁，入口自动消失（不出现任何付费文案）
-  const paid = render(<NavBar authed plan="paid" />)
+  const paid = render(<NavBar authed access="paid" />)
   expect(screen.queryByTestId('nav-upgrade')).not.toBeInTheDocument()
-  expect(/解锁|升级|付费/.test(document.body.textContent ?? '')).toBe(false)
+  expect(/解锁|升级|付费|续期/.test(document.body.textContent ?? '')).toBe(false)
   paid.unmount()
   // 匿名：不显示（免费口径由落地页自己讲）
   render(<NavBar />)
   expect(screen.queryByTestId('nav-upgrade')).not.toBeInTheDocument()
+})
+
+test('通行证到期（grace）：chip 改叫「续期」而非消失——宽限期正是续期的自然时机', () => {
+  render(<NavBar authed access="grace" />)
+  const chip = screen.getByTestId('nav-upgrade')
+  expect(chip).toHaveTextContent('续期')
+  expect(chip).toHaveAttribute('href', '/upgrade')
 })
 
 // ===== 登录态：唯一新增元素是退出（登录入口不进导航——浏览零门槛哲学）=====

@@ -10,6 +10,10 @@ import { withBase } from '../lib/base-path.js'
  * 「解锁」（免费常驻，2026-09-30 拍板：解锁页原本只藏在地图锁块里，用户找不到）、
  * 「退出」（登录态最右，signOut 回首页落匿名落地页）。
  *
+ * 2026-10-02 v3：通行证到期后进入宽限，chip 改叫「续期」并**照常显示**——
+ * 同样的发现性问题（用户找不到 /upgrade），且宽限期正是续期的自然时机；
+ * 藏起来等于让宽限静默过期。这不是「第二处付费提示」：仍是导航里同一个入口。
+ *
  * 「关于」原本只在页脚。移上来（2026-10-01 用户要求）后页脚不再重复；
  * 它是全站唯一介绍产品的稳定地址（登录后首页是刷题界面），放导航随时够得着、
  * 也更容易被转发。
@@ -20,7 +24,8 @@ import { withBase } from '../lib/base-path.js'
  * 多数机型两行内排得下。
  */
 export function NavBar(
-  { authed = false, plan = null }: { authed?: boolean; plan?: 'free' | 'paid' | null },
+  { authed = false, access = null }:
+  { authed?: boolean; access?: 'free' | 'paid' | 'grace' | null },
 ): React.JSX.Element {
   const pathname = usePathname()
   const items = [
@@ -56,13 +61,13 @@ export function NavBar(
               </Link>
             )
           })}
-          {plan === 'free' && (
+          {(access === 'free' || access === 'grace') && (
             <Link
               href="/upgrade"
               data-testid="nav-upgrade"
               className="ml-1 shrink-0 whitespace-nowrap rounded-lg bg-accent/15 px-2.5 py-1.5 text-[13px] font-semibold text-accent transition-colors duration-150 ease-snap hover:bg-accent/25 sm:px-3.5 sm:text-sm"
             >
-              解锁
+              {access === 'grace' ? '续期' : '解锁'}
             </Link>
           )}
           {authed && (
