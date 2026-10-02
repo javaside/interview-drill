@@ -314,6 +314,28 @@ describe('滥用防护：输出闸门与每日配额', () => {
     await expect(prepareQa(deps({ userId: 'u2', now: () => clock }))).resolves.toBeDefined()
   })
 
+  test('宽限期内配额按付费档，但语料边界仍只放行宽限块（两套口径别混用）', async () => {
+    await t.db.execute(sql`insert into users (id, github_id) values ('u3', 'gh-u3')`)
+    await t.db.execute(sql`
+      insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, paid_until, free_block_ids)
+      values ('u3', null, 10, 'Asia/Shanghai', 'paid',
+              ${'1970-01-01T00:00:00Z'}::timestamptz, '[]'::jsonb)`)
+    // 只有 b1（c1）有在期排期 → 到期结算后宽限块 = [b1]
+    await t.db.execute(sql`
+      insert into card_state (user_id, card_id, plan, algo_version)
+      values ('u3', 'c1', ${JSON.stringify(['1970-01-01'])}::jsonb, 'test')`)
+
+    let clock = 1_000
+    // 给到超过免费档 20 次仍全部放行 → 用的确实是付费档配额（宽限按付费档）
+    for (let i = 0; i < QA_DAILY_QUOTA.free + 1; i++) {
+      clock += 61_000
+      await expect(prepareQa(deps({ userId: 'u3', now: () => clock }))).resolves.toBeDefined()
+    }
+    // 同一时刻：宽限 ≠ 全量。不在宽限块的卡照旧不给问（免费墙不能被配额口径带松）
+    await expect(prepareQa(deps({ userId: 'u3', cardId: 'c2', now: () => clock + 61_000 })))
+      .rejects.toThrow('还没有解锁')
+  })
+
   test('配额按本地自然日重置：跨天后的第一问重新计数', async () => {
     const DAY_MS = 24 * 60 * 60 * 1000
     let clock = 1_000

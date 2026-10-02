@@ -1,5 +1,5 @@
 import type { SqlRunner } from './db/adapters.js'
-import { loadSettings, loadCardSnapshots, entitlementOf } from './db/adapters.js'
+import { loadSettings, loadCardSnapshots, entitlementOf, planOf } from './db/adapters.js'
 import { isEntitled } from '../lib/entitlement/entitlement.js'
 import { localDateOf } from './time.js'
 import {
@@ -133,10 +133,16 @@ export async function prepareQa(deps: QaDeps): Promise<PreparedQa> {
     history,
   )
 
+  // 配额档位与语料边界是**两套口径**，别混用：
+  // - 配额用 planOf：宽限期内仍按付费档（用户 2026-10-02 拍板——还在消化付费期
+  //   排下的题，AI 突然从 100/天 掉到 20/天 很断）；
+  // - 免费墙用 entitlementOf：宽限 ≠ 全量，只放行宽限块（上面的 isEntitled 已判）。
+  // 绝不读遗留的 settings.plan 列。
+  const quotaPlan = planOf(settings, nowMs)
   // 配额放最后：只有真要打 provider 的请求才扣次数（参数错/未解锁不白扣）
-  if (quotaExceeded(deps.userId, settings.plan, settings.timezone, nowMs)) {
+  if (quotaExceeded(deps.userId, quotaPlan, settings.timezone, nowMs)) {
     throw new Error(
-      `今天的 ${QA_DAILY_QUOTA[settings.plan]} 次提问已用完——明天恢复。` +
+      `今天的 ${QA_DAILY_QUOTA[quotaPlan]} 次提问已用完——明天恢复。` +
       '想深入某道题，可以先看题解或加入学习页复习。',
     )
   }
