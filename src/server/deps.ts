@@ -6,7 +6,8 @@ import type { DistractorPools } from '../lib/options/types.js'
 import { gatewayOf } from './billing-gateway.js'
 import type { BillingDeps } from './billing.js'
 import {
-  loadSettings, entitlementOf, loadAllCards, loadAllCardStates, loadBlocks,
+  loadSettings, entitlementOf, accessStateOfRow, selectionBlockIdsOf,
+  loadAllCards, loadAllCardStates, loadBlocks,
   persistPlans, ensureDailySession, countTodayDone, countTodayMisses, type SqlRunner,
 } from './db/adapters.js'
 
@@ -23,14 +24,16 @@ export function payloadDepsOf(db: SqlRunner, userId: string, serverNowMs: number
       return {
         settings: { readyByDate: row.readyByDate, dailyCapacity: row.dailyCapacity, timezone: row.timezone },
         ent: entitlementOf(row, serverNowMs),
-        // 已保存勾选集原样下发。没有 paid 兜底——空集就是空集（buildDailyPayload 只做
-        // 「按勾选集过滤」，付费用户兑换后勾选被清空时首页不出题，需回设置重勾）。
-        selectionBlockIds: new Set(row.freeBlockIds),
+        // 排期范围口径（付费/免费 = 已保存勾选；宽限期 = 勾选 ∪ 宽限块）。没有 paid
+        // 兜底——空集就是空集（buildDailyPayload 只做「按勾选集过滤」，付费用户兑换后
+        // 勾选被清空时首页不出题，需回设置重勾）。
+        selectionBlockIds: new Set(selectionBlockIdsOf(row, serverNowMs)),
+        graceActive: accessStateOfRow(row, serverNowMs) === 'grace',
       }
     },
     loadCards: () => loadAllCards(db),
     async loadStates() {
-      const row = await loadSettings(db, userId)
+      const row = await loadSettings(db, userId, serverNowMs)
       return loadAllCardStates(db, userId, localDateOf(serverNowMs, row.timezone))
     },
     persistPlans: plans => persistPlans(db, userId, plans),

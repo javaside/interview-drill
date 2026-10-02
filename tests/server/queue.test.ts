@@ -6,6 +6,7 @@ import {
   persistPlans, ensureDailySession, countTodayDone, type SqlRunner,
 } from '../../src/server/db/adapters.js'
 import { localDateOf } from '../../src/server/time.js'
+import { payloadDepsOf } from '../../src/server/deps.js'
 import { addDays } from '../../src/lib/scheduler/date.js'
 
 const TZ = 'Asia/Shanghai'
@@ -66,6 +67,9 @@ function mkDeps(t: TestDb, userId: string): DailyPayloadDeps {
         settings: { readyByDate: row.readyByDate, dailyCapacity: row.dailyCapacity, timezone: row.timezone },
         ent: entitlementOf(row, SERVER_NOW),
         selectionBlockIds: new Set(row.freeBlockIds),
+        // 本文件的夹具都不是宽限用户（免费 / 有效期内付费），恒 false；
+        // 宽限口径走 payloadDepsOf 的真实装配，见「宽限期只跑已有计划」两条用例
+        graceActive: false,
       }
     },
     loadCards: () => loadAllCards(db),
@@ -143,6 +147,51 @@ test('plan-once：当天重复取队列不重算已有计划（I4）', async () 
       select max(plan_generated_at)::text as m from card_state`)
     expect(after2.rows[0]!.n).toBe(after1.rows[0]!.n)
     expect(ts2.rows[0]!.m).toBe(ts1.rows[0]!.m)   // 时间戳也不变（未二次落盘）
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('宽限期只跑已有计划：勾选块里的 fresh 卡不再曝光（宽限 ≠ 再送两周新题）', async () => {
+  const t = await seedQueueFixture({ readyBy: null })   // 常备模式：fresh 卡本来会全部曝光
+  try {
+    // 付费用户已到期 → 进入宽限；勾选仍是 b1/b2；只给 b1 的一张卡留**今天到期**的排期
+    await t.db.execute(sql`
+      update user_settings
+      set plan = 'paid', paid_until = ${'2026-09-20T00:00:00Z'}::timestamptz
+      where user_id = 'u-free'`)
+    await t.db.execute(sql`
+      insert into card_state (user_id, card_id, plan, algo_version)
+      values ('u-free', 'b1-c0', ${JSON.stringify([TODAY])}::jsonb, 'test')`)
+
+    const deps = payloadDepsOf(runner(t), 'u-free', SERVER_NOW)
+    const loaded = await deps.loadSettings()
+    expect(loaded.graceActive).toBe(true)
+    // 勾选口径 = 勾选 ∪ 宽限块（否则宽限排期会被勾选集过滤掉）
+    expect([...loaded.selectionBlockIds].sort()).toEqual(['b1', 'b2'])
+
+    const p = await buildDailyPayload(deps)
+    // 宽限的承诺是「让**在期排的**题跑完」，不是「再免费刷两周新题」：
+    // b1/b2 里另外 9 张 fresh 卡必须被挡在队列外（常备模式下它们本来会全进）
+    expect(p.queue.map(q => q.cardId)).toEqual(['b1-c0'])
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('非宽限的付费用户不受此限：fresh 卡照常首次曝光（对照组，防过滤条件写宽）', async () => {
+  const t = await seedQueueFixture({ readyBy: null })
+  try {
+    await t.db.execute(sql`
+      update user_settings
+      set plan = 'paid', paid_until = ${'2099-01-01T00:00:00Z'}::timestamptz
+      where user_id = 'u-free'`)
+
+    const deps = payloadDepsOf(runner(t), 'u-free', SERVER_NOW)
+    const loaded = await deps.loadSettings()
+    expect(loaded.graceActive).toBe(false)
+    const p = await buildDailyPayload(deps)
+    expect(p.queue.length).toBeGreaterThan(0)
   } finally {
     await t.pg.close()
   }

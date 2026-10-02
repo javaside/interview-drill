@@ -116,9 +116,11 @@ export type DailyPayloadDeps = {
   loadSettings(): Promise<{
     settings: Settings & { timezone: string }
     ent: Entitlement
-    /** 排期范围 = 已保存勾选集（free_block_ids 原样，空即空——没有隐藏兜底；
-     *  ent 只管语料/自由刷边界：付费任意块可在地图自由刷，不受勾选影响） */
+    /** 排期范围 = 已保存勾选集（口径见 adapters.selectionBlockIdsOf；宽限期内并上宽限块）。
+     *  ent 只管语料/自由刷边界：付费任意块可在地图自由刷，不受勾选影响 */
     selectionBlockIds: ReadonlySet<string>
+    /** 宽限期内为 true：排期只含**已有计划**的卡，不新排（「让在期排的题跑完」的终止保证） */
+    graceActive: boolean
   }>
   loadCards(): Promise<{ cards: CardSnapshot[]; categories: Map<string, string> }>
   /** 偏移域卡状态（plan 已由 adapter diffDays 转相对 today） */
@@ -140,14 +142,23 @@ export type DailyPayloadDeps = {
  * 复现契约一致，见 replay.variantAt）。
  */
 export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPayload> {
-  const { settings, ent, selectionBlockIds } = await deps.loadSettings()
+  const { settings, ent, selectionBlockIds, graceActive } = await deps.loadSettings()
   const today = localDateOf(deps.serverNowMs, settings.timezone)
   const { cards, categories } = await deps.loadCards()
-
-  // 排期范围 = 已保存勾选集（勾了哪些题就刷哪些题）。ent 保留给干扰项语料
-  // （buildDistractorPools）：付费语料全量，不受勾选影响。
-  const entitled = cards.map(toSchedulable).filter(c => selectionBlockIds.has(c.blockId))
   const states = await deps.loadStates()
+
+  // 排期范围 = 勾选集（宽限期内由 selectionBlockIdsOf 并上宽限块）。
+  // ent 保留给干扰项语料（buildDistractorPools）：付费语料全量，不受勾选影响。
+  //
+  // 宽限期额外收一道：只让**已有计划**的卡进候选。宽限的承诺是「让在期排的题跑完」，
+  // 不是「再免费刷两周新题」——常备模式下 fresh 卡本来会按 newPerDayOf 全部曝光，
+  // 冲刺模式下还会给它们铺新计划，两种都会把宽限变成拿到一批没开始过的题。
+  const plannedCardIds = graceActive
+    ? new Set(states.filter(s => s.plan.length > 0).map(s => s.cardId))
+    : null
+  const entitled = cards.map(toSchedulable)
+    .filter(c => selectionBlockIds.has(c.blockId))
+    .filter(c => plannedCardIds === null || plannedCardIds.has(c.id))
 
   const result = schedule(
     entitled.map(c => ({ id: c.id, frequency: c.frequency })),
