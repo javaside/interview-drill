@@ -5,11 +5,12 @@ import { insertOrder, loadOrder, loadSettings } from '../../src/server/db/adapte
 import { createOrder, fulfillOrder, handleWebhook, type PaymentGateway } from '../../src/server/billing.js'
 import { buildBlockMap } from '../../src/server/map.js'
 import { mapDepsOf } from '../../src/server/deps.js'
+import { PASS_PRICE_CENTS } from '../../src/lib/billing/order.js'
 
 const fakeGateway: PaymentGateway = {
   createPayment: async () => ({ payParams: { fake: true } }),
   verifySignature: () => true,
-  parseCallback: () => ({ orderId: 'x', amountCents: 12900, gatewayTxnId: 't', event: 'paid' }),
+  parseCallback: () => ({ orderId: 'x', amountCents: PASS_PRICE_CENTS, gatewayTxnId: 't', event: 'paid' }),
 }
 
 async function seedUser(db: never) {
@@ -24,10 +25,10 @@ test('insertOrder/loadOrder 往返：新单 status=pending、金额落库、不�
   try {
     await seedUser(t.db as never)
     const id = ulid()
-    await insertOrder(t.db as never, { id, userId: 'u1', amountCents: 12900, gateway: 'fake' })
+    await insertOrder(t.db as never, { id, userId: 'u1', amountCents: PASS_PRICE_CENTS, gateway: 'fake' })
     const row = (await loadOrder(t.db as never, id))!
     expect(row.status).toBe('pending')
-    expect(row.amountCents).toBe(12900)
+    expect(row.amountCents).toBe(PASS_PRICE_CENTS)
     expect(row.userId).toBe('u1')
     expect(await loadOrder(t.db as never, 'nope')).toBeNull()
   } finally { await t.pg.close() }
@@ -75,7 +76,7 @@ test('未知订单 → rejected', async () => {
   try {
     await seedUser(t.db as never)
     const r = await fulfillOrder({ db: t.db as never, gateway: fakeGateway },
-      { orderId: 'nope', amountCents: 12900, gatewayTxnId: 't', event: 'paid' })
+      { orderId: 'nope', amountCents: PASS_PRICE_CENTS, gatewayTxnId: 't', event: 'paid' })
     expect(r.outcome).toBe('rejected')
   } finally { await t.pg.close() }
 })

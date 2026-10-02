@@ -9,8 +9,15 @@ export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired'
 /** 网关回调携带的事件（不含 pending——pending 是建单初态，非事件） */
 export type OrderEvent = 'paid' | 'failed' | 'expired'
 
-/** 占位价格，对标 129 元一次性买断（§10.1「价格上线前再定」——上线前替换） */
-export const PRICE_CENTS = 12900
+/**
+ * 30 天通行证单价（2026-10-02 用户拍板：¥29 / 30 天，取代原 ¥129 一次性买断）。
+ * 换算关系：三张通行证 ≈ 原买断价，对「集中刷一个月」的定价心理位最顺
+ * （spec §10.1 v3 修订）。
+ */
+export const PASS_PRICE_CENTS = 2900
+
+/** 通行证时长（天）——续期叠加的最小单位（叠加规则见 adapters.extendPass） */
+export const PASS_DAYS = 30
 
 /** 终态：再收事件只允许同类（幂等 no-op），异类事件是状态冲突 */
 const TERMINAL: Record<OrderEvent, OrderStatus> = { paid: 'paid', failed: 'failed', expired: 'expired' }
@@ -41,5 +48,5 @@ export function fulfillmentDecision(current: OrderStatus): 'fulfill' | 'already'
 
 /** 服务端金额校验：回调金额必须等于订单价，绝不信任客户端/回调传入的任意金额 */
 export function assertAmount(cents: number): void {
-  if (cents !== PRICE_CENTS) throw new Error(`金额不符：期望 ${PRICE_CENTS}，实收 ${cents}`)
+  if (cents !== PASS_PRICE_CENTS) throw new Error(`金额不符：期望 ${PASS_PRICE_CENTS}，实收 ${cents}`)
 }

@@ -5,7 +5,7 @@
  * 网关通过 PaymentGateway 接口注入（测试给假网关，生产给真实适配器）。
  */
 import { ulid } from 'ulid'
-import { transition, fulfillmentDecision, assertAmount, PRICE_CENTS } from '../lib/billing/order.js'
+import { transition, fulfillmentDecision, assertAmount, PASS_PRICE_CENTS } from '../lib/billing/order.js'
 import type { OrderEvent } from '../lib/billing/order.js'
 import {
   insertOrder, loadOrder, markOrderPaid, markOrderStatus, upgradeToPaid,
@@ -27,16 +27,16 @@ export interface PaymentGateway {
 export type BillingDeps = { db: SqlRunner; gateway: PaymentGateway }
 
 /**
- * 下单：铸 ULID → 落库（pending + 服务端定价 PRICE_CENTS，绝不接受调用方传金额）
+ * 下单：铸 ULID → 落库（pending + 服务端定价 PASS_PRICE_CENTS，绝不接受调用方传金额）
  * → 网关发起支付 → 返回拉起支付所需参数。建单与发起支付是同一步（无独立 created）。
  */
 export async function createOrder(
   deps: BillingDeps, userId: string, gateway: string,
 ): Promise<{ orderId: string; amountCents: number; payParams: unknown }> {
   const orderId = ulid()
-  await insertOrder(deps.db, { id: orderId, userId, amountCents: PRICE_CENTS, gateway })
-  const { payParams } = await deps.gateway.createPayment({ orderId, amountCents: PRICE_CENTS })
-  return { orderId, amountCents: PRICE_CENTS, payParams }
+  await insertOrder(deps.db, { id: orderId, userId, amountCents: PASS_PRICE_CENTS, gateway })
+  const { payParams } = await deps.gateway.createPayment({ orderId, amountCents: PASS_PRICE_CENTS })
+  return { orderId, amountCents: PASS_PRICE_CENTS, payParams }
 }
 
 /**

@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth'
-import { PRICE_CENTS } from '../../lib/billing/order.js'
+import { PASS_PRICE_CENTS } from '../../lib/billing/order.js'
 import { authOptions } from '../../server/auth-config.js'
 import { getDb } from '../../server/db/client.js'
 import { loadSettings } from '../../server/db/adapters.js'
@@ -16,5 +16,5 @@ export default async function UpgradePage(): Promise<React.JSX.Element> {
   const session = await getServerSession(authOptions)
   const userId = (session as { userId?: string } | null)?.userId
   const plan = userId === undefined ? null : (await loadSettings(getDb(), userId)).plan
-  return <UpgradeView priceCents={PRICE_CENTS} plan={plan} />
+  return <UpgradeView priceCents={PASS_PRICE_CENTS} plan={plan} />
 }
