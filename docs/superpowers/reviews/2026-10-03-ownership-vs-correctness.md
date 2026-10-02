@@ -87,7 +87,12 @@ atomic 唯一正解**（且 `public: true`，SEO 公开页可见）。
 **不是新发现。** 症状在评审里被逐字点名，工作量被算过，结论是「不可行」——
 然后带着 **0 覆盖**上了线。出处如下（原文引用，可逐条核对）。
 
-#### ① 最直接：症状被逐字点名 —— [round3-content-feasibility.md:64](round3-content-feasibility.md#L64)
+> **链接形式说明**：指向标题锚点（`文件.md#章节标题`）而不是行号。原因：IDEA 的
+> Markdown 预览**不支持行号跳转**（官方文档只记载链接到「有效的标题标签」；行号
+> 导航在 JetBrains 仍是未实现的功能请求），而标题锚点在 IDEA 与 GitHub 都可跳。
+> 链接文字里的 `:行号` 保留下来供精确对照。
+
+#### ① 最直接：症状被逐字点名 —— [round3-content-feasibility.md:64 → §4](round3-content-feasibility.md#4-干扰项互斥检查在-1200-题规模是否可行)
 
 Round 3 评审引 spec §4.3 的原文：
 
@@ -101,12 +106,12 @@ Round 3 评审引 spec §4.3 的原文：
 
 | 位置 | 内容 |
 |---|---|
-| [design.md:108](../specs/2026-09-15-interview-drill-design.md#L108) | 字段定义：「本要点对这些题也成立，不得抽作它们的干扰项」 |
-| [design.md:728](../specs/2026-09-15-interview-drill-design.md#L728) | §9.1 审核必做项**第 6 条**：「**干扰项互斥性**……这是选择题方案唯一新增的审核负担，但它是块内 N² 量级的检查——**审核工具必须自动把同块要点两两列出来给人看**，纯靠人脑记不住 18 张卡之间的交叉关系」 |
-| [design.md:750](../specs/2026-09-15-interview-drill-design.md#L750) | 把「要点级复用」从收益栏**删除**：「每一次省下审核时间的复用，**恰好是一条必须登记的 `excludeAsDistractorFor`**……复用率越高净收益越负」 |
-| [design.md:772](../specs/2026-09-15-interview-drill-design.md#L772) | 工时估算：**25-60 小时** |
+| [design.md:108 → §4.2 题卡结构](../specs/2026-09-15-interview-drill-design.md#42-题卡结构) | 字段定义：「本要点对这些题也成立，不得抽作它们的干扰项」 |
+| [design.md:728 → §9.1](../specs/2026-09-15-interview-drill-design.md#91-成本与压缩本项目最大的一笔投入) | §9.1 审核必做项**第 6 条**：「**干扰项互斥性**……这是选择题方案唯一新增的审核负担，但它是块内 N² 量级的检查——**审核工具必须自动把同块要点两两列出来给人看**，纯靠人脑记不住 18 张卡之间的交叉关系」 |
+| [design.md:750 → §9.1](../specs/2026-09-15-interview-drill-design.md#91-成本与压缩本项目最大的一笔投入) | 把「要点级复用」从收益栏**删除**：「每一次省下审核时间的复用，**恰好是一条必须登记的 `excludeAsDistractorFor`**……复用率越高净收益越负」 |
+| [design.md:772 → 修正后的估算](../specs/2026-09-15-interview-drill-design.md#修正后的估算) | 工时估算：**25-60 小时** |
 
-#### ③ spec 自己承认跨块不查（本次踩雷的正是这一层）—— [design.md:265](../specs/2026-09-15-interview-drill-design.md#L265)
+#### ③ spec 自己承认跨块不查（本次踩雷的正是这一层）—— [design.md:265 → 互斥检查的真实工作量](../specs/2026-09-15-interview-drill-design.md#互斥检查的真实工作量)
 
 > **跨块（第 2 层）不做全量互斥检查**，只做抽检——跨大类概念撞车的概率远低于
 > 同块，且报错闭环能覆盖。**这是有意识的取舍，不是遗漏。**
@@ -114,13 +119,13 @@ Round 3 评审引 spec §4.3 的原文：
 用户踩到的雷（`java/exceptions` × `java/language-basics`）**正好在跨块**——
 也就是被有意放弃的那一块。
 
-#### ④ Round 3 判定「不可行」—— [round3-content-feasibility.md:17](round3-content-feasibility.md#L17)
+#### ④ Round 3 判定「不可行」—— [round3-content-feasibility.md:17 → 结论先行](round3-content-feasibility.md#结论先行)
 
 > | 4 | 干扰项互斥检查 | **不可行（按当前口径）。** 文档把工作量算小了 **9 倍**，
 > 且这笔钱完全不在 70-80 小时里。另有干扰项枯竭问题：一轮刷完块内 **98.6%**
 > 的要点用户全见过 |
 
-同评审还指出维护成本不是一次性的（[round3:436-438](round3-content-feasibility.md#L436-L438)）：
+同评审还指出维护成本不是一次性的（[round3:436-438 → §4](round3-content-feasibility.md#4-干扰项互斥检查在-1200-题规模是否可行)）：
 
 > **(b) 互斥关系不是静态的，它随内容变更重算。** 每往块里加一道题，要做
 > `2 × (块内已有题数) × 4.5 ≈ 171` 次新判断……**知识块在互斥意义上是一个
