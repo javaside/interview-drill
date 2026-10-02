@@ -174,6 +174,32 @@ systemd unit：`/etc/systemd/system/interview-drill.service`（Restart=always，
    302 → /drill/signin（callbackUrl 绝对化回 /drill）、settings 匿名跳登录无双前缀、
    老站根路径 302 /admin/、Spring /api/** 与登录接口原样、/drill/ 308 → /drill 无循环。
 
+## 付费模型迁移（30 天通行证，2026-10-02）
+
+迁移 `0005` 给 `user_settings` 加 `paid_until / grace_until / grace_block_ids`（权限判定
+改用 `paid_until`），给 `orders` 加 `pass_days`，并**在迁移内手工回填**：存量
+`plan = 'paid'` 的行统一转为「迁移执行时刻 + 30 天」。
+
+**顺序敏感——别颠倒：**
+
+1. `pg_dump` 备份：
+   `sudo -u postgres pg_dump drill > /root/drill-$(date +%F).dump`
+2. 部署新代码（rsync + `pnpm install --frozen-lockfile && pnpm build`）。
+3. **同一个窗口内**跑 `pnpm exec drizzle-kit migrate`。新代码只认 `paid_until`：
+   若只切代码不跑迁移，**所有存量付费用户立刻掉权限**（表现为 /upgrade 显示
+   可输码、首页排期变空）。反向是安全的——列留着无害，回滚到旧代码后旧逻辑读
+   `plan` 仍见 `'paid'`（`extendPass` 会同步写这一列）。
+4. 健康检查 + **用一个存量付费账号实测**：`/drill/api/health` ok；
+   登录后 `/drill/upgrade` 显示「通行证有效 · 还剩 N 天」（N 应为 30 上下）；
+   首页排期照常出题、地图全量解锁。
+5. content 无变更时不需要 `content:upsert`。
+
+**回滚**：应用层回退 git 重发即可（DB 不用动——新列在旧代码下被忽略）。若必须
+回退数据：旧代码认 `plan`，`paid_until` 列留着不影响，**不要**手工删列。
+
+**待办（上线后观察）**：验证稳定后可单独发一次 drop 迁移删掉 `plan` 列
+（届时同步删 `extendPass` 与 `readSettingsRow` 里的写入/映射）。
+
 ## 回滚
 
 - 应用层：升级出问题 → 本地 git 回退 → 重走升级步骤；或 `systemctl stop interview-drill`
