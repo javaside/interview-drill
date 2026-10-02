@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 
 /**
  * 下单端点（薄壳，§10 付费解锁）。鉴权经 requireUserId（NextAuth session）。
- * 业务全程走 createOrder 纯核入口：金额由服务端 PRICE_CENTS 决定，
+ * 业务全程走 createOrder 纯核入口：金额由服务端 PASS_PRICE_CENTS 决定，
  * 请求体不接收任何金额参数（绝不信任客户端定价）。
  */
 export async function POST(request: Request): Promise<Response> {
