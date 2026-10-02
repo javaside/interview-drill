@@ -314,6 +314,78 @@ test('paid 排期只认勾选集：未勾块的新卡（fresh）不再涌入排�
   }
 })
 
+test('宽限期内：设置页把**实际在跑**的宽限块显示为已勾（所见即所得）', async () => {
+  const t = await createTestDb()
+  try {
+    await t.db.execute(sql`insert into users (id, github_id) values ('u1', 'gh-u1')`)
+    // 付费用户典型形态：勾了 4 块，已到期
+    await t.db.execute(sql`
+      insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, paid_until, free_block_ids)
+      values ('u1', null, 45, ${TZ}, 'paid', ${'2026-09-20T00:00:00Z'}::timestamptz,
+              ${JSON.stringify(['b1', 'b2', 'b3', 'b4'])}::jsonb)`)
+    for (const b of ['b1', 'b2', 'b3', 'b4']) {
+      await t.db.execute(sql`insert into blocks (id, name, category) values (${b}, ${b}, 'cat-a')`)
+      // 每块 4 张：同块干扰池需要 6 条（enumeration），1 张卡凑不出池
+      for (let n = 0; n < 4; n++) await addCard(t, `${b}-c${n}`, b)
+    }
+    // 3 块有在期排期（今天到期 + 后续还要复习）→ 宽限块 = [b1,b2,b3]；
+    // 勾选按 ≤2 收敛成 [b1,b2]，b3 靠 selectionBlockIdsOf 的并集才不被漏掉
+    for (const b of ['b1', 'b2', 'b3']) {
+      await t.db.execute(sql`
+        insert into card_state (user_id, card_id, plan, algo_version)
+        values ('u1', ${`${b}-c0`}, ${JSON.stringify([plusDays(0), plusDays(3)])}::jsonb, 'test')`)
+    }
+
+    const view = await loadSettingsView(mkDeps(t), 'u1')
+    expect(view.plan).toBe('paid')   // 宽限期按付费档：可任意勾选
+    // 关键：b3 有在期排期、首页真的在出它的题，设置页就必须显示为已勾。
+    // 否则页面说「排期只有 b1/b2」而实际跑三块——用户据此取消勾选会得到
+    // 与预期完全相反的结果（他以为在关的没关、以为没开的在跑）。
+    expect(view.blocks.filter(b => b.selected).map(b => b.blockId)).toEqual(['b1', 'b2', 'b3'])
+    expect(view.blocks.filter(b => !b.selected).map(b => b.blockId)).toEqual(['b4'])
+
+    // 保存设置不得有副作用：把读到的那份勾选原样提交回去
+    const selected = view.blocks.filter(b => b.selected).map(b => b.blockId)
+    await applyBlockSelection(mkDeps(t), 'u1', selected)
+    const paused = await t.db.execute<{ n: number }>(sql`
+      select count(*)::int as n from card_state where user_id = 'u1' and phase = 'paused'`)
+    expect(paused.rows[0]!.n).toBe(0)
+
+    // 且排期照常出题（宽限承诺兑现）
+    const p = await buildDailyPayload(payloadDepsOf(runner(t), 'u1', SERVER_NOW))
+    expect(p.queue.map(q => q.cardId).sort()).toEqual(['b1-c0', 'b2-c0', 'b3-c0'])
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('宽限期内取消勾选宽限块：明确 pause（用户主权，与页面上看到的勾选一致）', async () => {
+  const t = await createTestDb()
+  try {
+    await t.db.execute(sql`insert into users (id, github_id) values ('u1', 'gh-u1')`)
+    await t.db.execute(sql`
+      insert into user_settings (user_id, ready_by_date, daily_capacity, timezone, plan, paid_until, free_block_ids)
+      values ('u1', null, 45, ${TZ}, 'paid', ${'2026-09-20T00:00:00Z'}::timestamptz,
+              ${JSON.stringify(['b1', 'b2'])}::jsonb)`)
+    for (const b of ['b1', 'b2']) {
+      await t.db.execute(sql`insert into blocks (id, name, category) values (${b}, ${b}, 'cat-a')`)
+      await addCard(t, `${b}-c0`, b)
+      await t.db.execute(sql`
+        insert into card_state (user_id, card_id, plan, algo_version)
+        values ('u1', ${`${b}-c0`}, ${JSON.stringify([plusDays(3)])}::jsonb, 'test')`)
+    }
+    // 用户看到两块都在排期 → 明确只留 b1
+    await applyBlockSelection(mkDeps(t), 'u1', ['b1'])
+    const st = await t.db.execute<{ card_id: string; phase: string }>(sql`
+      select card_id, phase from card_state where user_id = 'u1' order by card_id`)
+    const byId = new Map(st.rows.map(r => [r.card_id, r.phase]))
+    expect(byId.get('b1-c0')).not.toBe('paused')
+    expect(byId.get('b2-c0')).toBe('paused')   // 用户主权：去勾即停
+  } finally {
+    await t.pg.close()
+  }
+})
+
 test('paid done 复活范围 = 勾选集：未勾块的 done 卡不动', async () => {
   const t = await seedDoneOutsideEntitlement()   // free 夹具：b1 勾选、b2 未勾
   await t.db.execute(sql`update user_settings set plan = 'paid', paid_until = '2099-01-01T00:00:00Z'::timestamptz where user_id = 'u1'`)

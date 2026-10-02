@@ -10,6 +10,7 @@ import {
   loadBlocks, type SqlRunner, type TrackRow,
 } from './db/adapters.js'
 import { FREE_BLOCK_LIMIT } from '../lib/entitlement/entitlement.js'
+import { planOf, selectionBlockIdsOf } from './db/adapters.js'
 
 export type ServerDeps = { db: SqlRunner; serverNowMs: number }
 
@@ -46,12 +47,14 @@ export async function loadSettingsView(deps: ServerDeps, userId: string): Promis
     loadTracks(deps.db),
   ])
   const trackIds = new Set(tracks.map(t => t.id))
-  // 回放与排期同一口径：勾选集本身，空即空——所见即所得，无隐藏兜底
-  const selectedIds = new Set(row.freeBlockIds)
+  // 回放与排期同一口径（selectionBlockIdsOf）：付费/免费 = 已保存勾选；宽限期 =
+  // 勾选 ∪ 宽限块。宽限期必须并上宽限块，否则页面显示「只刷 b1/b2」而首页实际在出
+  // b3 的题——所见即所得被破坏，用户据此调整勾选会得到与预期相反的结果。
+  const selectedIds = new Set(selectionBlockIdsOf(row, deps.serverNowMs))
   return {
     readyByDate: row.readyByDate,
     dailyCapacity: row.dailyCapacity,
-    plan: row.plan,
+    plan: planOf(row, deps.serverNowMs),
     trackId: row.trackId !== null && trackIds.has(row.trackId) ? row.trackId : null,
     tracks: tracks.map(t => ({ id: t.id, name: t.name, blockIds: t.blockIds })),
     blocks: entries.map(e => ({
@@ -97,8 +100,8 @@ export async function applySettingsChange(
   const today = localDateOf(deps.serverNowMs, row.timezone)
   // 存量 done 复活（v2 迁移）：v1 自动毕业的卡救回排期（两条模式路径都要；
   // 常备路径 reviveDoneCards 内部补种滚动计划，sprint 路径由随后的重排接管）。
-  // 复活范围 = 排期范围同一口径（勾选集）——排期不认的块复活了也没人消费
-  await reviveDoneCards(deps.db, userId, row.freeBlockIds, today)
+  // 复活范围 = 排期范围同一口径（宽限期内含宽限块）——排期不认的块复活了也没人消费
+  await reviveDoneCards(deps.db, userId, selectionBlockIdsOf(row, deps.serverNowMs), today)
   if (row.readyByDate === null || diffDays(row.readyByDate, today) < 0) {
     return { replanned: 0, changed: true }   // 常备模式：滚动计划原样保留
   }
@@ -129,11 +132,14 @@ export async function applyBlockSelection(
   for (const id of unique) {
     if (!known.has(id)) throw new Error(`块 id 不存在：${id}`)
   }
-  if (settings.plan === 'free' && unique.length > FREE_BLOCK_LIMIT) {
+  // 档位口径（不是 entitlement 的全量口径）：宽限期内按付费档，可任意勾选
+  if (planOf(settings, deps.serverNowMs) === 'free' && unique.length > FREE_BLOCK_LIMIT) {
     throw new Error(`免费层最多 ${FREE_BLOCK_LIMIT} 个块，收到 ${unique.length} 个（§10.1）`)
   }
 
-  const oldSet = new Set(settings.freeBlockIds)
+  // 旧集合必须与「用户在页面上看到的勾选」同口径（selectionBlockIdsOf），
+  // 否则删除集算错：宽限块在页面上显示为已勾却不进 oldSet，用户去勾它不会被 pause
+  const oldSet = new Set(selectionBlockIdsOf(settings, deps.serverNowMs))
   const newSet = new Set(unique)
   const removed = [...oldSet].filter(b => !newSet.has(b))
   const added = [...newSet].filter(b => !oldSet.has(b))
