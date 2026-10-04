@@ -31,6 +31,7 @@ import type { Card } from '../../src/lib/content/types.js'
 import { batchPairs, judgeBatches, judgedEntries } from './batch.js'
 import type { BatchOutcome } from './batch.js'
 import { makeLlmScorer, resolveProvider } from './run.js'
+import type { LlmUsage } from './run.js'
 import { applyExclusionsToRaw } from '../review/register.js'
 
 const CONTENT = 'content'
@@ -189,7 +190,17 @@ async function runJudge(): Promise<void> {
   let doneBatches = 0
   let failed = 0
   let yesCount = 0
-  const outcomes = await judgeBatches(batches, makeLlmScorer(provider), {
+  const usage = { promptTokens: 0, completionTokens: 0, calls: 0, maxPrompt: 0, maxCompletion: 0 }
+  const outcomes = await judgeBatches(batches, makeLlmScorer(provider, {
+    // 累计真实用量（含思考 tokens）—— §11 的成本标定只认这个数；max* 用来定批次上限
+    onUsage: (u: LlmUsage) => {
+      usage.promptTokens += u.promptTokens
+      usage.completionTokens += u.completionTokens
+      usage.calls++
+      usage.maxPrompt = Math.max(usage.maxPrompt, u.promptTokens)
+      usage.maxCompletion = Math.max(usage.maxCompletion, u.completionTokens)
+    },
+  }), {
     concurrency,
     onOutcome: (o: BatchOutcome) => {
       doneBatches++
@@ -216,6 +227,11 @@ async function runJudge(): Promise<void> {
 
     const secs = ((Date.now() - started) / 1000).toFixed(1)
     console.log(`\n完成：${batches.length - failed}/${batches.length} 批，用时 ${secs}s，新增「是」${yesCount} 条`)
+    const per = (n: number) => (n / Math.max(1, usage.calls)).toFixed(0)
+    console.log(
+      `用量（含失败重试）：输入 ${usage.promptTokens} tokens、输出 ${usage.completionTokens} tokens（${usage.calls} 次调用，` +
+      `均 ${per(usage.promptTokens)} / ${per(usage.completionTokens)} 每批；单批峰值 ${usage.maxPrompt} / ${usage.maxCompletion}）`,
+    )
     if (failed > 0) {
       console.error(`${failed} 批失败（重试后仍失败）—— 这些组合**未写账本**，仍是「未判定」，content:audit 会报错。重跑本命令即可补齐。`)
       for (const o of outcomes.filter(x => !x.ok).slice(0, 5)) {

@@ -53,12 +53,36 @@ test('只取正文：思考内容（reasoning）不进返回值', async () => {
   expect(await makeLlmScorer(provider, { fetchImpl: impl })('P')).toBe('[2, 5]')
 })
 
+test('思考吃光额度（finish_reason=length + 正文空）报的是「上限」而不是含糊的「没有 content」', async () => {
+  const { impl } = fetchStub({
+    choices: [{ message: { reasoning: '想了八千字……', content: '' }, finish_reason: 'length' }],
+  })
+  await expect(makeLlmScorer(provider, { fetchImpl: impl })('P'))
+    .rejects.toThrow(/被 max_tokens=8000 截断/)
+})
+
 test('非 2xx 与缺正文都抛中文可读的错误（交给 batch 重试 → fail-closed）', async () => {
   const bad = fetchStub({ error: 'invalid key' }, { status: 401 })
   await expect(makeLlmScorer(provider, { fetchImpl: bad.impl })('P')).rejects.toThrow(/DeepSeek HTTP 401/)
 
   const empty = fetchStub({ choices: [{ message: {} }] })
   await expect(makeLlmScorer(provider, { fetchImpl: empty.impl })('P')).rejects.toThrow(/没有 choices\[0\].message.content/)
+})
+
+test('用量上报：把 usage 交给回调（成本标定靠它，不靠估算）', async () => {
+  const seen: Array<{ promptTokens: number; completionTokens: number }> = []
+  const { impl } = fetchStub({
+    choices: [{ message: { content: '[]' } }],
+    usage: { prompt_tokens: 1900, completion_tokens: 42 },
+  })
+  await makeLlmScorer(provider, { fetchImpl: impl, onUsage: u => seen.push(u) })('P')
+  expect(seen).toEqual([{ promptTokens: 1900, completionTokens: 42 }])
+
+  // 家不回 usage 时给 0，不炸（不是所有 provider 都带这个字段）
+  const noUsage: typeof seen = []
+  const bare = fetchStub({ choices: [{ message: { content: '[]' } }] })
+  await makeLlmScorer(provider, { fetchImpl: bare.impl, onUsage: u => noUsage.push(u) })('P')
+  expect(noUsage).toEqual([])
 })
 
 test('resolveProvider：没配 key 时给中文提示并列出可配的变量名', () => {
