@@ -133,6 +133,25 @@ export type ExclusionLedger = {
   entries: Map<string, LedgerEntry>
 }
 
+/**
+ * 判据版本变化 → 旧判定**整体失效，必须丢掉**。
+ *
+ * 为什么不能只是「让待判集合变空」就算了（这是评审实测出来的漏洞）：版本只记在账本
+ * 头部，而 `flush()` 每次落盘都会把头部写成当前版本。若判定中途有批失败（失败的批不
+ * 写账本）或用了 `--limit`，账本就会变成「新版本头部 + 一部分旧版本判定」——
+ * `checkExclusion` 信头部、`pendingPairs` 版本一致后只看指纹，于是那些**按旧判据判出来
+ * 的结果被静默当成有效**，闸门报 0 错。那正是 fail-open，与设计的 fail-closed 相反。
+ *
+ * 所以 CLI 在判定开始前显式调用本函数清空：旧版本判定按定义就是无效的（本来就要重判），
+ * 清掉之后「缺条目 = 未判定」，闸门立刻红，中断后重跑也只补真正缺的那些。
+ */
+export function discardStaleVerdicts(ledger: ExclusionLedger): number {
+  const dropped = ledger.entries.size
+  ledger.entries.clear()
+  ledger.header.judgeVersion = JUDGE_VERSION
+  return dropped
+}
+
 export function emptyLedger(header: Partial<LedgerHeader> = {}): ExclusionLedger {
   return {
     header: {

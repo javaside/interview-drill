@@ -21,9 +21,9 @@ import { join } from 'node:path'
 import { parseCard } from '../../src/lib/content/parse.js'
 import { parseBlock } from '../../src/lib/content/block.js'
 import {
-  JUDGE_VERSION, LEDGER_FILE, checkExclusion, emptyLedger, enumerateCandidatePairs,
-  fingerprintOf, pairKey, parseLedger, pendingPairs, poolMarginsOf, projectExclusions,
-  serializeLedger, verdictStatsOf,
+  JUDGE_VERSION, LEDGER_FILE, checkExclusion, discardStaleVerdicts, emptyLedger,
+  enumerateCandidatePairs, fingerprintOf, pairKey, parseLedger, pendingPairs,
+  poolMarginsOf, projectExclusions, serializeLedger, verdictStatsOf,
 } from '../../src/lib/content/exclusion.js'
 import type { CandidatePair, ExclusionLedger } from '../../src/lib/content/exclusion.js'
 import type { DistractorLayer } from '../../src/lib/options/layers.js'
@@ -190,6 +190,16 @@ void main().catch(e => {
 
 async function runJudge(): Promise<void> {
   const base = ledger ?? emptyLedger()
+  // 判据版本变了 → 旧判定整体失效，先丢干净再判（否则「新头部 + 旧判定」会 fail-open，
+  // 见 discardStaleVerdicts 的说明；这条正是评审实测出来的漏洞）
+  if (base.entries.size > 0 && base.header.judgeVersion !== JUDGE_VERSION) {
+    const dropped = discardStaleVerdicts(base)
+    console.warn(
+      `账本判据版本是 ${base.header.judgeVersion || '(缺失)'}，当前代码是 ${JUDGE_VERSION}：` +
+      `丢弃 ${dropped} 条旧判定（按旧判据判出的结果一律无效）。` +
+      '\n本次判完后请跑 --apply，未判完的部分闸门会报「未判定」—— 那是正确行为。',
+    )
+  }
   const limit = option('limit') === undefined ? undefined : Number(option('limit'))
   if (limit !== undefined && (!Number.isInteger(limit) || limit <= 0)) {
     console.error('--limit 必须是 ≥1 的整数')

@@ -1,7 +1,7 @@
 import {
-  JUDGE_VERSION, checkExclusion, emptyLedger, enumerateCandidatePairs, fingerprintOf,
-  pairKey, parseLedger, pendingPairs, poolMarginsOf, projectExclusions, serializeLedger,
-  verdictStatsOf,
+  JUDGE_VERSION, checkExclusion, discardStaleVerdicts, emptyLedger, enumerateCandidatePairs,
+  fingerprintOf, pairKey, parseLedger, pendingPairs, poolMarginsOf, projectExclusions,
+  serializeLedger, verdictStatsOf,
 } from '../../../src/lib/content/exclusion.js'
 import type { ExclusionLedger } from '../../../src/lib/content/exclusion.js'
 import { MIN_BLOCK_POOL } from '../../../src/lib/content/audit.js'
@@ -256,6 +256,30 @@ test('判据版本变化 → 整体失效，且 pendingPairs 必须全量待判�
   // 唯一出路只剩手改账本（这是评审实测出来的死锁）
   expect(checkExclusion(cards, CATS, ledger).errors.join()).toContain('整体失效')
   expect(pendingPairs(pairs, ledger)).toHaveLength(pairs.length)
+})
+
+test('版本变化必须丢弃旧判定 —— 否则「新头部 + 旧判定」会静默 fail-open', () => {
+  const cards = fixture()
+  const ledger = ledgerFor(cards, p => (p.keyPointId === 't2b' && p.targetCardId === 't1' ? 'yes' : 'no'))
+  const cardsWithExclusions = cards.map(c => (c.id === 't2'
+    ? { ...c, keyPoints: c.keyPoints.map(k => ({ ...k, excludeAsDistractorFor: k.id === 't2b' ? ['t1'] : [] })) }
+    : c))
+
+  // 模拟评审实测的漏洞场景：头部已被 flush 写成当前版本，但条目还是旧判据判的
+  ledger.header.judgeVersion = JUDGE_VERSION
+  const project = projectExclusions(cardsWithExclusions, ledger)
+  expect(project.get('t2')?.get('t2b')).toEqual(['t1'])      // 旧判定「有效」
+  expect(checkExclusion(cardsWithExclusions, CATS, ledger).errors).toEqual([])   // ← 静默通过
+
+  // 只要按约定先丢干净的账本，同一个场景立刻变成「未判定」——fail-closed
+  ledger.header.judgeVersion = 'v0'
+  const dropped = discardStaleVerdicts(ledger)
+  expect(dropped).toBeGreaterThan(0)
+  expect(ledger.entries.size).toBe(0)
+  expect(ledger.header.judgeVersion).toBe(JUDGE_VERSION)
+  const after = checkExclusion(cardsWithExclusions, CATS, ledger)
+  expect(after.errors.join()).toContain('未判定')
+  expect(after.errors.join()).toContain('卡文件与账本不一致')
 })
 
 test('判据版本变化 → 整体失效', () => {

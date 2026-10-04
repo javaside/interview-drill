@@ -28,8 +28,8 @@
 
 | 项 | 事实 |
 |---|---|
-| 分支 | `feat/content-exclusion`，基准 `abc2931`；4 个提交（工具链 / AGENTS.md / 计量诊断 / 计划） |
-| 本地 main | 在 `544a8f0`（= 本计划文档那次提交），比 `origin/main` 多一个提交 |
+| 分支 | `feat/content-exclusion`，基准 `abc2931`；5 个提交（工具链 / AGENTS.md / 计量诊断 / 计划 V1 / 评审修复） |
+| main | `main == origin/main == abc2931`（实测 `git rev-parse` 两者相同），是分支的直接祖先 → **可以 ff**。V1 计划那次提交 `544a8f0` 是**悬空提交**（不在任何分支上） |
 | 三层候选对 | 108,891（同块 6,475 / 跨块 48,307 / 相邻 54,109），目标题 371 |
 | 账本 | 247 条（标定跑的，判「是」18 条）——**远未完成** |
 | 卡文件登记 | **0 条**（1769 个字段全空） |
@@ -88,7 +88,9 @@ pnpm content:audit 2>&1 | grep -c "excludeAsDistractorFor"   # 应为 0（没有
 git diff --stat content/ | tail -1
 ```
 
-Expected: typecheck 干净、784 用例全绿；`content:audit` 仍只有「账本未判定」类消息（格式改动不引入新的内容错误）。
+Expected: typecheck 干净、全量测试全绿；`content:audit` **不新增**任何消息 —— 它本来就红：
+既有 108k 条「未判定」+ **18 条「卡文件与账本不一致」**（标定账本里那 18 条「是」还没 apply 过）。
+判定口径是本步前后错误条数一致（格式改动不引入新的内容错误）。
 另：`--normalize` 是幂等的（再跑一次 0 张变化）——已实测。
 
 - [ ] **Step 4: 单独 Commit**
@@ -121,7 +123,8 @@ EOF
 
 - [ ] **Step 2: 评审已修复的问题清单（照实核对，别重犯）**
 
-两名评审共报 4 个 Critical、12 个 Important。**已在本分支修掉**：
+两轮评审的原始报数：**第一轮（审计划）Critical 4 / Important 12 / Minor 6；第二轮（审代码 + 验修复）
+Critical 2 / Important 5 / Minor 8 / 测试加固建议 4**（两轮条目有重叠，下表按**修复动作**归并成 13 行）。**均已在分支上修掉**：
 
 | 评审发现 | 修法 | 验证 |
 |---|---|---|
@@ -136,6 +139,8 @@ EOF
 | **M1** id 含 `|` 或行首 `#` → 账本写得出、读不回（发现时机是花完钱之后） | 闸门提前拦截 | `exclusion.test.ts` |
 | **M2** 截断只在正文为空时才诊断 | `finish_reason === 'length'` 一律作废（正文不完整同样危险，少掉的编号会被静默记成 `no`） | `content-exclusion-run.test.ts` |
 | **M3/M4/M5/M6** 死 import、忽略 `provider.maxTokens`、用量计数分母错误、`poolMarginsOf` 注释过头 | 逐条修 | 测试 + typecheck |
+| **C5**（第二轮审代码时实测）版本失效的恢复路径会 **fail-open**：`flush()` 每次落盘都把头部写成当前版本，而有批失败/用过 `--limit` 时账本里留着旧版本的判定 → 闸门报 0 错、静默通过 | 新增 `discardStaleVerdicts`：判定开始前发现版本不一致就**丢干净**（旧判定按定义无效），缺条目即为「未判定」；测试直接复现「同一场景下未丢弃时闸门静默通过、丢弃后报未判定」 | `exclusion.test.ts` |
+| **M7**（第二轮）计划文档的 git 现状写错（称 main 领先 origin/main、ff 不成立） | 实测：`main == origin/main == abc2931`，**可以 ff**；已改正（本表上方与 Task 9） | `git rev-parse` |
 
 - [ ] **Step 3: 确认没有残留的未修项**
 
@@ -390,23 +395,49 @@ Expected: `已登记 > 0`（此前恒为 0）。没有 psql 时用 `pnpm exec ts
 
 ```bash
 rsync -az -e "ssh -p 22222" content/ root@82.29.72.221:/opt/interview-drill/content/
-ssh -p 22222 root@82.29.72.221 'cd /opt/interview-drill && set -a; source .env.production.local; set +a; pnpm content:upsert'
+ssh -p 22222 root@82.29.72.221 'cd /opt/interview-drill && \
+  pnpm exec tsx --env-file-if-exists=.env.production.local src/server/content-upsert/cli.ts'
 ```
+
+（用 `--env-file-if-exists` 而不是 `set -a; source ...`：前者按 dotenv 规则解析，能处理引号与特殊字符，
+且与本地那条、以及 AGENTS.md 高频坑 2 的修法一致。）
 
 （本步只同步 `content/`，不重建应用——不需要 rsync 全量源码、不需要重启服务。）
 
 - [ ] **Step 4: 核对两边一致**
 
-```bash
-# 本地（先 export 或用 .env.local 的值替换）
-export DATABASE_URL=$(grep -o 'DATABASE_URL=.*' .env.local | cut -d= -f2-)
-psql "$DATABASE_URL" -c "select count(*) from key_points
-  where retired_at is null and jsonb_array_length(exclude_as_distractor_for) > 0"
+**本机没有 `psql`**（实测 `which psql` 退出 1），用项目自带的 tsx 跑同一句 SQL。
+**脚本走 stdin、在项目根执行**——这个形式本地与生产都已实测通过
+（写成 `/tmp/x.ts` 文件再跑会 `Cannot find module 'pg'`，因为解析相对脚本位置而不是 cwd——踩过）：
 
-# 生产
-ssh -p 22222 root@82.29.72.221 'cd /opt/interview-drill && set -a && . ./.env.production.local && set +a && \
-  psql "$DATABASE_URL" -c "select count(*) from key_points
-  where retired_at is null and jsonb_array_length(exclude_as_distractor_for) > 0"'
+```bash
+# 本地
+cat <<'EOF' | pnpm exec tsx --env-file-if-exists=.env.local
+import pg from 'pg'
+const c = new pg.Client({ connectionString: process.env.DATABASE_URL })
+async function main() {
+  await c.connect()
+  const r = await c.query(`select count(*)::int n from key_points
+    where retired_at is null and jsonb_array_length(exclude_as_distractor_for) > 0`)
+  console.log('已登记', r.rows[0])
+  await c.end()
+}
+main()
+EOF
+
+# 生产（同一段脚本塞进 ssh 的 stdin；heredoc 用引号包裹，别让本地 shell 先展开）
+ssh -p 22222 root@82.29.72.221 'cd /opt/interview-drill && pnpm exec tsx --env-file-if-exists=.env.production.local' <<'EOF'
+import pg from 'pg'
+const c = new pg.Client({ connectionString: process.env.DATABASE_URL })
+async function main() {
+  await c.connect()
+  const r = await c.query(`select count(*)::int n from key_points
+    where retired_at is null and jsonb_array_length(exclude_as_distractor_for) > 0`)
+  console.log('已登记', r.rows[0])
+  await c.end()
+}
+main()
+EOF
 ```
 
 Expected: 两边**同值**。不一致 = 有一边没跑 upsert。
@@ -445,7 +476,8 @@ Expected: 两边**同值**。不一致 = 有一边没跑 upsert。
 
 ```bash
 git log --oneline main..feat/content-exclusion    # 确认内容
-git merge --no-ff feat/content-exclusion          # main 已领先 origin/main 一个提交，ff 不成立
+git merge --no-ff feat/content-exclusion          # ff 是可行的（main 就是分支的 base）；
+                                                  # 用 --no-ff 是刻意的：把 5 个提交留成一个可见的整体
 ```
 
 **不主动 push。** 合并前确认：`content:audit` 绿、`--apply` 已跑、两库已 upsert。
