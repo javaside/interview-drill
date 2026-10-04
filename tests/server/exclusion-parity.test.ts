@@ -33,6 +33,8 @@ function fixture(): CardSnapshot[] {
     card('c3', 'b3', [kp('c3a', { public: true })]),
     card('c4', 'b4', [kp('c4a'), kp('c4b', { public: true })]),
     card('c5', 'b5', [kp('c5a')]),
+    // sequence 卡：不作目标题，但它的要点照旧进别人的池
+    { ...card('c6', 'b1', [kp('c6a'), kp('c6b')]), cardType: 'sequence' as const },
   ]
 }
 
@@ -56,12 +58,17 @@ const asContentCards = (cards: CardSnapshot[]): Card[] =>
 
 type Pools = ReturnType<typeof buildDistractorPools>
 
-/** 运行时实际可抽的集合：三层原始池过 draw 的 eligible 三连（退役 / ownIds / 已登记） */
+/**
+ * 运行时实际可抽的集合：三层原始池过 draw 的 eligible 三连（退役 / ownIds / 已登记）。
+ *
+ * 比对 `id#text` 而不是光比 id：池子在装配时丢掉了「这条属于哪张卡」，若两张卡用了
+ * 同一个要点 id，只比 id 看不出「抽出的是另一张卡的那条」。id 撞车在本库真实存在。
+ */
 function eligibleOf(pool: Pools['sameBlock'], target: CardSnapshot, targetId: string): string[] {
   const ownIds = new Set(target.keyPoints.map(k => k.id))
   return pool
     .filter(k => !k.retiredAt && !ownIds.has(k.id) && !k.excludeAsDistractorFor.includes(targetId))
-    .map(k => k.id)
+    .map(k => `${k.id}#${k.text}`)
     .sort()
 }
 
@@ -77,17 +84,28 @@ test('三层候选枚举与 buildDistractorPools 逐卡逐层一致（付费全�
   )
 
   for (const target of snaps) {
+    // sequence 卡不作目标题（枚举与 prepare 都在这一侧排除）—— 它只作为**来源**参与
+    if (target.cardType === 'sequence') continue
     const pools = buildDistractorPools(target, snaps, ent, CATS)
     for (const layer of ['sameBlock', 'crossBlock', 'neighbor'] as const) {
       const expected = pairs
         .filter(p => p.targetCardId === target.cardId && p.layer === layer)
         .filter(p => !(registered.get(`${p.ownerCardId}/${p.keyPointId}`) ?? []).includes(target.cardId))
-        .map(p => p.keyPointId)
+        .map(p => `${p.keyPointId}#${p.keyPointText}`)
         .sort()
       const actual = eligibleOf(pools[layer], target, target.cardId)
       expect({ card: target.cardId, layer, ids: actual }).toEqual({ card: target.cardId, layer, ids: expected })
     }
   }
+})
+
+test('sequence 卡不作目标题，但它的要点进别人的池 —— 与运行时一致', () => {
+  const snaps = fixture()
+  const pairs = enumerateCandidatePairs(asContentCards(snaps), CATS)
+  const pools = buildDistractorPools(snaps[0]!, snaps, makePaidEntitlement(), CATS)
+  expect(pairs.some(p => p.targetCardId === 'c6')).toBe(false)                     // 不作为目标
+  expect(pools.sameBlock.some(p => p.id.startsWith('c6'))).toBe(true)              // 但要点进池
+  expect(pairs.some(p => p.ownerCardId === 'c6' && p.targetCardId === 'c1')).toBe(true)
 })
 
 test('枚举不含「目标题自己」，也不含与目标卡撞 id 的候选（与运行时同一条剔除）', () => {

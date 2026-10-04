@@ -246,6 +246,18 @@ test('内容改过 → 该判定报「已过期」并指名', () => {
   expect(r.errors.join()).toContain('《问题一改？》')
 })
 
+test('判据版本变化 → 整体失效，且 pendingPairs 必须全量待判（否则修复路径是死路）', () => {
+  const cards = fixture()
+  const ledger = ledgerFor(cards, () => 'no')
+  const pairs = enumerateCandidatePairs(cards, CATS)
+  expect(pendingPairs(pairs, ledger)).toHaveLength(0)      // 版本一致时都已判
+  ledger.header.judgeVersion = 'v0'
+  // 闸门说「整体失效」时，--judge 必须真的有事可做：否则它的修复指引指向一条空转命令，
+  // 唯一出路只剩手改账本（这是评审实测出来的死锁）
+  expect(checkExclusion(cards, CATS, ledger).errors.join()).toContain('整体失效')
+  expect(pendingPairs(pairs, ledger)).toHaveLength(pairs.length)
+})
+
 test('判据版本变化 → 整体失效', () => {
   const cards = fixture()
   const ledger = ledgerFor(cards, () => 'no')
@@ -273,6 +285,26 @@ test('项目完全一致时闸门全绿', () => {
   const r = checkExclusion(cards, CATS, ledger)
   expect(r.errors).toEqual([])
   expect(r.warnings).toEqual([])
+})
+
+test('卡/要点 id 含账本保留字符 → 闸门报错（写得出读不回，发现时机是花完钱之后）', () => {
+  const cards = fixture()
+  const bad = cards.map(c => (c.id === 't1' ? { ...c, keyPoints: c.keyPoints.map(k => ({ ...k, id: 'kp|1' })) } : c))
+  expect(checkExclusion(bad, CATS, ledgerFor(cards, () => 'no')).errors.join()).toContain('保留字符')
+
+  const hashId = cards.map(c => (c.id === 't2' ? { ...c, id: '#t2' } : c))
+  expect(checkExclusion(hashId, CATS, ledgerFor(cards, () => 'no')).errors.join()).toContain('保留字符')
+})
+
+test('退役卡不参与投影一致性检查（运行时根本不读它，别逼着改写它的文件）', () => {
+  const cards = fixture()
+  const ledger = ledgerFor(cards, p => (p.keyPointId === 't2a' && p.targetCardId === 't1' ? 'yes' : 'no'))
+  // 卡文件空着 → 活跃卡会报不一致
+  expect(checkExclusion(cards, CATS, ledger).errors.join()).toContain('卡文件与账本不一致')
+  // 把 owner 卡整体退役 → 这条不再算漂移
+  const retired = cards.map(c => (c.id === 't2' ? { ...c, retiredAt: '2026-10-04' } : c))
+  const r = checkExclusion(retired, CATS, ledger)
+  expect(r.errors.join()).not.toContain('卡文件与账本不一致')
 })
 
 test('账本里的悬空条目 → 警告（内容删改后组合消失，不改变出题结果）', () => {

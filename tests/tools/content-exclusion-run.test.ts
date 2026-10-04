@@ -61,6 +61,20 @@ test('思考吃光额度（finish_reason=length + 正文空）报的是「上限
     .rejects.toThrow(/被 max_tokens=8000 截断/)
 })
 
+test('截断一律作废：正文非空但 finish_reason=length 也报错（少掉的编号会被静默记成 no）', async () => {
+  const { impl } = fetchStub({
+    choices: [{ message: { content: '[1,2' }, finish_reason: 'length' }],
+  })
+  await expect(makeLlmScorer(provider, { fetchImpl: impl })('P')).rejects.toThrow(/被 max_tokens=8000 截断（正文不完整）/)
+})
+
+test('上限优先取显式传参，其次 provider.maxTokens（家之间天花板不同）', async () => {
+  const lowCeiling = { ...provider, maxTokens: 3000 }
+  const { impl, calls } = fetchStub({ choices: [{ message: { content: '[]' }, finish_reason: 'stop' }] })
+  await makeLlmScorer(lowCeiling, { fetchImpl: impl })('P')
+  expect(JSON.parse(String(calls[0]!.init.body)).max_tokens).toBe(3000)
+})
+
 test('非 2xx 与缺正文都抛中文可读的错误（交给 batch 重试 → fail-closed）', async () => {
   const bad = fetchStub({ error: 'invalid key' }, { status: 401 })
   await expect(makeLlmScorer(provider, { fetchImpl: bad.impl })('P')).rejects.toThrow(/DeepSeek HTTP 401/)

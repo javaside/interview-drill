@@ -50,11 +50,13 @@ export function makeLlmScorer(
         Authorization: `Bearer ${provider.apiKey}`,
       },
       body: JSON.stringify({
+        // extraBody 放在前面：家特有参数不得覆盖下面这几个显式字段（否则某个 provider
+        // 配置一改就能静默改掉 model/stream/上限）
+        ...provider.extraBody,
         model: provider.model,
         messages: [{ role: 'user', content: prompt }],
         stream: false,
-        max_tokens: opts.maxTokens ?? JUDGE_MAX_TOKENS,
-        ...provider.extraBody,
+        max_tokens: opts.maxTokens ?? provider.maxTokens ?? JUDGE_MAX_TOKENS,
       }),
     })
     if (!res.ok) {
@@ -70,17 +72,17 @@ export function makeLlmScorer(
       })
     }
     const content = json.choices?.[0]?.message?.content
+    const finish = json.choices?.[0]?.finish_reason
+    // 截断一律作废，**哪怕正文看着能解析**：被判截断的编号数组可能少了几项，
+    // 少掉的那几项会被静默记成 `no`（错判），而重试一次只花几分钱。
+    if (finish === 'length') {
+      throw new Error(
+        `${provider.label} 的输出被 max_tokens=${opts.maxTokens ?? provider.maxTokens ?? JUDGE_MAX_TOKENS} 截断` +
+        `${typeof content === 'string' && content.trim() !== '' ? '（正文不完整）' : '（思考吃光额度、正文为 0）'}` +
+        '：整批作废重试（可调大上限或把 MAX_BATCH 切小）',
+      )
+    }
     if (typeof content !== 'string' || content.trim() === '') {
-      // 最常见的成因不是「模型不理人」，而是**思考吃光了 max_tokens**：思考型模型
-      // （DeepSeek）的 reasoning 与正文共用这份预算，批次一大思考就撑爆上限、正文 0 字。
-      // 报清楚是上限问题，而不是让上层看到一句含糊的「没有 content」。
-      const finish = json.choices?.[0]?.finish_reason
-      if (finish === 'length') {
-        throw new Error(
-          `${provider.label} 的输出被 max_tokens=${opts.maxTokens ?? JUDGE_MAX_TOKENS} 截断：` +
-          '思考 tokens 吃光了额度、正文为 0（调大上限，或把 MAX_BATCH 切小）',
-        )
-      }
       throw new Error(`${provider.label} 的响应里没有 choices[0].message.content（finish_reason=${String(finish)}）`)
     }
     return content

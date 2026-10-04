@@ -1,5 +1,5 @@
 import { sameBlockPoolOf } from '../lib/options/draw.js'
-import { layerOf, neighborCategoryOf } from '../lib/options/layers.js'
+import { layerOf } from '../lib/options/layers.js'
 import type { OptionCard, OptionKeyPoint, DistractorPools } from '../lib/options/types.js'
 import { prepareOptions } from '../lib/options/prepare.js'
 import type { PreparedOptions } from '../lib/options/prepare.js'

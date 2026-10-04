@@ -231,11 +231,19 @@ export function serializeLedger(ledger: ExclusionLedger): string {
   return lines.join('\n') + '\n'
 }
 
-/** 尚未判定（或指纹过期）的组合 —— judge 的输入，幂等重跑的由来 */
+/**
+ * 尚未判定（或指纹过期）的组合 —— judge 的输入，幂等重跑的由来。
+ *
+ * **判据版本也必须参与失效判定**：`checkExclusion` 在版本不匹配时报「整体失效」，
+ * 若这里还认为「都判过了」，`--judge` 会打印「没有待判定的组合」并直接返回 ——
+ * 闸门指着一条永远执行不动的修复命令，而唯一的出路只剩手改 7.7MB 账本。
+ * 这条正是「抽检不合格 → 升版本重判」那条恢复路径能否走通的前提。
+ */
 export function pendingPairs(
   pairs: readonly CandidatePair[],
   ledger: ExclusionLedger,
 ): CandidatePair[] {
+  if (ledger.header.judgeVersion !== JUDGE_VERSION) return [...pairs]
   return pairs.filter(p => {
     const e = ledger.entries.get(pairKey(p))
     if (e === undefined) return true
@@ -302,7 +310,9 @@ export type PoolMargin = {
  * 每张卡的**三层池扣除后剩余量**。互斥登记会吃掉池，而触线的表现是运行时抛
  * 「干扰项池枯竭」→ 线上 500，所以 `--apply` 必须先把它打出来再落盘。
  *
- * - `exclusions` 缺省用卡文件现状；`--apply --dry-run` 传账本投影（= 将要落盘的状态）
+ * - `exclusions` 缺省用卡文件现状；`--apply --dry-run` 传账本投影（= 将要落盘的状态）。
+ *   注意投影里没有的条目会回落到卡文件现状：库处于「卡文件比账本多登记」的漂移态时，
+ *   这个函数算的是**偏保守**的余量（仍把那一条算作排除），不是落盘后的精确值
  * - 与运行时逐字对齐：退役要点不算、与目标卡撞 id 的候选不算、已登记的排除不算
  * - `sameBlock` 对齐 `auditLibrary` 的口径（免费层同块不过 public）
  * - cross/neighbor 同时给两个口径：付费全量、免费仅 public（实测免费层 p10 为 0 条）
@@ -352,6 +362,11 @@ export function poolMarginsOf(
 
 export type GateResult = { errors: string[]; warnings: string[] }
 
+/** 闸门/报告里打印的 `--layer` 取值：CLI 只认 same / cross / neighbor（不是 camelCase） */
+const CLI_LAYER: Record<DistractorLayer, string> = {
+  sameBlock: 'same', crossBlock: 'cross', neighbor: 'neighbor',
+}
+
 function pushCapped(bucket: string[], lead: string, items: string[]): void {
   for (const i of items.slice(0, MAX_LISTED)) bucket.push(`${lead}${i}`)
   if (items.length > MAX_LISTED) bucket.push(`${lead}…还有 ${items.length - MAX_LISTED} 条同类问题`)
@@ -379,6 +394,17 @@ export function checkExclusion(
   const errors: string[] = []
   const warnings: string[] = []
   const pairs = enumerateCandidatePairs(cards, categories)
+
+  // 账本主键用 `|` 分隔、`#` 行首是注释：id 里出现这两个字符会让账本写得出、读不回
+  // （解析报错 → 工具整体退出），而发现时机是**花完钱之后**。提前在闸门拦掉。
+  const badIds: string[] = []
+  for (const c of cards) {
+    if (c.id.includes('|') || c.id.startsWith('#')) badIds.push(`卡 ${c.id}`)
+    for (const kp of c.keyPoints) {
+      if (kp.id.includes('|') || kp.id.startsWith('#')) badIds.push(`要点 ${c.id}/${kp.id}`)
+    }
+  }
+  pushCapped(errors, '卡/要点 id 含账本保留字符（| 或行首 #）：', badIds)
 
   if (ledger === undefined) {
     warnings.push(
@@ -432,7 +458,7 @@ export function checkExclusion(
     if (!layerSeen.get(layer)) {
       const total = pairs.filter(p => p.layer === layer).length
       if (total > 0) {
-        warnings.push(`互斥判定的 ${layer} 层尚未扫过：${total} 组候选未判定（content:exclusion --judge --layer ${layer}）`)
+        warnings.push(`互斥判定的 ${layer} 层尚未扫过：${total} 组候选未判定（content:exclusion --judge --layer ${CLI_LAYER[layer]}）`)
       }
     }
   }
@@ -449,7 +475,11 @@ export function checkExclusion(
   const project = projectExclusions(cards, ledger)
   const drift: string[] = []
   for (const c of cards) {
+    // 退役卡/退役要点不出题、不被抽，运行时根本不读它们的登记 —— 逼着改写它们的
+    // 文件只会制造无谓 churn（且 --prune 清掉旧条目后必然触发）。
+    if (c.retiredAt) continue
     for (const kp of c.keyPoints) {
+      if (kp.retiredAt) continue
       const want = [...(project.get(c.id)?.get(kp.id) ?? [])].sort().join(',')
       const have = [...kp.excludeAsDistractorFor].sort().join(',')
       if (want !== have) {

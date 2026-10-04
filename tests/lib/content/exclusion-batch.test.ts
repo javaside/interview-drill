@@ -102,6 +102,24 @@ test('解析失败重试一次；仍失败 → 该批 ok=false（fail-closed，�
   expect(flaky[0]).toMatchObject({ ok: true, yes: [2], attempts: 2 })
 })
 
+test('空数组先重试一次；仍空则接受但打 emptyAnswer 标记（模型没作答 vs 一条都不该勾）', async () => {
+  const batches = batchPairs(fixture()).slice(0, 2)
+  const calls: string[] = []
+  const outcomes = await judgeBatches(batches, async p => {
+    calls.push(p.slice(0, 20))
+    return '[]'
+  }, { concurrency: 1 })
+  expect(calls).toHaveLength(4)                       // 两批各试两次
+  expect(outcomes.every(o => o.ok && o.emptyAnswer === true)).toBe(true)
+  expect(outcomes.every(o => o.yes.length === 0)).toBe(true)
+
+  // 第一次空、第二次给出编号 → 用第二次的结果，且不标 emptyAnswer
+  let n = 0
+  const flaky = await judgeBatches(batches.slice(0, 1), async () => (++n === 1 ? '[]' : '[2]'), { concurrency: 1 })
+  expect(flaky[0]).toMatchObject({ ok: true, yes: [2], attempts: 2 })
+  expect(flaky[0]!.emptyAnswer).toBeUndefined()
+})
+
 test('调用抛错同样重试后 fail-closed，错误消息带出来', async () => {
   const batches = batchPairs(fixture()).slice(0, 1)
   const outcomes = await judgeBatches(batches, async () => { throw new Error('连接超时') }, { concurrency: 1 })

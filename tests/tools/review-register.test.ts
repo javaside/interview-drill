@@ -154,6 +154,75 @@ test('批处理：无关字段不被改写，confirmedIndependentOf 原样保留
   expect(out.trimEnd().endsWith('正文')).toBe(true)
 })
 
+test('批处理：能把真实卡文件的格式差异钉住 —— 写回会重排无关字段（已知且有命令处理）', () => {
+  // 真实卡文件的风格：relatedBlocks 换行、日期带引号、question 带双引号、locator 带引号
+  const messy = `---
+id: c9
+blockId: b1
+relatedBlocks:
+  []
+question: "它是什么？"
+cardType: enumeration
+appliesTo: JDK 8+
+frequency: mid
+followUps:
+  []
+keyPoints:
+  - id: kp-1
+    text: '要点一'
+    public: false
+    verifiedAt: '2026-09-28'
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://example.org/a
+      locator: 'doc'
+  - id: kp-2
+    text: '要点二'
+    public: false
+    verifiedAt: '2026-09-28'
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://example.org/b
+      locator: 'doc'
+  - id: kp-3
+    text: '要点三'
+    public: false
+    verifiedAt: '2026-09-28'
+    excludeAsDistractorFor: []
+    confirmedIndependentOf: []
+    source:
+      kind: official-doc
+      url: https://example.org/c
+      locator: 'doc'
+---
+
+正文
+`
+  const out = applyExclusionsToRaw(messy, new Map())
+  // 语义零变化：重新解析后每个字段都一样
+  const a = parseCard(messy, 'x.md'); const b = parseCard(out, 'x.md')
+  expect(a.ok && b.ok).toBe(true)
+  if (!a.ok || !b.ok) return
+  expect(b.card.keyPoints.map(k => k.excludeAsDistractorFor)).toEqual(a.card.keyPoints.map(k => k.excludeAsDistractorFor))
+  expect(b.card.question).toBe(a.card.question)
+  expect(b.card.keyPoints.map(k => [k.id, k.text, k.verifiedAt, k.source.locator]))
+    .toEqual(a.card.keyPoints.map(k => [k.id, k.text, k.verifiedAt, k.source.locator]))
+
+  // 但格式确实被重排了 —— 这就是 `--normalize` 存在的理由，别把这条当 bug 去「修好」：
+  // 断言钉住它，免得哪天悄悄变得更严重
+  expect(out).toContain('relatedBlocks: []')
+  expect(out).toContain('verifiedAt: 2026-09-28')   // 单引号被去掉
+  expect(out).not.toContain("'2026-09-28'")
+  expect(out).toContain('question: 它是什么？')       // 双引号被去掉
+  // 二次执行逐字节幂等 —— 所以「先 normalize 单独提交」之后，apply 的 diff 就只剩真实登记
+  expect(applyExclusionsToRaw(out, new Map())).toBe(out)
+  expect(applyExclusionsToRaw(out, new Map([['kp-1', ['c1']]]))).not.toBe(out)
+})
+
 test('批处理：缺 keyPoints 时抛出明确错误', () => {
   expect(() => applyExclusionsToRaw('---\nid: c1\n---\n正文', new Map())).toThrow(/keyPoints/)
 })

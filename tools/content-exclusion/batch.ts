@@ -149,6 +149,15 @@ export type BatchOutcome = {
   issue?: string
   /** 实际调用次数（含重试） */
   attempts: number
+  /**
+   * 重试后仍是空数组 —— 记 `no` 但标记出来。
+   *
+   * 为什么要这个标记：`[]` 是**合法**答案（这 40 条确实一条也不该勾），但它同时是
+   * 「模型没作答 / 格式回归」的表现，两者无法区分。若整层都是 `[]`，账本会变绿、
+   * 闸门会通过、而用户踩的那个坑原样存在 —— 正是设计里最想避免的「静默漏网」。
+   * 所以空答案重试一次，仍空则记录并计数，由 CLI 在报告里显式提醒。
+   */
+  emptyAnswer?: boolean
 }
 
 /**
@@ -172,7 +181,17 @@ export async function judgeBatches(
       try {
         const text = await score(buildJudgePrompt(batch))
         const parsed = parseJudgeResponse(text, batch.pairs.length)
-        if (parsed.ok) return { batch, ok: true, yes: parsed.yes, attempts: attempt + 1 }
+        if (parsed.ok) {
+          // 空数组重试一次：见 BatchOutcome.emptyAnswer 的说明
+          if (parsed.yes.length === 0 && attempt === 0) {
+            issue = '整批判「否」（空数组）—— 疑似模型未作答，重试一次'
+            continue
+          }
+          return {
+            batch, ok: true, yes: parsed.yes, attempts: attempt + 1,
+            ...(parsed.yes.length === 0 ? { emptyAnswer: true } : {}),
+          }
+        }
         issue = parsed.issue
       } catch (e) {
         issue = e instanceof Error ? e.message : String(e)
