@@ -3,7 +3,7 @@ id: 01M3M39N0YJQ9ETGS6ZDRW1J9B
 blockId: java/hashmap
 relatedBlocks:
   - java/collections-overview
-question: "HashMap key 用可变对象会有什么问题？"
+question: "HashMap key 放进桶后再改参与 hash 的字段，get 还能找到它吗？"
 cardType: judgment
 conclusion: no
 appliesTo: Java 17+
