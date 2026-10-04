@@ -42,3 +42,32 @@ export function registerDecision(
 
   return matter.stringify(fm.content, data, MATTER_OPTS)
 }
+
+/**
+ * 批处理变体：把整张卡的 `excludeAsDistractorFor` **置为**账本投影给出的集合。
+ *
+ * 与逐条登记（`registerDecision`，只做并集）的区别是**权威方向相反**：这里账本是
+ * 单一来源，卡文件是它的投影 —— 投影里没有的必须被清掉，否则账本删掉一条判定后
+ * 卡文件残留登记，闸门的「卡文件 == 账本投影」检查会一直红。
+ *
+ * 幂等：同样的投影重复跑输出逐字节相同（变更只在真正不同时才落到文件上，由调用方
+ * 比对字符串决定是否写盘）。`verifiedAt` 不 Date 化、`url` 不加引号这些坑同
+ * `registerDecision`（共用 MATTER_OPTS + detachedData）。
+ */
+export function applyExclusionsToRaw(
+  raw: string,
+  byKeyPointId: ReadonlyMap<string, readonly string[]>,
+): string {
+  const fm = matter(raw, MATTER_OPTS)
+  const data = detachedData(fm.data) as { keyPoints?: RawKeyPoint[] }
+  const kps = data.keyPoints
+  if (!Array.isArray(kps)) throw new Error('frontmatter 缺少 keyPoints 数组')
+
+  for (const kp of kps) {
+    if (typeof kp.id !== 'string') continue
+    const next = Array.from(new Set(byKeyPointId.get(kp.id) ?? [])).sort()
+    kp.excludeAsDistractorFor = next
+  }
+
+  return matter.stringify(fm.content, data, MATTER_OPTS)
+}

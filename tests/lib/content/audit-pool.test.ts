@@ -74,6 +74,15 @@ test('互斥登记把池吃到不足时同样报错', () => {
   expect(msg).toContain('池不足')
 })
 
+test('退役要点不算可用池 —— 池校验与运行时同口径（休眠缺陷已修）', () => {
+  // 健康块里 c0 看到 12 条正好压线；把 c1 的 3 条全部退役 → 只剩 9
+  const cards = healthyBlock()
+  cards[1]!.keyPoints.forEach(k => { k.retiredAt = '2026-09-28' })
+  const msg = auditLibrary(cards, ready).errors.join()
+  expect(msg).toContain('可用 9 条')
+  expect(msg).toContain('下界 12')
+})
+
 test('wip 块完全跳过池校验 —— 内容生产期间大多数块是半成品', () => {
   const cards = [card('c1', [kp('a1'), kp('a2'), kp('a3')])]
   expect(auditLibrary(cards, wip).errors).toEqual([])

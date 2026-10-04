@@ -1,4 +1,4 @@
-import { registerDecision } from '../../tools/review/register.js'
+import { applyExclusionsToRaw, registerDecision } from '../../tools/review/register.js'
 import { parseCard } from '../../src/lib/content/parse.js'
 
 const SRC = `---
@@ -121,4 +121,39 @@ test('要点 id 不存在时抛出明确错误', () => {
 test('正文部分不被改动', () => {
   const out = registerDecision(SRC, 'kp-1', 'c2', 'exclude')
   expect(out.trimEnd().endsWith('正文')).toBe(true)
+})
+
+// ---- 批处理变体（账本 → 卡文件投影）----
+
+test('批处理：按投影置位，未在投影里的要点被清空（账本是权威）', () => {
+  const withOld = registerDecision(SRC, 'kp-3', 'c-old', 'exclude')
+  const out = applyExclusionsToRaw(withOld, new Map([['kp-1', ['c9', 'c2']]]))
+  const r = parseCard(out, 'x.md')
+  expect(r.ok).toBe(true)
+  if (!r.ok) return
+  expect(r.card.keyPoints[0]!.excludeAsDistractorFor).toEqual(['c2', 'c9'])   // 去重 + 字典序
+  expect(r.card.keyPoints[1]!.excludeAsDistractorFor).toEqual([])
+  expect(r.card.keyPoints[2]!.excludeAsDistractorFor).toEqual([])             // 旧登记被清掉
+})
+
+test('批处理：幂等 —— 同一投影跑两次逐字节相同（diff 只显示真正变化）', () => {
+  const once = applyExclusionsToRaw(SRC, new Map([['kp-1', ['c2']]]))
+  expect(applyExclusionsToRaw(once, new Map([['kp-1', ['c2']]]))).toBe(once)
+})
+
+test('批处理：无关字段不被改写，confirmedIndependentOf 原样保留', () => {
+  const withNote = registerDecision(SRC, 'kp-1', 'c2', 'independent')
+  const out = applyExclusionsToRaw(withNote, new Map())
+  expect(out).toContain('verifiedAt: 2026-09-18')
+  expect(out).toContain('url: https://example.org/a')
+  expect(out).not.toContain('T00:00:00')
+  const r = parseCard(out, 'x.md')
+  expect(r.ok).toBe(true)
+  if (!r.ok) return
+  expect(r.card.keyPoints[0]!.confirmedIndependentOf).toEqual(['c2'])   // 人工判定不被账本清掉
+  expect(out.trimEnd().endsWith('正文')).toBe(true)
+})
+
+test('批处理：缺 keyPoints 时抛出明确错误', () => {
+  expect(() => applyExclusionsToRaw('---\nid: c1\n---\n正文', new Map())).toThrow(/keyPoints/)
 })

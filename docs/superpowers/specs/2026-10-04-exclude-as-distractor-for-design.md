@@ -1,7 +1,8 @@
 # excludeAsDistractorFor 全量补全与自动维护 · 设计
 
 - 日期：2026-10-04
-- 状态：**待实现**（v2，已按独立审查反馈修订；处置见 §12）
+- 状态：**主体已实现**（v2，已按独立审查反馈修订；处置见 §12；实施记录见 §13）。
+  尚未执行的是**唯一要花钱的一步**：`content:exclusion --judge` 全量判定（约 5M token）
 - 上游诊断：[reviews/2026-10-03-ownership-vs-correctness.md](../reviews/2026-10-03-ownership-vs-correctness.md)
 - 用户拍板：**① 范围三层全量 ② LLM 直判、不做 token 预筛 ③ 流程固定 + CI 闸门**
 
@@ -382,3 +383,41 @@ apply：账本 → 每卡 excludeAsDistractorFor（零调用）
 | `audit.ts` 计 `usable` 不滤 `retiredAt`（休眠缺陷） | **采纳**（§7.2 一并修） |
 | 枚举测试应放 `tests/server/` | **采纳**（§9） |
 | `--prune`、账本 header 语法、写回幂等 | **采纳**（§6.1、§6.2、§9） |
+
+## 13. 实施记录（2026-10-04）
+
+按 §4/§5/§6/§7 落地。**枚举口径已用真实内容校验**：三层分布
+同块 6,475 / 跨块 48,307 / 相邻 54,109 = **108,891**，目标题 **371**，与 §2 的实测表逐项一致。
+
+| 组件 | 落点 |
+|---|---|
+| 分层权威口径（§7.0 前置） | `src/lib/options/layers.ts`（新）——`categorySequenceOf` 按大类名升序 |
+| 运行时改为同一口径 | `src/server/queue.ts`（`buildDistractorPools` 走 `layerOf`，删掉本地 `neighborCategoryOf`） |
+| 候选枚举 / 账本 / 投影 / 池余量 / 闸门 | `src/lib/content/exclusion.ts`（新） |
+| 池下界常量 | `src/lib/content/pool.ts`（新，audit 原样再导出；避免 audit ↔ exclusion 成环） |
+| 闸门接进 CI | `src/lib/content/audit.ts` 的 `auditLibrary(..., { categories, ledger })` + `tools/audit-cli.ts` 打印警告 |
+| 批处理（切块/prompt/解析/并发/重试） | `tools/content-exclusion/batch.ts`（新，纯核） |
+| LLM 请求层 | `tools/content-exclusion/run.ts`（新，复用 `PROVIDERS`/`selectProvider` + 家特有 `extraBody`） |
+| CLI | `tools/content-exclusion/cli.ts`（新）+ `package.json` 的 `content:exclusion` |
+| 写回 | `tools/review/register.ts` 的 `applyExclusionsToRaw`（批处理变体，置位语义） |
+
+### 实施中的三处判断，与原文的差异记录在案
+
+1. **闸门不做「整层没扫过就先放行」的分级**。原文 §7.1 字面是「任一组未判定即红」，
+   但 §5.2 又要求分层推进 —— 两者逐字执行会互斥（推进到一半的账本把 CI 卡死）。
+   最终**按 §7.1 字面执行**（严格），未扫过的层只多给一条警告说明红的原因。
+   理由：分层推进只是本地过程，账本三层判完才提交，CI 看到的账本一定完整；
+   而为「整层没判」开例外会给漏判留一个静默口子。
+2. **`MIN_BLOCK_POOL` 从 `audit.ts` 挪到 `pool.ts`**（`audit.ts` 原样再导出，import 路径不变）。
+   池下界现在有两个消费者：池校验与 `--apply` 的池余量报告。
+3. **§8 的 overlap 工作没有物理删除**，而是 `git stash push -u` 收进
+   `stash@{0}`（"WIP overlap 哨兵（话题词重合判据）——被 exclusion 设计取代，保留备查"）——
+   涉及别人的未提交成果，保住可恢复性。其两个有用想法已被吸收：三层枚举（→ `exclusion.ts`）
+   与「无基线只警告 / 新命中报错指名」的闸门语义（→ `checkExclusion`）。
+   话题词判据本身按 §10 不采用。
+
+### 尚未做
+
+- **`--judge` 全量判定**（花钱、要 API key）：`pnpm content:exclusion --judge`。
+  建议先 `--layer same --limit 20` 标定单批 token 与耗时（§11），三层判完再提交账本。
+- 人工抽检 100 条「是」（`--report --sample 100`），一致率 ≥90% 才算验收（§7.3）。

@@ -13,6 +13,7 @@
     "content:new": "tsx tools/content-new/index.ts",
     "content:audit": "tsx tools/audit-cli.ts",
     "content:upsert": "tsx src/server/content-upsert/cli.ts",
+    "content:exclusion": "tsx --env-file-if-exists=.env.local tools/content-exclusion/cli.ts",
     "invite:new": "tsx --env-file-if-exists=.env.local tools/invite-new.ts",
     "review:pairs": "tsx tools/review/cli.ts"
   },

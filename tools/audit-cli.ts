@@ -4,6 +4,8 @@ import { parseCard } from '../src/lib/content/parse.js'
 import { parseBlock } from '../src/lib/content/block.js'
 import { parseTrack } from '../src/lib/content/track.js'
 import { auditLibrary, checkIdLock } from '../src/lib/content/audit.js'
+import { LEDGER_FILE, parseLedger } from '../src/lib/content/exclusion.js'
+import type { ExclusionLedger } from '../src/lib/content/exclusion.js'
 import type { Card } from '../src/lib/content/types.js'
 import type { Block } from '../src/lib/content/block.js'
 import type { Track } from '../src/lib/content/track.js'
@@ -45,7 +47,18 @@ for (const f of walk(join(CONTENT_DIR, 'tracks'), n => n.endsWith('.yml'))) {
   else issues.push(...r.issues)
 }
 
-const { errors } = auditLibrary(cards, blocks, tracks)
+// 账本：缺失 = 首次运行 → 闸门只警告不报错（否则一上线就永久红）
+let ledger: ExclusionLedger | undefined
+if (existsSync(LEDGER_FILE)) {
+  const parsed = parseLedger(readFileSync(LEDGER_FILE, 'utf8'))
+  if (parsed.ok) ledger = parsed.ledger
+  else issues.push(...parsed.issues)
+}
+
+// 互斥判定闸门（设计文档 §7.1）：三层候选对必须都在账本里且指纹未过期，
+// 卡文件的 excludeAsDistractorFor 必须等于账本 yes 的投影。纯计算，不调 LLM。
+const categories = new Map(blocks.map(b => [b.id, b.category] as const))
+const { errors, warnings } = auditLibrary(cards, blocks, tracks, { categories, ledger })
 issues.push(...errors)
 
 if (existsSync(LOCK_FILE)) {
@@ -66,6 +79,8 @@ if (process.argv.includes('--write-lock')) {
 }
 
 console.log(`解析 ${files.length} 张卡文件、${blocks.length} 个块、${tracks.length} 个岗位包`)
+// 警告不拦构建，但必须打印 —— 「整层还没判」「账本有悬空条目」这类事实只能在这里看见
+for (const w of warnings) console.log(`  ! ${w}`)
 if (issues.length > 0) {
   console.error(`\n发现 ${issues.length} 个问题：`)
   for (const i of issues) console.error(`  - ${i}`)

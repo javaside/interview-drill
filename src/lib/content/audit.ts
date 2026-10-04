@@ -1,5 +1,12 @@
 import type { Card, CardType } from './types.js'
 import { checkPlaceholders } from './rules.js'
+import { MIN_BLOCK_POOL } from './pool.js'
+import { checkExclusion, enumerateCandidatePairs } from './exclusion.js'
+import type { ExclusionLedger } from './exclusion.js'
+
+// 池下界挪到 pool.ts（被 exclusion 的池余量报告共用，避免 audit ↔ exclusion 成环）。
+// 这里原样再导出，既有调用方（含测试）的 import 路径不变。
+export { MIN_BLOCK_POOL }
 
 export type AuditResult = {
   errors: string[]
@@ -15,38 +22,18 @@ export type BlockLike = { id: string; status: 'wip' | 'ready' }
 /** 岗位包的最小形状（Track 在结构上满足它） */
 export type TrackLike = { id: string; blocks: string[] }
 
-/**
- * 同块可用干扰项池下界，**按 cardType 分派**。§4.3 的出题形式决定需求：
- *
- * - `enumeration` / `comparison`：9 选、正确要点最少 3 条 → 单次最多吃 **6 条**干扰项；
- *   且 §4.3 分层表的 `s = 1` 档是 **3:0**（干扰项全来自同块）。取 2 倍余量 = 12
- * - `judgment`：二段式，结论占一半，支撑要点部分需求减半 = 8
- * - `atomic`：4 选 1，单次 3 条干扰项，2 倍余量 = 6
- * - `sequence`：**排序题，选项就是本卡自己的步骤，不抽同块干扰项** = 0
- *
- * 早期版本对所有卡一视同仁要求 12 条，对 `sequence` 是定义上的错误。按 §4.3 的
- * 目标占比，那会让约 28% 的卡被一条与它们无关的规则卡住，作者只能往块里注水凑题。
- */
-export const MIN_BLOCK_POOL: Record<CardType, number> = {
-  enumeration: 12,
-  comparison: 12,
-  judgment: 8,
-  atomic: 6,
-  sequence: 0,
+export type AuditOptions = {
+  /**
+   * 块 → 大类。**给了才跑互斥闸门**（三层候选对枚举需要它；没给就不引入新报错，
+   * 保持既有调用方的行为）。给空 Map = 只枚举同块层。
+   */
+  categories?: ReadonlyMap<string, string>
+  /** 互斥判定账本（parse 后的形态）。undefined = 仓库还没有账本 → 只警告不报错 */
+  ledger?: ExclusionLedger
 }
 
-/**
- * 推论：池下界反过来定义了**块的最小可行规模**。
- * 对一张 k 条要点的 enumeration 卡，可用池 = 块内总要点数 T − k ≥ 12，
- * 即 T ≥ 12 + k。k 取上限 6 时 T ≥ 18 —— 按平均 4 条/卡约合 5 张卡。
- *
- * 这条约束应当反馈给内容侧：**一个块低于约 5 张卡就不该声明 ready**。
- * spec §2 定的每块 15-25 题远在这之上，所以真实块不会撞线；
- * 撞线的只有试点这种刻意做小的块。
- */
-
 export function auditLibrary(
-  cards: Card[], blocks: BlockLike[] = [], tracks: TrackLike[] = [],
+  cards: Card[], blocks: BlockLike[] = [], tracks: TrackLike[] = [], opts: AuditOptions = {},
 ): AuditResult {
   const errors: string[] = []
   const warnings: string[] = []
@@ -108,6 +95,9 @@ export function auditLibrary(
       for (const other of blockCards) {
         if (other.id === c.id || other.retiredAt) continue
         for (const kp of other.keyPoints) {
+          // 退役要点永不被抽（draw.ts 的 eligible 第一道过滤），不能算进可用池 ——
+          // 不滤的话「audit 绿」≠「运行时池够」，这条休眠缺陷随互斥登记一起吃池才暴露。
+          if (kp.retiredAt) continue
           if (!kp.excludeAsDistractorFor.includes(c.id)) usable++
         }
       }
@@ -175,6 +165,16 @@ export function auditLibrary(
         seen.add(b)
       }
     }
+  }
+
+  // 互斥判定闸门（content/.exclusion-ledger）：枚举三层候选对，逐组要求账本里有
+  // 未过期的判定，并校验卡文件的 excludeAsDistractorFor == 账本 yes 的投影。
+  // 只在调用方给了 categories 时跑 —— 否则三层枚举退化成同块，报出来的「未判定」
+  // 是假的（跨块/相邻层根本没法枚举），还会污染既有调用方。
+  if (opts.categories !== undefined) {
+    const gate = checkExclusion(cards, opts.categories, opts.ledger)
+    errors.push(...gate.errors)
+    warnings.push(...gate.warnings)
   }
 
   return { errors, warnings }
