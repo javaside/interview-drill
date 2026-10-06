@@ -55,13 +55,13 @@ content/*.md  excludeAsDistractorFor: [卡 id, …]
 - 候选 = **其他卡的未退役要点**（退役要点永不被抽，不判；`draw.ts:82-85`）
 - **目标侧排除 33 张 `sequence` 卡** → 404 活卡 − 33 = 371 道目标题。
   `prepare.ts:98-126` 的 sequence 分支直接返回、`drawDistractors` 在 `:129` 才调用，
-  结构上不可能受害；但 sequence 卡的**要点照旧进池**（`queue.ts:61-67` 无 cardType 过滤），
-  所以只在「目标题」一侧排除
+  结构上不可能受害；但 sequence 卡的**要点照旧进池**（`src/server/queue.ts:46-50`
+  收池循环无 cardType 过滤），所以只在「目标题」一侧排除
 
 ### 2.1 entitlement 口径（必须写明）
 
 上表按**全量要点**枚举，这逐字对齐的是**付费用户**的池。免费用户的 crossBlock /
-neighbor 两层会过 `crossBlockPoolFor` 只留 `public`（`queue.ts:71-72`）。
+neighbor 两层会过 `crossBlockPoolFor` 只留 `public`（`src/server/queue.ts:54-55`）。
 
 **仍必须按全量枚举，不得按 public 剪枝** —— 付费用户抽的是全量池，剪枝等于把付费
 用户的坑放回线上。全库 public 要点仅 **281 / 1,769 = 15.9%**，剪枝会漏掉 84% 的候选。
@@ -176,7 +176,9 @@ pnpm content:exclusion --prune
 ```
 judge：枚举三层候选对（108,891）
   → 按目标题分组（371 组，平均 294 条候选）
-  → 切块 ≤40 → 2,723 次调用 → 写账本
+  → 切块 ≤40 → 2,882 次调用 → 写账本
+     （2026-10-06 按现行枚举器复算；设计期估的 2,723 偏低。
+      分层跑则 3,330 批——同一目标题在各层各切一次）
 apply：账本 → 每卡 excludeAsDistractorFor（零调用）
   → content:audit 复核池容量（§7.2）
 ```
@@ -187,11 +189,17 @@ apply：账本 → 每卡 excludeAsDistractorFor（零调用）
 体量：按实测文本长度（要点均 32 字、题干均 19 字），极简 prompt 约 1.5–2K token/批
 → 输入约 **5M token**、输出约 0.3M（裸下标数组）。成本与耗时尚需首轮实测确认
 （§11），并发按 20。
+**（2026-10-04 标定修正：输入估算量级成立（外推 ~4.2M），但输出被思考型模型推翻——
+满批实测 267–581 tokens，早期小批 7 条候选即 1,301（思考占大头），外推约 1.3M。
+数字见落地计划的成本表。）**
 
 ### 5.3 增量（每次加题，自动）
 
-加一张新卡带来的未判定组合（实测逐卡模拟，按 §2 三层口径）：
-**均值 561 组 / 卡**（最少 290、中位 559、最多 697）。其余 10 万+ 组读账本即跳过。
+加一张新卡带来的未判定组合（按 §2 三层口径；2026-10-06 用现行枚举器
+`enumerateCandidatePairs` 逐卡复算，口径 = 该卡作为目标题吸纳的候选组 + 其要点
+作为候选进其他目标题的组）：**均值 539 组 / 卡**（最少 200、中位 542、最多 681）。
+其余 10 万+ 组读账本即跳过。（初版记 561 / 290 / 559 / 697，系设计期手写模拟的
+口径，以本复算为准。）
 
 **幂等**：同一组合在账本里就跳过，命令可重复执行。
 
@@ -253,7 +261,8 @@ apply：账本 → 每卡 excludeAsDistractorFor（零调用）
 
 ### 7.0 前置：大类序列必须有权威来源
 
-`neighborCategoryOf`（`queue.ts:25-31`）取的是传入 Map 的键序，来自
+`neighborCategoryOf`（旧 `src/server/queue.ts:25-31`，**已在实施中随统一口径删除，见 §13**；
+本节行号描述的是修复前状态）取的是传入 Map 的键序，来自
 `select id, category from blocks`（`adapters.ts:387-388`）—— **没有 `ORDER BY`**，
 行序 = 插入序，且 PG 不作保证。而工具/闸门从文件系统走（`readdirSync`，无序）。
 
@@ -278,7 +287,7 @@ apply：账本 → 每卡 excludeAsDistractorFor（零调用）
 另加一致性检查：卡文件里的 `excludeAsDistractorFor` 必须等于账本中 `yes` 的投影，
 不等即报错（防手改卡文件后与账本漂移）。
 
-纯计算，不调 LLM，秒级。加一张新卡 → 它的约 561 组未判定 → 红 → 跑
+纯计算，不调 LLM，秒级。加一张新卡 → 它的约 540 组未判定 → 红 → 跑
 `content:exclusion` → 绿。**这就是「自动更新」的强制点**：不判就交不上。
 
 **缺失账本 = 首次运行 → 只警告不报错**（否则一上线就永久红）。
@@ -287,7 +296,7 @@ apply：账本 → 每卡 excludeAsDistractorFor（零调用）
 
 登记会**吃掉可用池**：`auditLibrary` 拿扣除 `excludeAsDistractorFor` 后的条数跟
 `MIN_BLOCK_POOL` 比（enumeration/comparison 12、judgment 8、atomic 6，
-`audit.ts:101-120`）。
+常量在 `pool.ts:20-26`，audit 在 `audit.ts:88-110` 消费）。
 
 - **相邻/跨块层的登记不影响 `MIN_BLOCK_POOL`**（该检查只遍历同块 `blockCards`）——
   但会缩小**实际**可用池，而**免费用户的跨块+相邻池只有 public 子集**
@@ -296,9 +305,9 @@ apply：账本 → 每卡 excludeAsDistractorFor（零调用）
 - 因此 `--apply` 必须先输出**每卡三层池扣除后剩余量 + 免费口径剩余量**，再决定落盘
 - 真触线时，**正确的修法是改内容**（给块补卡、或把题干改到答案封闭），
   **绝不允许为了过闸门而漏登记** —— 那等于把 bug 放回线上
-- 顺手修一个休眠缺陷：`audit.ts:110-112` 计 `usable` 时**不滤 `kp.retiredAt`**，
-  当前内容 0 条退役要点故未暴露；池校验是本次的核心护栏，扩进来时一并修掉，
-  否则「audit 绿」≠「运行时池够」
+- 顺手修一个休眠缺陷：计 `usable` 时**不滤 `kp.retiredAt`**，当前内容 0 条退役要点
+  故未暴露；池校验是本次的核心护栏，扩进来时一并修掉，否则「audit 绿」≠「运行时池够」
+  ——**已修**（现行 `audit.ts:94-103` 已滤 `retiredAt`，见 §13 补记）
 
 ### 7.3 三层正确性保障
 
@@ -322,8 +331,8 @@ apply：账本 → 每卡 excludeAsDistractorFor（零调用）
   （均来自那批未提交 WIP）。
 - **要点 id 跨块撞车**（`agent/llm-basics` × `java/language-basics` 共 20 个、
   `concurrency/sync-tools` × `java/string` 共 13 个）：**不在本设计范围**。账本键
-  `cardId/kpId` 的唯一性由「卡 id 全局唯一」（`audit.ts:54-58` 重复即 error）+「要点 id
-  块内唯一」（`:63-73`）保证；实测这些撞车 id 的两端从不落在同一/相邻大类，连
+  `cardId/kpId` 的唯一性由「卡 id 全局唯一」（`audit.ts:42-44` 重复即 error）+「要点 id
+  块内唯一」（`:50-59`）保证；实测这些撞车 id 的两端从不落在同一/相邻大类，连
   `ownIds` 都滤不掉任何一组。撞车影响的是池子静默缩小，另行处理。
 - **现有 `review:pairs`**：只扫同块（`pairs.ts:13-45`）、字符重合度占位打分器
   （`cli.ts:44-50`）、交互式。本设计落地后退役（保留或删除，实现时定）。
@@ -415,6 +424,18 @@ apply：账本 → 每卡 excludeAsDistractorFor（零调用）
    涉及别人的未提交成果，保住可恢复性。其两个有用想法已被吸收：三层枚举（→ `exclusion.ts`）
    与「无基线只警告 / 新命中报错指名」的闸门语义（→ `checkExclusion`）。
    话题词判据本身按 §10 不采用。
+
+### 2026-10-06 复核更正（对照现行代码与内容逐项实测）
+
+- **批数**：不分层 2,882 批、分层 3,330（sameBlock 363 批 8–24 条/批、crossBlock
+  1,395、neighbor 1,572）——§5.2 设计期估的 2,723 偏低，正文已更新。
+- **单卡增量**：按现行 `enumerateCandidatePairs` 复算为均值 539（200/542/681），
+  初版 561 系设计期手写模拟口径，正文已更新。
+- **§7.2 的休眠缺陷已修**：现行 `audit.ts:94-103` 计 `usable` 已滤 `kp.retiredAt`。
+- **§2/§7.0 引用的 queue.ts 行号**（61-67 / 71-72 / 25-31）是实施前状态，现行池装配
+  在 `src/server/queue.ts:33-57`（`buildDistractorPools` 走 `layerOf`，本地
+  `neighborCategoryOf` 已删），正文行号已更新。
+- 测试基线：92 文件 / 785 用例（第二轮评审修复净增 1）。
 
 ### 尚未做
 

@@ -14,7 +14,7 @@
 ## Global Constraints
 
 - 代码在 `feat/content-exclusion` 分支，**不在 main 上改**。
-- **验收标准：`pnpm typecheck && pnpm test` 全绿**（基线 92 文件 / **784** 用例）。
+- **验收标准：`pnpm typecheck && pnpm test` 全绿**（基线 92 文件 / **785** 用例，2026-10-06 实测）。
 - **花钱的步骤必须逐次批准**：Task 2 拿到实测数字后停下等用户点头；**任何重判（`--rejudge`、升 `JUDGE_VERSION`、失败重跑成规模时）都要重新获批**。
 - `content/` 是权威源，DB 是它的投影——**本地库与生产库都要跑 `content:upsert`**，否则两边漂移。
 - 账本 `content/.exclusion-ledger` 是判定状态的**单一来源**；`--judge` 幂等（已判定跳过）、**增量落盘**（每 25 批 + SIGINT）。
@@ -28,7 +28,7 @@
 
 | 项 | 事实 |
 |---|---|
-| 分支 | `feat/content-exclusion`，基准 `abc2931`；5 个提交（工具链 / AGENTS.md / 计量诊断 / 计划 V1 / 评审修复） |
+| 分支 | `feat/content-exclusion`，基准 `abc2931`；6 个提交（工具链 / AGENTS.md / 计量诊断+标定账本 / 第一轮评审修复+计划重写 / 第二轮 fail-open 修复+计划三处事实更正 / 评审报告留档） |
 | main | `main == origin/main == abc2931`（实测 `git rev-parse` 两者相同），是分支的直接祖先 → **可以 ff**。V1 计划那次提交 `544a8f0` 是**悬空提交**（不在任何分支上） |
 | 三层候选对 | 108,891（同块 6,475 / 跨块 48,307 / 相邻 54,109），目标题 371 |
 | 账本 | 247 条（标定跑的，判「是」18 条）——**远未完成** |
@@ -89,7 +89,8 @@ git diff --stat content/ | tail -1
 ```
 
 Expected: typecheck 干净、全量测试全绿；`content:audit` **不新增**任何消息 —— 它本来就红：
-既有 108k 条「未判定」+ **18 条「卡文件与账本不一致」**（标定账本里那 18 条「是」还没 apply 过）。
+既有 108k 条「未判定」+ **17 条「卡文件与账本不一致」**（标定账本里那 18 条「是」投影出来的——
+其中一条要点带两个目标卡，闸门按要点粒度报错合并，故 18 → 17；都还没 apply 过）。
 判定口径是本步前后错误条数一致（格式改动不引入新的内容错误）。
 另：`--normalize` 是幂等的（再跑一次 0 张变化）——已实测。
 
@@ -104,7 +105,7 @@ chore(content): 统一卡文件 YAML 格式——为互斥登记让出一个可�
 约 1.3 万行格式改动与真正的互斥登记混在一个 diff 里（403/404 张卡）。
 
 语义零变化：--normalize 把文件现状喂回同一个 writer，只让 YAML 引擎重排格式；
-typecheck + 784 用例全绿，audit 无新增错误。幂等（二次执行 0 张变化）。
+typecheck + 785 用例全绿，audit 无新增错误。幂等（二次执行 0 张变化）。
 EOF
 )"
 ---
@@ -149,7 +150,7 @@ pnpm typecheck && pnpm test
 pnpm content:exclusion --apply --dry-run      # 只读，看触线与免费池现状
 ```
 
-Expected: 784 用例全绿；dry-run 打印 2 张触线（标定账本口径）与 65 张免费池为 0（exit 1 是设计如此）。
+Expected: 785 用例全绿；dry-run 打印 2 张触线（标定账本口径）与 65 张免费池为 0（exit 1 是设计如此）。
 
 - [ ] **Step 4: 用户说「可以」才继续**
 
@@ -477,7 +478,7 @@ Expected: 两边**同值**。不一致 = 有一边没跑 upsert。
 ```bash
 git log --oneline main..feat/content-exclusion    # 确认内容
 git merge --no-ff feat/content-exclusion          # ff 是可行的（main 就是分支的 base）；
-                                                  # 用 --no-ff 是刻意的：把 5 个提交留成一个可见的整体
+                                                  # 用 --no-ff 是刻意的：把分支上的提交留成一个可见的整体
 ```
 
 **不主动 push。** 合并前确认：`content:audit` 绿、`--apply` 已跑、两库已 upsert。
