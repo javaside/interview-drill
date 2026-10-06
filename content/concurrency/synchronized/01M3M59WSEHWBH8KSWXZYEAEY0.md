@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEHWBH8KSWXZYEAEY0
 blockId: concurrency/synchronized
-relatedBlocks:
-  []
-question: "什么是死锁？怎么排查和预防？"
+relatedBlocks: []
+question: 什么是死锁？怎么排查和预防？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 活锁和死锁的区别？
 keyPoints:
   - id: kp-sy5-1
-    text: "两个线程各持一把锁、互相要对方的，永久僵持"
+    text: 两个线程各持一把锁、互相要对方的，永久僵持
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-sy5-2
-    text: "排查：jstack 抓线程 dump 看「Found one Java-level deadlock」；或 arthas/visualvm"
+    text: 排查：jstack 抓线程 dump 看「Found one Java-level deadlock」；或 arthas/visualvm
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-sy5-3
-    text: "预防 1：所有线程按相同顺序抢锁（全局锁排序）"
+    text: 预防 1：所有线程按相同顺序抢锁（全局锁排序）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-sy5-4
-    text: "预防 2：tryLock 带超时——拿不齐就放弃已持有的（打破持有并守候）"
+    text: 预防 2：tryLock 带超时——拿不齐就放弃已持有的（打破持有并守候）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 **死锁** = 互相持有对方所需、互不退让的**永久静止**：

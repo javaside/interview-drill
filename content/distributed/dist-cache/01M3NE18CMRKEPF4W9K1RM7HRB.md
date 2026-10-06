@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMRKEPF4W9K1RM7HRB
 blockId: distributed/dist-cache
-relatedBlocks:
-  []
-question: "Redis 主从复制和哨兵的作用？"
+relatedBlocks: []
+question: Redis 主从复制和哨兵的作用？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 哨兵为什么至少 3 个？
 keyPoints:
   - id: kp-dc9-1
-    text: "主从：全量 RDB 同步 + 增量命令流复制——读写分离扩读"
+    text: 主从：全量 RDB 同步 + 增量命令流复制——读写分离扩读
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc9-2
-    text: "哨兵 Sentinel：监控主——宕了自动挑从升主（故障转移）"
+    text: 哨兵 Sentinel：监控主——宕了自动挑从升主（故障转移）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc9-3
-    text: "哨兵需过半同意才判定主死（防误判脑裂）"
+    text: 哨兵需过半同意才判定主死（防误判脑裂）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc9-4
-    text: "客户端订阅哨兵感知新主地址"
+    text: 客户端订阅哨兵感知新主地址
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc9-5
-    text: "异步复制的丢失窗口：主写完没来得及同步就挂——新主可能缺最新写"
+    text: 异步复制的丢失窗口：主写完没来得及同步就挂——新主可能缺最新写
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **高可用的两层积木**：

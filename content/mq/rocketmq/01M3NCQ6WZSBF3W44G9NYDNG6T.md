@@ -3,7 +3,7 @@ id: 01M3NCQ6WZSBF3W44G9NYDNG6T
 blockId: mq/rocketmq
 relatedBlocks:
   - mq/mq-fundamentals
-question: "死信队列的触发条件和用途？"
+question: 死信队列的触发条件和用途？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,45 +11,45 @@ followUps:
   - 死信和重试队列的关系？
 keyPoints:
   - id: kp-rq3-1
-    text: "触发：重试耗尽（RocketMQ 默认 16 次）消息进 %DLQ%消费组"
+    text: 触发：重试耗尽（RocketMQ 默认 16 次）消息进 %DLQ%消费组
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq3-2
-    text: "用途：隔离毒消息保消费组前进 + 人工介入/修复后重放"
+    text: 用途：隔离毒消息保消费组前进 + 人工介入/修复后重放
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq3-3
-    text: "Kafka 无内建 DLQ——Spring Kafka 处理失败可发往自定义死信 topic"
+    text: Kafka 无内建 DLQ——Spring Kafka 处理失败可发往自定义死信 topic
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq3-4
-    text: "死信要监控告警：死信堆积=业务异常面"
+    text: 死信要监控告警：死信堆积=业务异常面
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **死信队列（DLQ）= 毒消息的隔离区**：

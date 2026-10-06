@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRZ7M7Q9T1V3
 blockId: network/net-layers
-relatedBlocks:
-  []
-question: "短连接、长连接、WebSocket 怎么选？"
+relatedBlocks: []
+question: 短连接、长连接、WebSocket 怎么选？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 长连接的空闲怎么治理？
 keyPoints:
   - id: kp-nl4-1
-    text: "短连接：每请求建连断连——简单但握手与 TIME_WAIT 成本高"
+    text: 短连接：每请求建连断连——简单但握手与 TIME_WAIT 成本高
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl4-2
-    text: "长连接：keep-alive 复用 TCP——HTTP/1.1 默认，配合连接池"
+    text: 长连接：keep-alive 复用 TCP——HTTP/1.1 默认，配合连接池
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl4-3
-    text: "WebSocket：TCP 上全双工消息协议——服务器可主动推"
+    text: WebSocket：TCP 上全双工消息协议——服务器可主动推
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl4-4
-    text: "升级路径：HTTP 先握手 101 Switching Protocols 再转 WS"
+    text: 升级路径：HTTP 先握手 101 Switching Protocols 再转 WS
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl4-5
-    text: "选型：请求响应用长连接；双向实时（IM/行情/协同）用 WS 或 SSE"
+    text: 选型：请求响应用长连接；双向实时（IM/行情/协同）用 WS 或 SSE
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
 ---
 
 三档连接策略，按**「连接成本」和「通信方向」**两个维度选：

@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRW1F1H3J5M7Q
 blockId: network/net-layers
-relatedBlocks:
-  []
-question: "OSI 七层和 TCP/IP 四层各是什么？"
+relatedBlocks: []
+question: OSI 七层和 TCP/IP 四层各是什么？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 为什么模型是四层不是五层六层？
 keyPoints:
   - id: kp-nl1-1
-    text: "TCP/IP 四层：应用（HTTP/TLS）→ 传输（TCP/UDP）→ 网络（IP）→ 链路（以太网）"
+    text: TCP/IP 四层：应用（HTTP/TLS）→ 传输（TCP/UDP）→ 网络（IP）→ 链路（以太网）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl1-2
-    text: "OSI 七层把应用侧再细分：会话/表示层，链路拆数据链路+物理"
+    text: OSI 七层把应用侧再细分：会话/表示层，链路拆数据链路+物理
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl1-3
-    text: "分层价值：各层只依赖下层的接口，换实现互不影响"
+    text: 分层价值：各层只依赖下层的接口，换实现互不影响
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl1-4
-    text: "数据封装：每层给上层数据加自己的头（段→包→帧）"
+    text: 数据封装：每层给上层数据加自己的头（段→包→帧）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl1-5
-    text: "面试实务按四层答，对照七层补会话/表示即可"
+    text: 面试实务按四层答，对照七层补会话/表示即可
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
 ---
 
 工业界活的是 **TCP/IP 四层**，教科书考的是 **OSI 七层**——对照着记：

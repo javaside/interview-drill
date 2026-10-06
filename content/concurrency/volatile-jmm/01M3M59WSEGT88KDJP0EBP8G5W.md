@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEGT88KDJP0EBP8G5W
 blockId: concurrency/volatile-jmm
-relatedBlocks:
-  []
-question: "happens-before 是什么？"
+relatedBlocks: []
+question: happens-before 是什么？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 它和时间的先后是一回事吗？
 keyPoints:
   - id: kp-vj3-1
-    text: "JMM 的可见性契约：A happens-before B，则 A 的结果对 B 可见且有序"
+    text: JMM 的可见性契约：A happens-before B，则 A 的结果对 B 可见且有序
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj3-2
-    text: "程序次序：单线程内按代码顺序"
+    text: 程序次序：单线程内按代码顺序
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj3-3
-    text: "解锁 先行于 后续加锁；volatile 写 先行于 后续读；start/join 先行规则"
+    text: 解锁 先行于 后续加锁；volatile 写 先行于 后续读；start/join 先行规则
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj3-4
-    text: "传递性：A→B、B→C 则 A→C（跨点接力组合出全局顺序）"
+    text: 传递性：A→B、B→C 则 A→C（跨点接力组合出全局顺序）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 **happens-before（先行发生）** 是 JMM 给开发者的**承诺**，不是时间上的先后：

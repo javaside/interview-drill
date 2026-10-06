@@ -2,7 +2,7 @@
 id: 01M3KHXF759MGE3R6J7QBHH3HA
 blockId: mysql/sql-optimization
 relatedBlocks: []
-question: "type 列从好到差的顺序和含义？"
+question: type 列从好到差的顺序和含义？
 cardType: sequence
 appliesTo: MySQL 8.0+
 frequency: high
@@ -11,9 +11,9 @@ followUps:
 keyPoints:
   - id: kp-opt2-1
     order: 1
-    text: "const：主键或唯一索引按唯一值命中，最多一行"
+    text: const：主键或唯一索引按唯一值命中，最多一行
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -22,9 +22,9 @@ keyPoints:
       locator: '15'
   - id: kp-opt2-2
     order: 2
-    text: "eq_ref：join 时被驱动表走主键/唯一索引，每外层行最多一行"
+    text: eq_ref：join 时被驱动表走主键/唯一索引，每外层行最多一行
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -33,9 +33,9 @@ keyPoints:
       locator: '15'
   - id: kp-opt2-3
     order: 3
-    text: "ref：普通索引按值匹配，可多行"
+    text: ref：普通索引按值匹配，可多行
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -44,9 +44,9 @@ keyPoints:
       locator: '15'
   - id: kp-opt2-4
     order: 4
-    text: "range：索引范围扫描（between、>、in）"
+    text: range：索引范围扫描（between、>、in）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -55,9 +55,9 @@ keyPoints:
       locator: '15'
   - id: kp-opt2-5
     order: 5
-    text: "index：扫整棵索引树（比 ALL 好：索引比数据小，仍是全扫）"
+    text: index：扫整棵索引树（比 ALL 好：索引比数据小，仍是全扫）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -66,9 +66,9 @@ keyPoints:
       locator: '15'
   - id: kp-opt2-6
     order: 6
-    text: "ALL：全表扫描，每行都读"
+    text: ALL：全表扫描，每行都读
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

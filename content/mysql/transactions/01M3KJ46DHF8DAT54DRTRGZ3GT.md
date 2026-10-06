@@ -2,7 +2,7 @@
 id: 01M3KJ46DHF8DAT54DRTRGZ3GT
 blockId: mysql/transactions
 relatedBlocks: []
-question: "事务里执行 DDL 有什么风险？"
+question: 事务里执行 DDL 有什么风险？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: mid
@@ -10,9 +10,9 @@ followUps:
   - 隐式提交都有哪些语句？
 keyPoints:
   - id: kp-tac5-1
-    text: "多数 DDL 会造成隐式提交：当前事务先被悄悄提交"
+    text: 多数 DDL 会造成隐式提交：当前事务先被悄悄提交
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac5-2
-    text: "DDL 失败回滚不影响已被隐式提交的前序事务"
+    text: DDL 失败回滚不影响已被隐式提交的前序事务
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac5-3
-    text: "DDL 是表级操作，可能与行锁、复制产生长时间阻塞"
+    text: DDL 是表级操作，可能与行锁、复制产生长时间阻塞
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac5-4
-    text: "8.0 的原子 DDL 把 DDL 本身做成原子的，但仍无法回到之前的事务"
+    text: 8.0 的原子 DDL 把 DDL 本身做成原子的，但仍无法回到之前的事务
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -50,9 +50,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac5-5
-    text: "批量 DML 与 DDL 混排在复制下产生不确定顺序，主从易漂移"
+    text: 批量 DML 与 DDL 混排在复制下产生不确定顺序，主从易漂移
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

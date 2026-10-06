@@ -2,7 +2,7 @@
 id: 01M3KHXF75MB2TSZ8Z02239NXG
 blockId: mysql/redo-log
 relatedBlocks: []
-question: "redo log 的作用是什么？什么是 WAL？"
+question: redo log 的作用是什么？什么是 WAL？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - checkpoint 是什么？
 keyPoints:
   - id: kp-rd-1
-    text: "记录「做了什么修改」的物理日志，崩溃后照它重放，保证已提交修改不丢"
+    text: 记录「做了什么修改」的物理日志，崩溃后照它重放，保证已提交修改不丢
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd-2
-    text: "WAL 先写日志后写数据页：修改先记 redo，数据页延后刷盘"
+    text: WAL 先写日志后写数据页：修改先记 redo，数据页延后刷盘
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd-3
-    text: "顺序写日志代替随机写数据页，性能高数个量级"
+    text: 顺序写日志代替随机写数据页，性能高数个量级
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd-4
-    text: "redo 是循环写的固定大小文件组，写满触发 checkpoint 强制刷脏页"
+    text: redo 是循环写的固定大小文件组，写满触发 checkpoint 强制刷脏页
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

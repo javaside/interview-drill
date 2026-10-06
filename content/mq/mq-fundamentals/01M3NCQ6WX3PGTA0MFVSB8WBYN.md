@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WX3PGTA0MFVSB8WBYN
 blockId: mq/mq-fundamentals
-relatedBlocks:
-  []
-question: "为什么要用消息队列？"
+relatedBlocks: []
+question: 为什么要用消息队列？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 削峰填谷的代价是什么？
 keyPoints:
   - id: kp-mf1-1
-    text: "解耦：上下游互不依赖，新增消费方零改动"
+    text: 解耦：上下游互不依赖，新增消费方零改动
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf1-2
-    text: "异步：非核心链路（通知/积分）异步化，响应时间从串行和降为最长一步"
+    text: 异步：非核心链路（通知/积分）异步化，响应时间从串行和降为最长一步
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf1-3
-    text: "削峰：洪峰先进队列排队，消费端按自己的节奏消化"
+    text: 削峰：洪峰先进队列排队，消费端按自己的节奏消化
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf1-4
-    text: "代价：系统复杂度上升——可用性依赖、一致性变最终、重复消息治理"
+    text: 代价：系统复杂度上升——可用性依赖、一致性变最终、重复消息治理
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 三大收益（也是三大经典答案）：

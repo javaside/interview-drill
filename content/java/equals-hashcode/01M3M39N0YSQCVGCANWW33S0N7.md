@@ -4,7 +4,7 @@ blockId: java/equals-hashcode
 relatedBlocks:
   - java/language-basics
   - java/hashmap
-question: "只重写 equals 不重写 hashCode 会发生什么？"
+question: 只重写 equals 不重写 hashCode 会发生什么？
 cardType: atomic
 appliesTo: Java 17+
 frequency: high
@@ -12,15 +12,15 @@ followUps:
   - set.contains 为什么时灵时不灵？
 keyPoints:
   - id: kp-eh3-1
-    text: "两个内容相同的对象 hash 不同 → 落入 HashMap 不同桶 → contains/get 找不到、HashSet 去重失效"
+    text: 两个内容相同的对象 hash 不同 → 落入 HashMap 不同桶 → contains/get 找不到、HashSet 去重失效
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 具体症状一行流：**对象放进 HashSet 后，用内容相同的新实例去 contains，返回 false**。

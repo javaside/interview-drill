@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WZ8A7RXJJMTBCSZWHW
 blockId: mq/mq-problems
-relatedBlocks:
-  []
-question: "怎么保证消息的事务性（与本地事务联动）？"
+relatedBlocks: []
+question: 怎么保证消息的事务性（与本地事务联动）？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 本地消息表的扫表压力怎么解？
 keyPoints:
   - id: kp-mp4-1
-    text: "本地消息表：业务与消息记录同库同事务落盘，后台扫表投递"
+    text: 本地消息表：业务与消息记录同库同事务落盘，后台扫表投递
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp4-2
-    text: "RocketMQ 事务消息：半消息+回查（MQ 内建）"
+    text: RocketMQ 事务消息：半消息+回查（MQ 内建）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp4-3
-    text: "事务结果驱动投递：commit 后消息可见，rollback 则废弃"
+    text: 事务结果驱动投递：commit 后消息可见，rollback 则废弃
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp4-4
-    text: "下游消费端防重闭环——生产原子加消费端防重即端到端一致"
+    text: 下游消费端防重闭环——生产原子加消费端防重即端到端一致
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp4-5
-    text: "binlog 订阅可替代扫表驱动投递"
+    text: binlog 订阅可替代扫表驱动投递
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 「**下订单（DB）+ 发消息（MQ）**」要原子，两条路：

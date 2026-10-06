@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSETRSSPGFJWEA22AW4
 blockId: concurrency/synchronized
-relatedBlocks:
-  []
-question: "synchronized 锁的到底是什么？"
+relatedBlocks: []
+question: synchronized 锁的到底是什么？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 两个线程分别调用同一类的静态和实例同步方法，互斥吗？
 keyPoints:
   - id: kp-sy1-1
-    text: "锁的是对象头里的 monitor（监视器），不是代码本身"
+    text: 锁的是对象头里的 monitor（监视器），不是代码本身
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-sy1-2
-    text: "修饰实例方法：锁当前对象 this"
+    text: 修饰实例方法：锁当前对象 this
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-sy1-3
-    text: "修饰静态方法：锁类的 Class 对象（全局唯一）"
+    text: 修饰静态方法：锁类的 Class 对象（全局唯一）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-sy1-4
-    text: "同步代码块：锁括号里指定的对象"
+    text: 同步代码块：锁括号里指定的对象
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 `synchronized` 的**锁是对象**，不是方法不是代码：

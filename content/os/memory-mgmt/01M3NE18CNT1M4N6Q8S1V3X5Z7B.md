@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNT1M4N6Q8S1V3X5Z7B
 blockId: os/memory-mgmt
-relatedBlocks:
-  []
-question: "mmap 和共享内存是怎么回事？"
+relatedBlocks: []
+question: mmap 和共享内存是怎么回事？
 cardType: enumeration
 appliesTo: Linux
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 什么时候不该用 mmap？
 keyPoints:
   - id: kp-mm5-1
-    text: "mmap：把文件/匿名内存映射进地址空间——访问内存即读写文件"
+    text: mmap：把文件/匿名内存映射进地址空间——访问内存即读写文件
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mmap(2)'
+      locator: mmap(2)
   - id: kp-mm5-2
-    text: "匿名映射：纯内存（malloc 大块/加载器建堆）"
+    text: 匿名映射：纯内存（malloc 大块/加载器建堆）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mmap(2)'
+      locator: mmap(2)
   - id: kp-mm5-3
-    text: "文件映射：页缓存即视图——读文件零拷贝进用户态"
+    text: 文件映射：页缓存即视图——读文件零拷贝进用户态
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mmap(2)'
+      locator: mmap(2)
   - id: kp-mm5-4
-    text: "MAP_SHARED：两进程映射同一文件/同 shm——写完即互通"
+    text: MAP_SHARED：两进程映射同一文件/同 shm——写完即互通
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mmap(2)'
+      locator: mmap(2)
   - id: kp-mm5-5
-    text: "工程应用：程序加载/Redis 快照写盘/MQ 消息文件/DB 数据文件"
+    text: 工程应用：程序加载/Redis 快照写盘/MQ 消息文件/DB 数据文件
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mmap(2)'
+      locator: mmap(2)
 ---
 
 **mmap** = 「把文件当数组访问」：

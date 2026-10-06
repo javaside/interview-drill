@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGX9FZ6VE7ETS22432
 blockId: rpc/service-governance
-relatedBlocks:
-  []
-question: "熔断、降级、限流的区别？"
+relatedBlocks: []
+question: 熔断、降级、限流的区别？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 三者谁保护谁？
 keyPoints:
   - id: kp-sg1-1
-    text: "限流：入口控制并发/速率——保自己不死（量的问题）"
+    text: 限流：入口控制并发/速率——保自己不死（量的问题）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg1-2
-    text: "熔断：下游故障率超阈值时直接断路快速失败——保自己不被拖死"
+    text: 熔断：下游故障率超阈值时直接断路快速失败——保自己不被拖死
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg1-3
-    text: "降级：有损服务——核心保住、旁路舍弃或返回兜底值"
+    text: 降级：有损服务——核心保住、旁路舍弃或返回兜底值
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg1-4
-    text: "三者常联动：熔断触发后走降级逻辑；限流是常态防御"
+    text: 三者常联动：熔断触发后走降级逻辑；限流是常态防御
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **三种自保手段，保护对象不同**：

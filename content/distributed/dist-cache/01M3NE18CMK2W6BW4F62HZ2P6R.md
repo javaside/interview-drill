@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMK2W6BW4F62HZ2P6R
 blockId: distributed/dist-cache
-relatedBlocks:
-  []
-question: "Redis 的持久化方式 RDB 和 AOF？"
+relatedBlocks: []
+question: Redis 的持久化方式 RDB 和 AOF？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - everysec 会丢多少？
 keyPoints:
   - id: kp-dc8-1
-    text: "RDB：定时快照（fork 子进程全量二进制）——恢复快、丢数据多"
+    text: RDB：定时快照（fork 子进程全量二进制）——恢复快、丢数据多
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc8-2
-    text: "AOF：追加写命令日志——丢得少、文件大恢复慢"
+    text: AOF：追加写命令日志——丢得少、文件大恢复慢
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc8-3
-    text: "AOF 重写：fork 子进程把日志压缩为最小命令集（bgrewriteaof）"
+    text: AOF 重写：fork 子进程把日志压缩为最小命令集（bgrewriteaof）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc8-4
-    text: "4.0 混合持久化：RDB 全量 + 增量 AOF——两全"
+    text: 4.0 混合持久化：RDB 全量 + 增量 AOF——两全
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc8-5
-    text: "appendfsync 三档：always/everysec（默认，丢 1 秒）/no"
+    text: appendfsync 三档：always/everysec（默认，丢 1 秒）/no
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 两种**持久化**路线（解决 Redis 重启数据丢不丢）：

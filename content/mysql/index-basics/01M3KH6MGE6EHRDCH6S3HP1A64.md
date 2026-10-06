@@ -13,43 +13,43 @@ keyPoints:
   - id: kp-clu-1
     text: 聚簇索引叶子存整行数据；二级索引叶子只存索引列 + 主键值
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-clu-2
     text: 一张表只有一个聚簇索引（按主键组织），二级索引可以有多个
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-clu-3
     text: 查二级索引拿不到整行时需回表：拿主键回聚簇索引再查一次
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-clu-4
     text: 没有显式主键时，InnoDB 用第一个非空唯一索引，或隐藏的 row_id 兜底
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
 ---
 
 一张 InnoDB 表其实就是一棵按**主键**组织的 B+ 树——这棵树叫**聚簇索引（clustered index）**：叶子层就是数据本身（「数据即索引」）。你在别的列上建索引（比如给 name 建一个），会另起一棵小一点的 B+ 树——**二级索引（secondary index）**。

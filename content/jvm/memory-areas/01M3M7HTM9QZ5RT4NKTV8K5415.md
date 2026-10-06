@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTM9QZ5RT4NKTV8K5415
 blockId: jvm/memory-areas
-relatedBlocks:
-  []
-question: "JVM 运行时数据区有哪几块？"
+relatedBlocks: []
+question: JVM 运行时数据区有哪几块？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 哪些区域线程共享、哪些私有？
 keyPoints:
   - id: kp-ma1-1
-    text: "堆：对象实例的主战场，线程共享，GC 的核心工作区"
+    text: 堆：对象实例的主战场，线程共享，GC 的核心工作区
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma1-2
-    text: "虚拟机栈：每线程一份，栈帧存局部变量表与操作数栈"
+    text: 虚拟机栈：每线程一份，栈帧存局部变量表与操作数栈
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma1-3
-    text: "方法区（元空间）：类信息、常量、静态变量；落在本机内存"
+    text: 方法区（元空间）：类信息、常量、静态变量；落在本机内存
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma1-4
-    text: "程序计数器：当前线程执行的字节码行号，唯一无 OOM 区域"
+    text: 程序计数器：当前线程执行的字节码行号，唯一无 OOM 区域
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma1-5
-    text: "本机方法栈：服务 native 方法"
+    text: 本机方法栈：服务 native 方法
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 按「**谁的**」分两组记：

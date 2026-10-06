@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0Y9TXHK3XYMAC70KFA
 blockId: java/collections-overview
-relatedBlocks:
-  []
-question: "Java 集合框架的整体结构是怎样的？"
+relatedBlocks: []
+question: Java 集合框架的整体结构是怎样的？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - Iterator 在体系中扮演什么角色？
 keyPoints:
   - id: kp-co1-1
-    text: "两大接口家族：Collection（List/Set/Queue 单值）与 Map（键值对，独立体系）"
+    text: 两大接口家族：Collection（List/Set/Queue 单值）与 Map（键值对，独立体系）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-co1-2
-    text: "List 有序可重复；Set 不可重复；Queue 队列语义；Map 键唯一"
+    text: List 有序可重复；Set 不可重复；Queue 队列语义；Map 键唯一
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-co1-3
-    text: "Map 不继承 Collection——键值对与单值是两种抽象"
+    text: Map 不继承 Collection——键值对与单值是两种抽象
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-co1-4
-    text: "各接口均有配套的不可变/线程安全工厂方法（List.of / Map.of）"
+    text: 各接口均有配套的不可变/线程安全工厂方法（List.of / Map.of）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 集合框架 = **两大族谱**：

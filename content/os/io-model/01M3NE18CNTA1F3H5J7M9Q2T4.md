@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTA1F3H5J7M9Q2T4
 blockId: os/io-model
-relatedBlocks:
-  []
-question: "IO 调度器在调度什么？SSD 为什么可以关掉？"
+relatedBlocks: []
+question: IO 调度器在调度什么？SSD 为什么可以关掉？
 cardType: enumeration
 appliesTo: Linux
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 虚拟机盘的调度器怎么配？
 keyPoints:
   - id: kp-di4-1
-    text: "目标：合并相邻请求+排序路径，减少机械盘寻道"
+    text: 目标：合并相邻请求+排序路径，减少机械盘寻道
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di4-2
-    text: "mq-deadline：保证每个请求有截止时间——防饿死，默认之一"
+    text: mq-deadline：保证每个请求有截止时间——防饿死，默认之一
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di4-3
-    text: "bfq：按进程公平分配带宽——桌面交互体验"
+    text: bfq：按进程公平分配带宽——桌面交互体验
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di4-4
-    text: "none：不排序——SSD/ NVMe 常配（无寻道可省）"
+    text: none：不排序——SSD/ NVMe 常配（无寻道可省）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di4-5
-    text: "多队列（blk-mq）：每核一条队列锁竞争少——现代默认架构"
+    text: 多队列（blk-mq）：每核一条队列锁竞争少——现代默认架构
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
 ---
 
 IO 调度器管的是**块设备请求队列的插队艺术**——在「公平」与「总吞吐」间周旋：

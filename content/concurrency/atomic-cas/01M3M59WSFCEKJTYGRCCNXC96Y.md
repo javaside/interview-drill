@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSFCEKJTYGRCCNXC96Y
 blockId: concurrency/atomic-cas
-relatedBlocks:
-  []
-question: "原子类是怎么实现的？"
+relatedBlocks: []
+question: 原子类是怎么实现的？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 为什么 AtomicReference 也常用？
 keyPoints:
   - id: kp-ac1-1
-    text: "CAS 自旋 + volatile 读：读可见、写原子"
+    text: CAS 自旋 + volatile 读：读可见、写原子
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac1-2
-    text: "incrementAndGet：循环里 CAS 旧值到旧值加一，失败重读重试"
+    text: incrementAndGet：循环里 CAS 旧值到旧值加一，失败重读重试
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac1-3
-    text: "getAndAccumulate 与 getAndUpdate：任意函数的 CAS 通用形态（8+）"
+    text: getAndAccumulate 与 getAndUpdate：任意函数的 CAS 通用形态（8+）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac1-4
-    text: "LongAdder：热点计数不在这里——分散格子求和（空间换冲突）"
+    text: LongAdder：热点计数不在这里——分散格子求和（空间换冲突）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac1-5
-    text: "getIncrement 与 getAndSet 皆为自旋封装的单变量原语"
+    text: getIncrement 与 getAndSet 皆为自旋封装的单变量原语
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
 ---
 
 原子类 = **volatile 读 + CAS 写**的组合拳：

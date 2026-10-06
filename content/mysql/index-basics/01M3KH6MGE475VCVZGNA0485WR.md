@@ -14,43 +14,43 @@ keyPoints:
   - id: kp-inc-1
     text: 自增 id 总是追加到最后：页写满就顺序开新页，避免页分裂
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-inc-2
     text: 随机主键插入位置随机，触发频繁页分裂与数据搬移，写入变慢
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-inc-3
     text: 页分裂产生碎片，空间利用率下降
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-inc-4
     text: 二级索引叶子存主键副本，主键越短二级索引越小
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
 ---
 
 聚簇索引（按主键组织的那棵主树）的叶子是**有序**的数据页。新插入一行落在哪里，取决于主键值的大小：

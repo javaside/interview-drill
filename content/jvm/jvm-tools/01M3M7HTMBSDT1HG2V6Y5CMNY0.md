@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMBSDT1HG2V6Y5CMNY0
 blockId: jvm/jvm-tools
-relatedBlocks:
-  []
-question: "CPU 100% 怎么排查？"
+relatedBlocks: []
+question: CPU 100% 怎么排查？
 cardType: sequence
 appliesTo: Java 17+
 frequency: high
@@ -11,49 +10,49 @@ followUps:
   - 为什么是 GC 线程在烧 CPU？
 keyPoints:
   - id: kp-jt5-1
-    text: "top -Hp <pid>：找到吃 CPU 的线程号"
+    text: top -Hp <pid>：找到吃 CPU 的线程号
     public: true
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-jt5-2
-    text: "线程号转 16 进制（printf %x）"
+    text: 线程号转 16 进制（printf %x）
     public: true
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-jt5-3
-    text: "jstack <pid> | grep -A 20 该 16 进制 nid：定位到代码行"
+    text: jstack <pid> | grep -A 20 该 16 进制 nid：定位到代码行
     public: true
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-jt5-4
-    text: "看栈：业务死循环/GC 线程狂转（GC 日志佐证）/正则回溯"
+    text: 看栈：业务死循环/GC 线程狂转（GC 日志佐证）/正则回溯
     public: true
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 CPU 打满的**标准三连**（按步骤排）：

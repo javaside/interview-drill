@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRH9Z1C3E5G7K9S1
 blockId: network/dns-cdn
-relatedBlocks:
-  []
-question: "DNS 域名解析的完整流程？"
+relatedBlocks: []
+question: DNS 域名解析的完整流程？
 cardType: sequence
 appliesTo: 通用
 frequency: high
@@ -12,60 +11,60 @@ followUps:
   - 为什么要有 TTL？
 keyPoints:
   - id: kp-dn1-1
-    text: "查本地缓存链：浏览器 → 系统 hosts → 本地 DNS 服务器"
+    text: 查本地缓存链：浏览器 → 系统 hosts → 本地 DNS 服务器
     public: false
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn1-2
-    text: "本地 DNS 未命中问根服务器：给出顶级域（.com）地址"
+    text: 本地 DNS 未命中问根服务器：给出顶级域（.com）地址
     public: false
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn1-3
-    text: "问顶级域服务器：给出权威 DNS 的地址"
+    text: 问顶级域服务器：给出权威 DNS 的地址
     public: false
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn1-4
-    text: "问权威 DNS：拿到域名 A 记录的正式答案"
+    text: 问权威 DNS：拿到域名 A 记录的正式答案
     public: false
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn1-5
-    text: "本地 DNS 缓存结果（按 TTL）并返回客户端"
+    text: 本地 DNS 缓存结果（按 TTL）并返回客户端
     public: false
     order: 5
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
 ---
 
 浏览器敲入域名到拿到 IP，是一条**逐级甩锅**的流水线：

@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RD2NVBJQYQFZNV35F
 blockId: spring/transaction-tx
-relatedBlocks:
-  []
-question: "@Transactional 什么时候会失效？"
+relatedBlocks: []
+question: '@Transactional 什么时候会失效？'
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 为什么默认只回滚 RuntimeException？
 keyPoints:
   - id: kp-tx2-1
-    text: "同类自调用：this 不走代理，事务拦截器根本没机会执行"
+    text: 同类自调用：this 不走代理，事务拦截器根本没机会执行
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx2-2
-    text: "方法非 public（CGLIB/代理拦截不到）"
+    text: 方法非 public（CGLIB/代理拦截不到）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx2-3
-    text: "异常被 catch 吞掉，或抛的是受检异常而未配 rollbackFor"
+    text: 异常被 catch 吞掉，或抛的是受检异常而未配 rollbackFor
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx2-4
-    text: "类不是 Spring Bean（自己 new 的）；或引擎不支持（MyISAM）"
+    text: 类不是 Spring Bean（自己 new 的）；或引擎不支持（MyISAM）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx2-5
-    text: "多线程里调用：事务绑定 ThreadLocal 连接，子线程无事务"
+    text: 多线程里调用：事务绑定 ThreadLocal 连接，子线程无事务
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **失效八宗罪**（高频考题，按踩坑率排）：

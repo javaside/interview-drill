@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSFM8NJKCXFZ3M12AVT
 blockId: concurrency/thread-pools
-relatedBlocks:
-  []
-question: "为什么不推荐 Executors 的快捷工厂？"
+relatedBlocks: []
+question: 为什么不推荐 Executors 的快捷工厂？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - OOM 是怎么发生的？
 keyPoints:
   - id: kp-tp5-1
-    text: "newFixedThreadPool/newSingleThreadExecutor：无界 LinkedBlockingQueue——任务堆积撑爆内存"
+    text: newFixedThreadPool/newSingleThreadExecutor：无界 LinkedBlockingQueue——任务堆积撑爆内存
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp5-2
-    text: "newCachedThreadPool：max 是 Integer.MAX_VALUE——线程数失控"
+    text: newCachedThreadPool：max 是 Integer.MAX_VALUE——线程数失控
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp5-3
-    text: "newScheduledThreadPool：同样无界队列"
+    text: newScheduledThreadPool：同样无界队列
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp5-4
-    text: "阿里规范：手动 new ThreadPoolExecutor——显式有界队列 + 明确参数 + 命名工厂"
+    text: 阿里规范：手动 new ThreadPoolExecutor——显式有界队列 + 明确参数 + 命名工厂
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 Executors 的方便面**三宗罪**：

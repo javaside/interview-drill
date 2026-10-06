@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEWBB5J408AHXNNYN8
 blockId: concurrency/aqs-lock
-relatedBlocks:
-  []
-question: "AQS（AbstractQueuedSynchronizer）的核心思想是什么？"
+relatedBlocks: []
+question: AQS（AbstractQueuedSynchronizer）的核心思想是什么？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 为什么模板方法模式是它的精髓？
 keyPoints:
   - id: kp-aq1-1
-    text: "一个 volatile int state + 一条 CLH 变体的阻塞队列，构成同步器骨架"
+    text: 一个 volatile int state + 一条 CLH 变体的阻塞队列，构成同步器骨架
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq1-2
-    text: "state 语义由子类定义：ReentrantLock 记重入次数、Semaphore 记许可数、CountDownLatch 记计数"
+    text: state 语义由子类定义：ReentrantLock 记重入次数、Semaphore 记许可数、CountDownLatch 记计数
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq1-3
-    text: "获取失败即入队 park；释放时唤醒后继节点"
+    text: 获取失败即入队 park；释放时唤醒后继节点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq1-4
-    text: "ReentrantLock/Semaphore/CountDownLatch/线程池的 Worker 全是 AQS 的徒子徒孙"
+    text: ReentrantLock/Semaphore/CountDownLatch/线程池的 Worker 全是 AQS 的徒子徒孙
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 JUC 半数同步工具的**共同骨架**——AQS 只出两样东西：

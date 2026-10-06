@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMBGBZPZS0NQDQD6AMZ
 blockId: jvm/class-loading
-relatedBlocks:
-  []
-question: "怎么打破双亲委派？"
+relatedBlocks: []
+question: 怎么打破双亲委派？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - Tomcat 为什么要打破？
 keyPoints:
   - id: kp-cl3-1
-    text: "重写 loadClass：改掉「先委托后自找」的流程本身"
+    text: 重写 loadClass：改掉「先委托后自找」的流程本身
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl3-2
-    text: "线程上下文类加载器：让父层代码能借子层加载器（SPI/JDBC 的实现发现）"
+    text: 线程上下文类加载器：让父层代码能借子层加载器（SPI/JDBC 的实现发现）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl3-3
-    text: "OSGi 与 Web 容器：模块化/应用隔离要求各自加载各自的类"
+    text: OSGi 与 Web 容器：模块化/应用隔离要求各自加载各自的类
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl3-4
-    text: "重写 findClass 只影响「怎么找」不破委派——推荐的扩展方式"
+    text: 重写 findClass 只影响「怎么找」不破委派——推荐的扩展方式
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 两条路数：

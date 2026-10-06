@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WZ2NN8RWDEQY5XT6X8
 blockId: mq/kafka-core
-relatedBlocks:
-  []
-question: "Kafka 为什么快？"
+relatedBlocks: []
+question: Kafka 为什么快？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 零拷贝快在哪？
 keyPoints:
   - id: kp-kc5-1
-    text: "顺序写：日志只追加（append）——磁盘顺序写接近内存"
+    text: 顺序写：日志只追加（append）——磁盘顺序写接近内存
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc5-2
-    text: "页缓存：读写都走 OS page cache——不自己管缓存"
+    text: 页缓存：读写都走 OS page cache——不自己管缓存
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc5-3
-    text: "零拷贝：sendfile 直送网卡，数据不经用户态"
+    text: 零拷贝：sendfile 直送网卡，数据不经用户态
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc5-4
-    text: "批量+压缩：攒批传输、端到端压缩，摊薄网络与 IO"
+    text: 批量+压缩：攒批传输、端到端压缩，摊薄网络与 IO
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc5-5
-    text: "分区并行：吞吐随 partition 数与 Broker 数水平扩展"
+    text: 分区并行：吞吐随 partition 数与 Broker 数水平扩展
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 Kafka 的性能是**四个「不折腾」**的叠加：

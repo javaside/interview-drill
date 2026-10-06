@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNS6E8G0K2M4N6Q8S1V
 blockId: os/process-thread
-relatedBlocks:
-  []
-question: "死锁的四个必要条件？怎么排查和预防？"
+relatedBlocks: []
+question: 死锁的四个必要条件？怎么排查和预防？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 破坏哪个条件最容易？
 keyPoints:
   - id: kp-pt5-1
-    text: "条件 1 互斥：资源一次只能一个线程用"
+    text: 条件 1 互斥：资源一次只能一个线程用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt5-2
-    text: "条件 2 持有并候：拿着 A 候 B（不释放手里的）"
+    text: 条件 2 持有并候：拿着 A 候 B（不释放手里的）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt5-3
-    text: "条件 3 不可剥夺：不能强行抢走别人手里的锁"
+    text: 条件 3 不可剥夺：不能强行抢走别人手里的锁
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt5-4
-    text: "条件 4 循环候：A 候 B、B 候 A 成环——四条全满足才死锁"
+    text: 条件 4 循环候：A 候 B、B 候 A 成环——四条全满足才死锁
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt5-5
-    text: "工程三板斧：全局加锁顺序 / tryLock 超时让路 / 一次性申请全部资源"
+    text: 工程三板斧：全局加锁顺序 / tryLock 超时让路 / 一次性申请全部资源
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
 ---
 
 死锁是**环**：每人手里攥一把钥匙，都在候对方手里那把——四个条件**缺一不死**：

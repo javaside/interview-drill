@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CM3PYDPV0D8474B4VG
 blockId: distributed/sharding
-relatedBlocks:
-  []
-question: "分库分表的扩容（数据迁移）怎么做？"
+relatedBlocks: []
+question: 分库分表的扩容（数据迁移）怎么做？
 cardType: sequence
 appliesTo: 通用
 frequency: high
@@ -11,60 +10,60 @@ followUps:
   - 为什么要双写不直接切？
 keyPoints:
   - id: kp-sh4-1
-    text: "双写：新旧两套同时写（旧为主）"
+    text: 双写：新旧两套同时写（旧为主）
     public: false
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh4-2
-    text: "存量迁移：历史数据批量刷到新表（增量靠双写追平）"
+    text: 存量迁移：历史数据批量刷到新表（增量靠双写追平）
     public: false
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh4-3
-    text: "校验：新旧数据比对（抽样+全量 checksum）"
+    text: 校验：新旧数据比对（抽样+全量 checksum）
     public: false
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh4-4
-    text: "切读：灰度把读流量切到新表（可回滚）"
+    text: 切读：灰度把读流量切到新表（可回滚）
     public: false
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh4-5
-    text: "收尾：全量切换后停写旧表，观察期后下线"
+    text: 收尾：全量切换后停写旧表，观察期后下线
     public: false
     order: 5
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **平滑扩容五步法**（不停机迁移的工业标准，按序排）：

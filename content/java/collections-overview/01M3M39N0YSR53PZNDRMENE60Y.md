@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0YSR53PZNDRMENE60Y
 blockId: java/collections-overview
-relatedBlocks:
-  []
-question: "Comparable 和 Comparator 的区别？"
+relatedBlocks: []
+question: Comparable 和 Comparator 的区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 为什么 JDK 类推荐 Comparable 与 equals 一致？
 keyPoints:
   - id: kp-co5-1
-    text: "Comparable：类自身实现 compareTo，定义「天生排序」（内部比较器）"
+    text: Comparable：类自身实现 compareTo，定义「天生排序」（内部比较器）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-co5-2
-    text: "Comparator：类外的独立比较器，定义临时排序策略"
+    text: Comparator：类外的独立比较器，定义临时排序策略
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-co5-3
-    text: "TreeMap/TreeSet/Arrays.sort 均可选其一"
+    text: TreeMap/TreeSet/Arrays.sort 均可选其一
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-co5-4
-    text: "Comparator 可组合链（thenComparing）与逆转（reversed）"
+    text: Comparator 可组合链（thenComparing）与逆转（reversed）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 两条路给对象定「大小」：

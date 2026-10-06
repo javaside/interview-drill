@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEDGSJTK9Y680HTJJS
 blockId: concurrency/aqs-lock
-relatedBlocks:
-  []
-question: "ReadWriteLock 的适用场景和坑？"
+relatedBlocks: []
+question: ReadWriteLock 的适用场景和坑？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,48 +10,45 @@ followUps:
   - 锁降级怎么写、为什么安全？
 keyPoints:
   - id: kp-aq4-1
-    text: "读写分离：读读共存、读写/写写互斥——读多写少场景吞吐起飞"
+    text: 读写分离：读读共存、读写/写写互斥——读多写少场景吞吐起飞
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq4-2
-    text: "ReentrantReadWriteLock：可重入、支持锁降级（写→读）"
+    text: ReentrantReadWriteLock：可重入、支持锁降级（写→读）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq4-3
-    text: "坑：读线程长期占据可饿死写（写饥饿）——公平模式可解但降吞吐"
+    text: 坑：读线程长期占据可饿死写（写饥饿）——公平模式可解但降吞吐
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq4-4
-    text: "StampedLock 的乐观读：不拿锁先读，验证戳未变即有效——读路径零锁"
+    text: StampedLock 的乐观读：不拿锁先读，验证戳未变即有效——读路径零锁
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 **读写锁**按用途拆锁：**读锁**大家共享（读读不互斥）、**写锁**独占（读写/写写互斥）。读多写少（配置、缓存、词典）的吞吐救星。

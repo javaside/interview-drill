@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0ZSX6Z9F21G4KHMHHW
 blockId: java/exceptions
-relatedBlocks:
-  []
-question: "finally 的执行时机和坑？"
+relatedBlocks: []
+question: finally 的执行时机和坑？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - finally 能「取消」return 吗？
 keyPoints:
   - id: kp-ex2-1
-    text: "正常/异常/return 三种路径都会先走 finally 再结束方法"
+    text: 正常/异常/return 三种路径都会先走 finally 再结束方法
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex2-2
-    text: "坑 1：finally 里 return 会吞掉 try 的返回值与异常"
+    text: 坑 1：finally 里 return 会吞掉 try 的返回值与异常
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex2-3
-    text: "坑 2：finally 里抛异常会顶替 try 的原始异常"
+    text: 坑 2：finally 里抛异常会顶替 try 的原始异常
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex2-4
-    text: "finally 在 return 表达式求值之后、真正返回之前执行"
+    text: finally 在 return 表达式求值之后、真正返回之前执行
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 **finally 必然执行**——try 里 return、抛异常都拦不住它；顺序是：return 的**表达式先求值**（值放一边）→ 执行 finally → 才真正返回。

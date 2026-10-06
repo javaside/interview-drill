@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMMT3RDZB3WJX4WY65
 blockId: distributed/high-availability
-relatedBlocks:
-  []
-question: "优雅停机为什么重要？"
+relatedBlocks: []
+question: 优雅停机为什么重要？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 滚动发布为什么会抖动？
 keyPoints:
   - id: kp-ha3-1
-    text: "直接 kill：在途请求被拦腰斩断——用户看到 502"
+    text: 直接 kill：在途请求被拦腰斩断——用户看到 502
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha3-2
-    text: "优雅停机：先摘流量→处理完存量→再退出"
+    text: 优雅停机：先摘流量→处理完存量→再退出
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha3-3q
-    text: "K8s：preStop 钩子 + terminationGracePeriodSeconds 配合"
+    text: K8s：preStop 钩子 + terminationGracePeriodSeconds 配合
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha3-4
-    text: "注册中心注销先行：消费者缓存刷新后才真下线"
+    text: 注册中心注销先行：消费者缓存刷新后才真下线
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **直接 kill -9** 的三宗罪：在途请求斩断（用户 502）、注册中心还认为你活着（流量继续来、连接拒绝）、消息处理一半（没 ack，重投还算好的）。

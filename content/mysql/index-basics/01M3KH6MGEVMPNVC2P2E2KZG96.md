@@ -13,13 +13,13 @@ keyPoints:
   - id: kp-lk-1
     text: 二级索引叶子只存主键，需再回聚簇索引取整行的第二次查找
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
 ---
 
 一句话：**查了两次树**。

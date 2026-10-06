@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGR5N4Y995MHGC2TXJ
 blockId: rpc/service-governance
-relatedBlocks:
-  []
-question: "令牌桶和漏桶的区别？"
+relatedBlocks: []
+question: 令牌桶和漏桶的区别？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 秒杀场景选哪个？
 keyPoints:
   - id: kp-sg2-1
-    text: "漏桶：恒定速率流出——绝对整流（不许突发）"
+    text: 漏桶：恒定速率流出——绝对整流（不许突发）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg2-2
-    text: "令牌桶：恒速放令牌入桶，请求拿到令牌才走——允许攒额度后的突发"
+    text: 令牌桶：恒速放令牌入桶，请求拿到令牌才走——允许攒额度后的突发
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg2-3
-    text: "桶=缓冲容量：满了拒绝/排队"
+    text: 桶=缓冲容量：满了拒绝/排队
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg2-4
-    text: "Guava RateLimiter 即令牌桶；Nginx limit_req 是漏桶风格（burst 缓冲）"
+    text: Guava RateLimiter 即令牌桶；Nginx limit_req 是漏桶风格（burst 缓冲）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 两种**整流器**，差在**对突发的态度**：

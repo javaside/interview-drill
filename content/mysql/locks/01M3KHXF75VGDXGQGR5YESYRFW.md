@@ -2,7 +2,7 @@
 id: 01M3KHXF75VGDXGQGR5YESYRFW
 blockId: mysql/locks
 relatedBlocks: []
-question: "死锁是怎么产生的？InnoDB 怎么处理？"
+question: 死锁是怎么产生的？InnoDB 怎么处理？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - show engine innodb status 怎么看死锁信息？
 keyPoints:
   - id: kp-lk4-1
-    text: "两个事务互相持有对方需要的锁，形成循环依赖"
+    text: 两个事务互相持有对方需要的锁，形成循环依赖
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk4-2
-    text: "死锁检测：发现循环依赖后回滚持锁最少的一方"
+    text: 死锁检测：发现循环依赖后回滚持锁最少的一方
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk4-3
-    text: "innodb_deadlock_detect=off 时靠锁超时（默认 50s）兜底"
+    text: innodb_deadlock_detect=off 时靠锁超时（默认 50s）兜底
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk4-4
-    text: "预防：事务小而快、按相同顺序访问资源、索引避免无效锁扩大"
+    text: 预防：事务小而快、按相同顺序访问资源、索引避免无效锁扩大
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

@@ -2,7 +2,7 @@
 id: 01M3KHXF75EQAKBS12MY82KVGM
 blockId: mysql/locks
 relatedBlocks: []
-question: "记录锁、间隙锁、next-key lock 分别是什么？"
+question: 记录锁、间隙锁、next-key lock 分别是什么？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - RR 和 RC 下间隙锁的行为差异？
 keyPoints:
   - id: kp-lk3-1
-    text: "记录锁 Record Lock：锁住单条索引记录本身"
+    text: 记录锁 Record Lock：锁住单条索引记录本身
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk3-2
-    text: "间隙锁 Gap Lock：锁住两条记录之间的开区间，阻止区间内插入新行"
+    text: 间隙锁 Gap Lock：锁住两条记录之间的开区间，阻止区间内插入新行
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk3-3
-    text: "next-key lock = 记录锁 + 它前面的间隙，左开右闭区间，RR 防幻读的当前读手段"
+    text: next-key lock = 记录锁 + 它前面的间隙，左开右闭区间，RR 防幻读的当前读手段
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk3-4
-    text: "唯一索引按唯一值命中时，next-key 退化为纯记录锁"
+    text: 唯一索引按唯一值命中时，next-key 退化为纯记录锁
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

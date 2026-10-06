@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0X0G14QQV3EYXSHC61
 blockId: java/language-basics
-relatedBlocks:
-  []
-question: "重载和重写的区别？"
+relatedBlocks: []
+question: 重载和重写的区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 重载方法的选取发生在什么阶段？
 keyPoints:
   - id: kp-lb5-1
-    text: "重写 Override：子类重新实现父类/接口的同签名方法，运行时多态"
+    text: 重写 Override：子类重新实现父类/接口的同签名方法，运行时多态
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-lb5-2
-    text: "重载 Overload：同类中同名但参数列表不同的多个方法，编译期绑定"
+    text: 重载 Overload：同类中同名但参数列表不同的多个方法，编译期绑定
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-lb5-3
-    text: "重写要求：签名相同、权限不收窄、返回类型可协变、受检异常不扩大"
+    text: 重写要求：签名相同、权限不收窄、返回类型可协变、受检异常不扩大
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-lb5-4
-    text: "重载与返回类型无关；重写构成了动态分派的基础"
+    text: 重载与返回类型无关；重写构成了动态分派的基础
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 **重写（Override）**——**纵向**，子类改父类：签名一模一样，实现换成自己的。调用哪个看**运行时**对象的实际类型（多态的来源：父类引用指向子类对象，调的是子类版本）。

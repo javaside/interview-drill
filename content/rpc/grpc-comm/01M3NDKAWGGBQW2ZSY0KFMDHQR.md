@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGGBQW2ZSY0KFMDHQR
 blockId: rpc/grpc-comm
-relatedBlocks:
-  []
-question: "API 版本管理怎么做？"
+relatedBlocks: []
+question: API 版本管理怎么做？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: mid
@@ -11,55 +10,55 @@ followUps:
   - 为什么不建议 URI 里放版本号以外还改路径结构？
 keyPoints:
   - id: kp-gr5-1
-    text: "URL 路径版本 /v1/——直观、可路由、最常用"
+    text: URL 路径版本 /v1/——直观、可路由、最常用
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr5-2
-    text: "Header 版本（Accept-Version）——URL 干净但不可见难调试"
+    text: Header 版本（Accept-Version）——URL 干净但不可见难调试
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr5-3
-    text: "兼容演进优先：只加字段不删不改语义——尽量不升版本"
+    text: 兼容演进优先：只加字段不删不改语义——尽量不升版本
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr5-4
-    text: "废弃流程：标记 deprecated→公告期→双版本并存→下线旧版"
+    text: 废弃流程：标记 deprecated→公告期→双版本并存→下线旧版
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr5-5
-    text: "gRPC/IDL 走 proto 包名版本（api.v2.OrderService）"
+    text: gRPC/IDL 走 proto 包名版本（api.v2.OrderService）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **版本=兼容性承诺的边界**。三种放法：

@@ -3,7 +3,7 @@ id: 01M3MFN29RF62WP8ZD6T4TYK8H
 blockId: spring/bean-lifecycle
 relatedBlocks:
   - spring/ioc-container
-question: "Spring 怎么解决循环依赖？"
+question: Spring 怎么解决循环依赖？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,65 +11,65 @@ followUps:
   - 为什么需要第三级缓存存工厂？
 keyPoints:
   - id: kp-bl5-1
-    text: "三级缓存：单例池 / 早期工厂池 / 原始对象池"
+    text: 三级缓存：单例池 / 早期工厂池 / 原始对象池
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-bl5-2
-    text: "singletonObjects：成品；earlySingletonObjects：半成品；singletonFactories：提前暴露的工厂"
+    text: singletonObjects：成品；earlySingletonObjects：半成品；singletonFactories：提前暴露的工厂
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-bl5-3
-    text: "A 实例化后先把工厂放三级缓存，B 要 A 时从工厂拿早期引用"
+    text: A 实例化后先把工厂放三级缓存，B 要 A 时从工厂拿早期引用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-bl5-4
-    text: "只解 setter/字段注入的单例循环；构造器循环与 prototype 直接失败"
+    text: 只解 setter/字段注入的单例循环；构造器循环与 prototype 直接失败
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-bl5-5
-    text: "第三级存工厂而非对象：让 AOP 代理的生成推迟到真正被提前需要时"
+    text: 第三级存工厂而非对象：让 AOP 代理的生成推迟到真正被提前需要时
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-bl5-6
-    text: "Boot 2.6 起默认禁止循环依赖（allow-circular-references=false）"
+    text: Boot 2.6 起默认禁止循环依赖（allow-circular-references=false）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **循环依赖**（A 要 B、B 要 A）的解法 = **三级缓存的提前暴露**：

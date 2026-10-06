@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRV9D9F1H3J5M
 blockId: network/io-multiplexing
-relatedBlocks:
-  []
-question: "零拷贝是什么？sendfile 和 mmap 工作在哪层？"
+relatedBlocks: []
+question: 零拷贝是什么？sendfile 和 mmap 工作在哪层？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 为什么叫零拷贝却还有拷贝？
 keyPoints:
   - id: kp-io5-1
-    text: "传统读发四次拷贝：磁盘→页缓存→用户态→socket 缓冲→网卡"
+    text: 传统读发四次拷贝：磁盘→页缓存→用户态→socket 缓冲→网卡
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'sendfile(2)'
+      locator: sendfile(2)
   - id: kp-io5-2
-    text: "sendfile：内核里页缓存直达网卡——省两次用户态来回"
+    text: sendfile：内核里页缓存直达网卡——省两次用户态来回
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'sendfile(2)'
+      locator: sendfile(2)
   - id: kp-io5-3
-    text: "mmap+write：映射页缓存进用户地址空间，省一次拷贝"
+    text: mmap+write：映射页缓存进用户地址空间，省一次拷贝
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'sendfile(2)'
+      locator: sendfile(2)
   - id: kp-io5-4
-    text: "scatter-gather（DMA）：只传描述符不搬数据，CPU 零参与"
+    text: scatter-gather（DMA）：只传描述符不搬数据，CPU 零参与
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'sendfile(2)'
+      locator: sendfile(2)
   - id: kp-io5-5
-    text: "收益场景：静态文件发送/消息中间件落盘转发；应用要改数据则不适用"
+    text: 收益场景：静态文件发送/消息中间件落盘转发；应用要改数据则不适用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'sendfile(2)'
+      locator: sendfile(2)
 ---
 
 「零拷贝」= **砍掉不必要的数据搬运与 CPU 参与**。传统 `read+write` 发文件：

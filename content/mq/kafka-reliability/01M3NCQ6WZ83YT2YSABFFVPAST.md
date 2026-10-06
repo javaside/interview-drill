@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WZ83YT2YSABFFVPAST
 blockId: mq/kafka-reliability
-relatedBlocks:
-  []
-question: "刷盘策略和持久化的关系？"
+relatedBlocks: []
+question: 刷盘策略和持久化的关系？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: mid
@@ -11,65 +10,65 @@ followUps:
   - 为什么 Kafka 不默认每条刷盘？
 keyPoints:
   - id: kp-kr4-1
-    text: "消息先写页缓存（OS）——log.flush.interval 默认交给 OS 择机刷盘"
+    text: 消息先写页缓存（OS）——log.flush.interval 默认交给 OS 择机刷盘
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr4-2
-    text: "机器整体断电页缓存丢——多副本才是可靠性主轴"
+    text: 机器整体断电页缓存丢——多副本才是可靠性主轴
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr4-3
-    text: "单副本+强制刷盘（flush.messages=1）吞吐暴跌"
+    text: 单副本+强制刷盘（flush.messages=1）吞吐暴跌
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr4-4
-    text: "副本跨机架/可用区——物理故障域隔离"
+    text: 副本跨机架/可用区——物理故障域隔离
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr4-5
-    text: "副本放置策略应跨故障域分布"
+    text: 副本放置策略应跨故障域分布
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr4-6
-    text: "云盘自身的冗余层与 Kafka 副本互补"
+    text: 云盘自身的冗余层与 Kafka 副本互补
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **写入 ≠ 落盘**：消息先入**页缓存**（内存），由 OS 择机批量刷盘（Kafka 默认不主动 fsync——顺序写+页缓存已经极快，**每条强刷吞吐暴跌**）。

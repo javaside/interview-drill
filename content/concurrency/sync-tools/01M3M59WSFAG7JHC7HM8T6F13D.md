@@ -3,7 +3,7 @@ id: 01M3M59WSFAG7JHC7HM8T6F13D
 blockId: concurrency/sync-tools
 relatedBlocks:
   - concurrency/aqs-lock
-question: "CountDownLatch 和 CyclicBarrier 的区别？"
+question: CountDownLatch 和 CyclicBarrier 的区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +11,45 @@ followUps:
   - 多轮迭代计算为什么选 Barrier？
 keyPoints:
   - id: kp-st1-1
-    text: "Latch：主线程候 N 个干活的完成——计数递减到零放行（一次性）"
+    text: Latch：主线程候 N 个干活的完成——计数递减到零放行（一次性）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-st1-2
-    text: "Barrier：N 个线程互候、到齐一起过闸（可复用 reset）"
+    text: Barrier：N 个线程互候、到齐一起过闸（可复用 reset）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-st1-3
-    text: "Latch 的事件是「别人做完事」；Barrier 的事件是「大家到齐」"
+    text: Latch 的事件是「别人做完事」；Barrier 的事件是「大家到齐」
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-st1-4
-    text: "await 阻塞候行；countDown 或到达不打断已通过者"
+    text: await 阻塞候行；countDown 或到达不打断已通过者
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
 ---
 
 两个「凑齐再走」的工具，**主语不同**：

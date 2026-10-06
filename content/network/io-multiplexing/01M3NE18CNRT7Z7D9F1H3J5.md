@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRT7Z7D9F1H3J5
 blockId: network/io-multiplexing
-relatedBlocks:
-  []
-question: "Reactor 模式怎么组织高并发服务？"
+relatedBlocks: []
+question: Reactor 模式怎么组织高并发服务？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - Netty 的 boss/worker 对应什么？
 keyPoints:
   - id: kp-io4-1
-    text: "Reactor=事件循环：epoll 候事件，就绪后分发（dispatch）给处理器"
+    text: Reactor=事件循环：epoll 候事件，就绪后分发（dispatch）给处理器
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io4-2
-    text: "单 Reactor 单线程：Redis 模型——简单无锁，但慢命令拖全场"
+    text: 单 Reactor 单线程：Redis 模型——简单无锁，但慢命令拖全场
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io4-3
-    text: "单 Reactor 多 worker：IO 分发，计算丢线程池——业务隔离"
+    text: 单 Reactor 多 worker：IO 分发，计算丢线程池——业务隔离
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io4-4
-    text: "主从 Reactor：主收连接、从各管一批连接的 IO（Netty/Memcached）"
+    text: 主从 Reactor：主收连接、从各管一批连接的 IO（Netty/Memcached）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io4-5
-    text: "对偶 Proactor：事件是「完成通知」而非「就绪通知」——真异步 IO 的框架形态"
+    text: 对偶 Proactor：事件是「完成通知」而非「就绪通知」——真异步 IO 的框架形态
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
 ---
 
 **Reactor** 把「一个线程候一批 fd + 就绪分发」固化成架构骨架，三代演进：

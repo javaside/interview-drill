@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WZC00C1NKK1Y7X64MR
 blockId: mq/kafka-reliability
-relatedBlocks:
-  []
-question: "消费者怎么处理消息才算安全？"
+relatedBlocks: []
+question: 消费者怎么处理消息才算安全？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 重试几次合适？
 keyPoints:
   - id: kp-kr5-1
-    text: "先处理业务、成功后手动提交 offset（at-least-once）"
+    text: 先处理业务、成功后手动提交 offset（at-least-once）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr5-2
-    text: "业务idempotent：唯一键/状态机/Redis 去重拦住重投"
+    text: 业务idempotent：唯一键/状态机/Redis 去重拦住重投
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr5-3
-    text: "处理失败：重试有限次后进死信（retry topic / DLQ）"
+    text: 处理失败：重试有限次后进死信（retry topic / DLQ）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr5-4
-    text: "禁止：先提交后处理（丢消息）、异常静默吞掉（假成功）"
+    text: 禁止：先提交后处理（丢消息）、异常静默吞掉（假成功）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr5-5
-    text: "DefaultErrorHandler 的退避策略可编程配置"
+    text: DefaultErrorHandler 的退避策略可编程配置
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 消费侧的**安全公式 = 手动提交 + idempotent + 死信出口**：

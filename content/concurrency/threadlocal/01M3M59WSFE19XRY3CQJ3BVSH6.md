@@ -3,7 +3,7 @@ id: 01M3M59WSFE19XRY3CQJ3BVSH6
 blockId: concurrency/threadlocal
 relatedBlocks:
   - concurrency/thread-pools
-question: "父线程修改 ThreadLocal 后子线程能看到吗？"
+question: 父线程修改 ThreadLocal 后子线程能看到吗？
 cardType: judgment
 conclusion: 'no'
 appliesTo: Java 17+
@@ -12,38 +12,35 @@ followUps:
   - 什么时候该放弃 ThreadLocal 改显式传参？
 keyPoints:
   - id: kp-tl5-1
-    text: "普通 ThreadLocal：完全看不到，各线程各一张表"
+    text: 普通 ThreadLocal：完全看不到，各线程各一张表
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ThreadLocal.html
-      locator: 'ThreadLocal'
-
+      locator: ThreadLocal
   - id: kp-tl5-2
-    text: "InheritableThreadLocal：创建子线程那一刻的快照可继承"
+    text: InheritableThreadLocal：创建子线程那一刻的快照可继承
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ThreadLocal.html
-      locator: 'ThreadLocal'
-
+      locator: ThreadLocal
   - id: kp-tl5-3
-    text: "线程池复用线程：连 ITL 的创建时机都没有，需要 TTL 搬运"
+    text: 线程池复用线程：连 ITL 的创建时机都没有，需要 TTL 搬运
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ThreadLocal.html
-      locator: 'ThreadLocal'
-
+      locator: ThreadLocal
 ---
 
 **看不到**——普通 ThreadLocal 的隔离是**彻底**的：父线程 set 的值在子线程 get 是 null（两张独立的表）。

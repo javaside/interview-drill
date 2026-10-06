@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNS0K2M4N6Q8S1V3X5Z
 blockId: os/memory-mgmt
-relatedBlocks:
-  []
-question: "OOM 是怎么发生的？内存泄漏怎么排查？"
+relatedBlocks: []
+question: OOM 是怎么发生的？内存泄漏怎么排查？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - RSS 和 VSZ 看哪个？
 keyPoints:
   - id: kp-mm4-1
-    text: "OOM：物理+swap 都不够，内核挑「最贵」进程杀掉解围"
+    text: OOM：物理+swap 都不够，内核挑「最贵」进程杀掉解围
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'oom(7)'
+      locator: oom(7)
   - id: kp-mm4-2
-    text: "OOM killer 评分：RSS 越大越先死（oom_score）"
+    text: OOM killer 评分：RSS 越大越先死（oom_score）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'oom(7)'
+      locator: oom(7)
   - id: kp-mm4-3
-    text: "泄漏形态：堆内存没 free/连接 fd 没关/缓存无上限只进不出"
+    text: 泄漏形态：堆内存没 free/连接 fd 没关/缓存无上限只进不出
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'oom(7)'
+      locator: oom(7)
   - id: kp-mm4-4
-    text: "排查链：free→top 排序→进程内工具（jmap/heap profile）定位分配点"
+    text: 排查链：free→top 排序→进程内工具（jmap/heap profile）定位分配点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'oom(7)'
+      locator: oom(7)
   - id: kp-mm4-5
-    text: "防线：容器配 memory limit+告警；缓存设上限与过期"
+    text: 防线：容器配 memory limit+告警；缓存设上限与过期
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'oom(7)'
+      locator: oom(7)
 ---
 
 **OOM**（Out Of Memory）是内核的**弃车保帅**：物理内存+swap 全线告急 → 触发 OOM killer → 按 **oom_score**（≈RSS 越大分越高）挑一个「最肥」的进程 SIGKILL。**容器里更常见**：cgroup 内存超 limit → **OOMKilled**（exit code 137）——只看本容器账本，整机内存再空也没用（Java 容器事故的头号来源：JVM 没感知 cgroup limit，堆+元空间+堆外超限被杀）。

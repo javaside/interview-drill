@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMBPQKZ8V2N78WW7RWH
 blockId: jvm/gc-basics
-relatedBlocks:
-  []
-question: "什么是安全点（safepoint）？"
+relatedBlocks: []
+question: 什么是安全点（safepoint）？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 为什么 long 循环会让 GC 卡住？
 keyPoints:
   - id: kp-gb4-1
-    text: "线程可以安全停车接受 GC 检查的位置：方法调用/循环回边/异常跳转"
+    text: 线程可以安全停车接受 GC 检查的位置：方法调用/循环回边/异常跳转
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gb4-2
-    text: "GC 发起时全线程跑到最近安全点停机（STW 的起点）"
+    text: GC 发起时全线程跑到最近安全点停机（STW 的起点）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gb4-3
-    text: "OopMap 在安全点记录栈与寄存器里的引用位置"
+    text: OopMap 在安全点记录栈与寄存器里的引用位置
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gb4-4
-    text: "可数 int 长循环没有安全点——其他线程全在候它"
+    text: 可数 int 长循环没有安全点——其他线程全在候它
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 GC 要扫描引用，但线程**不能在任意指令处被打断**（寄存器/栈里引用状态不明）。**安全点**=JVM 挑好的「**可以安全停车**」的位置。

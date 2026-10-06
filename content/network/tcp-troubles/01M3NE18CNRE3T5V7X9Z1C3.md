@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRE3T5V7X9Z1C3
 blockId: network/tcp-troubles
-relatedBlocks:
-  []
-question: "TCP keepalive 和应用层心跳怎么选？"
+relatedBlocks: []
+question: TCP keepalive 和应用层心跳怎么选？
 cardType: comparison
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 心跳间隔怎么定？
 keyPoints:
   - id: kp-tt3-1
-    text: "TCP keepalive：内核发的探测空包——默认 2 小时才起探"
+    text: TCP keepalive：内核发的探测空包——默认 2 小时才起探
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tt3-2
-    text: "应用心跳：业务自发的 ping/pong——间隔语义自己定"
+    text: 应用心跳：业务自发的 ping/pong——间隔语义自己定
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tt3-3
-    text: "共同目的：探活对端是否还在，及时回收死连接资源"
+    text: 共同目的：探活对端是否还在，及时回收死连接资源
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tt3-4
-    text: "心跳优先：可控间隔、跨中间盒可靠（LB/防火墙会清空闲流表）"
+    text: 心跳优先：可控间隔、跨中间盒可靠（LB/防火墙会清空闲流表）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tt3-5
-    text: "心跳顺带承担连接可用性预热与 RTT 测量的副业"
+    text: 心跳顺带承担连接可用性预热与 RTT 测量的副业
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
 ---
 
 两类探活都在回答「**对面还活着吗**」——不探的后果是**半开连接**（对端断电/拔网线，你这头永远不知道，连接与内存白占）：

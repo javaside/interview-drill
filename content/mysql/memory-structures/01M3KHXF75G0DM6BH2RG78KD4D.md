@@ -2,7 +2,7 @@
 id: 01M3KHXF75G0DM6BH2RG78KD4D
 blockId: mysql/memory-structures
 relatedBlocks: []
-question: "Change Buffer 是什么？什么时候失效？"
+question: Change Buffer 是什么？什么时候失效？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: mid
@@ -10,9 +10,9 @@ followUps:
   - 为什么唯一索引用不了 change buffer？
 keyPoints:
   - id: kp-mem3-1
-    text: "对唯一二级索引的 DML 先缓存进 change buffer 免立刻读盘，后续读取或 merge 时合并"
+    text: 对唯一二级索引的 DML 先缓存进 change buffer 免立刻读盘，后续读取或 merge 时合并
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem3-2
-    text: "写多读少且索引页常不在缓存的负载收益最大"
+    text: 写多读少且索引页常不在缓存的负载收益最大
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem3-3
-    text: "唯一索引用不了 change buffer——插入前必须读页验证唯一性"
+    text: 唯一索引用不了 change buffer——插入前必须读页验证唯一性
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

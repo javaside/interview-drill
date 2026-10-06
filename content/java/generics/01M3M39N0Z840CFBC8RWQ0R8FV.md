@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0Z840CFBC8RWQ0R8FV
 blockId: java/generics
-relatedBlocks:
-  []
-question: "什么是桥方法？"
+relatedBlocks: []
+question: 什么是桥方法？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: low
@@ -11,35 +10,35 @@ followUps:
   - 什么时候能在反编译里看到它？
 keyPoints:
   - id: kp-gn5-1
-    text: "编译器为擦除后多态生成的合成转发方法（synthetic bridge）"
+    text: 编译器为擦除后多态生成的合成转发方法（synthetic bridge）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-gn5-2
-    text: "反射按名字找方法时需过滤 isBridge 避免重复命中"
+    text: 反射按名字找方法时需过滤 isBridge 避免重复命中
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-gn5-3
-    text: "父类引用调用落在桥上，桥强转参数后转调擦除前的具体版本"
+    text: 父类引用调用落在桥上，桥强转参数后转调擦除前的具体版本
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 子类重写泛型父类方法时，擦除会把父类方法签名变掉（`compare(T o1)` → `compare(Object)`）——**多态要炸**。编译器默默补一个**桥方法**（synthetic bridge）：

@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29S9602B8ZHYVXN5ZQX
 blockId: spring/security-basics
-relatedBlocks:
-  []
-question: "认证和鉴权的区别？"
+relatedBlocks: []
+question: 认证和鉴权的区别？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 为什么 401 和 403 要分开？
 keyPoints:
   - id: kp-sec2-1
-    text: "认证 Authentication：你是谁（登录/JWT 验签）"
+    text: 认证 Authentication：你是谁（登录/JWT 验签）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec2-2
-    text: "鉴权 Authorization：你能干什么（角色/权限校验）"
+    text: 鉴权 Authorization：你能干什么（角色/权限校验）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec2-3
-    text: "Spring 中分离：AuthenticationManager 管认证、AccessDecisionManager/AuthorizationManager 管鉴权"
+    text: Spring 中分离：AuthenticationManager 管认证、AccessDecisionManager/AuthorizationManager 管鉴权
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec2-4
-    text: "401=未认证；403=已认证但无权限"
+    text: 401=未认证；403=已认证但无权限
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 两道关：

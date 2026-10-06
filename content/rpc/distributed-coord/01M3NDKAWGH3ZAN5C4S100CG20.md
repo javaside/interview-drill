@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGH3ZAN5C4S100CG20
 blockId: rpc/distributed-coord
-relatedBlocks:
-  []
-question: "分布式锁的三种实现与取舍？"
+relatedBlocks: []
+question: 分布式锁的三种实现与取舍？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - Redis 锁的看门狗是什么？
 keyPoints:
   - id: kp-dc3-1
-    text: "DB 唯一键/乐观锁：简单慢——低频够用"
+    text: DB 唯一键/乐观锁：简单慢——低频够用
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc3-2
-    text: "Redis SETNX+过期+Lua 释放：性能高；但主从切换丢锁（Redlock 争议）"
+    text: Redis SETNX+过期+Lua 释放：性能高；但主从切换丢锁（Redlock 争议）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc3-3
-    text: "ZK 临时顺序节点+watch 前驱：可靠无惊群——一致性场景首选"
+    text: ZK 临时顺序节点+watch 前驱：可靠无惊群——一致性场景首选
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc3-4
-    text: "看家三件：互斥/无死锁（超时兜底）/容错（锁服务挂了怎么办）"
+    text: 看家三件：互斥/无死锁（超时兜底）/容错（锁服务挂了怎么办）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc3-5
-    text: "谨慎长锁：锁内做事要短，业务级防重才是根本"
+    text: 谨慎长锁：锁内做事要短，业务级防重才是根本
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **三种锁实现按「快/稳/简」取舍**：

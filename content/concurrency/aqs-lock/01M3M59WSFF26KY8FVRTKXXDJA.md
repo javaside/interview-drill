@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSFF26KY8FVRTKXXDJA
 blockId: concurrency/aqs-lock
-relatedBlocks:
-  []
-question: "AQS 的独占模式和共享模式有什么区别？"
+relatedBlocks: []
+question: AQS 的独占模式和共享模式有什么区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 读写锁是怎么同时用两种模式的？
 keyPoints:
   - id: kp-aq5-1
-    text: "独占：同一时刻一个线程持有（ReentrantLock、线程池 Worker）"
+    text: 独占：同一时刻一个线程持有（ReentrantLock、线程池 Worker）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-aq5-2
-    text: "共享：可多线程同时持有（Semaphore、CountDownLatch、读写锁的读锁）"
+    text: 共享：可多线程同时持有（Semaphore、CountDownLatch、读写锁的读锁）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-aq5-3
-    text: "独占释放只唤醒队头一个；共享释放沿队列连续唤醒（传播）"
+    text: 独占释放只唤醒队头一个；共享释放沿队列连续唤醒（传播）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-aq5-4
-    text: "子类按需实现 tryAcquire/tryRelease 或 tryAcquireShared/tryReleaseShared 其一"
+    text: 子类按需实现 tryAcquire/tryRelease 或 tryAcquireShared/tryReleaseShared 其一
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
 ---
 
 AQS 的两种**占用姿势**：

@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMA90JZ179PX8RG2VT9
 blockId: jvm/memory-areas
-relatedBlocks:
-  []
-question: "为什么 JDK 8 用元空间替换永久代？"
+relatedBlocks: []
+question: 为什么 JDK 8 用元空间替换永久代？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 永久代的经典 OOM 场景？
 keyPoints:
   - id: kp-ma4-1
-    text: "永久代在堆内、容量开局钉死——动态类一多就 OOM"
+    text: 永久代在堆内、容量开局钉死——动态类一多就 OOM
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma4-2
-    text: "元空间在本机内存，默认只受物理内存限"
+    text: 元空间在本机内存，默认只受物理内存限
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma4-3
-    text: "与 JRockit 融合的架构统一（后者无永久代概念）"
+    text: 与 JRockit 融合的架构统一（后者无永久代概念）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma4-4
-    text: "字符串常量池 7 起已移入堆"
+    text: 字符串常量池 7 起已移入堆
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 **永久代（PermGen）**是历史包袱：把「方法区」实现在 **JVM 堆里**，容量开局钉死——动态类一多（CGLib、JSP、脚本引擎）直接 **PermGen OOM**，运维只能拍脑袋调参。

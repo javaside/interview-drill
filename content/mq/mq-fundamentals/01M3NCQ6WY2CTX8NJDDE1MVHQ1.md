@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WY2CTX8NJDDE1MVHQ1
 blockId: mq/mq-fundamentals
-relatedBlocks:
-  []
-question: "推模式和拉模式的区别？"
+relatedBlocks: []
+question: 推模式和拉模式的区别？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 为什么 Kafka 坚持拉？
 keyPoints:
   - id: kp-mf3-1
-    text: "推：broker 主动推给消费者——低延迟但易压垮慢消费者"
+    text: 推：broker 主动推给消费者——低延迟但易压垮慢消费者
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf3-2
-    text: "拉：消费者按能力拉取——自然背压、跟不上就攒着"
+    text: 拉：消费者按能力拉取——自然背压、跟不上就攒着
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf3-3
-    text: "Kafka 纯拉：消费端 poll 控制节奏；空轮询问题由长轮询缓解"
+    text: Kafka 纯拉：消费端 poll 控制节奏；空轮询问题由长轮询缓解
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf3-4
-    text: "RocketMQ 推模式本质是长轮询的封装（伪推）"
+    text: RocketMQ 推模式本质是长轮询的封装（伪推）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 - **推（Push）**：broker 主动塞给消费者——**延迟最低**，但消费者的**处理能力被无视**：慢消费者被越塞越多（积压在它自己内存里炸掉）；

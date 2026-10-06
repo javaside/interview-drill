@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNQ3V7X9Z1C3E5G7K
 blockId: network/http-protocol
-relatedBlocks:
-  []
-question: "常见 HTTP 状态码及其含义？"
+relatedBlocks: []
+question: 常见 HTTP 状态码及其含义？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 502 与 504 哪个更可能是后端挂了？
 keyPoints:
   - id: kp-hp2-1
-    text: "2xx 成功：200 正常 / 204 无内容 / 206 断点续传部分内容"
+    text: 2xx 成功：200 正常 / 204 无内容 / 206 断点续传部分内容
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
   - id: kp-hp2-2
-    text: "3xx 重定向：301 永久 / 302 临时 / 304 缓存有效省传输"
+    text: 3xx 重定向：301 永久 / 302 临时 / 304 缓存有效省传输
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
   - id: kp-hp2-3
-    text: "4xx 客户端错：400 参数 / 401 未认证 / 403 拒绝 / 404 不存在 / 429 限流"
+    text: 4xx 客户端错：400 参数 / 401 未认证 / 403 拒绝 / 404 不存在 / 429 限流
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
   - id: kp-hp2-4
-    text: "5xx 服务端错：500 内部 / 502 网关收到坏响应 / 504 网关上游超时"
+    text: 5xx 服务端错：500 内部 / 502 网关收到坏响应 / 504 网关上游超时
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
   - id: kp-hp2-5
-    text: "排查口诀：4xx 先查自己，5xx 先查服务端，502/504 查网关到上游"
+    text: 排查口诀：4xx 先查自己，5xx 先查服务端，502/504 查网关到上游
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
 ---
 
 状态码是响应的**体检报告单**，五段分类记骨架、高频记个体：

@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CJ0HRAQEQC7FDWQFWT
 blockId: distributed/consensus
-relatedBlocks:
-  []
-question: "Raft 的选主流程？"
+relatedBlocks: []
+question: Raft 的选主流程？
 cardType: sequence
 appliesTo: 通用
 frequency: high
@@ -11,49 +10,49 @@ followUps:
   - 为什么是过半而不是全部？
 keyPoints:
   - id: kp-cs1-1
-    text: "节点初始为 Follower，超时未闻心跳则变 Candidate 发起选举"
+    text: 节点初始为 Follower，超时未闻心跳则变 Candidate 发起选举
     public: false
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs1-2
-    text: "自增任期号，投自己一票，向其他节点拉票"
+    text: 自增任期号，投自己一票，向其他节点拉票
     public: false
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs1-3
-    text: "收到过半选票则当选 Leader，广播心跳"
+    text: 收到过半选票则当选 Leader，广播心跳
     public: false
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs1-4
-    text: "任期内日志只从 Leader 流向 Follower"
+    text: 任期内日志只从 Leader 流向 Follower
     public: false
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **Raft** 把共识拆成「选主 + 日志复制」两件事。选主四步（按序排）：

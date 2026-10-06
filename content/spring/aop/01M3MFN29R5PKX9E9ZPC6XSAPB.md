@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29R5PKX9E9ZPC6XSAPB
 blockId: spring/aop
-relatedBlocks:
-  []
-question: "Spring AOP 的实现原理？"
+relatedBlocks: []
+question: Spring AOP 的实现原理？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 代理是什么时候生成的？
 keyPoints:
   - id: kp-aop2-1
-    text: "运行时动态代理：接口走 JDK 代理，无接口走 CGLIB 子类化"
+    text: 运行时动态代理：接口走 JDK 代理，无接口走 CGLIB 子类化
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop2-2
-    text: "AbstractAutoProxyCreator（BPP）在初始化后判定切点命中则生成代理"
+    text: AbstractAutoProxyCreator（BPP）在初始化后判定切点命中则生成代理
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop2-3
-    text: "代理拦截方法调用：按序执行拦截器链（各通知转成的 MethodInterceptor）"
+    text: 代理拦截方法调用：按序执行拦截器链（各通知转成的 MethodInterceptor）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop2-4
-    text: "Boot 2+ 默认 proxyTargetClass=true（全 CGLIB）"
+    text: Boot 2+ 默认 proxyTargetClass=true（全 CGLIB）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **Spring AOP = Bean 生命周期里的一次「偷梁换柱」**：

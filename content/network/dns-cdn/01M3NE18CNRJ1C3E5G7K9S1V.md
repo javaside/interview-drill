@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRJ1C3E5G7K9S1V
 blockId: network/dns-cdn
-relatedBlocks:
-  []
-question: "DNS 能做负载均衡吗？怎么做？"
+relatedBlocks: []
+question: DNS 能做负载均衡吗？怎么做？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 为什么 CDN 都用 CNAME 接入？
 keyPoints:
   - id: kp-dn2-1
-    text: "轮询 A 记录：一个域名多条 A，DNS 依次返回——最简朴"
+    text: 轮询 A 记录：一个域名多条 A，DNS 依次返回——最简朴
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn2-2
-    text: "权重/地理调度：权威 DNS 按来源网段返回就近机房 IP"
+    text: 权重/地理调度：权威 DNS 按来源网段返回就近机房 IP
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn2-3
-    text: "CDN 的 CNAME 接力：域名 CNAME 到 CDN，由 CDN 调度"
+    text: CDN 的 CNAME 接力：域名 CNAME 到 CDN，由 CDN 调度
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn2-4
-    text: "局限：DNS 只管「给你哪个 IP」，不管那个 IP 活没活着"
+    text: 局限：DNS 只管「给你哪个 IP」，不管那个 IP 活没活着
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn2-5
-    text: "健康检查要靠动态 DNS（改记录）或前置 LB 补位"
+    text: 健康检查要靠动态 DNS（改记录）或前置 LB 补位
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
 ---
 
 DNS 天生就是个**全球分布式的调度器**，四层用法逐级增强：

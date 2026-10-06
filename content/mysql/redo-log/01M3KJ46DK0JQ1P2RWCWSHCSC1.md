@@ -2,7 +2,7 @@
 id: 01M3KJ46DK0JQ1P2RWCWSHCSC1
 blockId: mysql/redo-log
 relatedBlocks: []
-question: "LSN 是什么？"
+question: LSN 是什么？
 cardType: atomic
 appliesTo: MySQL 8.0+
 frequency: mid
@@ -10,9 +10,9 @@ followUps:
   - 恢复时 LSN 怎么用？
 keyPoints:
   - id: kp-rd5-1
-    text: "单调递增的全局字节偏移，标记 redo 进度与数据页新旧程度"
+    text: 单调递增的全局字节偏移，标记 redo 进度与数据页新旧程度
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

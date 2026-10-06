@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTN5G7K9S1V3X5Z7
 blockId: os/linux-commands
-relatedBlocks:
-  []
-question: "load average 怎么读？高 load 但 CPU 闲是怎么回事？"
+relatedBlocks: []
+question: load average 怎么读？高 load 但 CPU 闲是怎么回事？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - USE 方法论是什么？
 keyPoints:
   - id: kp-lc5-1
-    text: "load=运行中+不可中断候 IO 的任务数（R+D 态）的滑动平均"
+    text: load=运行中+不可中断候 IO 的任务数（R+D 态）的滑动平均
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'uptime(1)'
+      locator: uptime(1)
   - id: kp-lc5-2
-    text: "1/5/15 分钟三个数看趋势：升/降/稳"
+    text: 1/5/15 分钟三个数看趋势：升/降/稳
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'uptime(1)'
+      locator: uptime(1)
   - id: kp-lc5-3
-    text: "判断要除以核数：8 核 load 7 不忙，2 核 load 7 已过载"
+    text: 判断要除以核数：8 核 load 7 不忙，2 核 load 7 已过载
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'uptime(1)'
+      locator: uptime(1)
   - id: kp-lc5-4
-    text: "CPU 闲但 load 高：D 态任务堆积——磁盘/存储卡死（含 NFS）"
+    text: CPU 闲但 load 高：D 态任务堆积——磁盘/存储卡死（含 NFS）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'uptime(1)'
+      locator: uptime(1)
   - id: kp-lc5-5
-    text: "分诊顺序：vmstat r 与 b 列→top 找 D 进程→iostat 确认 IO"
+    text: 分诊顺序：vmstat r 与 b 列→top 找 D 进程→iostat 确认 IO
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'uptime(1)'
+      locator: uptime(1)
 ---
 
 **load average 的分子是两种人**：正在跑的（R）+**候磁盘 IO 的 D 态**（Linux 特色的计入方式）——1/5/15 分钟滑动平均：

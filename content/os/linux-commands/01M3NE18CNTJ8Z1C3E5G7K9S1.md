@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTJ8Z1C3E5G7K9S1
 blockId: os/linux-commands
-relatedBlocks:
-  []
-question: "free 的输出怎么读？available 和 free 有什么区别？"
+relatedBlocks: []
+question: free 的输出怎么读？available 和 free 有什么区别？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - swap 用了一定是坏事吗？
 keyPoints:
   - id: kp-lc2-1
-    text: "free 列=完全空闲；available=还能给应用的量（含可回收缓存）"
+    text: free 列=完全空闲；available=还能给应用的量（含可回收缓存）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'free(1)'
+      locator: free(1)
   - id: kp-lc2-2
-    text: "buff/cache 不是被偷走——是内核拿闲内存做缓存，可即时让渡"
+    text: buff/cache 不是被偷走——是内核拿闲内存做缓存，可即时让渡
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'free(1)'
+      locator: free(1)
   - id: kp-lc2-3
-    text: "判断内存压力看 available 与 swap 是否增长，不是看 free"
+    text: 判断内存压力看 available 与 swap 是否增长，不是看 free
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'free(1)'
+      locator: free(1)
   - id: kp-lc2-4
-    text: "sar -r 看趋势，ps aux --sort=-rss 找大户"
+    text: sar -r 看趋势，ps aux --sort=-rss 找大户
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'free(1)'
+      locator: free(1)
   - id: kp-lc2-5
-    text: "交换两信号：si/so 持续非零=真缺内存；偶发换出是正常调剂"
+    text: 交换两信号：si/so 持续非零=真缺内存；偶发换出是正常调剂
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'free(1)'
+      locator: free(1)
 ---
 
 ```

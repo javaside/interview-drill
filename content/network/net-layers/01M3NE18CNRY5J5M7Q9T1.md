@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRY5J5M7Q9T1
 blockId: network/net-layers
-relatedBlocks:
-  []
-question: "交换机、路由器、LB 分别工作在哪一层？"
+relatedBlocks: []
+question: 交换机、路由器、LB 分别工作在哪一层？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 网关和 LB 是一回事吗？
 keyPoints:
   - id: kp-nl3-1
-    text: "交换机：链路层——按 MAC 地址表转发帧（局域网内）"
+    text: 交换机：链路层——按 MAC 地址表转发帧（局域网内）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl3-2
-    text: "路由器：网络层——按路由表 IP 转发包（跨网段/自治域）"
+    text: 路由器：网络层——按路由表 IP 转发包（跨网段/自治域）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl3-3
-    text: "四层 LB：改包转发（IP+端口）——LVS/DPVS"
+    text: 四层 LB：改包转发（IP+端口）——LVS/DPVS
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl3-4
-    text: "七层 LB：解析应用协议按内容分发——Nginx/Envoy（反向代理）"
+    text: 七层 LB：解析应用协议按内容分发——Nginx/Envoy（反向代理）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl3-5
-    text: "设备演进趋势：功能软件化（SDN/智能网卡），边界日益模糊"
+    text: 设备演进趋势：功能软件化（SDN/智能网卡），边界日益模糊
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
 ---
 
 **「在哪层读数据，就在哪层干活」**：

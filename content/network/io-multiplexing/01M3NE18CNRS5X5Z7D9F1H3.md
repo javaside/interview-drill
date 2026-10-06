@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRS5X5Z7D9F1H3
 blockId: network/io-multiplexing
-relatedBlocks:
-  []
-question: "epoll 的水平触发和边缘触发？"
+relatedBlocks: []
+question: epoll 的水平触发和边缘触发？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 为什么 Nginx 用 ET？
 keyPoints:
   - id: kp-io3-1
-    text: "LT 水平触发：只要缓冲区还有数据，每次 epoll_wait 都报你"
+    text: LT 水平触发：只要缓冲区还有数据，每次 epoll_wait 都报你
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io3-2
-    text: "ET 边缘触发：仅在状态跃变（无→有）时通知一次"
+    text: ET 边缘触发：仅在状态跃变（无→有）时通知一次
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io3-3
-    text: "ET 必须一次读干（循环 read 到 EAGAIN），否则残留数据不再提醒"
+    text: ET 必须一次读干（循环 read 到 EAGAIN），否则残留数据不再提醒
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io3-4
-    text: "ET 必须配非阻塞 fd——阻塞 read 最后一口气会卡死"
+    text: ET 必须配非阻塞 fd——阻塞 read 最后一口气会卡死
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io3-5
-    text: "LT 容错高是默认；ET 少唤醒高效但对写循环要求严苛"
+    text: LT 容错高是默认；ET 少唤醒高效但对写循环要求严苛
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
 ---
 
 两种「叫你的时机」：

@@ -2,7 +2,7 @@
 id: 01M3KJ46DKA96Z7J019CVJXCAY
 blockId: mysql/redo-log
 relatedBlocks: []
-question: "什么是脏页？哪些情况会触发刷脏页？"
+question: 什么是脏页？哪些情况会触发刷脏页？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 刷脏抖动为什么会引起业务卡顿？
 keyPoints:
   - id: kp-rd4-1
-    text: "脏页=buffer pool 中已修改但未刷回磁盘的数据页"
+    text: 脏页=buffer pool 中已修改但未刷回磁盘的数据页
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd4-2
-    text: "redo log 写满逼近：checkpoint 强制推进，刷最老脏页腾日志空间"
+    text: redo log 写满逼近：checkpoint 强制推进，刷最老脏页腾日志空间
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd4-3
-    text: "内存不足淘汰页：LRU 逐出的页若是脏页必须先刷"
+    text: 内存不足淘汰页：LRU 逐出的页若是脏页必须先刷
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd4-4
-    text: "正常后台节奏刷脏 + shutdown 时全量刷"
+    text: 正常后台节奏刷脏 + shutdown 时全量刷
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

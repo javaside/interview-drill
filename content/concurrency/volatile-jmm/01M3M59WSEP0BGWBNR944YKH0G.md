@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEP0BGWBNR944YKH0G
 blockId: concurrency/volatile-jmm
-relatedBlocks:
-  []
-question: "CAS 是什么？有什么问题？"
+relatedBlocks: []
+question: CAS 是什么？有什么问题？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 为什么 CAS 比加锁快？
 keyPoints:
   - id: kp-vj5-1
-    text: "Compare-And-Swap：比较内存值与预期，相同则换成新值——CPU 级原子指令"
+    text: Compare-And-Swap：比较内存值与预期，相同则换成新值——CPU 级原子指令
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj5-2
-    text: "乐观策略：不加锁，失败就重试（自旋）"
+    text: 乐观策略：不加锁，失败就重试（自旋）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj5-3
-    text: "ABA 问题：值 A→B→A，CAS 察觉不到中途变化——版本号/AtomicStampedReference 解决"
+    text: ABA 问题：值 A→B→A，CAS 察觉不到中途变化——版本号/AtomicStampedReference 解决
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj5-4
-    text: "自旋失败率高时烧 CPU（长期抢不过就该上锁/LongAdder）"
+    text: 自旋失败率高时烧 CPU（长期抢不过就该上锁/LongAdder）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 **CAS（比较并交换）** 是 CPU 的一条**原子指令**：

@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWG8CF6C9PGA4451HNQ
 blockId: rpc/service-governance
-relatedBlocks:
-  []
-question: "网关在微服务里的职责？"
+relatedBlocks: []
+question: 网关在微服务里的职责？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 网关和服务网格的区别？
 keyPoints:
   - id: kp-sg3-1
-    text: "统一入口：路由转发（外部→内部服务）、协议转换"
+    text: 统一入口：路由转发（外部→内部服务）、协议转换
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg3-2
-    text: "横切面：鉴权、限流、黑白名单、日志埋点"
+    text: 横切面：鉴权、限流、黑白名单、日志埋点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg3-3
-    text: "南北向流量治理：灰度路由（按头/权重分流版本）"
+    text: 南北向流量治理：灰度路由（按头/权重分流版本）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg4-4
-    text: "屏蔽内部拓扑：服务扩缩容/拆分对外无感"
+    text: 屏蔽内部拓扑：服务扩缩容/拆分对外无感
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg3-5
-    text: "常见：Nginx/OpenResty（流量层）、Spring Cloud Gateway（业务层）、Kong/APISIX（插件化）"
+    text: 常见：Nginx/OpenResty（流量层）、Spring Cloud Gateway（业务层）、Kong/APISIX（插件化）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **网关=微服务的城门**：所有外部流量（南北向）的**唯一入口**，职责三块：

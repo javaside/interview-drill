@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WZ6MQVQ9GJCQ4QT23Y
 blockId: mq/mq-problems
-relatedBlocks:
-  []
-question: "怎么设计一个消费框架的监控体系？"
+relatedBlocks: []
+question: 怎么设计一个消费框架的监控体系？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: mid
@@ -11,65 +10,65 @@ followUps:
   - lag 告警阈值怎么设？
 keyPoints:
   - id: kp-mp5-1
-    text: "核心指标：lag（堆积）、消费延迟、失败率、死信量"
+    text: 核心指标：lag（堆积）、消费延迟、失败率、死信量
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp5-2
-    text: "lag 持续上涨=消费力不足；lag 突跳=生产暴增或消费挂"
+    text: lag 持续上涨=消费力不足；lag 突跳=生产暴增或消费挂
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp5-3
-    text: "处理耗时分布（P99）暴露慢消费（RPC/慢 SQL）"
+    text: 处理耗时分布（P99）暴露慢消费（RPC/慢 SQL）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp5-4
-    text: "死信告警=业务异常面；端到端对账=丢失终极防线"
+    text: 死信告警=业务异常面；端到端对账=丢失终极防线
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp5-5
-    text: "rebalance 频次是消费组健康的隐性指标"
+    text: rebalance 频次是消费组健康的隐性指标
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp5-7
-    text: "rebalance 频次是消费组健康的隐性指标"
+    text: rebalance 频次是消费组健康的隐性指标
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **MQ 监控的四类仪表**：

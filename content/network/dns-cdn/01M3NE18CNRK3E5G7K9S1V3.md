@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRK3E5G7K9S1V3
 blockId: network/dns-cdn
-relatedBlocks:
-  []
-question: "CDN 的工作原理？"
+relatedBlocks: []
+question: CDN 的工作原理？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 动态内容怎么办 CDN？
 keyPoints:
   - id: kp-dn3-1
-    text: "接入：源站域名 CNAME 到 CDN 域名，调度系统选边缘节点"
+    text: 接入：源站域名 CNAME 到 CDN 域名，调度系统选边缘节点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn3-2
-    text: "命中：边缘节点缓存有内容直接返回——用户到源站的 RTT 变成到边缘"
+    text: 命中：边缘节点缓存有内容直接返回——用户到源站的 RTT 变成到边缘
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn3-3
-    text: "未命中回源：边缘去源站拉一份，缓存住再返回"
+    text: 未命中回源：边缘去源站拉一份，缓存住再返回
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn3-4
-    text: "缓存键与过期：URL 为键，TTL/Cache-Control 控制，刷新可强制"
+    text: 缓存键与过期：URL 为键，TTL/Cache-Control 控制，刷新可强制
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn3-5
-    text: "价值三合一：降延迟（就近）、扛流量（边缘分担）、省源站带宽"
+    text: 价值三合一：降延迟（就近）、扛流量（边缘分担）、省源站带宽
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
 ---
 
 CDN = **把内容搬到离用户最近的机房**。核心三步：

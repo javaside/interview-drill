@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGNWPDP2H7CQCBZE3V
 blockId: rpc/dubbo
-relatedBlocks:
-  []
-question: "负载均衡策略有哪些？"
+relatedBlocks: []
+question: 负载均衡策略有哪些？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 一致性哈希解决什么？
 keyPoints:
   - id: kp-du3-1
-    text: "Random（默认）：按权重随机——大流量下天然均衡"
+    text: Random（默认）：按权重随机——大流量下天然均衡
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du3-2
-    text: "RoundRobin：加权轮询——均匀但无随机打散"
+    text: RoundRobin：加权轮询——均匀但无随机打散
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du3-3
-    text: "LeastActive：选活跃调用最少的——慢机器自动少接活"
+    text: LeastActive：选活跃调用最少的——慢机器自动少接活
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du3-4
-    text: "ConsistentHash：同参数同机器——有状态路由（会话/分片亲和）"
+    text: ConsistentHash：同参数同机器——有状态路由（会话/分片亲和）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du3-5
-    text: "ShortestResponseTime：响应最快优先（P99 敏感场景）"
+    text: ShortestResponseTime：响应最快优先（P99 敏感场景）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **流量怎么分给多台 Provider**：

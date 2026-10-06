@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRB7K9P1R3T5V7
 blockId: network/https-security
-relatedBlocks:
-  []
-question: "TLS 1.3 相比 1.2 快在哪、强在哪？"
+relatedBlocks: []
+question: TLS 1.3 相比 1.2 快在哪、强在哪？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 为什么删掉 RSA 交换？
 keyPoints:
   - id: kp-hs5-1
-    text: "握手 2-RTT → 1-RTT：ClientHello 直接带密钥交换参数"
+    text: 握手 2-RTT → 1-RTT：ClientHello 直接带密钥交换参数
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
   - id: kp-hs5-2
-    text: "0-RTT 恢复：带早期数据重连续传，首请求即带业务数据"
+    text: 0-RTT 恢复：带早期数据重连续传，首请求即带业务数据
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
   - id: kp-hs5-3
-    text: "强制前向安全：删 RSA 静态交换，只留 ECDHE 家族"
+    text: 强制前向安全：删 RSA 静态交换，只留 ECDHE 家族
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
   - id: kp-hs5-4
-    text: "套件砍到 5 个：全 AEAD 加密，废 RC4/CBC 弱算法"
+    text: 套件砍到 5 个：全 AEAD 加密，废 RC4/CBC 弱算法
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
   - id: kp-hs5-5
-    text: "握手消息加密更多：证书也在密文里，被动抓包看不到对方是谁"
+    text: 握手消息加密更多：证书也在密文里，被动抓包看不到对方是谁
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
 ---
 
 TLS 1.3（2018）= **1.2 的安全补丁 + 速度翻新**：

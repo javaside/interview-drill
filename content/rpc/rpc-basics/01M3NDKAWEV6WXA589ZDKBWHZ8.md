@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWEV6WXA589ZDKBWHZ8
 blockId: rpc/rpc-basics
-relatedBlocks:
-  []
-question: "一次 RPC 调用的完整过程？"
+relatedBlocks: []
+question: 一次 RPC 调用的完整过程？
 cardType: sequence
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,60 +10,60 @@ followUps:
   - stub 到底是什么？
 keyPoints:
   - id: kp-rb1-1
-    text: "客户端调本地代理（stub）：像调本地方法一样发起"
+    text: 客户端调本地代理（stub）：像调本地方法一样发起
     public: true
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb1-2
-    text: "序列化：方法名+参数编码成字节流"
+    text: 序列化：方法名+参数编码成字节流
     public: true
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb1-3
-    text: "网络传输：字节流发往服务端"
+    text: 网络传输：字节流发往服务端
     public: true
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb1-4
-    text: "服务端反序列化并反射调用真实方法"
+    text: 服务端反序列化并反射调用真实方法
     public: true
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb1-5
-    text: "结果原路序列化返回，代理还原给调用方"
+    text: 结果原路序列化返回，代理还原给调用方
     public: true
     order: 5
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **RPC（远程过程调用）的目标**：让「调另一台机器上的方法」**写起来像调本地方法**。五步流水（按序排）：

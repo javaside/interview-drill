@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WZGNAPXSW2KZR44JMT
 blockId: mq/kafka-reliability
-relatedBlocks:
-  []
-question: "ISR 是什么？"
+relatedBlocks: []
+question: ISR 是什么？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,65 +10,65 @@ followUps:
   - 和全部副本有什么区别？
 keyPoints:
   - id: kp-kr2-1
-    text: "In-Sync Replicas：与 Leader 保持同步的副本集合（含 Leader）"
+    text: In-Sync Replicas：与 Leader 保持同步的副本集合（含 Leader）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr2-2
-    text: "落后超阈值的副本被踢出 ISR，追上再回来"
+    text: 落后超阈值的副本被踢出 ISR，追上再回来
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr2-3
-    text: "Leader 选举只从 ISR 里挑——保证新 Leader 拥有全部已确认消息"
+    text: Leader 选举只从 ISR 里挑——保证新 Leader 拥有全部已确认消息
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr2-4
-    text: "acks=all 的「all」指的就是 ISR 里的全部成员"
+    text: acks=all 的「all」指的就是 ISR 里的全部成员
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr2-5
-    text: "HW 高水位限定消费者可见范围"
+    text: HW 高水位限定消费者可见范围
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr2-6
-    text: "LeaderEpoch 机制防副本截断不一致"
+    text: LeaderEpoch 机制防副本截断不一致
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **分区副本分两拨**：

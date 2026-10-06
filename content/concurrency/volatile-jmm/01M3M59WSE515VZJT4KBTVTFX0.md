@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSE515VZJT4KBTVTFX0
 blockId: concurrency/volatile-jmm
-relatedBlocks:
-  []
-question: "什么是双重检查锁定（DCL）？为什么要 volatile？"
+relatedBlocks: []
+question: 什么是双重检查锁定（DCL）？为什么要 volatile？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 静态内部类单例为什么不需要 volatile？
 keyPoints:
   - id: kp-vj4-1
-    text: "两次判空 + 锁：外层免锁快路径，内层加锁防重复创建"
+    text: 两次判空 + 锁：外层免锁快路径，内层加锁防重复创建
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj4-2
-    text: "隐患：new 分配→构造→赋值给引用 可被重排为 先赋值后构造"
+    text: 隐患：new 分配→构造→赋值给引用 可被重排为 先赋值后构造
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj4-3
-    text: "无 volatile 时另一线程拿到非 null 的半成品引用"
+    text: 无 volatile 时另一线程拿到非 null 的半成品引用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj4-4
-    text: "JDK5 后 volatile 语义补全，DCL 才真正可靠；更简替代是静态内部类 HOLDER 模式"
+    text: JDK5 后 volatile 语义补全，DCL 才真正可靠；更简替代是静态内部类 HOLDER 模式
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 懒加载单例的经典写法——**判两次、锁一次**：

@@ -2,7 +2,7 @@
 id: 01M3KHXF75XT8GXGAC3HAWDNJG
 blockId: mysql/memory-structures
 relatedBlocks: []
-question: "Buffer Pool 是什么？为什么重要？"
+question: Buffer Pool 是什么？为什么重要？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 怎么判断 buffer pool 够不够？
 keyPoints:
   - id: kp-mem-1
-    text: "缓存磁盘数据页的内存池：读走缓存命中免磁盘，改先改缓存页成为脏页"
+    text: 缓存磁盘数据页的内存池：读走缓存命中免磁盘，改先改缓存页成为脏页
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem-2
-    text: "以页（默认 16KB）为单位管理，是 InnoDB 性能的第一支柱"
+    text: 以页（默认 16KB）为单位管理，是 InnoDB 性能的第一支柱
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem-3
-    text: "大小 innodb_buffer_pool_size，通常给到机器内存的 50%~70%"
+    text: 大小 innodb_buffer_pool_size，通常给到机器内存的 50%~70%
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem-4
-    text: "脏页由后台线程按 checkpoint 机制异步刷回磁盘"
+    text: 脏页由后台线程按 checkpoint 机制异步刷回磁盘
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -50,9 +50,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem1-5
-    text: "BP 可划分为多个 instance 降低内部锁争用"
+    text: BP 可划分为多个 instance 降低内部锁争用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

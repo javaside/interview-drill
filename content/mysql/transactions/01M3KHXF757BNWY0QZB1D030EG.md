@@ -2,7 +2,7 @@
 id: 01M3KHXF757BNWY0QZB1D030EG
 blockId: mysql/transactions
 relatedBlocks: []
-question: "SAVEPOINT 是干什么的？"
+question: SAVEPOINT 是干什么的？
 cardType: atomic
 appliesTo: MySQL 8.0+
 frequency: low
@@ -10,9 +10,9 @@ followUps:
   - 保存点之后的保存点回滚后会怎样？
 keyPoints:
   - id: kp-tac-4-1
-    text: "在事务内设置保存点，ROLLBACK TO 可只撤销保存点之后的操作而不放弃整个事务"
+    text: 在事务内设置保存点，ROLLBACK TO 可只撤销保存点之后的操作而不放弃整个事务
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

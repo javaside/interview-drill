@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTB3H5J7M9Q2T4V6
 blockId: os/io-model
-relatedBlocks:
-  []
-question: "HDD 和 SSD 的性能特性差在哪？"
+relatedBlocks: []
+question: HDD 和 SSD 的性能特性差在哪？
 cardType: enumeration
 appliesTo: Linux
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 4K 对齐影响什么？
 keyPoints:
   - id: kp-di5-1
-    text: "HDD：寻道+旋转毫秒级——顺序尚可、随机极慢"
+    text: HDD：寻道+旋转毫秒级——顺序尚可、随机极慢
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di5-2
-    text: "SSD：电子寻址微秒级——随机读轻松数十万 IOPS"
+    text: SSD：电子寻址微秒级——随机读轻松数十万 IOPS
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di5-3
-    text: "SSD 写约束：擦除块大、先擦后写——引出写放大与 GC"
+    text: SSD 写约束：擦除块大、先擦后写——引出写放大与 GC
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di5-4
-    text: "SSD 寿命：P/E 次数有限——磨损均衡与预留空间兜底"
+    text: SSD 寿命：P/E 次数有限——磨损均衡与预留空间兜底
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di5-5
-    text: "对应用的意义：小 IO 延迟、对齐、避免频繁原地改写"
+    text: 对应用的意义：小 IO 延迟、对齐、避免频繁原地改写
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
 ---
 
 两种介质的物理决定命运：

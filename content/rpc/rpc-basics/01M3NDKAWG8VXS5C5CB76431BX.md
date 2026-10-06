@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWG8VXS5C5CB76431BX
 blockId: rpc/rpc-basics
-relatedBlocks:
-  []
-question: "Feign 和 Dubbo 的区别？"
+relatedBlocks: []
+question: Feign 和 Dubbo 的区别？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,65 +10,65 @@ followUps:
   - 中小团队选哪个？
 keyPoints:
   - id: kp-rb3-1
-    text: "Feign：HTTP 为载体（默认配合 SpringMVC 语义），REST 风格"
+    text: Feign：HTTP 为载体（默认配合 SpringMVC 语义），REST 风格
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb3-2
-    text: "Dubbo：TCP 长连接 + 自定义协议 + 二进制序列化，性能更高"
+    text: Dubbo：TCP 长连接 + 自定义协议 + 二进制序列化，性能更高
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb3-3
-    text: "Feign 集成 Spring Cloud 生态（与注册中心/熔断丝滑）；Dubbo 自成体系治理完善"
+    text: Feign 集成 Spring Cloud 生态（与注册中心/熔断丝滑）；Dubbo 自成体系治理完善
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb3-4
-    text: "体感：Feign 声明式接口像写 Controller；Dubbo 像注入本地 Bean"
+    text: 体感：Feign 声明式接口像写 Controller；Dubbo 像注入本地 Bean
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb3-6
-    text: "Feign 可换 httpclient/okhttp 底层实现"
+    text: Feign 可换 httpclient/okhttp 底层实现
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb3-5
-    text: "Dubbo3 的 Triple 协议与 gRPC 生态互通"
+    text: Dubbo3 的 Triple 协议与 gRPC 生态互通
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 两条路线的**气质差异**：

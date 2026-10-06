@@ -2,7 +2,7 @@
 id: 01M3KHXF75Q620Q8Q4F6P2JSDV
 blockId: mysql/sql-optimization
 relatedBlocks: []
-question: "深分页 limit 1000000,10 为什么慢？怎么优化？"
+question: 深分页 limit 1000000,10 为什么慢？怎么优化？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 为什么「记住上次位置」快？
 keyPoints:
   - id: kp-opt3-1
-    text: "慢因：要取出前 1000010 行再丢弃前 100 万，回表与扫描量巨大"
+    text: 慢因：要取出前 1000010 行再丢弃前 100 万，回表与扫描量巨大
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt3-2
-    text: "游标/续传式：记住上一页末尾 id，where id > last_id limit 10"
+    text: 游标/续传式：记住上一页末尾 id，where id > last_id limit 10
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt3-3
-    text: "延迟关联：先用覆盖索引把目标主键查出来，再回表取整行"
+    text: 延迟关联：先用覆盖索引把目标主键查出来，再回表取整行
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt3-4
-    text: "业务侧限制跳页，只允许上一页/下一页"
+    text: 业务侧限制跳页，只允许上一页/下一页
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

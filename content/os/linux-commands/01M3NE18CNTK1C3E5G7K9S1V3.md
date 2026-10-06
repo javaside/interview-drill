@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTK1C3E5G7K9S1V3
 blockId: os/linux-commands
-relatedBlocks:
-  []
-question: "磁盘满了/磁盘忙，怎么查？"
+relatedBlocks: []
+question: 磁盘满了/磁盘忙，怎么查？
 cardType: enumeration
 appliesTo: Linux
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 为什么 df 显示满但 du 找不到大文件？
 keyPoints:
   - id: kp-lc3-1
-    text: "df -h 看 inode 与容量两条线：满可能不是容量是 inode 耗尽"
+    text: df -h 看 inode 与容量两条线：满可能不是容量是 inode 耗尽
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'df(1)'
+      locator: df(1)
   - id: kp-lc3-2
-    text: "du -x 逐层对比定位大目录；df/du 差值=被删未释放的幽灵文件"
+    text: du -x 逐层对比定位大目录；df/du 差值=被删未释放的幽灵文件
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'df(1)'
+      locator: df(1)
   - id: kp-lc3-3
-    text: "iostat -x 看 await/util；iotop -o 找到正在 IO 的进程"
+    text: iostat -x 看 await/util；iotop -o 找到正在 IO 的进程
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'df(1)'
+      locator: df(1)
   - id: kp-lc3-4
-    text: "inode 耗尽的经典：海量小文件（邮件队列/临时文件）"
+    text: inode 耗尽的经典：海量小文件（邮件队列/临时文件）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'df(1)'
+      locator: df(1)
   - id: kp-lc3-5
-    text: "治后必防：日志轮转+配额+告警（用量阈值）三件套"
+    text: 治后必防：日志轮转+配额+告警（用量阈值）三件套
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'df(1)'
+      locator: df(1)
 ---
 
 磁盘「满」有两种满，先分清再下药：

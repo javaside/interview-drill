@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29R8NK408F20XC6CJBC
 blockId: spring/spring-mvc
-relatedBlocks:
-  []
-question: "RESTful 的设计规范？"
+relatedBlocks: []
+question: RESTful 的设计规范？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: mid
@@ -11,55 +10,55 @@ followUps:
   - PUT 和 PATCH 的区别？
 keyPoints:
   - id: kp-mv5-1
-    text: "资源为名词复数 + HTTP 动词表操作：GET/POST/PUT/DELETE"
+    text: 资源为名词复数 + HTTP 动词表操作：GET/POST/PUT/DELETE
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv5-2
-    text: "层级表达从属：/users/99/orders；过滤用查询参数"
+    text: 层级表达从属：/users/99/orders；过滤用查询参数
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv5-3
-    text: "状态码语义化：200/201/204/400/401/403/404/409/422/500"
+    text: 状态码语义化：200/201/204/400/401/403/404/409/422/500
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv5-4
-    text: "无状态：每次请求自带全部上下文（token），服务端不存会话"
+    text: 无状态：每次请求自带全部上下文（token），服务端不存会话
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv5-5
-    text: "版本与限流头：/v1 前缀或 Accept 头；统一错误体"
+    text: 版本与限流头：/v1 前缀或 Accept 头；统一错误体
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **RESTful 五原则**：

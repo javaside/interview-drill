@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNP8W2X4Y6Z8B0D2F4H
 blockId: network/tcp-connection
-relatedBlocks:
-  []
-question: "TCP 四次挥手的流程？为什么比握手多一次？"
+relatedBlocks: []
+question: TCP 四次挥手的流程？为什么比握手多一次？
 cardType: sequence
 appliesTo: 通用
 frequency: high
@@ -12,49 +11,49 @@ followUps:
   - 被动方迟迟不发 FIN 会怎样？
 keyPoints:
   - id: kp-tc2-1
-    text: "主动方发 FIN 进 FIN_WAIT_1，表示不再发数据"
+    text: 主动方发 FIN 进 FIN_WAIT_1，表示不再发数据
     public: false
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9293.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tc2-2
-    text: "被动方回 ACK，进入半关闭：收发只剩单向"
+    text: 被动方回 ACK，进入半关闭：收发只剩单向
     public: false
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9293.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tc2-3
-    text: "被动方把剩余数据发完，再发自己的 FIN"
+    text: 被动方把剩余数据发完，再发自己的 FIN
     public: false
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9293.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tc2-4
-    text: "主动方回 ACK 并进 TIME_WAIT，滞留 2MSL 后关闭"
+    text: 主动方回 ACK 并进 TIME_WAIT，滞留 2MSL 后关闭
     public: false
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9293.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
 ---
 
 断连比建连多一个包，根源是** TCP 允许半关闭**：收到对方的 FIN 只说明**对方不发了**，不代表**自己发完了**——被动方的 ACK（确认收尾）和 FIN（自己收尾）中间可能还隔着一批没发完的数据，只能拆成两步：

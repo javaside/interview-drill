@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0X9CV1HJ9G0XDVHS6P
 blockId: java/language-basics
-relatedBlocks:
-  []
-question: "final、finally、finalize 分别是什么？"
+relatedBlocks: []
+question: final、finally、finalize 分别是什么？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - finalize 为什么被废弃？
 keyPoints:
   - id: kp-lb4-1
-    text: "final 修饰：类不可继承 / 方法不可重写 / 变量只能赋值一次"
+    text: final 修饰：类不可继承 / 方法不可重写 / 变量只能赋值一次
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-lb4-2
-    text: "finally：try 块的收尾，正常或异常都会执行（释放资源的固定位置）"
+    text: finally：try 块的收尾，正常或异常都会执行（释放资源的固定位置）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-lb4-3
-    text: "finalize：对象被 GC 回收前的回调钩子，已废弃（Java 9+ Deprecated）"
+    text: finalize：对象被 GC 回收前的回调钩子，已废弃（Java 9+ Deprecated）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-lb4-4
-    text: "finally 不执行的三种情况：System.exit、JVM 崩溃、守护线程里的死循环"
+    text: finally 不执行的三种情况：System.exit、JVM 崩溃、守护线程里的死循环
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 三个长得很像、毫无关系的东西：

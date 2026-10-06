@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0YSKNPV9WB4ESFMHTR
 blockId: java/arraylist
-relatedBlocks:
-  []
-question: "ArrayList 的 remove 是怎么工作的？"
+relatedBlocks: []
+question: ArrayList 的 remove 是怎么工作的？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - list.remove(1) 和 list.remove(Integer.valueOf(1)) 有何不同？
 keyPoints:
   - id: kp-al2-1
-    text: "按下标 remove：删元素后把后半段整体前移一位（System.arraycopy）"
+    text: 按下标 remove：删元素后把后半段整体前移一位（System.arraycopy）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-al2-2
-    text: "按对象 remove：从头顺序 equals 找到第一个再删"
+    text: 按对象 remove：从头顺序 equals 找到第一个再删
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-al2-3
-    text: "remove(int) 返回被删元素；remove(Integer) 走按对象查找——重载陷阱"
+    text: remove(int) 返回被删元素；remove(Integer) 走按对象查找——重载陷阱
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-al2-4
-    text: "modCount++ 使并发迭代中的删除触发 fail-fast"
+    text: modCount++ 使并发迭代中的删除触发 fail-fast
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 删除的两种入口：

@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNS3B5D7F9H1J3M5N7R
 blockId: os/process-thread
-relatedBlocks:
-  []
-question: "进程有哪些状态？僵尸进程怎么产生、怎么清理？"
+relatedBlocks: []
+question: 进程有哪些状态？僵尸进程怎么产生、怎么清理？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - ps 里 S+ 与 D 是什么信号？
 keyPoints:
   - id: kp-pt2-1
-    text: "五态：运行 R、可中断睡 S、不可中断睡 D、暂停 T、僵尸 Z"
+    text: 五态：运行 R、可中断睡 S、不可中断睡 D、暂停 T、僵尸 Z
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt2-2
-    text: "僵尸=已退出但父进程没收尸（exit 状态残留 PCB）"
+    text: 僵尸=已退出但父进程没收尸（exit 状态残留 PCB）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt2-3
-    text: "大量僵尸耗尽 pid 与 PCB——病根在父进程没调 wait"
+    text: 大量僵尸耗尽 pid 与 PCB——病根在父进程没调 wait
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt2-4
-    text: "清理：让父进程 wait/waitpid；或杀掉父进程让 init 接管收尸"
+    text: 清理：让父进程 wait/waitpid；或杀掉父进程让 init 接管收尸
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt2-5
-    text: "D 状态（不可中断 IO）杀不掉——通常磁盘/存储卡死，查硬件路径"
+    text: D 状态（不可中断 IO）杀不掉——通常磁盘/存储卡死，查硬件路径
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
 ---
 
 **五态模型**（`ps`/`top` 里的字母）：

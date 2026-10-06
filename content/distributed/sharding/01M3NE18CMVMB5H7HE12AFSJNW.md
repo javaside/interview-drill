@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMVMB5H7HE12AFSJNW
 blockId: distributed/sharding
-relatedBlocks:
-  []
-question: "分库分表后的分布式 ID 和事务？"
+relatedBlocks: []
+question: 分库分表后的分布式 ID 和事务？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 跨片 join 怎么替代？
 keyPoints:
   - id: kp-sh5-1
-    text: "自增 id 不可用：各分片会撞号——雪花/号段接管"
+    text: 自增 id 不可用：各分片会撞号——雪花/号段接管
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh5-2
-    text: "跨片事务不能靠单库——本地消息表/Saga 最终一致"
+    text: 跨片事务不能靠单库——本地消息表/Saga 最终一致
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh5-3
-    text: "跨片 join 消失——业务层聚合或宽表冗余"
+    text: 跨片 join 消失——业务层聚合或宽表冗余
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh5-4
-    text: "sharding 中间件（ShardingSphere/MyCat）对应用透明化路由"
+    text: sharding 中间件（ShardingSphere/MyCat）对应用透明化路由
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 水平拆分带走的三个「单库福利」与补偿：

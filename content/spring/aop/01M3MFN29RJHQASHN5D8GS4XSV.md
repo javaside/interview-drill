@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RJHQASHN5D8GS4XSV
 blockId: spring/aop
-relatedBlocks:
-  []
-question: "JDK 代理和 CGLIB 怎么选？"
+relatedBlocks: []
+question: JDK 代理和 CGLIB 怎么选？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 目标类有接口就一定走 JDK 吗？
 keyPoints:
   - id: kp-aop5-1
-    text: "JDK：面向接口，Proxy.newProxyInstance + InvocationHandler"
+    text: JDK：面向接口，Proxy.newProxyInstance + InvocationHandler
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop5-2
-    text: "CGLIB：面向继承，运行时生成子类覆盖方法（MethodInterceptor）"
+    text: CGLIB：面向继承，运行时生成子类覆盖方法（MethodInterceptor）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop5-3
-    text: "CGLIB 限制：final 类/方法、private、static 不可代理"
+    text: CGLIB 限制：final 类/方法、private、static 不可代理
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop5-4
-    text: "Boot 2+ 默认全 CGLIB——避免「注入类型必须接口」的割裂"
+    text: Boot 2+ 默认全 CGLIB——避免「注入类型必须接口」的割裂
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **两条代理路线**：

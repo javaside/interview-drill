@@ -2,7 +2,7 @@
 id: 01M3KHXF757YPGRM9WQ11B8Y9J
 blockId: mysql/binlog
 relatedBlocks: []
-question: "主从复制的流程是怎样的？异步复制意味着什么风险？"
+question: 主从复制的流程是怎样的？异步复制意味着什么风险？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - GTID 解决了什么问题？
 keyPoints:
   - id: kp-bi3-1
-    text: "主库写 binlog；dump 线程推给从库；从库 IO 线程写入 relay log"
+    text: 主库写 binlog；dump 线程推给从库；从库 IO 线程写入 relay log
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi3-2
-    text: "从库 SQL 线程（或 coordinator+worker）重放 relay log"
+    text: 从库 SQL 线程（或 coordinator+worker）重放 relay log
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi3-3
-    text: "异步复制：主库提交不候从库，宕机可能丢最新事务"
+    text: 异步复制：主库提交不候从库，宕机可能丢最新事务
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi3-4
-    text: "半同步：至少一个从库确认收到 binlog 才返回提交；损失性能换不丢"
+    text: 半同步：至少一个从库确认收到 binlog 才返回提交；损失性能换不丢
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

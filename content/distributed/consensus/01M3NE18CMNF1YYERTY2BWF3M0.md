@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMNF1YYERTY2BWF3M0
 blockId: distributed/consensus
-relatedBlocks:
-  []
-question: "拜占庭错误和一般故障的区别？"
+relatedBlocks: []
+question: 拜占庭错误和一般故障的区别？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -11,55 +10,55 @@ followUps:
   - 为什么数据库集群不用 BFT？
 keyPoints:
   - id: kp-cs5-1
-    text: "一般故障：节点宕机/失联——不撒谎，只是不响应"
+    text: 一般故障：节点宕机/失联——不撒谎，只是不响应
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs5-2
-    text: "拜占庭故障：节点作恶——发假消息/双面话"
+    text: 拜占庭故障：节点作恶——发假消息/双面话
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs5-3
-    text: "内网可信环境（公司机房）只需容忍一般故障——Raft 够用"
+    text: 内网可信环境（公司机房）只需容忍一般故障——Raft 够用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs5-4
-    text: "开放环境（区块链/多方协作）才需要 BFT——3f+1 容 f 个恶节点"
+    text: 开放环境（区块链/多方协作）才需要 BFT——3f+1 容 f 个恶节点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs5-5
-    text: "PBFT/POW 是拜占庭容错的代表"
+    text: PBFT/POW 是拜占庭容错的代表
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 故障模型决定算法选型：

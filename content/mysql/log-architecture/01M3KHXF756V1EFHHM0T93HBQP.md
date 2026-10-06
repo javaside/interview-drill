@@ -2,7 +2,7 @@
 id: 01M3KHXF756V1EFHHM0T93HBQP
 blockId: mysql/log-architecture
 relatedBlocks: []
-question: "一条 update 从执行到返回，InnoDB 内部完整经过哪些步骤？"
+question: 一条 update 从执行到返回，InnoDB 内部完整经过哪些步骤？
 cardType: sequence
 appliesTo: MySQL 8.0+
 frequency: high
@@ -11,9 +11,9 @@ followUps:
 keyPoints:
   - id: kp-log2-1
     order: 1
-    text: "定位并加行锁，写 undo log 记录旧值"
+    text: 定位并加行锁，写 undo log 记录旧值
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -22,9 +22,9 @@ keyPoints:
       locator: '15'
   - id: kp-log2-2
     order: 2
-    text: "在 buffer pool 中修改数据页成脏页，写 redo 到 log buffer"
+    text: 在 buffer pool 中修改数据页成脏页，写 redo 到 log buffer
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -33,9 +33,9 @@ keyPoints:
       locator: '15'
   - id: kp-log2-3
     order: 3
-    text: "提交时 redo 写盘标记 prepare，写 binlog 并落盘"
+    text: 提交时 redo 写盘标记 prepare，写 binlog 并落盘
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -44,9 +44,9 @@ keyPoints:
       locator: '15'
   - id: kp-log2-4
     order: 4
-    text: "redo 标记 commit，返回客户端成功；脏页由后台异步刷盘"
+    text: redo 标记 commit，返回客户端成功；脏页由后台异步刷盘
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

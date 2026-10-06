@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WY7KZGFE6X0HZ0K9KC
 blockId: mq/kafka-core
-relatedBlocks:
-  []
-question: "怎么保证同一 key 的消息顺序？"
+relatedBlocks: []
+question: 怎么保证同一 key 的消息顺序？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 订单的创建和取消乱序了会怎样？
 keyPoints:
   - id: kp-kc3-1
-    text: "Kafka 只保证 partition 内有序——全局有序需单 partition"
+    text: Kafka 只保证 partition 内有序——全局有序需单 partition
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc3-2
-    text: "同 key 哈希到同一 partition（默认分区器）——key 级有序"
+    text: 同 key 哈希到同一 partition（默认分区器）——key 级有序
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc3-3
-    text: "重试与 in.flight>1 组合可能乱序——idempotent 生产者防住"
+    text: 重试与 in.flight>1 组合可能乱序——idempotent 生产者防住
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc3-4
-    text: "扩分区会改变 key 的落点——顺序敏感的 topic 提前规划够多分区"
+    text: 扩分区会改变 key 的落点——顺序敏感的 topic 提前规划够多分区
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **顺序的粒度**：Kafka 只保证 **partition 内有序**（单队列天然先进先出）。跨 partition 无全局序。

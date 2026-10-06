@@ -3,7 +3,7 @@ id: 01M3M7HTMBHDFZQ4Z1E1JFTB3V
 blockId: jvm/object-engine
 relatedBlocks:
   - jvm/gc-basics
-question: "方法调用有哪几种字节码指令？"
+question: 方法调用有哪几种字节码指令？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,55 +11,55 @@ followUps:
   - invokestatic 为什么不需要接收者？
 keyPoints:
   - id: kp-oe5-1
-    text: "invokestatic：静态方法（编译期锁定）"
+    text: invokestatic：静态方法（编译期锁定）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe5-2
-    text: "invokespecial：构造器/私有/super 调用（静态绑定）"
+    text: invokespecial：构造器/私有/super 调用（静态绑定）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe5-3
-    text: "invokevirtual：实例方法——按接收者实际类型虚分派"
+    text: invokevirtual：实例方法——按接收者实际类型虚分派
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe5-4
-    text: "invokeinterface：接口方法——接口表的迟绑定查找"
+    text: invokeinterface：接口方法——接口表的迟绑定查找
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe5-5
-    text: "invokedynamic：动态调用点——lambda 与动态语言的基座"
+    text: invokedynamic：动态调用点——lambda 与动态语言的基座
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 五条**调用指令**，绑定时机各异：

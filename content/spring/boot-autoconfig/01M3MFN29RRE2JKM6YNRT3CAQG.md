@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RRE2JKM6YNRT3CAQG
 blockId: spring/boot-autoconfig
-relatedBlocks:
-  []
-question: "Spring Boot 启动流程？"
+relatedBlocks: []
+question: Spring Boot 启动流程？
 cardType: sequence
 appliesTo: Spring 6+
 frequency: high
@@ -11,60 +10,60 @@ followUps:
   - Banner 打印在启动的第几步？
 keyPoints:
   - id: kp-ba3-1
-    text: "SpringApplication.run：推断应用类型（Servlet/Reactive/无 Web）"
+    text: SpringApplication.run：推断应用类型（Servlet/Reactive/无 Web）
     public: true
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba3-2
-    text: "创建并准备 ApplicationContext：注册主类、加载 Environment（yml/环境变量）"
+    text: 创建并准备 ApplicationContext：注册主类、加载 Environment（yml/环境变量）
     public: true
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba3-3
-    text: "refresh：加载自动配置与用户 Bean（IoC 容器的标准启动）"
+    text: refresh：加载自动配置与用户 Bean（IoC 容器的标准启动）
     public: true
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba3-4
-    text: "启动内嵌 Web 服务器（Tomcat onRefresh）"
+    text: 启动内嵌 Web 服务器（Tomcat onRefresh）
     public: true
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba3-5
-    text: "Runner 执行：ApplicationRunner/CommandLineRunner 收尾"
+    text: Runner 执行：ApplicationRunner/CommandLineRunner 收尾
     public: true
     order: 5
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 `SpringApplication.run()` 的五拍（按序排）：

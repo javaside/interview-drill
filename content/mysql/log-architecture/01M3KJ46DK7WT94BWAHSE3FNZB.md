@@ -2,7 +2,7 @@
 id: 01M3KJ46DK7WT94BWAHSE3FNZB
 blockId: mysql/log-architecture
 relatedBlocks: []
-question: "MySQL 一条 SQL 的 IO 链路上有哪些缓冲/缓存？"
+question: MySQL 一条 SQL 的 IO 链路上有哪些缓冲/缓存？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: mid
@@ -10,9 +10,9 @@ followUps:
   - flush_log_at_trx_commit=2 与 =1 的差别在链路上处于哪一环？
 keyPoints:
   - id: kp-log5-1
-    text: "buffer pool：数据页的内存缓存，命中免磁盘"
+    text: buffer pool：数据页的内存缓存，命中免磁盘
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-log5-2
-    text: "log buffer：redo 的内存缓冲，事务提交时刷盘"
+    text: log buffer：redo 的内存缓冲，事务提交时刷盘
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-log5-3
-    text: "OS page cache：文件系统缓存，redo/binlog 的 fsync 边界即冲它"
+    text: OS page cache：文件系统缓存，redo/binlog 的 fsync 边界即冲它
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-log5-4
-    text: "change buffer：非唯一二级索引改动的暂存区"
+    text: change buffer：非唯一二级索引改动的暂存区
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

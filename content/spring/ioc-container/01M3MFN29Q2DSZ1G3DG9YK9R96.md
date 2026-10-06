@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29Q2DSZ1G3DG9YK9R96
 blockId: spring/ioc-container
-relatedBlocks:
-  []
-question: "三种依赖注入方式怎么选？"
+relatedBlocks: []
+question: 三种依赖注入方式怎么选？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 为什么官方推荐构造器注入？
 keyPoints:
   - id: kp-ioc2-1
-    text: "构造器注入：强制依赖、不可变（final）、官方推荐"
+    text: 构造器注入：强制依赖、不可变（final）、官方推荐
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ioc2-2
-    text: "Setter 注入：可选依赖、可重配置的场景"
+    text: Setter 注入：可选依赖、可重配置的场景
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ioc2-3
-    text: "字段注入（@Autowired 在字段上）：最简但隐式依赖、测试难、IDE 都警告"
+    text: 字段注入（@Autowired 在字段上）：最简但隐式依赖、测试难、IDE 都警告
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ioc2-4
-    text: "循环依赖时构造器注入直接失败——Setter/字段可被三级缓存救"
+    text: 循环依赖时构造器注入直接失败——Setter/字段可被三级缓存救
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 按**依赖的刚性**选：

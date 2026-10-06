@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WY92YKR2DWS380WRQF
 blockId: mq/mq-fundamentals
-relatedBlocks:
-  []
-question: "消息积压了怎么处理？"
+relatedBlocks: []
+question: 消息积压了怎么处理？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 消费者数量为什么不能超过 partition 数？
 keyPoints:
   - id: kp-mf4-1
-    text: "定位：消费速率 < 生产速率多久了——监控 lag（堆积量）"
+    text: 定位：消费速率 < 生产速率多久了——监控 lag（堆积量）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf4-2
-    text: "临时扩容：加消费者实例（上限=partition 数），或升级消费端配置"
+    text: 临时扩容：加消费者实例（上限=partition 数），或升级消费端配置
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf4-3
-    text: "消费端优化：批量拉取/批量写库/异步 IO/去掉慢调用（RPC 挪出循环）"
+    text: 消费端优化：批量拉取/批量写库/异步 IO/去掉慢调用（RPC 挪出循环）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf4-4
-    text: "紧急泄洪：新消费者快速转储到新 topic（更多分区）再慢慢消化"
+    text: 紧急泄洪：新消费者快速转储到新 topic（更多分区）再慢慢消化
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf4-5
-    text: "可丢场景：过期消息直接丢弃或落盘归档后跳过"
+    text: 可丢场景：过期消息直接丢弃或落盘归档后跳过
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **积压 = lag（生产领先消费的条数）**。处置四板斧：

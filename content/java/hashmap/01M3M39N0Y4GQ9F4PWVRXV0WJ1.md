@@ -3,7 +3,7 @@ id: 01M3M39N0Y4GQ9F4PWVRXV0WJ1
 blockId: java/hashmap
 relatedBlocks:
   - java/collections-overview
-question: "HashMap 的扩容（resize）过程是怎样的？"
+question: HashMap 的扩容（resize）过程是怎样的？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +11,45 @@ followUps:
   - 为什么负载因子是 0.75？
 keyPoints:
   - id: kp-hm3-1
-    text: "负载因子 0.75：size > cap × 0.75 触发扩容，容量翻倍"
+    text: 负载因子 0.75：size > cap × 0.75 触发扩容，容量翻倍
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-hm3-2
-    text: "容量恒为 2 的幂（tableSizeFor 向上取），翻倍后保持"
+    text: 容量恒为 2 的幂（tableSizeFor 向上取），翻倍后保持
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-hm3-3
-    text: "JDK8 拆链优化：节点按 hash 新增那位是 0/1 分成两条原序子链（不再重算 hash）"
+    text: JDK8 拆链优化：节点按 hash 新增那位是 0/1 分成两条原序子链（不再重算 hash）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-hm3-4
-    text: "扩容是全量搬迁：默认初始 16，大量数据建议预估 initialCapacity"
+    text: 扩容是全量搬迁：默认初始 16，大量数据建议预估 initialCapacity
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 装到 **75% 满**（size > 16×0.75=12）就搬家：容量**翻倍**（2 的幂序列 16→32→64…），所有元素**重新分桶**。

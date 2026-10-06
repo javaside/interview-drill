@@ -3,7 +3,7 @@ id: 01M3MFN29Q0JPJG0GVX8C8MEKD
 blockId: spring/bean-lifecycle
 relatedBlocks:
   - spring/ioc-container
-question: "Bean 的作用域有哪些？"
+question: Bean 的作用域有哪些？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,55 +11,55 @@ followUps:
   - 单例 Bean 是线程安全的吗？
 keyPoints:
   - id: kp-bl2-1
-    text: "singleton：容器一 Bean（默认）；prototype：每次 getBean 新造"
+    text: singleton：容器一 Bean（默认）；prototype：每次 getBean 新造
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-bl2-2
-    text: "request/session：Web 环境，每请求/会话一份"
+    text: request/session：Web 环境，每请求/会话一份
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-bl2-3
-    text: "application：ServletContext 级；websocket：会话级"
+    text: application：ServletContext 级；websocket：会话级
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-bl2-4
-    text: "注入短周期 Bean 到长周期会失败——需 @Lazy 代理或 ObjectFactory"
+    text: 注入短周期 Bean 到长周期会失败——需 @Lazy 代理或 ObjectFactory
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-bl2-5
-    text: "HTTP 作用域依赖请求上下文激活（RequestContextListener 或 DispatcherServlet）"
+    text: HTTP 作用域依赖请求上下文激活（RequestContextListener 或 DispatcherServlet）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 作用域=「**这份配方造几份**」：

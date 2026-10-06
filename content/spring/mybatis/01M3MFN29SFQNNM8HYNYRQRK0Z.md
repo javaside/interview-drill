@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29SFQNNM8HYNYRQRK0Z
 blockId: spring/mybatis
-relatedBlocks:
-  []
-question: "MyBatis 的延迟加载原理？"
+relatedBlocks: []
+question: MyBatis 的延迟加载原理？
 cardType: atomic
 appliesTo: Spring 6+
 frequency: mid
@@ -11,15 +10,15 @@ followUps:
   - association 和 collection 怎么选？
 keyPoints:
   - id: kp-my5-1
-    text: "关联对象用代理占位（CGLIB），首次访问代理方法时才触发子查询加载"
+    text: 关联对象用代理占位（CGLIB），首次访问代理方法时才触发子查询加载
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 查订单时「顺带拿客户信息」不必立刻查——**延迟加载**给关联字段放一个**代理**：你调 `order.getCustomer().getName()` 的那一刻，代理才**发第二条 SQL** 把客户查回来。

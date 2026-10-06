@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNS4C6E8G0K2M4N6Q8S
 blockId: os/process-thread
-relatedBlocks:
-  []
-question: "进程间通信方式怎么选？"
+relatedBlocks: []
+question: 进程间通信方式怎么选？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - Unix socket 和 TCP socket 选哪个？
 keyPoints:
   - id: kp-pt3-1
-    text: "管道：父子血缘间字节流——shell 的 | 就是它"
+    text: 管道：父子血缘间字节流——shell 的 | 就是它
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt3-2
-    text: "消息队列：内核维护的有格式消息——可分类型取"
+    text: 消息队列：内核维护的有格式消息——可分类型取
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt3-3
-    text: "共享内存+信号量：同块物理内存映射两进程——最快，配信号量同步"
+    text: 共享内存+信号量：同块物理内存映射两进程——最快，配信号量同步
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt3-4
-    text: "信号：异步通知（kill/定时器）——只能带个编号"
+    text: 信号：异步通知（kill/定时器）——只能带个编号
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
   - id: kp-pt3-5
-    text: "socket：跨机通吃——本地走 Unix domain socket 零网络栈"
+    text: socket：跨机通吃——本地走 Unix domain socket 零网络栈
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'proc(5)'
+      locator: proc(5)
 ---
 
 IPC 全家福按「**传什么、多快、跨不跨机**」选：

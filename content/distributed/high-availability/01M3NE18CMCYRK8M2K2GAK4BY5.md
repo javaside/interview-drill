@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMCYRK8M2K2GAK4BY5
 blockId: distributed/high-availability
-relatedBlocks:
-  []
-question: "容量规划和压测怎么做？"
+relatedBlocks: []
+question: 容量规划和压测怎么做？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -11,55 +10,55 @@ followUps:
   - 为什么压测要在生产环境？
 keyPoints:
   - id: kp-ha5-1
-    text: "容量=单机容量×数量×水位折扣——压测得出单机基准"
+    text: 容量=单机容量×数量×水位折扣——压测得出单机基准
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha5-2
-    text: "压测类型：基准（单接口）/链路（全链路压测）/浸泡（稳定性）"
+    text: 压测类型：基准（单接口）/链路（全链路压测）/浸泡（稳定性）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha5-3
-    text: "全链路压测：影子库/影子表隔离压测数据——生产环境真实流量模型"
+    text: 全链路压测：影子库/影子表隔离压测数据——生产环境真实流量模型
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha5-4
-    text: "容量目标：峰值×冗余系数（如 1.5 倍），瓶颈定位到具体资源"
+    text: 容量目标：峰值×冗余系数（如 1.5 倍），瓶颈定位到具体资源
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha5-5q
-    text: "常态化：容量水位告警+弹性伸缩联动"
+    text: 常态化：容量水位告警+弹性伸缩联动
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **容量=能扛住多少流量**，规划四步：

@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMB6A429AJDHQV5SSP9
 blockId: jvm/class-loading
-relatedBlocks:
-  []
-question: "什么是类的初始化时机？"
+relatedBlocks: []
+question: 什么是类的初始化时机？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - static final 常量为什么不触发初始化？
 keyPoints:
   - id: kp-cl5-1
-    text: "主动引用才初始化：new、读写静态字段、调用静态方法"
+    text: 主动引用才初始化：new、读写静态字段、调用静态方法
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl5-2
-    text: "反射调用、初始化子类时父类先初始化、main 所在类"
+    text: 反射调用、初始化子类时父类先初始化、main 所在类
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl5-3
-    text: "被动引用不初始化：引用父类静态、创建数组、引用编译期常量"
+    text: 被动引用不初始化：引用父类静态、创建数组、引用编译期常量
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl5-4
-    text: "接口初始化：仅在使用其成员时，初始化接口不触发父接口"
+    text: 接口初始化：仅在使用其成员时，初始化接口不触发父接口
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 类**不是**加载了就初始化——**只有「主动引用」才点火**跑 `<clinit>`：

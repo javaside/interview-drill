@@ -2,7 +2,7 @@
 id: 01M3KJ46DKQ6R6A6MJXTR7Y5CB
 blockId: mysql/memory-structures
 relatedBlocks: []
-question: "Double Write（双写缓冲）解决什么问题？"
+question: Double Write（双写缓冲）解决什么问题？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: mid
@@ -10,9 +10,9 @@ followUps:
   - redo 不是已经能恢复了吗，为什么还要双写？
 keyPoints:
   - id: kp-mem4-1
-    text: "问题：宕机时一页只写到一半（部分写失效），redo 重放也要基于完整页"
+    text: 问题：宕机时一页只写到一半（部分写失效），redo 重放也要基于完整页
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem4-2
-    text: "做法：脏页先顺序写入 doublewrite buffer 共享区，再写各自位置"
+    text: 做法：脏页先顺序写入 doublewrite buffer 共享区，再写各自位置
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem4-3
-    text: "恢复：发现页损坏，从双写区取完整副本 + redo 修复"
+    text: 恢复：发现页损坏，从双写区取完整副本 + redo 修复
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem4-4
-    text: "代价：每页多一次顺序写，可用 innodb_doublewrite 开关控制"
+    text: 代价：每页多一次顺序写，可用 innodb_doublewrite 开关控制
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -50,9 +50,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem4-5
-    text: "双写区位于共享表空间，顺序写入代价低"
+    text: 双写区位于共享表空间，顺序写入代价低
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

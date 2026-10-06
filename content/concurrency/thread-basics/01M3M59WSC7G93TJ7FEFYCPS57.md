@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSC7G93TJ7FEFYCPS57
 blockId: concurrency/thread-basics
-relatedBlocks:
-  []
-question: "创建线程有哪几种方式？"
+relatedBlocks: []
+question: 创建线程有哪几种方式？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,59 +10,55 @@ followUps:
   - 为什么推荐 Runnable 而非继承 Thread？
 keyPoints:
   - id: kp-tb1-1
-    text: "继承 Thread 重写 run"
+    text: 继承 Thread 重写 run
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb1-2
-    text: "实现 Runnable 传给 Thread（任务与执行器解耦，推荐）"
+    text: 实现 Runnable 传给 Thread（任务与执行器解耦，推荐）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb1-3
-    text: "实现 Callable + FutureTask：有返回值、可抛受检异常"
+    text: 实现 Callable + FutureTask：有返回值、可抛受检异常
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb1-4
-    text: "线程池 submit/executors 提交 Runnable 或 Callable（生产标准）"
+    text: 线程池 submit/executors 提交 Runnable 或 Callable（生产标准）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb1-5
-    text: "本质只有 new Thread().start() 一种启动方式，其余都是任务的形态"
+    text: 本质只有 new Thread().start() 一种启动方式，其余都是任务的形态
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 四种「姿势」，但**本质只有一个入口**：`new Thread(任务).start()`。区别只是「任务」长什么样：

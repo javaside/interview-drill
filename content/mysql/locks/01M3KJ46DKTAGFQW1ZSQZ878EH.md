@@ -2,7 +2,7 @@
 id: 01M3KJ46DKTAGFQW1ZSQZ878EH
 blockId: mysql/locks
 relatedBlocks: []
-question: "共享锁（S）和排他锁（X）的兼容规则是什么？"
+question: 共享锁（S）和排他锁（X）的兼容规则是什么？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 两阶段锁协议是什么？
 keyPoints:
   - id: kp-lk6-1
-    text: "S 与 S 兼容：多个事务可同时读同一行"
+    text: S 与 S 兼容：多个事务可同时读同一行
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk6-2
-    text: "X 与任何行锁互斥：改一行时别人的加锁读写都得排队"
+    text: X 与任何行锁互斥：改一行时别人的加锁读写都得排队
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk6-3
-    text: "lock in share mode 显式加 S；for update 显式加 X"
+    text: lock in share mode 显式加 S；for update 显式加 X
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk6-4
-    text: "普通快照读不加任何行锁（靠 MVCC），与 S/X 都不冲突"
+    text: 普通快照读不加任何行锁（靠 MVCC），与 S/X 都不冲突
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

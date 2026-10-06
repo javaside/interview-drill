@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0XFJ4YWXX9RK3PTZ3P
 blockId: java/string
-relatedBlocks:
-  []
-question: "String.trim() 和 strip() 的区别？"
+relatedBlocks: []
+question: String.trim() 和 strip() 的区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: low
@@ -11,35 +10,35 @@ followUps:
   - isBlank 和 isEmpty 呢？
 keyPoints:
   - id: kp-st5-1
-    text: "trim 只认 ASCII ≤ U+0020 的空白，strip 按 Unicode 空白标准判定"
+    text: trim 只认 ASCII ≤ U+0020 的空白，strip 按 Unicode 空白标准判定
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st5-2
-    text: "isBlank 判定全空白，isEmpty 只看长度为零"
+    text: isBlank 判定全空白，isEmpty 只看长度为零
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st5-3
-    text: "stripLeading/stripTrailing 只去单侧空白（Java 11+）"
+    text: stripLeading/stripTrailing 只去单侧空白（Java 11+）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 两者都去首尾空白，但「空白」的定义不同：

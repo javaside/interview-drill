@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0YXSC9CC75JQX0ZQET
 blockId: java/collections-overview
-relatedBlocks:
-  []
-question: "HashSet、LinkedHashSet、TreeSet 的区别？"
+relatedBlocks: []
+question: HashSet、LinkedHashSet、TreeSet 的区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 自定义对象放 HashSet 需要重写什么？
 keyPoints:
   - id: kp-co4-1
-    text: "HashSet：哈希去重，无序，增删查 O(1)——默认选择"
+    text: HashSet：哈希去重，无序，增删查 O(1)——默认选择
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-co4-2
-    text: "LinkedHashSet：HashSet + 双向链表记插入序，遍历按放入顺序"
+    text: LinkedHashSet：HashSet + 双向链表记插入序，遍历按放入顺序
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-co4-3
-    text: "TreeSet：红黑树按比较序（自然序或 Comparator），O(log n)"
+    text: TreeSet：红黑树按比较序（自然序或 Comparator），O(log n)
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-co4-4
-    text: "去重判定 HashSet 用 hash+equals；TreeSet 用 compareTo/compare（0 即重复）"
+    text: 去重判定 HashSet 用 hash+equals；TreeSet 用 compareTo/compare（0 即重复）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 三个 Set，差在**顺序**和**代价**：

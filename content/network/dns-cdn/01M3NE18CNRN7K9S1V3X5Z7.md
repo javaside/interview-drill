@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRN7K9S1V3X5Z7
 blockId: network/dns-cdn
-relatedBlocks:
-  []
-question: "DNS 记录类型有哪些、TTL 怎么权衡？"
+relatedBlocks: []
+question: DNS 记录类型有哪些、TTL 怎么权衡？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - CNAME 为什么不能与其他记录共存？
 keyPoints:
   - id: kp-dn5-1
-    text: "A/AAAA：域名到 IPv4/IPv6 地址——解析的终点"
+    text: A/AAAA：域名到 IPv4/IPv6 地址——解析的终点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn5-2
-    text: "CNAME：别名指向另一个域名——CDN/多层调度的基础"
+    text: CNAME：别名指向另一个域名——CDN/多层调度的基础
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn5-3
-    text: "MX/NS/TXT：邮件路由/域的管理者/扩展信息（SPF/DKIM/验证）"
+    text: MX/NS/TXT：邮件路由/域的管理者/扩展信息（SPF/DKIM/验证）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn5-4
-    text: "TTL 大：缓存多负载小，但切换生效慢"
+    text: TTL 大：缓存多负载小，但切换生效慢
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn5-5
-    text: "TTL 小：切换快，但解析压力与故障半径变大"
+    text: TTL 小：切换快，但解析压力与故障半径变大
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
 ---
 
 常用记录一张图：

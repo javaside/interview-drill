@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMV6N4KQQ9A7KDZ3BR
 blockId: distributed/dist-cache
-relatedBlocks:
-  []
-question: "缓存穿透、击穿、雪崩的区别？"
+relatedBlocks: []
+question: 缓存穿透、击穿、雪崩的区别？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 三者一句话区分？
 keyPoints:
   - id: kp-dc6-1
-    text: "穿透：查不存在的 key——请求打到 DB（恶意伪造 id）"
+    text: 穿透：查不存在的 key——请求打到 DB（恶意伪造 id）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc6-2
-    text: "击穿：热点 key 过期瞬间——万计并发同时砸 DB"
+    text: 击穿：热点 key 过期瞬间——万计并发同时砸 DB
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc6-3
-    text: "雪崩：大批 key 同时过期或缓存整体宕机——DB 被冲垮"
+    text: 雪崩：大批 key 同时过期或缓存整体宕机——DB 被冲垮
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc6-4
-    text: "穿透防：布隆过滤器/空值缓存（短 TTL）"
+    text: 穿透防：布隆过滤器/空值缓存（短 TTL）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc6-5
-    text: "击穿防：互斥重建（只放一个请求去查库）；雪崩防：过期加随机+集群高可用"
+    text: 击穿防：互斥重建（只放一个请求去查库）；雪崩防：过期加随机+集群高可用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **三个「缓存失效伤及 DB」的病**，病因各不同：

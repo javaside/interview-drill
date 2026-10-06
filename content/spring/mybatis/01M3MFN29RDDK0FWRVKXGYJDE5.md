@@ -1,55 +1,54 @@
 ---
 id: 01M3MFN29RDDK0FWRVKXGYJDE5
 blockId: spring/mybatis
-relatedBlocks:
-  []
-question: "#{} 和 ${} 的区别？"
+relatedBlocks: []
+question: '#{} 和 ${} 的区别？'
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
 followUps:
-  - 为什么 #{} 能防注入？
+  - 为什么
 keyPoints:
   - id: kp-my1-1
-    text: "#{} 预编译占位：值以参数形式进 PreparedStatement，防注入"
+    text: '#{} 预编译占位：值以参数形式进 PreparedStatement，防注入'
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my1-2
-    text: "${} 字符串替换：直接拼进 SQL——注入风险"
+    text: ${} 字符串替换：直接拼进 SQL——注入风险
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my1-3
-    text: "${} 仅用于表名/列名/排序字段这类不能参数化的位置"
+    text: ${} 仅用于表名/列名/排序字段这类不能参数化的位置
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my1-4
-    text: "动态排序（order by ${col}）必须白名单校验输入"
+    text: 动态排序（order by ${col}）必须白名单校验输入
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 差在**进 SQL 的方式**：

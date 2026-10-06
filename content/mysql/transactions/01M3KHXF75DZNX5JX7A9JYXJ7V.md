@@ -2,7 +2,7 @@
 id: 01M3KHXF75DZNX5JX7A9JYXJ7V
 blockId: mysql/transactions
 relatedBlocks: []
-question: "脏读、不可重复读、幻读分别是什么？"
+question: 脏读、不可重复读、幻读分别是什么？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - RC 防住了哪些？RR 呢？
 keyPoints:
   - id: kp-tac-2-1
-    text: "脏读：读到了别的事务尚未提交、可能被回滚的数据"
+    text: 脏读：读到了别的事务尚未提交、可能被回滚的数据
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac-2-2
-    text: "不可重复读：同一事务内两次读同一行，值被别人已提交的修改改变了"
+    text: 不可重复读：同一事务内两次读同一行，值被别人已提交的修改改变了
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac-2-3
-    text: "幻读：同一事务内两次同范围查询，多出了别人新插入的行"
+    text: 幻读：同一事务内两次同范围查询，多出了别人新插入的行
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac-2-4
-    text: "严重程度递进：脏读 > 不可重复读 > 幻读，隔离级别逐级防住前者"
+    text: 严重程度递进：脏读 > 不可重复读 > 幻读，隔离级别逐级防住前者
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -50,9 +50,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac-2-5
-    text: "串行化 SERIALIZABLE 完全防住三种异常，但并发性能最差"
+    text: 串行化 SERIALIZABLE 完全防住三种异常，但并发性能最差
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

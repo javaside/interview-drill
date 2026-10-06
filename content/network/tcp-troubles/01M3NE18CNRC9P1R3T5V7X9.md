@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRC9P1R3T5V7X9
 blockId: network/tcp-troubles
-relatedBlocks:
-  []
-question: "TIME_WAIT 过多怎么办？"
+relatedBlocks: []
+question: TIME_WAIT 过多怎么办？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 服务端出现 TIME_WAIT 说明谁关的？
 keyPoints:
   - id: kp-tt1-1
-    text: "TIME_WAIT 由主动关闭方滞留 2MSL——设计保护不是 bug"
+    text: TIME_WAIT 由主动关闭方滞留 2MSL——设计保护不是 bug
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'ip-sysctl'
+      locator: ip-sysctl
   - id: kp-tt1-2
-    text: "大量来源：高频短连接（每请求一连）与自身做主动关闭方"
+    text: 大量来源：高频短连接（每请求一连）与自身做主动关闭方
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'ip-sysctl'
+      locator: ip-sysctl
   - id: kp-tt1-3
-    text: "危害：占端口（客户端 6 万上限）与内存，拖新连接建立"
+    text: 危害：占端口（客户端 6 万上限）与内存，拖新连接建立
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'ip-sysctl'
+      locator: ip-sysctl
   - id: kp-tt1-4
-    text: "治本：连接池/长连接复用，把短连接变长连接"
+    text: 治本：连接池/长连接复用，把短连接变长连接
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'ip-sysctl'
+      locator: ip-sysctl
   - id: kp-tt1-5
-    text: "治标参数：扩 port range、开 tcp_tw_reuse（需 timestamp）"
+    text: 治标参数：扩 port range、开 tcp_tw_reuse（需 timestamp）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'ip-sysctl'
+      locator: ip-sysctl
 ---
 
 TIME_WAIT 本身是**设计者的深谋远虑**（保最后的 ACK 能补发、让旧报文寿终正寝），**不是泄漏**。问题只在**量大**：

@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSF04PTXX7GPVNQKWNG
 blockId: concurrency/thread-pools
-relatedBlocks:
-  []
-question: "四种拒绝策略是什么？怎么选？"
+relatedBlocks: []
+question: 四种拒绝策略是什么？怎么选？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 为什么说 CallerRuns 是天然限流？
 keyPoints:
   - id: kp-tp3-1
-    text: "AbortPolicy（默认）：抛 RejectedExecutionException——快速失败"
+    text: AbortPolicy（默认）：抛 RejectedExecutionException——快速失败
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp3-2
-    text: "CallerRunsPolicy：让提交任务的线程自己跑——天然限流反压"
+    text: CallerRunsPolicy：让提交任务的线程自己跑——天然限流反压
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp3-3
-    text: "DiscardPolicy：静默丢弃（最危险：无声无息）"
+    text: DiscardPolicy：静默丢弃（最危险：无声无息）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp3-4
-    text: "DiscardOldestPolicy：丢队头最老的，给新任务腾位"
+    text: DiscardOldestPolicy：丢队头最老的，给新任务腾位
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 池满之后的**四种处置**：

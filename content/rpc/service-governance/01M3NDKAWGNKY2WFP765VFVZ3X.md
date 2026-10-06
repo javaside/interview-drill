@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGNKY2WFP765VFVZ3X
 blockId: rpc/service-governance
-relatedBlocks:
-  []
-question: "链路追踪的原理？"
+relatedBlocks: []
+question: 链路追踪的原理？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - traceId 怎么跨线程传递？
 keyPoints:
   - id: kp-sg4-1
-    text: "TraceId 全链路唯一：一次请求经过所有服务共用一个 ID"
+    text: TraceId 全链路唯一：一次请求经过所有服务共用一个 ID
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg4-2
-    text: "SpanId/ParentSpanId 记录调用层级（谁调的谁）"
+    text: SpanId/ParentSpanId 记录调用层级（谁调的谁）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg4-3
-    text: "埋点数据异步上报（不打扰业务），聚合还原成调用树"
+    text: 埋点数据异步上报（不打扰业务），聚合还原成调用树
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg4-5x
-    text: "上下文跨进程传播：HTTP 头/MQ 消息头（W3C traceparent）"
+    text: 上下文跨进程传播：HTTP 头/MQ 消息头（W3C traceparent）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-sg4-5
-    text: "价值：慢在哪一环、错在哪一层、一次请求的完整路径"
+    text: 价值：慢在哪一环、错在哪一层、一次请求的完整路径
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **链路追踪=给每次请求发一张全程通用的工牌**：

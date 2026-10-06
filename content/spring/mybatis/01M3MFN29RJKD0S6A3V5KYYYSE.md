@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RJKD0S6A3V5KYYYSE
 blockId: spring/mybatis
-relatedBlocks:
-  []
-question: "动态 SQL 有哪些标签？"
+relatedBlocks: []
+question: 动态 SQL 有哪些标签？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: mid
@@ -11,55 +10,55 @@ followUps:
   - where 标签智能在哪？
 keyPoints:
   - id: kp-my4-1
-    text: "if：条件片段（test 的 OGNL 表达式）"
+    text: if：条件片段（test 的 OGNL 表达式）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my4-2
-    text: "where/trim：智能拼出无残留的 where 与前后缀"
+    text: where/trim：智能拼出无残留的 where 与前后缀
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my4-3
-    text: "foreach：集合展开成 in 列表（collection/item/separator）"
+    text: foreach：集合展开成 in 列表（collection/item/separator）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my4-4
-    text: "choose/when/otherwise：多路分支；set 与 trim 同理智能拼 set"
+    text: choose/when/otherwise：多路分支；set 与 trim 同理智能拼 set
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my4-5
-    text: "bind 标签可声明中间变量用于 like 拼接"
+    text: bind 标签可声明中间变量用于 like 拼接
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **动态 SQL**=SQL 的模板引擎，四组标签：

@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29S0DCW9ZV6FQ5P2YTV
 blockId: spring/security-basics
-relatedBlocks:
-  []
-question: "JWT 在 Spring Security 里怎么落地？"
+relatedBlocks: []
+question: JWT 在 Spring Security 里怎么落地？
 cardType: sequence
 appliesTo: Spring 6+
 frequency: high
@@ -11,60 +10,60 @@ followUps:
   - JWT 怎么实现登出？
 keyPoints:
   - id: kp-sec3-1
-    text: "登录接口校验账号密码 → 签发 JWT（含用户名/角色/过期时间）"
+    text: 登录接口校验账号密码 → 签发 JWT（含用户名/角色/过期时间）
     public: true
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec3-2
-    text: "客户端每次请求带 Authorization: Bearer <token>"
+    text: '客户端每次请求带 Authorization: Bearer <token>'
     public: true
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec3-3
-    text: "BearerTokenAuthenticationFilter 解析验签 → 构造 Authentication 入 SecurityContext"
+    text: BearerTokenAuthenticationFilter 解析验签 → 构造 Authentication 入 SecurityContext
     public: true
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec3-4
-    text: "后续链上鉴权按角色/权限放行"
+    text: 后续链上鉴权按角色/权限放行
     public: true
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec3-5
-    text: "无状态：不存会话，登出靠客户端删 token（或黑名单）"
+    text: 无状态：不存会话，登出靠客户端删 token（或黑名单）
     public: true
     order: 5
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **JWT 无状态落地五步**（按序排）：

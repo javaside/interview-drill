@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNDSRTSJCNEHRAVWH0
 blockId: distributed/arch-evolution
-relatedBlocks:
-  []
-question: "读写分离和 CQRS？"
+relatedBlocks: []
+question: 读写分离和 CQRS？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 写完立刻读怎么办？
 keyPoints:
   - id: kp-ae3-1
-    text: "读写分离：主写从读——读扩容的第一步"
+    text: 读写分离：主写从读——读扩容的第一步
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae3-2
-    text: "主从延迟问题：写后立读可能读到旧值（路由强制的坑）"
+    text: 主从延迟问题：写后立读可能读到旧值（路由强制的坑）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae3-3
-    text: "CQRS：命令与查询模型分离——写库与读库异构"
+    text: CQRS：命令与查询模型分离——写库与读库异构
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae3-4
-    text: "同步管道：binlog/CDC 驱动写模型→读模型（ES/宽表）"
+    text: 同步管道：binlog/CDC 驱动写模型→读模型（ES/宽表）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **读写分离**：写走主库、读走从库——**读压力**的水平扩展第一步。直接坑：**主从延迟**（毫秒~秒）——「下单成功」跳转订单列表却查不到（读到还没同步的从库）。

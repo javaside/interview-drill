@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGTN38NM7WTAZ6BV13
 blockId: rpc/distributed-coord
-relatedBlocks:
-  []
-question: "ZooKeeper 和 Nacos 怎么选？"
+relatedBlocks: []
+question: ZooKeeper 和 Nacos 怎么选？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 注册中心为什么常选 AP？
 keyPoints:
   - id: kp-dc1-1
-    text: "ZK：CP 型（ZAB 一致性优先）——选主/分布式锁/强一致元数据"
+    text: ZK：CP 型（ZAB 一致性优先）——选主/分布式锁/强一致元数据
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc1-2
-    text: "Nacos：AP/CP 可切（Raft/Distro 双模式）——注册中心+配置中心二合一"
+    text: Nacos：AP/CP 可切（Raft/Distro 双模式）——注册中心+配置中心二合一
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc1-3
-    text: "注册中心场景 AP 通常更优：可用性>强一致（宁要旧地址不要全体瘫痪）"
+    text: 注册中心场景 AP 通常更优：可用性>强一致（宁要旧地址不要全体瘫痪）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc1-4
-    text: "Nacos 支持健康检查/权重/推送；ZK 的 Watch 一次性需重注册"
+    text: Nacos 支持健康检查/权重/推送；ZK 的 Watch 一次性需重注册
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 按**CAP 取舍**分两派：

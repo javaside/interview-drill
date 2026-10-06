@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29SSW7Y9HZ44YHBZTK3
 blockId: spring/security-basics
-relatedBlocks:
-  []
-question: "CSRF 是什么？Spring Security 怎么防？"
+relatedBlocks: []
+question: CSRF 是什么？Spring Security 怎么防？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: mid
@@ -11,55 +10,55 @@ followUps:
   - 为什么 JWT 不怕 CSRF？
 keyPoints:
   - id: kp-sec5-1
-    text: "攻击：恶意网站借你浏览器里未过期的 Cookie 冒充你发请求"
+    text: 攻击：恶意网站借你浏览器里未过期的 Cookie 冒充你发请求
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec5-2
-    text: "前提：浏览器自动带 Cookie + 目标站点有会话"
+    text: 前提：浏览器自动带 Cookie + 目标站点有会话
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec5-3
-    text: "防御：CsrfFilter 要求请求携带服务端下发的一次性 token（表单隐藏域/header）"
+    text: 防御：CsrfFilter 要求请求携带服务端下发的一次性 token（表单隐藏域/header）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec5-4
-    text: "JWT 无状态（token 主动放 header 不自动随行）天然免疫 CSRF"
+    text: JWT 无状态（token 主动放 header 不自动随行）天然免疫 CSRF
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec5-5
-    text: "SameSite Cookie 属性是浏览器层的另一道闸"
+    text: SameSite Cookie 属性是浏览器层的另一道闸
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **CSRF**（跨站请求伪造）= 坏网站让你**已登录**的浏览器「顺手」向银行网站发转账——浏览器**自动带 Cookie**，银行一看凭证齐全就执行了。它没偷密码，是**借你的浏览器用你的会话**。

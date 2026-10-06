@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMBATQ8AZC2PFT8FR9G
 blockId: jvm/gc-collectors
-relatedBlocks:
-  []
-question: "Minor GC、Major GC、Full GC 的区别？"
+relatedBlocks: []
+question: Minor GC、Major GC、Full GC 的区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 什么时候会触发 Full GC？
 keyPoints:
   - id: kp-gc3-1
-    text: "Minor：只收新生代——频繁、快"
+    text: Minor：只收新生代——频繁、快
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc3-2
-    text: "Major：收老年代（CMS 的并发收集即此语义）"
+    text: Major：收老年代（CMS 的并发收集即此语义）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc3-3
-    text: "Full：整堆加方法区的大扫除——最慢，调优目标是让它消失"
+    text: Full：整堆加方法区的大扫除——最慢，调优目标是让它消失
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc3-4
-    text: "Full 触发：老年代满、元空间满、担保失败、System.gc"
+    text: Full 触发：老年代满、元空间满、担保失败、System.gc
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 按**扫哪儿**分三档：

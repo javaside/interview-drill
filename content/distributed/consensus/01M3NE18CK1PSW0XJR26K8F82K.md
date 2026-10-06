@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CK1PSW0XJR26K8F82K
 blockId: distributed/consensus
-relatedBlocks:
-  []
-question: "Paxos 和 Raft 的区别？"
+relatedBlocks: []
+question: Paxos 和 Raft 的区别？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - Raft 为什么能取代 Paxos？
 keyPoints:
   - id: kp-cs2-1
-    text: "Paxos：理论优美但难懂难实现——只解决单值共识"
+    text: Paxos：理论优美但难懂难实现——只解决单值共识
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs2-2
-    text: "Raft：为可理解性设计——强 Leader 分解出选主与日志复制"
+    text: Raft：为可理解性设计——强 Leader 分解出选主与日志复制
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs2-3
-    text: "Multi-Paxos 可达到 Raft 效果但工程细节需自行补全"
+    text: Multi-Paxos 可达到 Raft 效果但工程细节需自行补全
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs2-4
-    text: "工业界几乎全用 Raft（etcd/Consul/Kafka KRaft）"
+    text: 工业界几乎全用 Raft（etcd/Consul/Kafka KRaft）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **Paxos** 是共识的理论基石（Lamport 1989）——正确但**出了名的难懂难实现**：只定义单值共识，工程化作多日志需要自行补全大量细节（每个实现都不一样）。**Raft**（2013）的目标明确写论文名里：*In Search of an Understandable Consensus Algorithm*——**用可理解性换实现一致性**：

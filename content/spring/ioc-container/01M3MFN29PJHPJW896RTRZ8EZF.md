@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29PJHPJW896RTRZ8EZF
 blockId: spring/ioc-container
-relatedBlocks:
-  []
-question: "什么是 IoC？它解决了什么问题？"
+relatedBlocks: []
+question: 什么是 IoC？它解决了什么问题？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - IoC 和 DI 是一回事吗？
 keyPoints:
   - id: kp-ioc1-1
-    text: "控制反转：对象的创建与装配从代码移交给容器"
+    text: 控制反转：对象的创建与装配从代码移交给容器
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ioc1-2
-    text: "解耦：对象声明需要什么，不自己 new 依赖"
+    text: 解耦：对象声明需要什么，不自己 new 依赖
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ioc1-3
-    text: "DI（依赖注入）是 IoC 的主要实现方式"
+    text: DI（依赖注入）是 IoC 的主要实现方式
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ioc1-4
-    text: "收益：可测（mock 注入）、可替换（面向接口）、生命周期统一管理"
+    text: 收益：可测（mock 注入）、可替换（面向接口）、生命周期统一管理
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **IoC（控制反转）**= 把「**谁来创建对象、谁来接线**」这件事从你的代码手里**夺走**，交给容器：

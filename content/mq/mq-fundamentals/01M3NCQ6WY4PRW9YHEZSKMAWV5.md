@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WY4PRW9YHEZSKMAWV5
 blockId: mq/mq-fundamentals
-relatedBlocks:
-  []
-question: "怎么设计一个消息的完整生命周期保障？"
+relatedBlocks: []
+question: 怎么设计一个消息的完整生命周期保障？
 cardType: sequence
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,49 +10,49 @@ followUps:
   - 哪一环最容易丢消息？
 keyPoints:
   - id: kp-mf5-1
-    text: "第 1 环 生产端：发送确认（acks）+ 失败重试 + 本地消息表兜底"
+    text: 第 1 环 生产端：发送确认（acks）+ 失败重试 + 本地消息表兜底
     public: true
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf5-2
-    text: "第 2 环 broker：多副本持久化（刷盘策略）+ 高可用集群"
+    text: 第 2 环 broker：多副本持久化（刷盘策略）+ 高可用集群
     public: true
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf5-3
-    text: "第 3 环 消费端：手动 ack（处理成功才签收）与idempotent 去重"
+    text: 第 3 环 消费端：手动 ack（处理成功才签收）与idempotent 去重
     public: true
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf5-4
-    text: "第 4 环 兜底：对账（生产表 vs 消费表）+ 死信人工介入"
+    text: 第 4 环 兜底：对账（生产表 vs 消费表）+ 死信人工介入
     public: true
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 「**不丢**」是三段接力，每段各自的保险（按链路顺序排）：

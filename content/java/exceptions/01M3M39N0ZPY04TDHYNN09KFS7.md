@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0ZPY04TDHYNN09KFS7
 blockId: java/exceptions
-relatedBlocks:
-  []
-question: "异常处理的最佳实践有哪些？"
+relatedBlocks: []
+question: 异常处理的最佳实践有哪些？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 为什么抓栈很贵？
 keyPoints:
   - id: kp-ex5-1
-    text: "别捕获后吞掉：空 catch 块是排障黑洞，至少记日志或转译重抛"
+    text: 别捕获后吞掉：空 catch 块是排障黑洞，至少记日志或转译重抛
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex5-2
-    text: "别 catch (Exception) 一把梭：按预期异常精确捕获，意外错误让它炸"
+    text: 别 catch (Exception) 一把梭：按预期异常精确捕获，意外错误让它炸
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex5-3
-    text: "异常别用于流程控制：构建异常对象要抓栈，代价高"
+    text: 异常别用于流程控制：构建异常对象要抓栈，代价高
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex5-4
-    text: "底层异常转译成业务异常再抛，保留 cause 链与上下文信息"
+    text: 底层异常转译成业务异常再抛，保留 cause 链与上下文信息
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 四条铁律：

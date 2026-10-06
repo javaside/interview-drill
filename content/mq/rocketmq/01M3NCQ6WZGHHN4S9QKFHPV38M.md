@@ -3,7 +3,7 @@ id: 01M3NCQ6WZGHHN4S9QKFHPV38M
 blockId: mq/rocketmq
 relatedBlocks:
   - mq/mq-fundamentals
-question: "延迟消息怎么实现？"
+question: 延迟消息怎么实现？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,45 +11,45 @@ followUps:
   - 为什么不用定时任务扫全表？
 keyPoints:
   - id: kp-rq2-1
-    text: "RocketMQ 4.x：18 个固定级别的延迟队列（SCHEDULE_TOPIC_XXXX 中转）"
+    text: RocketMQ 4.x：18 个固定级别的延迟队列（SCHEDULE_TOPIC_XXXX 中转）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq2-2
-    text: "5.x 支持任意时间：timer wheel 定时轮"
+    text: 5.x 支持任意时间：timer wheel 定时轮
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq2-3
-    text: "Kafka 无内建延迟——业务自建：延迟库+定时扫描、或时间轮轮次推进"
+    text: Kafka 无内建延迟——业务自建：延迟库+定时扫描、或时间轮轮次推进
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq2-4
-    text: "经典用法：订单超时未支付自动取消（延迟 30 分钟）"
+    text: 经典用法：订单超时未支付自动取消（延迟 30 分钟）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **延迟消息 = 到点才投递的消息**（订单 30 分钟未付自动取消是标配场景）：

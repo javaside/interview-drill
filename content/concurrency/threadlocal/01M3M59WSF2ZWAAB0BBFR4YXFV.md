@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSF2ZWAAB0BBFR4YXFV
 blockId: concurrency/threadlocal
-relatedBlocks:
-  []
-question: "ThreadLocal 的原理是什么？"
+relatedBlocks: []
+question: ThreadLocal 的原理是什么？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 为什么把 map 放在线程里而不是 ThreadLocal 里？
 keyPoints:
   - id: kp-tl1-1
-    text: "每个 Thread 内置一个 ThreadLocalMap：键是 ThreadLocal 弱引用，值是变量副本"
+    text: 每个 Thread 内置一个 ThreadLocalMap：键是 ThreadLocal 弱引用，值是变量副本
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl1-2
-    text: "set/get 都先摸到当前线程自己的 map——天然按线程隔离"
+    text: set/get 都先摸到当前线程自己的 map——天然按线程隔离
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl1-3
-    text: "哈希冲突用开放地址（线性探测）而非链表"
+    text: 哈希冲突用开放地址（线性探测）而非链表
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl1-4
-    text: "同一个 ThreadLocal 在不同线程中各存各的互不可见"
+    text: 同一个 ThreadLocal 在不同线程中各存各的互不可见
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 **ThreadLocal = 线程私有的储物柜**。实现反直觉但妙：

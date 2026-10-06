@@ -6,7 +6,7 @@ question: RR 隔离级别下 MVCC 能完全避免幻读吗？
 cardType: judgment
 appliesTo: MySQL 8.0+
 frequency: high
-conclusion: no
+conclusion: 'no'
 followUps:
   - 那 next-key lock 是怎么补上当前读这个缺口的？
   - 举一个 RR 下仍会读到幻行的具体场景

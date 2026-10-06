@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RMZ3AHPVWHKPZHQHZ
 blockId: spring/transaction-tx
-relatedBlocks:
-  []
-question: "声明式事务的实现原理？"
+relatedBlocks: []
+question: 声明式事务的实现原理？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 事务拦截器在拦截器链的哪个位置？
 keyPoints:
   - id: kp-tx3-1
-    text: "AOP 环绕通知：TransactionInterceptor 拦截 @Transactional 方法"
+    text: AOP 环绕通知：TransactionInterceptor 拦截 @Transactional 方法
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx3-2
-    text: "事务管理器 PlatformTransactionManager 按 propagation 开/接事务"
+    text: 事务管理器 PlatformTransactionManager 按 propagation 开/接事务
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx3-3
-    text: "连接绑定 ThreadLocal：同线程内 DAO 拿到同一事务连接"
+    text: 连接绑定 ThreadLocal：同线程内 DAO 拿到同一事务连接
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx3-4
-    text: "正常返回 commit，异常按 rollbackFor 决定回滚"
+    text: 正常返回 commit，异常按 rollbackFor 决定回滚
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **@Transactional = 一个注解 + 一套 AOP 流水线**：

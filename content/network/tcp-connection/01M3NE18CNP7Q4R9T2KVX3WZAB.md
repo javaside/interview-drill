@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNP7Q4R9T2KVX3WZAB
 blockId: network/tcp-connection
-relatedBlocks:
-  []
-question: "TCP 三次握手的流程？为什么不是两次？"
+relatedBlocks: []
+question: TCP 三次握手的流程？为什么不是两次？
 cardType: sequence
 appliesTo: 通用
 frequency: high
@@ -12,60 +11,60 @@ followUps:
   - 初始 seq 为什么随机？
 keyPoints:
   - id: kp-tc1-1
-    text: "客户端发 SYN（seq=x），进 SYN_SENT 状态"
+    text: 客户端发 SYN（seq=x），进 SYN_SENT 状态
     public: false
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9293.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tc1-2
-    text: "服务端回 SYN+ACK（seq=y，ack=x+1），进 SYN_RCVD"
+    text: 服务端回 SYN+ACK（seq=y，ack=x+1），进 SYN_RCVD
     public: false
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9293.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tc1-3
-    text: "客户端回 ACK（ack=y+1），双方 ESTABLISHED"
+    text: 客户端回 ACK（ack=y+1），双方 ESTABLISHED
     public: false
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9293.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tc1-4
-    text: "三方的目的：双方各确认一次「你能收我能发」，同步初始序号"
+    text: 三方的目的：双方各确认一次「你能收我能发」，同步初始序号
     public: false
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9293.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tc1-5
-    text: "防历史连接：旧 SYN 迟到时三次握手的最后一次 ACK 可拒掉"
+    text: 防历史连接：旧 SYN 迟到时三次握手的最后一次 ACK 可拒掉
     public: false
     order: 5
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9293.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
 ---
 
 三次握手像打电话确认线路：「喂，听得到吗？」「听得到，你能听到我吗？」「能，开始说」——**每方都要确认「我发的你能收、你发的我能收」**，这件事最少三个包：

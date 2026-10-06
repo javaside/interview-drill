@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMA2ZKQQFCQ383RZBZY
 blockId: jvm/memory-areas
-relatedBlocks:
-  []
-question: "堆是怎么分代的？为什么分？"
+relatedBlocks: []
+question: 堆是怎么分代的？为什么分？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 新生代为什么是 8:1:1？
 keyPoints:
   - id: kp-ma2-1
-    text: "弱分代假说：绝大多数对象朝生夕死——按存活时间分区治理"
+    text: 弱分代假说：绝大多数对象朝生夕死——按存活时间分区治理
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma2-2
-    text: "新生代 = Eden + 两个 Survivor，Minor GC 的地盘"
+    text: 新生代 = Eden + 两个 Survivor，Minor GC 的地盘
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma2-3
-    text: "老年代：熬过多次 Minor 的对象与前置分配的大对象"
+    text: 老年代：熬过多次 Minor 的对象与前置分配的大对象
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma2-4
-    text: "Minor 收新生代、Major 收老年代、Full 收全堆"
+    text: Minor 收新生代、Major 收老年代、Full 收全堆
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma2-5
-    text: "晋升条件：年龄阈值（默认 15）或 Survivor 装不下"
+    text: 晋升条件：年龄阈值（默认 15）或 Survivor 装不下
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 对象的**生死规律**很偏科：大部分活不过一轮 GC。堆按「**岁数**」分而治之：

@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMB81HWVM0FJMDCK880
 blockId: jvm/class-loading
-relatedBlocks:
-  []
-question: "类的相等（同一个类）由什么决定？"
+relatedBlocks: []
+question: 类的相等（同一个类）由什么决定？
 cardType: atomic
 appliesTo: Java 17+
 frequency: high
@@ -11,15 +10,15 @@ followUps:
   - 同一个类被两个加载器加载会怎样？
 keyPoints:
   - id: kp-cl4-1
-    text: "全限定名 + 定义类加载器，两者都相同才是同一个类"
+    text: 全限定名 + 定义类加载器，两者都相同才是同一个类
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 JVM 里「是不是同一个类」看**两样**：**全限定名**（叫什么）+ **定义类加载器**（谁加载的）。

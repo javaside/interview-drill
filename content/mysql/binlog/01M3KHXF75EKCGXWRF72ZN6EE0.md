@@ -2,7 +2,7 @@
 id: 01M3KHXF75EKCGXWRF72ZN6EE0
 blockId: mysql/binlog
 relatedBlocks: []
-question: "binlog 和 redo log 的区别？"
+question: binlog 和 redo log 的区别？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 为什么需要两阶段提交来协调它们？
 keyPoints:
   - id: kp-bi2-1
-    text: "层次：binlog 是 Server 层（所有引擎）；redo 是 InnoDB 引擎层"
+    text: 层次：binlog 是 Server 层（所有引擎）；redo 是 InnoDB 引擎层
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi2-2
-    text: "内容：binlog 逻辑日志（语句/行变化）；redo 物理日志（页级改动）"
+    text: 内容：binlog 逻辑日志（语句/行变化）；redo 物理日志（页级改动）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi2-3
-    text: "写法：binlog 追加写不循环；redo 循环写固定文件组"
+    text: 写法：binlog 追加写不循环；redo 循环写固定文件组
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi2-4
-    text: "用途：binlog 复制与归档恢复；redo 崩溃恢复"
+    text: 用途：binlog 复制与归档恢复；redo 崩溃恢复
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSFHJNM8DE7H0EJPN2T
 blockId: concurrency/threadlocal
-relatedBlocks:
-  []
-question: "ThreadLocal 为什么会内存泄漏？"
+relatedBlocks: []
+question: ThreadLocal 为什么会内存泄漏？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 弱引用不是用来防泄漏的吗？
 keyPoints:
   - id: kp-tl2-1
-    text: "Entry 的键是弱引用：ThreadLocal 对象可被回收，键变 null"
+    text: Entry 的键是弱引用：ThreadLocal 对象可被回收，键变 null
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl2-2
-    text: "但值是强引用：键 null 的条目里值仍被线程牵着"
+    text: 但值是强引用：键 null 的条目里值仍被线程牵着
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl2-3
-    text: "线程长期存活（线程池）→ null 键条目累积 → 值无法回收"
+    text: 线程长期存活（线程池）→ null 键条目累积 → 值无法回收
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl2-4
-    text: "根治：用完 finally 里 remove()（try-with-resources 亦可）"
+    text: 根治：用完 finally 里 remove()（try-with-resources 亦可）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 经典追问链。泄漏的**路径**：

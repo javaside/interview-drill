@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CM7FPX5TGQH5R1Z7Z5
 blockId: distributed/sharding
-relatedBlocks:
-  []
-question: "分片后的跨片查询和分页怎么做？"
+relatedBlocks: []
+question: 分片后的跨片查询和分页怎么做？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 跨片深分页有多惨？
 keyPoints:
   - id: kp-sh3-1
-    text: "路由式：带分片键——直达单片，与单表无差"
+    text: 路由式：带分片键——直达单片，与单表无差
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh3-2b
-    text: "广播式：不带分片键——各片查一遍再聚合（fan-out）"
+    text: 广播式：不带分片键——各片查一遍再聚合（fan-out）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh3-3
-    text: "跨片分页：各片取前 N 条 → 内存归并排序取全局前 N"
+    text: 跨片分页：各片取前 N 条 → 内存归并排序取全局前 N
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh3-4
-    text: "深翻页灾难：各片要取 offset+N 条——全局页码越大片内取越多"
+    text: 深翻页灾难：各片要取 offset+N 条——全局页码越大片内取越多
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh3-5
-    text: "解法：禁止跳页（连续翻页游标）/ ES 承担复杂查询"
+    text: 解法：禁止跳页（连续翻页游标）/ ES 承担复杂查询
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 分片后的查询三形态：

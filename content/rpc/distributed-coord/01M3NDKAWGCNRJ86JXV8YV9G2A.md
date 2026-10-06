@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGCNRJ86JXV8YV9G2A
 blockId: rpc/distributed-coord
-relatedBlocks:
-  []
-question: "配置中心的核心设计？"
+relatedBlocks: []
+question: 配置中心的核心设计？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 配置变更是推还是拉？
 keyPoints:
   - id: kp-dc4-1
-    text: "集中存储+版本化（谁在何时改了什么可回滚）"
+    text: 集中存储+版本化（谁在何时改了什么可回滚）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc4-2
-    text: "推拉结合：长轮询推送变更 + 客户端兜底定时全量拉"
+    text: 推拉结合：长轮询推送变更 + 客户端兜底定时全量拉
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc4-3
-    text: "灰度发布：按 ip/集群/标签分批生效"
+    text: 灰度发布：按 ip/集群/标签分批生效
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc4-4
-    text: "本地快照：配置中心全挂，客户端用最后一份缓存启动"
+    text: 本地快照：配置中心全挂，客户端用最后一份缓存启动
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc4-5
-    text: "敏感配置加密（数据库密码）+ 变更审计"
+    text: 敏感配置加密（数据库密码）+ 变更审计
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **配置中心=运维的遥控器**，五要件：

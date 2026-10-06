@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMRN7EG84EWF9CK533
 blockId: distributed/dist-cache
-relatedBlocks:
-  []
-question: "Redis 集群模式的数据分布？"
+relatedBlocks: []
+question: Redis 集群模式的数据分布？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 为什么是 16384 个槽？
 keyPoints:
   - id: kp-dca-1
-    text: "16384 个哈希槽：key 的 CRC16 取模落槽，槽分配到节点"
+    text: 16384 个哈希槽：key 的 CRC16 取模落槽，槽分配到节点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dca-2
-    text: "hash tag {user1000}.x 强制同 key 同槽（多键操作的前提）"
+    text: hash tag {user1000}.x 强制同 key 同槽（多键操作的前提）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dca-3
-    text: "MOVED 重定向：请求到错节点时告知正确节点"
+    text: MOVED 重定向：请求到错节点时告知正确节点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dca-4
-    text: "ASK/智能客户端：客户端缓存槽位表直连目标"
+    text: ASK/智能客户端：客户端缓存槽位表直连目标
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dca-5
-    text: "扩缩容：槽迁移（逐 key 搬）期间 ASK 引导到迁移中节点"
+    text: 扩缩容：槽迁移（逐 key 搬）期间 ASK 引导到迁移中节点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **Redis Cluster** 的分片方案——**16384 个哈希槽**：

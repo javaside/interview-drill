@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29R5P7NZEFGXBV390XM
 blockId: spring/boot-autoconfig
-relatedBlocks:
-  []
-question: "自动配置的原理（条件装配）？"
+relatedBlocks: []
+question: 自动配置的原理（条件装配）？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 怎么写一个自定义 starter？
 keyPoints:
   - id: kp-ba2-1
-    text: "起步依赖引入 jar → AutoConfiguration.imports 声明候选配置类"
+    text: 起步依赖引入 jar → AutoConfiguration.imports 声明候选配置类
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba2-2
-    text: "@ConditionalOnClass/MissingBean/Property 按条件生效"
+    text: '@ConditionalOnClass/MissingBean/Property 按条件生效'
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba2-3
-    text: "@ConditionalOnMissingBean：你配了就以你的为准（默认可覆盖）"
+    text: '@ConditionalOnMissingBean：你配了就以你的为准（默认可覆盖）'
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba2-4
-    text: "配置属性绑定：@EnableConfigurationProperties + @ConfigurationProperties"
+    text: 配置属性绑定：@EnableConfigurationProperties + @ConfigurationProperties
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba2-5
-    text: "排除不想要的自动配置：exclude 或 excludeName"
+    text: 排除不想要的自动配置：exclude 或 excludeName
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **自动装配的推理链**：

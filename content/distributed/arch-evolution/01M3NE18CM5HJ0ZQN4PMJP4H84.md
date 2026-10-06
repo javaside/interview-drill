@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CM5HJ0ZQN4PMJP4H84
 blockId: distributed/arch-evolution
-relatedBlocks:
-  []
-question: "中大型系统的典型分层？"
+relatedBlocks: []
+question: 中大型系统的典型分层？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 为什么应用层要无状态？
 keyPoints:
   - id: kp-ae2-1
-    text: "接入层：DNS/GSLB→CDN→LB（L4/L7）→网关"
+    text: 接入层：DNS/GSLB→CDN→LB（L4/L7）→网关
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae2-2q
-    text: "应用层：无状态服务（聚合/编排）——横向扩展"
+    text: 应用层：无状态服务（聚合/编排）——横向扩展
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae2-3
-    text: "数据层：缓存（本地+分布式）→ DB（主从/分片）+ 异构存储（ES/数仓）"
+    text: 数据层：缓存（本地+分布式）→ DB（主从/分片）+ 异构存储（ES/数仓）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae2-4
-    text: "支撑：注册配置中心/MQ/链路监控——横切全栈"
+    text: 支撑：注册配置中心/MQ/链路监控——横切全栈
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 典型互联网后端的**纵向分层**（请求路径从上到下）：

@@ -2,7 +2,7 @@
 id: 01M3KHXF75BZGZ60GV618ERYXY
 blockId: mysql/log-architecture
 relatedBlocks: []
-question: "两阶段提交（redo 与 binlog）为什么必要？"
+question: 两阶段提交（redo 与 binlog）为什么必要？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 崩溃恢复时怎么裁定 prepare 状态的事务？
 keyPoints:
   - id: kp-log-1
-    text: "一次提交要同时写 redo 与 binlog 两本账，任何顺序都存在中间态"
+    text: 一次提交要同时写 redo 与 binlog 两本账，任何顺序都存在中间态
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-log-2
-    text: "先 binlog 后 redo：崩溃于中间→主库回滚而从库已重放→主少从多"
+    text: 先 binlog 后 redo：崩溃于中间→主库回滚而从库已重放→主少从多
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-log-3
-    text: "先 redo 后 binlog：崩溃于中间→主库已提交而从库没收到→主多从少"
+    text: 先 redo 后 binlog：崩溃于中间→主库已提交而从库没收到→主多从少
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-log-4
-    text: "解法：redo 先写为 prepare，binlog 落盘成功后才把 redo 标记 commit——崩溃恢复以 binlog 是否完整裁定"
+    text: 解法：redo 先写为 prepare，binlog 落盘成功后才把 redo 标记 commit——崩溃恢复以 binlog 是否完整裁定
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

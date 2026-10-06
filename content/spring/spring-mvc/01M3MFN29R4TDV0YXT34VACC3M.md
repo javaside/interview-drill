@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29R4TDV0YXT34VACC3M
 blockId: spring/spring-mvc
-relatedBlocks:
-  []
-question: "拦截器和 Filter 的区别？"
+relatedBlocks: []
+question: 拦截器和 Filter 的区别？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 登录校验放 Filter 还是拦截器？
 keyPoints:
   - id: kp-mv2-1
-    text: "Filter 是 Servlet 规范（容器级），拦截器是 Spring MVC 专属"
+    text: Filter 是 Servlet 规范（容器级），拦截器是 Spring MVC 专属
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv2-2
-    text: "拦截器能拿到 HandlerMethod（知道要执行哪个方法），Filter 不能"
+    text: 拦截器能拿到 HandlerMethod（知道要执行哪个方法），Filter 不能
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv2-3
-    text: "执行序：Filter→DispatcherServlet→拦截器→Controller"
+    text: 执行序：Filter→DispatcherServlet→拦截器→Controller
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv2-4
-    text: "拦截器可注入 Spring Bean 天然；Filter 若需注入要 DelegatingFilterProxy"
+    text: 拦截器可注入 Spring Bean 天然；Filter 若需注入要 DelegatingFilterProxy
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv2-5
-    text: "preHandle 返回 false 可短路；afterCompletion 无论成败都执行（清理资源）"
+    text: preHandle 返回 false 可短路；afterCompletion 无论成败都执行（清理资源）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **层次不同**：Filter 在 **Servlet 容器层**（包裹整个 DispatcherServlet），拦截器在 **Spring MVC 层**（只管进到 MVC 的请求）：

@@ -2,7 +2,7 @@
 id: 01M3KHXF75R06665VQA8KHERJA
 blockId: mysql/locks
 relatedBlocks: []
-question: "什么是插入意向锁？"
+question: 什么是插入意向锁？
 cardType: atomic
 appliesTo: MySQL 8.0+
 frequency: low
@@ -10,9 +10,9 @@ followUps:
   - 它和间隙锁的冲突关系是什么？
 keyPoints:
   - id: kp-lk5-1
-    text: "插行前对间隙的意向标记：彼此兼容、仅与间隙锁冲突"
+    text: 插行前对间隙的意向标记：彼此兼容、仅与间隙锁冲突
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

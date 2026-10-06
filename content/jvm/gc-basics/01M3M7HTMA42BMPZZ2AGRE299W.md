@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMA42BMPZZ2AGRE299W
 blockId: jvm/gc-basics
-relatedBlocks:
-  []
-question: "基础 GC 算法有哪三种？各适合哪代？"
+relatedBlocks: []
+question: 基础 GC 算法有哪三种？各适合哪代？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 为什么新生代选复制、老年代选整理？
 keyPoints:
   - id: kp-gb3-1
-    text: "标记-清除：标完直接删——快但留碎片"
+    text: 标记-清除：标完直接删——快但留碎片
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gb3-2
-    text: "标记-复制：活对象搬走、旧区整体清零——无碎片但费空间"
+    text: 标记-复制：活对象搬走、旧区整体清零——无碎片但费空间
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gb3-3
-    text: "标记-整理：标记后存活者向一端挪——无碎片但挪动贵"
+    text: 标记-整理：标记后存活者向一端挪——无碎片但挪动贵
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gb3-4
-    text: "存活少的新生代配复制；存活多的老年代配整理"
+    text: 存活少的新生代配复制；存活多的老年代配整理
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 三种**基础姿势**：

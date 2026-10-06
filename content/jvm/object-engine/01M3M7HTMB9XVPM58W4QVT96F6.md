@@ -3,7 +3,7 @@ id: 01M3M7HTMB9XVPM58W4QVT96F6
 blockId: jvm/object-engine
 relatedBlocks:
   - jvm/gc-basics
-question: "什么是 JIT 与逃逸分析？"
+question: 什么是 JIT 与逃逸分析？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +11,45 @@ followUps:
   - 为什么局部 new 的对象可能不进堆？
 keyPoints:
   - id: kp-oe3-1
-    text: "JIT：热点代码（计数器达标）编译成本机机器码——越跑越快"
+    text: JIT：热点代码（计数器达标）编译成本机机器码——越跑越快
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe3-2
-    text: "逃逸分析：对象是否跑出方法/线程的作用域"
+    text: 逃逸分析：对象是否跑出方法/线程的作用域
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe3-3
-    text: "不逃逸对象的优化：栈上拆解（标量替换）、锁消除、不死码剪除"
+    text: 不逃逸对象的优化：栈上拆解（标量替换）、锁消除、不死码剪除
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe3-4
-    text: "分层编译：C1 快速编译保启动，C2 深度优化保峰值"
+    text: 分层编译：C1 快速编译保启动，C2 深度优化保峰值
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 **解释执行→越跑越快**的秘密是 **JIT（即时编译）**：

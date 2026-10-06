@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0ZVK25VC2HMSK3EKB2
 blockId: java/reflection-proxy
-relatedBlocks:
-  []
-question: "JDK 动态代理的原理？"
+relatedBlocks: []
+question: JDK 动态代理的原理？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 代理类是怎么生成的？
 keyPoints:
   - id: kp-rf3-1
-    text: "运行时生成实现接口的代理类（$Proxy0），方法调用统一转发 InvocationHandler"
+    text: 运行时生成实现接口的代理类（$Proxy0），方法调用统一转发 InvocationHandler
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-rf3-2
-    text: "InvocationHandler.invoke(proxy, method, args)：切面逻辑的落点"
+    text: InvocationHandler.invoke(proxy, method, args)：切面逻辑的落点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-rf3-3
-    text: "只能代理接口（代理类继承 Proxy 类，Java 单继承已占用）"
+    text: 只能代理接口（代理类继承 Proxy 类，Java 单继承已占用）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-rf3-4
-    text: "Spring AOP 默认策略：有接口走 JDK 代理，无接口走 CGLIB"
+    text: Spring AOP 默认策略：有接口走 JDK 代理，无接口走 CGLIB
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 给接口动态造一个「替身」，所有调用先过你的一段逻辑：

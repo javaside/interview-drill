@@ -14,43 +14,43 @@ keyPoints:
   - id: kp-inv-1
     text: 对索引列使用函数或表达式：where year(create_time) = 2026
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-inv-2
     text: 隐式类型转换：字符串列传入了数字
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-inv-3
     text: 前导模糊匹配：like '%xx'（'xx%' 则可用）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-inv-4
     text: 联合索引不满足最左前缀：跳过第一列直接查后面的列
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
 ---
 
 索引是按**列的原值**有序组织的。写法一旦让数据库「没法直接按有序值找」，就只能放弃索引、全表逐行扫（**索引失效**→**全表扫描**）。四种最常见的踩法：

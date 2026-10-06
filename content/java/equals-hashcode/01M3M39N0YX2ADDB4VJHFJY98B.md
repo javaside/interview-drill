@@ -4,7 +4,7 @@ blockId: java/equals-hashcode
 relatedBlocks:
   - java/language-basics
   - java/hashmap
-question: "equals 和 hashCode 之间的契约是什么？"
+question: equals 和 hashCode 之间的契约是什么？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -12,45 +12,45 @@ followUps:
   - 违反契约的具体症状是什么？
 keyPoints:
   - id: kp-eh2-1
-    text: "equals 相同 ⇒ hashCode 必须相同（硬性要求）"
+    text: equals 相同 ⇒ hashCode 必须相同（硬性要求）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-eh2-2
-    text: "hashCode 相同 ⇏ equals 相同（碰撞合法，只是性能问题）"
+    text: hashCode 相同 ⇏ equals 相同（碰撞合法，只是性能问题）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-eh2-3
-    text: "只重写 equals 不重写 hashCode：对象进 HashMap/HashSet 后找不到"
+    text: 只重写 equals 不重写 hashCode：对象进 HashMap/HashSet 后找不到
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-eh2-4
-    text: "IDE/Objects.hash 可生成合格实现；参与字段必须与 equals 完全一致"
+    text: IDE/Objects.hash 可生成合格实现；参与字段必须与 equals 完全一致
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 一条**单向硬约束**：

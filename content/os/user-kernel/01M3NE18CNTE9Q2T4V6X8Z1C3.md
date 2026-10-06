@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTE9Q2T4V6X8Z1C3
 blockId: os/user-kernel
-relatedBlocks:
-  []
-question: "系统调用的开销在哪？为什么 strace 会让程序变慢？"
+relatedBlocks: []
+question: 系统调用的开销在哪？为什么 strace 会让程序变慢？
 cardType: enumeration
 appliesTo: Linux
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - glibc 的 buffered IO 帮了什么？
 keyPoints:
   - id: kp-uk3-1
-    text: "开销构成：模式切换（保存现场+切栈+安全检查）+内核逻辑本身"
+    text: 开销构成：模式切换（保存现场+切栈+安全检查）+内核逻辑本身
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk3-2
-    text: "syscall 指令百纳秒级——但内核逻辑可达微秒毫秒（read 触盘）"
+    text: syscall 指令百纳秒级——但内核逻辑可达微秒毫秒（read 触盘）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk3-3
-    text: "strace 用 ptrace 拦截每次调用——每个调用多两倍切换+打印"
+    text: strace 用 ptrace 拦截每次调用——每个调用多两倍切换+打印
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk3-4
-    text: "优化方向：减少次数（缓冲/批量/vDSO）而非单次加速"
+    text: 优化方向：减少次数（缓冲/批量/vDSO）而非单次加速
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk3-5
-    text: "对比：一次系统调用 ≈ 上千次函数调用——高频小 IO 是反模式"
+    text: 对比：一次系统调用 ≈ 上千次函数调用——高频小 IO 是反模式
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
 ---
 
 一次系统调用的账单两部分：**「过门费」**（模式切换：保存寄存器/切内核栈/入口检查——`syscall` 指令本身 ~百 ns）+**「办事费」**（内核里实际干的活——可能触发磁盘就是毫秒级）。

@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29R31DZVVDW8KSP6GE7
 blockId: spring/boot-autoconfig
-relatedBlocks:
-  []
-question: "starter 是什么？为什么需要？"
+relatedBlocks: []
+question: starter 是什么？为什么需要？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 为什么不该把版本号写死在每个依赖里？
 keyPoints:
   - id: kp-ba4-1
-    text: "依赖聚合 + 自动配置的打包：引一个 starter 得到全家桶"
+    text: 依赖聚合 + 自动配置的打包：引一个 starter 得到全家桶
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba4-2
-    text: "spring-boot-starter-web=SpringMVC+Jackson+Tomcat 版本对齐"
+    text: spring-boot-starter-web=SpringMVC+Jackson+Tomcat 版本对齐
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba4-3
-    text: "解决依赖地狱：版本由 Boot BOM 统一仲裁"
+    text: 解决依赖地狱：版本由 Boot BOM 统一仲裁
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ba4-4
-    text: "约定优于配置：默认即可跑，要改走 yml"
+    text: 约定优于配置：默认即可跑，要改走 yml
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **Starter = 依赖打包（BOM 版本对齐）+ 自动配置（缺省可跑）**：

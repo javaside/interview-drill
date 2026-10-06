@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0ZNMSR29N61YMXVZZM
 blockId: java/reflection-proxy
-relatedBlocks:
-  []
-question: "获取 Class 对象的方式有哪些？"
+relatedBlocks: []
+question: 获取 Class 对象的方式有哪些？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - Class.forName 和 ClassLoader.loadClass 的区别？
 keyPoints:
   - id: kp-rf1-1
-    text: "类名.class：编译期已知类型时最简洁"
+    text: 类名.class：编译期已知类型时最简洁
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-rf1-2
-    text: "对象.getClass()：运行时拿实例的真实类型（含子类）"
+    text: 对象.getClass()：运行时拿实例的真实类型（含子类）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-rf1-3
-    text: 'Class.forName(全限定名)：按名字加载（JDBC 驱动注册的经典写法）'
+    text: Class.forName(全限定名)：按名字加载（JDBC 驱动注册的经典写法）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-rf1-4
-    text: "三种方式拿到的是同一个 Class 实例（JVM 每类一份）"
+    text: 三种方式拿到的是同一个 Class 实例（JVM 每类一份）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 运行时拿到「类型的身份证（**Class 对象**」的三条路：

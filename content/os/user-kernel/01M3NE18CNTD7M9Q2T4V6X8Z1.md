@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTD7M9Q2T4V6X8Z1
 blockId: os/user-kernel
-relatedBlocks:
-  []
-question: "程序什么时候会陷入内核态？"
+relatedBlocks: []
+question: 程序什么时候会陷入内核态？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 软中断为什么占 CPU？
 keyPoints:
   - id: kp-uk2-1
-    text: "路 1 系统调用：主动请求服务（read/write/fork/socket）"
+    text: 路 1 系统调用：主动请求服务（read/write/fork/socket）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk2-2
-    text: "路 2 中断：硬件异步敲门（网卡包到/时钟节拍/磁盘完成）"
+    text: 路 2 中断：硬件异步敲门（网卡包到/时钟节拍/磁盘完成）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk2-3
-    text: "路 3 异常：执行出错（缺页/除零/越权访问）被动触发"
+    text: 路 3 异常：执行出错（缺页/除零/越权访问）被动触发
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk2-4
-    text: "三条路殊途同归：保存现场→进 Ring0 →处理→返回"
+    text: 三条路殊途同归：保存现场→进 Ring0 →处理→返回
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk2-5
-    text: "时钟中断是调度的脉搏——没有它一个死循环独占 CPU"
+    text: 时钟中断是调度的脉搏——没有它一个死循环独占 CPU
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
 ---
 
 进内核只有**三条门**：

@@ -2,7 +2,7 @@
 id: 01M3KHXF7554DRVCQAJDQ486AT
 blockId: mysql/memory-structures
 relatedBlocks: []
-question: "InnoDB 对传统 LRU 做了什么改进？为什么？"
+question: InnoDB 对传统 LRU 做了什么改进？为什么？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - young 区内部的「降温」规则是什么？
 keyPoints:
   - id: kp-mem2-1
-    text: "问题：全表扫描一次灌入大量冷页，把真正的热数据挤出缓存（缓存污染）"
+    text: 问题：全表扫描一次灌入大量冷页，把真正的热数据挤出缓存（缓存污染）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem2-2
-    text: "改进：LRU 分 young/old 两代，新读入的页先进 old 区（链表 5/8 处）"
+    text: 改进：LRU 分 young/old 两代，新读入的页先进 old 区（链表 5/8 处）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem2-3
-    text: "在 old 区停留超过 innodb_old_blocks_time（默认 1 秒）再次被访问才晋升 young"
+    text: 在 old 区停留超过 innodb_old_blocks_time（默认 1 秒）再次被访问才晋升 young
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem2-4
-    text: "效果：扫描类冷页很快被逐出，频繁访问的热页留在 young 区不被冲刷"
+    text: 效果：扫描类冷页很快被逐出，频繁访问的热页留在 young 区不被冲刷
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -50,9 +50,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem2-5
-    text: "young 区头部 1/4 的重复访问不再前移，减少链表抖动"
+    text: young 区头部 1/4 的重复访问不再前移，减少链表抖动
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

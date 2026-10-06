@@ -3,44 +3,44 @@ id: 01M3M39N0YJQ9ETGS6ZDRW1J9B
 blockId: java/hashmap
 relatedBlocks:
   - java/collections-overview
-question: "HashMap key 放进桶后再改参与 hash 的字段，get 还能找到它吗？"
+question: HashMap key 放进桶后再改参与 hash 的字段，get 还能找到它吗？
 cardType: judgment
-conclusion: no
+conclusion: 'no'
 appliesTo: Java 17+
 frequency: high
 followUps:
   - value 可变有问题吗？
 keyPoints:
   - id: kp-hm5-1
-    text: "入桶后修改参与 hash 的字段：hash 变了，元素留在旧桶——之后查不到"
+    text: 入桶后修改参与 hash 的字段：hash 变了，元素留在旧桶——之后查不到
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-hm5-2
-    text: "get/remove 都按新 hash 找新桶，旧桶里的它成了孤儿（内存泄漏式滞留）"
+    text: get/remove 都按新 hash 找新桶，旧桶里的它成了孤儿（内存泄漏式滞留）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-hm5-3
-    text: "规范：key 用 String/Integer 或含 final 字段的不可变对象"
+    text: 规范：key 用 String/Integer 或含 final 字段的不可变对象
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 Map 定位元素靠的是 **key 的 hash**。放进去之后再**改 key 的字段**（参与 hashCode 的字段）：

@@ -51,7 +51,7 @@ keyPoints:
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/glossary.html
-      locator: "glossary: non-repeatable read"
+      locator: 'glossary: non-repeatable read'
     reasoning: 由 ReadView 复用与否推出：同一查询两次结果是否可能不同
   - id: kp-jbj3jw-5
     text: 两者的当前读都读最新已提交版本，与 ReadView 无关

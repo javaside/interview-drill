@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNQFGY7ZQBDA3P1QXB
 blockId: distributed/arch-evolution
-relatedBlocks:
-  []
-question: "怎么设计一个短链系统？"
+relatedBlocks: []
+question: 怎么设计一个短链系统？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 301 和 302 选哪个？
 keyPoints:
   - id: kp-ae5-1
-    text: "发号器：长链→全局唯一短码（自增转 62 进制/哈希+冲突检测）"
+    text: 发号器：长链→全局唯一短码（自增转 62 进制/哈希+冲突检测）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae5-2
-    text: "存储：短码→长链映射（KV 场景 Redis/MySQL 均可）"
+    text: 存储：短码→长链映射（KV 场景 Redis/MySQL 均可）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae5-3
-    text: "跳转：301/302 重定向（302 可统计点击）"
+    text: 跳转：301/302 重定向（302 可统计点击）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae5-4
-    text: "缓存：热点短码进缓存+布隆防穿透"
+    text: 缓存：热点短码进缓存+布隆防穿透
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **短链系统三件套**：

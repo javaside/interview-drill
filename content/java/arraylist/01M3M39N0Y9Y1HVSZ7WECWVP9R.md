@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0Y9Y1HVSZ7WECWVP9R
 blockId: java/arraylist
-relatedBlocks:
-  []
-question: "ArrayList 是线程安全的吗？有哪些替代？"
+relatedBlocks: []
+question: ArrayList 是线程安全的吗？有哪些替代？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - CopyOnWriteArrayList 的写代价是什么？
 keyPoints:
   - id: kp-al5-1
-    text: "不是：并发 add 可丢数据，扩容竞态可抛 ArrayIndexOutOfBounds"
+    text: 不是：并发 add 可丢数据，扩容竞态可抛 ArrayIndexOutOfBounds
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-al5-2
-    text: "Collections.synchronizedList：全方法 synchronized 的包装（粗但简单）"
+    text: Collections.synchronizedList：全方法 synchronized 的包装（粗但简单）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-al5-3
-    text: "CopyOnWriteArrayList：写时复制新数组，读完全无锁——读多写少首选"
+    text: CopyOnWriteArrayList：写时复制新数组，读完全无锁——读多写少首选
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-al5-4
-    text: "并发迭代：COW 天然快照安全；synchronized 需 synchronized 块包裹"
+    text: 并发迭代：COW 天然快照安全；synchronized 需 synchronized 块包裹
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 **不安全**。并发场景两类替代：

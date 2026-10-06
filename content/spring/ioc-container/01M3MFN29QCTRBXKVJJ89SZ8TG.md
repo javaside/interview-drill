@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29QCTRBXKVJJ89SZ8TG
 blockId: spring/ioc-container
-relatedBlocks:
-  []
-question: "BeanDefinition 是什么？"
+relatedBlocks: []
+question: BeanDefinition 是什么？
 cardType: atomic
 appliesTo: Spring 6+
 frequency: mid
@@ -11,15 +10,15 @@ followUps:
   - Spring 里有几处产生 BeanDefinition 的方式？
 keyPoints:
   - id: kp-ioc5-1
-    text: "Bean 的配方卡：类名、作用域、依赖、初始化方法、懒加载——容器照它实例化装配"
+    text: Bean 的配方卡：类名、作用域、依赖、初始化方法、懒加载——容器照它实例化装配
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **BeanDefinition = Bean 的配方卡**：容器并不直接拿着类干活，而是先把每个 Bean 的**元信息**登记成一张卡——类名（照它反射造）、作用域（单例/原型）、依赖（照它注入）、init/destroy 方法、懒加载……

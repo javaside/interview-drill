@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0Y0TJ3PKJPN01HQXKA
 blockId: java/arraylist
-relatedBlocks:
-  []
-question: "subList 返回的是什么？"
+relatedBlocks: []
+question: subList 返回的是什么？
 cardType: atomic
 appliesTo: Java 17+
 frequency: mid
@@ -11,15 +10,15 @@ followUps:
   - 视图失效是什么错？
 keyPoints:
   - id: kp-al3-1
-    text: "原列表的一个视图：不拷贝数据，视图上的结构修改直接作用于原列表"
+    text: 原列表的一个视图：不拷贝数据，视图上的结构修改直接作用于原列表
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 `list.subList(2, 5)` 拿到的**不是新列表，是原列表的「窗口」**（视图）：底层同一份数据，**不拷贝**。

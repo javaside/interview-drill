@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMWEQ7GZJVCYEBDWF4
 blockId: distributed/dist-tx
-relatedBlocks:
-  []
-question: "本地消息表 vs 事务消息怎么选？"
+relatedBlocks: []
+question: 本地消息表 vs 事务消息怎么选？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 没有 RocketMQ 怎么办？
 keyPoints:
   - id: kp-dt4-1
-    text: "本地消息表：业务与消息同库同事务——强可靠，侵入 DB"
+    text: 本地消息表：业务与消息同库同事务——强可靠，侵入 DB
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt4-2
-    text: "事务消息：MQ 半消息+回查——不侵入业务库，绑 MQ 能力"
+    text: 事务消息：MQ 半消息+回查——不侵入业务库，绑 MQ 能力
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt4-3
-    text: "两者目标相同：本地事务与消息发送的原子性"
+    text: 两者目标相同：本地事务与消息发送的原子性
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt4-4
-    text: "最终一致都依赖：消费端 idempotent 加失败重试加对账"
+    text: 最终一致都依赖：消费端 idempotent 加失败重试加对账
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 「**DB 落库成功 = 消息一定发出去**」的两条实现：

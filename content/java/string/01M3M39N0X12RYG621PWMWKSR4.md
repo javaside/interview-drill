@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0X12RYG621PWMWKSR4
 blockId: java/string
-relatedBlocks:
-  []
-question: "String 的 hashCode 是怎么算的？"
+relatedBlocks: []
+question: String 的 hashCode 是怎么算的？
 cardType: atomic
 appliesTo: Java 17+
 frequency: mid
@@ -11,15 +10,15 @@ followUps:
   - 为什么选 31 这个系数？
 keyPoints:
   - id: kp-st4-1
-    text: "s[0]*31^(n-1) + s[1]*31^(n-2) + … + s[n-1]：按位乘 31 累加，结果缓存"
+    text: s[0]*31^(n-1) + s[1]*31^(n-2) + … + s[n-1]：按位乘 31 累加，结果缓存
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 公式：**h = 0; 对每个字符 c：h = 31*h + c**——即 `s[0]*31^(n-1) + s[1]*31^(n-2) + …`。

@@ -2,7 +2,7 @@
 id: 01M3KJ46DKB7XQ1TV1EFE6KEEA
 blockId: mysql/binlog
 relatedBlocks: []
-question: "relay log 堆积说明什么？"
+question: relay log 堆积说明什么？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: mid
@@ -10,9 +10,9 @@ followUps:
   - Seconds_Behind_Master 为 0 一定没延迟吗？
 keyPoints:
   - id: kp-bi5-1
-    text: "relay log=从库收到 binlog 的中转文件；堆积=SQL 线程重放速度跟不上主库写入"
+    text: relay log=从库收到 binlog 的中转文件；堆积=SQL 线程重放速度跟不上主库写入
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi5-2
-    text: "常见原因：从库单线程重放、大事务、从库负载高或锁僵持"
+    text: 常见原因：从库单线程重放、大事务、从库负载高或锁僵持
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi5-3
-    text: "影响：主从延迟扩大，读从库拿到旧数据"
+    text: 影响：主从延迟扩大，读从库拿到旧数据
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi5-4
-    text: "缓解：并行复制（LOGICAL_CLOCK/WRITESET）、拆大事务、扩从库资源"
+    text: 缓解：并行复制（LOGICAL_CLOCK/WRITESET）、拆大事务、扩从库资源
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

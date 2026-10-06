@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CM79Q3MZ0JMWFRJ6FB
 blockId: distributed/high-availability
-relatedBlocks:
-  []
-question: "限流算法部署在哪一层？"
+relatedBlocks: []
+question: 限流算法部署在哪一层？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -11,55 +10,55 @@ followUps:
   - 单机限流和集群限流的差？
 keyPoints:
   - id: kp-ha4-1
-    text: "客户端限流：防自己打垮下游（sdk 令牌桶）"
+    text: 客户端限流：防自己打垮下游（sdk 令牌桶）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha4-2
-    text: "网关限流：全局入口闸（按 API/用户/租户）"
+    text: 网关限流：全局入口闸（按 API/用户/租户）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha4-3
-    text: "服务端限流：自我保护（sentinel 每机）"
+    text: 服务端限流：自我保护（sentinel 每机）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha4-4
-    text: "分布式限流：Redis+lua 或集群流控 server（全局面额）"
+    text: 分布式限流：Redis+lua 或集群流控 server（全局面额）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ha5-5
-    text: "多层配额：全局>应用>接口>用户 层层分摊"
+    text: 多层配额：全局>应用>接口>用户 层层分摊
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 限流器放哪里 = **保护谁、按什么口径数**：

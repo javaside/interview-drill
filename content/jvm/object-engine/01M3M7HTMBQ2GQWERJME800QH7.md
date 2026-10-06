@@ -3,7 +3,7 @@ id: 01M3M7HTMBQ2GQWERJME800QH7
 blockId: jvm/object-engine
 relatedBlocks:
   - jvm/gc-basics
-question: "对象的内存布局？"
+question: 对象的内存布局？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +11,45 @@ followUps:
   - 一个空对象占多少字节？
 keyPoints:
   - id: kp-oe2-1
-    text: "对象头 Mark Word：哈希/GC 年龄/锁状态位（锁升级的主舞台）"
+    text: 对象头 Mark Word：哈希/GC 年龄/锁状态位（锁升级的主舞台）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe2-2
-    text: "对象头类型指针：指向类元数据（压缩指针 4 字节）"
+    text: 对象头类型指针：指向类元数据（压缩指针 4 字节）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe2-3
-    text: "实例数据：字段按类型排序排列（longs/doubles 优先的对齐策略）"
+    text: 实例数据：字段按类型排序排列（longs/doubles 优先的对齐策略）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe2-4
-    text: "对齐填充：补齐到 8 字节整数倍"
+    text: 对齐填充：补齐到 8 字节整数倍
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 一个对象在堆里的**三段结构**：

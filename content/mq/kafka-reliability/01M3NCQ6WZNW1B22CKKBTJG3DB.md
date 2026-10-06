@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WZNW1B22CKKBTJG3DB
 blockId: mq/kafka-reliability
-relatedBlocks:
-  []
-question: "acks 参数的三个取值意味着什么？"
+relatedBlocks: []
+question: acks 参数的三个取值意味着什么？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,65 +10,65 @@ followUps:
   - 为什么 all 还要配 min.insync.replicas？
 keyPoints:
   - id: kp-kr1-1
-    text: "acks=0：发出即算成功——不候任何确认（可丢场景最快）"
+    text: acks=0：发出即算成功——不候任何确认（可丢场景最快）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr1-2
-    text: "acks=1：Leader 写入即确认——Leader 挂且未同步完则丢"
+    text: acks=1：Leader 写入即确认——Leader 挂且未同步完则丢
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr1-3
-    text: "acks=all：ISR 全部副本写入才确认——最可靠（配 min.insync.replicas）"
+    text: acks=all：ISR 全部副本写入才确认——最可靠（配 min.insync.replicas）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr1-4
-    text: "acks=all 且 ISR 收缩到 1 时退化——min.insync.replicas=2 卡住底线"
+    text: acks=all 且 ISR 收缩到 1 时退化——min.insync.replicas=2 卡住底线
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr1-5
-    text: "unclean 选举开关决定可用性与一致性的取舍"
+    text: unclean 选举开关决定可用性与一致性的取舍
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr1-6
-    text: "delivery.timeout 约束生产端整体重试时长"
+    text: delivery.timeout 约束生产端整体重试时长
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **acks=生产端要求 broker 写到什么程度才算「收到」**：

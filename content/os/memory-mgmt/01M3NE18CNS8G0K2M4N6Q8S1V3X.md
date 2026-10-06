@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNS8G0K2M4N6Q8S1V3X
 blockId: os/memory-mgmt
-relatedBlocks:
-  []
-question: "缺页中断和页面置换算法？"
+relatedBlocks: []
+question: 缺页中断和页面置换算法？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 怎么判断系统在颠簸？
 keyPoints:
   - id: kp-mm2-1
-    text: "缺页：访问的页不在内存——触发中断由内核补页（读盘/分配/换入）"
+    text: 缺页：访问的页不在内存——触发中断由内核补页（读盘/分配/换入）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
   - id: kp-mm2-2
-    text: "类型：良性（按需调入）/ 换入（从 swap 回来）/ 恶性（越权→段错误）"
+    text: 类型：良性（按需调入）/ 换入（从 swap 回来）/ 恶性（越权→段错误）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
   - id: kp-mm2-3
-    text: "物理满则置换：挑冷页让位——LRU 家族是主流"
+    text: 物理满则置换：挑冷页让位——LRU 家族是主流
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
   - id: kp-mm2-4
-    text: "LRU 精确代换太贵：active/inactive 双链表近似"
+    text: LRU 精确代换太贵：active/inactive 双链表近似
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
   - id: kp-mm2-5
-    text: "颠簸：工作集超物理容量——页频繁进出，CPU 全耗在换页上"
+    text: 颠簸：工作集超物理容量——页频繁进出，CPU 全耗在换页上
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
 ---
 
 **缺页中断**（page fault）不是坏事——它是「按需分配」的兑现时刻：进程摸到一个还没映射的虚拟页 → CPU 陷入内核 → 内核看这地方**该不该有数据**：

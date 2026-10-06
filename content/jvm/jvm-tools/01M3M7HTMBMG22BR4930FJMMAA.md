@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMBMG22BR4930FJMMAA
 blockId: jvm/jvm-tools
-relatedBlocks:
-  []
-question: "内存泄漏怎么排查？"
+relatedBlocks: []
+question: 内存泄漏怎么排查？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 内存泄漏和内存溢出的区别？
 keyPoints:
   - id: kp-jt2-1
-    text: "现象：Full GC 后老年代只升不降、GC 间隔越来越短"
+    text: 现象：Full GC 后老年代只升不降、GC 间隔越来越短
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-jt2-2
-    text: "dump 堆（jmap 或 HeapDumpOnOutOfMemoryError）交 MAT"
+    text: dump 堆（jmap 或 HeapDumpOnOutOfMemoryError）交 MAT
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-jt2-3
-    text: "MAT 看 Dominator Tree 与 Leak Suspects：谁霸着内存不放"
+    text: MAT 看 Dominator Tree 与 Leak Suspects：谁霸着内存不放
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-jt2-4
-    text: "常见根因：静态集合只进不出、ThreadLocal 不 remove、监听器不注销、连接不关"
+    text: 常见根因：静态集合只进不出、ThreadLocal 不 remove、监听器不注销、连接不关
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 **排查流水线**：

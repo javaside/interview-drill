@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGPW7ZR3GM4N1XPD0Z
 blockId: rpc/grpc-comm
-relatedBlocks:
-  []
-question: "Protobuf 的字段编号规则？"
+relatedBlocks: []
+question: Protobuf 的字段编号规则？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 改了字段编号会怎样？
 keyPoints:
   - id: kp-gr4-1
-    text: "编号一旦使用不可改（线上字节流的字段定位全靠它）"
+    text: 编号一旦使用不可改（线上字节流的字段定位全靠它）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr4-2
-    text: "1-15 单字节编码——高频字段优先用这段"
+    text: 1-15 单字节编码——高频字段优先用这段
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr4-3
-    text: "删除字段要 reserved 编号与名字——防新人复用酿事故"
+    text: 删除字段要 reserved 编号与名字——防新人复用酿事故
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr4-4
-    text: "新增字段双方兼容：旧端读新数据忽略未知字段"
+    text: 新增字段双方兼容：旧端读新数据忽略未知字段
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **Protobuf 的字段在字节流里没有名字——只有编号**（`tag = (field_number << 3) | wire_type`）：

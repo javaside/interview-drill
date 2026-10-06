@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMTB6TCQT0VZ7GZ1CR
 blockId: distributed/dist-cache
-relatedBlocks:
-  []
-question: "缓存和数据库的一致性怎么保证？"
+relatedBlocks: []
+question: 缓存和数据库的一致性怎么保证？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 为什么是删缓存而不是更新缓存？
 keyPoints:
   - id: kp-dc7-1
-    text: "主流：Cache Aside——读 miss 回源回填；写先更 DB 再删缓存"
+    text: 主流：Cache Aside——读 miss 回源回填；写先更 DB 再删缓存
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc7-2
-    text: "为何删不改写缓存：并发改写易乱序覆盖；删除天然 idempotent"
+    text: 为何删不改写缓存：并发改写易乱序覆盖；删除天然 idempotent
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc7-3
-    text: "先删缓存再更 DB：读旧值回填脏数据窗口更大"
+    text: 先删缓存再更 DB：读旧值回填脏数据窗口更大
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc7-4
-    text: "极致方案：延迟双删（更新后再删一次兜底）/ binlog 订阅异步删"
+    text: 极致方案：延迟双删（更新后再删一次兜底）/ binlog 订阅异步删
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dc7-5
-    text: "接受短暂不一致（TTL 兜底）是多数业务的现实选择"
+    text: 接受短暂不一致（TTL 兜底）是多数业务的现实选择
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **Cache Aside（旁路缓存）**——业务代码亲自管缓存的事实标准：

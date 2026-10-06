@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RQG76PR28N5HX1K6K
 blockId: spring/transaction-tx
-relatedBlocks:
-  []
-question: "编程式事务什么时候用？"
+relatedBlocks: []
+question: 编程式事务什么时候用？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 长事务怎么治理？
 keyPoints:
   - id: kp-tx4-1
-    text: "粒度太细（事务包住一小段代码）或需条件分支控制提交"
+    text: 粒度太细（事务包住一小段代码）或需条件分支控制提交
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx4-2
-    text: "TransactionTemplate：回调式，无侵"
+    text: TransactionTemplate：回调式，无侵
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx4-3
-    text: "PlatformTransactionManager 手动三步：getTransaction/commit/rollback"
+    text: PlatformTransactionManager 手动三步：getTransaction/commit/rollback
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx4-4
-    text: "声明式适合方法级边界；事务跨多方法手工编排时编程式更直白"
+    text: 声明式适合方法级边界；事务跨多方法手工编排时编程式更直白
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **声明式**（@Transactional）适合「**一个方法=一个事务**」的规整边界；这些场景**编程式**更合适：

@@ -3,7 +3,7 @@ id: 01M3NCQ6WZC2R2ZYTTCM2YF3A5
 blockId: mq/rocketmq
 relatedBlocks:
   - mq/mq-fundamentals
-question: "消息idempotent怎么实现？"
+question: 消息idempotent怎么实现？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,55 +11,55 @@ followUps:
   - 为什么不能靠 MQ 自己不重复？
 keyPoints:
   - id: kp-rq5-1
-    text: "唯一键约束：业务号（订单号+事件类型）插库天然去重"
+    text: 唯一键约束：业务号（订单号+事件类型）插库天然去重
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq5-2
-    text: "状态机：只允许合法迁移（已支付收到取消前的扣款消息→跳过）"
+    text: 状态机：只允许合法迁移（已支付收到取消前的扣款消息→跳过）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq5-3
-    text: "Redis setnx/SETNX+过期时间挡住短窗口重复"
+    text: Redis setnx/SETNX+过期时间挡住短窗口重复
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq5-4
-    text: "版本号/乐观锁：带版本更新，重复消息第二次影响为零"
+    text: 版本号/乐观锁：带版本更新，重复消息第二次影响为零
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq5-5
-    text: "选择标准：强一致用库唯一键；高频用 Redis；流程类用状态机"
+    text: 选择标准：强一致用库唯一键；高频用 Redis；流程类用状态机
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **重复投递是 MQ 的本性**（网络重试/重平衡/ack 丢失都可能重投）——**at-least-once 是底色**，与其对抗不如接受 + **消费端防重**：

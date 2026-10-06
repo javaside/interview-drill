@@ -1,8 +1,7 @@
 ---
 id: 01M3M39N0X1EYQ2CC05QDYQ0QM
 blockId: java/string
-relatedBlocks:
-  []
+relatedBlocks: []
 question: String s = new String(「abc」) 创建了几个对象？
 cardType: judgment
 conclusion: depends
@@ -12,45 +11,45 @@ followUps:
   - intern() 的作用是什么？
 keyPoints:
   - id: kp-st3-1
-    text: "常量池中若无 abc 则先在池里创建一个"
+    text: 常量池中若无 abc 则先在池里创建一个
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st3-2
-    text: "new 在堆里再创建一个独立对象（不指向池）"
+    text: new 在堆里再创建一个独立对象（不指向池）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st3-3
-    text: "答案是 1 或 2 个：取决于字面量此前是否已入池"
+    text: 答案是 1 或 2 个：取决于字面量此前是否已入池
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st3-4
-    text: "字符串字面量在类加载的常量池解析阶段登记"
+    text: 字符串字面量在类加载的常量池解析阶段登记
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 经典面试题，拆开看这行代码的两步：

@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSFQ6DJYJ18QPFWZQBD
 blockId: concurrency/sync-tools
-relatedBlocks:
-  []
-question: "怎么实现一个生产者消费者队列？"
+relatedBlocks: []
+question: 怎么实现一个生产者消费者队列？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - put 和 offer 的区别？
 keyPoints:
   - id: kp-st4-1
-    text: "首选 BlockingQueue：put 与 take 自带满阻塞与空阻塞"
+    text: 首选 BlockingQueue：put 与 take 自带满阻塞与空阻塞
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-st4-2
-    text: "ArrayBlockingQueue 有界（生产推荐）；LinkedBlockingQueue 可设界"
+    text: ArrayBlockingQueue 有界（生产推荐）；LinkedBlockingQueue 可设界
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-st4-3
-    text: "SynchronousQueue 零容量直递（一手交钱一手交货）"
+    text: SynchronousQueue 零容量直递（一手交钱一手交货）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-st4-4
-    text: "PriorityBlockingQueue 按优先级出队；DelayQueue 到期才可取"
+    text: PriorityBlockingQueue 按优先级出队；DelayQueue 到期才可取
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
 ---
 
 生产者消费者的**队列选型**：

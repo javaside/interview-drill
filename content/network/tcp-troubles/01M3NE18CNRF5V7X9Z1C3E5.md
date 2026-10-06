@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRF5V7X9Z1C3E5
 blockId: network/tcp-troubles
-relatedBlocks:
-  []
-question: "什么情况下会收到 RST？"
+relatedBlocks: []
+question: 什么情况下会收到 RST？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - RST 与 FIN 的体验差别？
 keyPoints:
   - id: kp-tt4-1
-    text: "端口未监听/半开：SYK 打到无人端口立即回 RST"
+    text: 端口未监听/半开：SYK 打到无人端口立即回 RST
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tt4-2
-    text: "请求打到不存在的连接：四元组对不上（对端已重启/清表）"
+    text: 请求打到不存在的连接：四元组对不上（对端已重启/清表）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tt4-3
-    text: "进程崩溃：内核替进程关 socket 发 FIN/RST，缓冲数据丢弃"
+    text: 进程崩溃：内核替进程关 socket 发 FIN/RST，缓冲数据丢弃
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tt4-4
-    text: "主动弃数据关闭：SO_LINGER 超时 0 或应用 abort——不走正常挥手"
+    text: 主动弃数据关闭：SO_LINGER 超时 0 或应用 abort——不走正常挥手
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
   - id: kp-tt4-5
-    text: "防火墙/中间盒注入 RST 拦断（GFW/安全策略的经典手法）"
+    text: 防火墙/中间盒注入 RST 拦断（GFW/安全策略的经典手法）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
-      locator: 'RFC 9293'
+      locator: RFC 9293
 ---
 
 RST（复位）是 TCP 的**急刹车**：不走挥手、不发剩余数据、双方立刻散场。常见五个来源：

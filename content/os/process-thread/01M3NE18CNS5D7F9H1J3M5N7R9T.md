@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNS5D7F9H1J3M5N7R9T
 blockId: os/process-thread
-relatedBlocks:
-  []
-question: "线程同步有哪些方式？各自适用什么场景？"
+relatedBlocks: []
+question: 线程同步有哪些方式？各自适用什么场景？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 条件变量为什么要配互斥锁？
 keyPoints:
   - id: kp-pt4-1
-    text: "互斥锁：同一时刻一个线程进临界区——拿不到就睡（上下文切换）"
+    text: 互斥锁：同一时刻一个线程进临界区——拿不到就睡（上下文切换）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'futex(7)'
+      locator: futex(7)
   - id: kp-pt4-2
-    text: "自旋锁：拿不到原地忙候——无切换烧 CPU，临界区极短才划算"
+    text: 自旋锁：拿不到原地忙候——无切换烧 CPU，临界区极短才划算
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'futex(7)'
+      locator: futex(7)
   - id: kp-pt4-3
-    text: "条件变量：候某条件成立——配互斥锁用（候通知再醒）"
+    text: 条件变量：候某条件成立——配互斥锁用（候通知再醒）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'futex(7)'
+      locator: futex(7)
   - id: kp-pt4-4
-    text: "读写锁：读共享写独占——读多写少场景吞吐高"
+    text: 读写锁：读共享写独占——读多写少场景吞吐高
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'futex(7)'
+      locator: futex(7)
   - id: kp-pt4-5
-    text: "信号量：计数器控制并发名额（连接池限流）"
+    text: 信号量：计数器控制并发名额（连接池限流）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'futex(7)'
+      locator: futex(7)
 ---
 
 同步原语按「**候的方式**」与「**放几个人进**」分族：

@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRX3H3J5M7Q9
 blockId: network/net-layers
-relatedBlocks:
-  []
-question: "从输入 URL 到页面展示，中间发生了什么？"
+relatedBlocks: []
+question: 从输入 URL 到页面展示，中间发生了什么？
 cardType: sequence
 appliesTo: 通用
 frequency: high
@@ -12,60 +11,60 @@ followUps:
   - 渲染里哪步最耗时？
 keyPoints:
   - id: kp-nl2-1
-    text: "DNS 解析拿 IP：缓存链→本地 DNS→根/顶级/权威迭代"
+    text: DNS 解析拿 IP：缓存链→本地 DNS→根/顶级/权威迭代
     public: false
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl2-2
-    text: "TCP 三次握手建连（HTTPS 再叠 TLS 握手）"
+    text: TCP 三次握手建连（HTTPS 再叠 TLS 握手）
     public: false
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl2-3
-    text: "发 HTTP 请求经路由逐跳转发到服务器"
+    text: 发 HTTP 请求经路由逐跳转发到服务器
     public: false
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl2-4
-    text: "服务端处理：LB→网关→应用→DB，回 HTTP 响应"
+    text: 服务端处理：LB→网关→应用→DB，回 HTTP 响应
     public: false
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
   - id: kp-nl2-5
-    text: "浏览器解析渲染：HTML→DOM、CSS→CSSOM→布局绘制"
+    text: 浏览器解析渲染：HTML→DOM、CSS→CSSOM→布局绘制
     public: false
     order: 5
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
-      locator: 'RFC 1122'
+      locator: RFC 1122
 ---
 
 这道题是**整门网络的地图**——每一步都通向一个专题：

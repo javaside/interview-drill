@@ -1,11 +1,10 @@
 ---
 id: 01M3NE18CNRA5G7K9P1R3T5V
 blockId: network/https-security
-relatedBlocks:
-  []
-question: "HTTPS 能完全防住中间人攻击吗？"
+relatedBlocks: []
+question: HTTPS 能完全防住中间人攻击吗？
 cardType: judgment
-conclusion: 'depends'
+conclusion: depends
 appliesTo: 通用
 frequency: mid
 followUps:
@@ -13,55 +12,55 @@ followUps:
   - 证书校验被代码跳过有多常见？
 keyPoints:
   - id: kp-hs4-1
-    text: "能防的：窃听（密文不可读）与篡改（AEAD 校验失败即断）"
+    text: 能防的：窃听（密文不可读）与篡改（AEAD 校验失败即断）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
   - id: kp-hs4-2
-    text: "能防冒充：伪造证书无法通过信任链验证"
+    text: 能防冒充：伪造证书无法通过信任链验证
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
   - id: kp-hs4-3
-    text: "前提：客户端信任库未被污染且会真正校验（老代码忽略验签是重灾区）"
+    text: 前提：客户端信任库未被污染且会真正校验（老代码忽略验签是重灾区）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
   - id: kp-hs4-4
-    text: "破防面：用户点「继续访问」装假证书/抓包工具、CA 被黑签真证书"
+    text: 破防面：用户点「继续访问」装假证书/抓包工具、CA 被黑签真证书
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
   - id: kp-hs4-5
-    text: "不防的：流量分析（看得到你连了谁）、客户端或服务端自身失陷"
+    text: 不防的：流量分析（看得到你连了谁）、客户端或服务端自身失陷
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc8446.html
-      locator: 'RFC 8446'
+      locator: RFC 8446
 ---
 
 **结论取决于「客户端的信任体系是否完好」**。

@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29Q6BXSMTKJBP3AQTBA
 blockId: spring/ioc-container
-relatedBlocks:
-  []
-question: "BeanFactory 和 ApplicationContext 的区别？"
+relatedBlocks: []
+question: BeanFactory 和 ApplicationContext 的区别？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 懒加载和预实例化各有什么代价？
 keyPoints:
   - id: kp-ioc3-1
-    text: "BeanFactory 是最小容器：懒加载，getBean 时才造"
+    text: BeanFactory 是最小容器：懒加载，getBean 时才造
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ioc3-2
-    text: "ApplicationContext 是超集：启动时预实例化单例"
+    text: ApplicationContext 是超集：启动时预实例化单例
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ioc3-3
-    text: "ApplicationContext 额外提供：事件发布、国际化、AOP 集成、环境抽象"
+    text: ApplicationContext 额外提供：事件发布、国际化、AOP 集成、环境抽象
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-ioc3-4
-    text: "实际开发全用 ApplicationContext（AnnotationConfig/Web 组合）"
+    text: 实际开发全用 ApplicationContext（AnnotationConfig/Web 组合）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **BeanFactory** 是「最低配置版」容器：只管**造和给**（getBean 时才真正实例化——懒加载）；**ApplicationContext** 是「全家桶」：启动时把**所有单例预造好**，再叠加事件机制、国际化、环境 Profile、AOP 自动代理。

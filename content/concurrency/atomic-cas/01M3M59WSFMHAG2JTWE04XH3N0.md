@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSFMHAG2JTWE04XH3N0
 blockId: concurrency/atomic-cas
-relatedBlocks:
-  []
-question: "LongAdder 为什么比 AtomicLong 快？"
+relatedBlocks: []
+question: LongAdder 为什么比 AtomicLong 快？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 什么时候仍该用 AtomicLong？
 keyPoints:
   - id: kp-ac2-1
-    text: "AtomicLong：单点 CAS——N 线程全在一个变量上自旋互踩"
+    text: AtomicLong：单点 CAS——N 线程全在一个变量上自旋互踩
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac2-2
-    text: "LongAdder：base 加 Cell 数组分散格子——冲突时换格子各自累加"
+    text: LongAdder：base 加 Cell 数组分散格子——冲突时换格子各自累加
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac2-3
-    text: "sum 时才把 base 与全格子求和（弱一致瞬时值）"
+    text: sum 时才把 base 与全格子求和（弱一致瞬时值）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac2-4
-    text: "场景：统计计数、监控打点——只加少读的热点"
+    text: 场景：统计计数、监控打点——只加少读的热点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac2-5
-    text: "sum 的弱一致换 O(1) 写入：读少写多的吞吐契约"
+    text: sum 的弱一致换 O(1) 写入：读少写多的吞吐契约
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
 ---
 
 计数器的**堵与疏**：

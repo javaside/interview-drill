@@ -2,7 +2,7 @@
 id: 01M3KJ46DKNPM6MJHD973CJ7BF
 blockId: mysql/memory-structures
 relatedBlocks: []
-question: "自适应哈希索引（AHI）是什么？"
+question: 自适应哈希索引（AHI）是什么？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: low
@@ -10,9 +10,9 @@ followUps:
   - 为什么高并发写入场景有时要关掉它？
 keyPoints:
   - id: kp-mem5-1
-    text: "InnoDB 自动对热点页建哈希入口，同值条件查询不再逐层爬 B+ 树"
+    text: InnoDB 自动对热点页建哈希入口，同值条件查询不再逐层爬 B+ 树
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem5-2
-    text: "AHI 命中率可在 show engine innodb status 中观测"
+    text: AHI 命中率可在 show engine innodb status 中观测
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-mem5-3
-    text: "高并发写入时保护 AHI 的全局 latch 争抢反成瓶颈，可关闭"
+    text: 高并发写入时保护 AHI 的全局 latch 争抢反成瓶颈，可关闭
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

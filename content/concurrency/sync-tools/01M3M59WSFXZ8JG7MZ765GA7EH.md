@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSFXZ8JG7MZ765GA7EH
 blockId: concurrency/sync-tools
-relatedBlocks:
-  []
-question: "Exchanger 是什么？"
+relatedBlocks: []
+question: Exchanger 是什么？
 cardType: atomic
 appliesTo: Java 17+
 frequency: low
@@ -11,15 +10,15 @@ followUps:
   - 遗传算法里怎么用它？
 keyPoints:
   - id: kp-st3-1
-    text: "两线程的汇合点：各自 exchange 自家的货，在栅栏处互换拿到对方的货"
+    text: 两线程的汇合点：各自 exchange 自家的货，在栅栏处互换拿到对方的货
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
 ---
 
 **双人交换台**：两个线程各自带着「自己的货」到 exchange() 碰头——**先到的候着**，后到的一到，两人**互换货物**各自继续。

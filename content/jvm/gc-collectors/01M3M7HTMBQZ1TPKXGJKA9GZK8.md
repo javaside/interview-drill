@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMBQZ1TPKXGJKA9GZK8
 blockId: jvm/gc-collectors
-relatedBlocks:
-  []
-question: "什么是卡表和写屏障？"
+relatedBlocks: []
+question: 什么是卡表和写屏障？
 cardType: atomic
 appliesTo: Java 17+
 frequency: mid
@@ -11,15 +10,15 @@ followUps:
   - 为什么跨代引用要单独记？
 keyPoints:
   - id: kp-gc6-1
-    text: "卡表：老年代切成 512B 的卡，指向新生代的卡标脏——Minor 只扫脏卡"
+    text: 卡表：老年代切成 512B 的卡，指向新生代的卡标脏——Minor 只扫脏卡
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 **问题**：Minor GC 只扫新生代，但**老年代对象可能引用新生代**——总不能每次 Minor 翻整个老年代？

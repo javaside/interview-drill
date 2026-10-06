@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29R50DZHWB1PETZVT4Z
 blockId: spring/mybatis
-relatedBlocks:
-  []
-question: "Mapper 接口没有实现类，为什么能执行？"
+relatedBlocks: []
+question: Mapper 接口没有实现类，为什么能执行？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 方法重载在 Mapper 里能生效吗？
 keyPoints:
   - id: kp-my3-1
-    text: "JDK 动态代理：getMapper 返回接口的代理对象"
+    text: JDK 动态代理：getMapper 返回接口的代理对象
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my3-2
-    text: "代理拦截方法调用 → 依接口全限定名+方法名定位 XML/注解里的 SQL"
+    text: 代理拦截方法调用 → 依接口全限定名+方法名定位 XML/注解里的 SQL
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my3-3
-    text: "SqlSession.selectList(namespace.method) 执行并按返回类型映射"
+    text: SqlSession.selectList(namespace.method) 执行并按返回类型映射
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my3-4
-    text: "Spring 集成：MapperFactoryBean/扫描器把代理注册成 Bean"
+    text: Spring 集成：MapperFactoryBean/扫描器把代理注册成 Bean
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-my3-5
-    text: "@MapperScan 的 basePackages 与 annotationClass 控制扫描注册范围"
+    text: '@MapperScan 的 basePackages 与 annotationClass 控制扫描注册范围'
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 Mapper 接口**没有实现类**——你调用的是 **JDK 动态代理**：

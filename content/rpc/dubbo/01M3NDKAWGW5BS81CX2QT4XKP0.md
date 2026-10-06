@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGW5BS81CX2QT4XKP0
 blockId: rpc/dubbo
-relatedBlocks:
-  []
-question: "Dubbo 的集群容错模式有哪些？"
+relatedBlocks: []
+question: Dubbo 的集群容错模式有哪些？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 写接口为什么别用默认容错？
 keyPoints:
   - id: kp-du2-1
-    text: "Failover（默认）：失败换一台重试——只读操作的默认"
+    text: Failover（默认）：失败换一台重试——只读操作的默认
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du2-2
-    text: "Failfast：一次失败立即报错——写操作且未做防重时用它"
+    text: Failfast：一次失败立即报错——写操作且未做防重时用它
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du2-3
-    text: "Failsafe：失败忽略只记日志——写审计日志这类可丢场景"
+    text: Failsafe：失败忽略只记日志——写审计日志这类可丢场景
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du2-4
-    text: "Failback：失败记录后台异步重发——消息通知类最终一致"
+    text: Failback：失败记录后台异步重发——消息通知类最终一致
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du2-5
-    text: "Forking/并行调用多台取最快；Broadcast 广播任意失败即失败"
+    text: Forking/并行调用多台取最快；Broadcast 广播任意失败即失败
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **集群容错=调用失败后的补救策略**（按业务语义选）：

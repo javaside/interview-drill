@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNYXR11H0D7PRZ1EMN
 blockId: distributed/arch-evolution
-relatedBlocks:
-  []
-question: "怎么设计一个秒杀系统？"
+relatedBlocks: []
+question: 怎么设计一个秒杀系统？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 为什么不直接打数据库？
 keyPoints:
   - id: kp-ae4-1
-    text: "漏斗逐层削流：CDN 静态→网关限流→队列削峰→DB 短事务"
+    text: 漏斗逐层削流：CDN 静态→网关限流→队列削峰→DB 短事务
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae4-2
-    text: "库存预热进 Redis：原子扣减（lua/DECR），DB 异步落账"
+    text: 库存预热进 Redis：原子扣减（lua/DECR），DB 异步落账
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae4-3
-    text: "MQ 排队下单：请求入队立即返回「排队中」，消费端匀速建单"
+    text: MQ 排队下单：请求入队立即返回「排队中」，消费端匀速建单
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae4-4
-    text: "防刷：答题/验证码打散瞬时尖峰+限 uid 频次"
+    text: 防刷：答题/验证码打散瞬时尖峰+限 uid 频次
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae5-5
-    text: "兜底：库存扣到 0 即终态，超卖=红线（lua 原子+校验）"
+    text: 兜底：库存扣到 0 即终态，超卖=红线（lua 原子+校验）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **秒杀的本质：10 万 QPS 抢 100 件库存**——99.9% 的请求注定失败，**设计目标就是让它们死得越早越便宜**（漏斗逐层拦）：

@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEMZCSH9G8H0SSWWJP
 blockId: concurrency/aqs-lock
-relatedBlocks:
-  []
-question: "ReentrantLock 的公平锁和非公平锁区别？"
+relatedBlocks: []
+question: ReentrantLock 的公平锁和非公平锁区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 为什么默认非公平？
 keyPoints:
   - id: kp-aq2-1
-    text: "公平：先到先得，抢锁前查队列有无前驱"
+    text: 公平：先到先得，抢锁前查队列有无前驱
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq2-2
-    text: "非公平：直接 CAS 抢，抢到算你的——默认形态"
+    text: 非公平：直接 CAS 抢，抢到算你的——默认形态
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq2-3
-    text: "非公平吞吐高：省去排队唤醒的往返，但可能饥饿"
+    text: 非公平吞吐高：省去排队唤醒的往返，但可能饥饿
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq2-4
-    text: "公平锁保证无饥饿但上下文切换多"
+    text: 公平锁保证无饥饿但上下文切换多
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 - **公平锁**：`new ReentrantLock(true)`——钥匙**按排队序**发：来抢锁先看队列里有没有人排在前面，有就老实去队尾。

@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGA004Z8DA9CMXHVWQ
 blockId: rpc/dubbo
-relatedBlocks:
-  []
-question: "Dubbo 的 SPI 和 Java SPI 的区别？"
+relatedBlocks: []
+question: Dubbo 的 SPI 和 Java SPI 的区别？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 为什么 Dubbo 不直接用 Java SPI？
 keyPoints:
   - id: kp-du4-1
-    text: "按名加载：META-INF/dubbo/ 下接口全限定名文件，key=实现名"
+    text: 按名加载：META-INF/dubbo/ 下接口全限定名文件，key=实现名
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du4-2
-    text: "自适应扩展 @Adaptive：运行时按参数选实现（protocol=xxx）"
+    text: 自适应扩展 @Adaptive：运行时按参数选实现（protocol=xxx）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du4-3
-    text: "AOP/IoC 增强：扩展点可被 wrapper 包装、可注入其他扩展"
+    text: AOP/IoC 增强：扩展点可被 wrapper 包装、可注入其他扩展
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-du4-4
-    text: "对比 Java SPI：一次性全实例化 vs 按需单个；无自适应与依赖注入"
+    text: 对比 Java SPI：一次性全实例化 vs 按需单个；无自适应与依赖注入
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **SPI=框架的插件机制**（协议/注册中心/负载均衡全是插件）。Dubbo 增强 SPI 的三板斧：

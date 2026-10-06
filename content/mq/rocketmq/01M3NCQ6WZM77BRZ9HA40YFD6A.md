@@ -3,7 +3,7 @@ id: 01M3NCQ6WZM77BRZ9HA40YFD6A
 blockId: mq/rocketmq
 relatedBlocks:
   - mq/mq-fundamentals
-question: "RabbitMQ 的 exchange 模型？"
+question: RabbitMQ 的 exchange 模型？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: mid
@@ -11,45 +11,45 @@ followUps:
   - 和 Kafka 的模型差异在哪？
 keyPoints:
   - id: kp-rq4-1
-    text: "生产者只发 exchange，exchange 按类型路由到 queue"
+    text: 生产者只发 exchange，exchange 按类型路由到 queue
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq4-2
-    text: "direct：binding key 精确匹配；topic：通配符匹配（order.*）"
+    text: direct：binding key 精确匹配；topic：通配符匹配（order.*）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq4-3
-    text: "fanout：广播到所有绑定队列；headers：按头字段匹配"
+    text: fanout：广播到所有绑定队列；headers：按头字段匹配
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq4-4
-    text: "queue 持久化+消息持久化才保不丢（两开关都要开）"
+    text: queue 持久化+消息持久化才保不丢（两开关都要开）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **RabbitMQ 的路由中枢是 exchange（交换机）**：生产者不直接发队列——消息进 exchange，由 **binding 规则**路由到一/多/零个 queue：

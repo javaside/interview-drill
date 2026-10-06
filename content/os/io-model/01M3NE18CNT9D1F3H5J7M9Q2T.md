@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNT9D1F3H5J7M9Q2T
 blockId: os/io-model
-relatedBlocks:
-  []
-question: "iostat 的指标怎么读？%util 高就是瓶颈吗？"
+relatedBlocks: []
+question: iostat 的指标怎么读？%util 高就是瓶颈吗？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 怎么区分是设备慢还是请求太多？
 keyPoints:
   - id: kp-di3-1
-    text: "核心四指标：r/s ws（频率）、await（每次 IO 候+服务的毫秒）"
+    text: 核心四指标：r/s ws（频率）、await（每次 IO 候+服务的毫秒）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di3-2
-    text: "avgqu-sz 队列深度：排队越长积压越重"
+    text: avgqu-sz 队列深度：排队越长积压越重
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di3-3
-    text: "%util 设备忙的百分比——SSD 并行下 100% 并非即饱和"
+    text: '%util 设备忙的百分比——SSD 并行下 100% 并非即饱和'
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di3-4
-    text: "看 await 是否恶化比看 util 更可靠：await 数倍于常态即病"
+    text: 看 await 是否恶化比看 util 更可靠：await 数倍于常态即病
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di3-5
-    text: "配合 iotop 找到发起 IO 的进程，dstat 看读写构成"
+    text: 配合 iotop 找到发起 IO 的进程，dstat 看读写构成
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
 ---
 
 `iostat -x 1` 一屏指标，按重要性读：

@@ -2,7 +2,7 @@
 id: 01M3KHXF75T0YE2NHBEJRQ9WG6
 blockId: mysql/locks
 relatedBlocks: []
-question: "InnoDB 有哪些锁的层级？"
+question: InnoDB 有哪些锁的层级？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 为什么 DDL 可能被一行记录阻塞很久？
 keyPoints:
   - id: kp-lk2-1
-    text: "全局锁：FTWRL 让整库只读，用于逻辑备份"
+    text: 全局锁：FTWRL 让整库只读，用于逻辑备份
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk2-2
-    text: "表锁：lock tables 或 DDL 加在表级别，锁粒度大、并发差"
+    text: 表锁：lock tables 或 DDL 加在表级别，锁粒度大、并发差
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk2-3
-    text: "行锁：InnoDB 在索引记录上加锁，粒度最细、并发最好"
+    text: 行锁：InnoDB 在索引记录上加锁，粒度最细、并发最好
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-lk2-4
-    text: "意向锁：表级「占位声明」，快速判断表里是否有行锁，避免逐行检查"
+    text: 意向锁：表级「占位声明」，快速判断表里是否有行锁，避免逐行检查
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

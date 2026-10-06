@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMB90FZKSVG7C5TG9XK
 blockId: jvm/class-loading
-relatedBlocks:
-  []
-question: "类加载的过程有哪几步？"
+relatedBlocks: []
+question: 类加载的过程有哪几步？
 cardType: sequence
 appliesTo: Java 17+
 frequency: high
@@ -11,60 +10,60 @@ followUps:
   - <clinit> 的线程安全靠什么保证？
 keyPoints:
   - id: kp-cl1-1
-    text: "加载：按全限定名读字节流，生成方法区的类结构与堆中的 Class 对象"
+    text: 加载：按全限定名读字节流，生成方法区的类结构与堆中的 Class 对象
     public: true
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl1-2
-    text: "验证：文件格式/元数据/字节码/符号引用四道安检"
+    text: 验证：文件格式/元数据/字节码/符号引用四道安检
     public: true
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl1-3
-    text: "准备：静态变量分配内存并置零值（final 常量在此直接赋值）"
+    text: 准备：静态变量分配内存并置零值（final 常量在此直接赋值）
     public: true
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl1-4
-    text: "解析：符号引用转直接引用（懒执行：首次用到才发生）"
+    text: 解析：符号引用转直接引用（懒执行：首次用到才发生）
     public: true
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl1-5
-    text: "初始化：执行 <clinit>（静态变量赋值与静态块合并而成）"
+    text: 初始化：执行 <clinit>（静态变量赋值与静态块合并而成）
     public: true
     order: 5
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 类的加载到就绪，按发生顺序排五步（把下面排对）：

@@ -29,7 +29,7 @@ keyPoints:
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-multi-versioning.html
-      locator: "15.3"
+      locator: '15.3'
   - id: kp-0vp7zs-3
     text: 崩溃恢复中回滚重启时仍未提交的事务
     public: false

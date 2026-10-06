@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WYEV6W4H3YHJNRC2BP
 blockId: mq/mq-fundamentals
-relatedBlocks:
-  []
-question: "点对点和发布订阅的区别？"
+relatedBlocks: []
+question: 点对点和发布订阅的区别？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: mid
@@ -11,45 +10,45 @@ followUps:
   - 一个服务多个实例怎么保证只处理一次？
 keyPoints:
   - id: kp-mf2-1
-    text: "点对点：一条消息只被一个消费者消费（抢食）"
+    text: 点对点：一条消息只被一个消费者消费（抢食）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf2-2
-    text: "发布订阅：所有订阅者各得一份（广播）"
+    text: 发布订阅：所有订阅者各得一份（广播）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf2-3
-    text: "Kafka 以消费组实现两态：组内竞争（点对点）、组间广播"
+    text: Kafka 以消费组实现两态：组内竞争（点对点）、组间广播
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mf2-4
-    text: "RabbitMQ 的 fanout/exchange 路由模型天然广播；queue 自身是点对点"
+    text: RabbitMQ 的 fanout/exchange 路由模型天然广播；queue 自身是点对点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 两种**投递拓扑**：

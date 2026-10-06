@@ -2,7 +2,7 @@
 id: 01M3KJ46DKRAYACW2N5KTJ7K2G
 blockId: mysql/binlog
 relatedBlocks: []
-question: "GTID 是什么？解决了什么问题？"
+question: GTID 是什么？解决了什么问题？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - GTID 模式下搭建从库参数是什么？
 keyPoints:
   - id: kp-bi4-1
-    text: "全局事务标识 server_uuid:transaction_id，每个事务在集群内唯一"
+    text: 全局事务标识 server_uuid:transaction_id，每个事务在集群内唯一
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi4-2
-    text: "旧方式主从对位靠「文件名+偏移量」，手工易错；GTID 自动对位"
+    text: 旧方式主从对位靠「文件名+偏移量」，手工易错；GTID 自动对位
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi4-3
-    text: "从库自动跳过已执行过的 GTID，故障切换与新从库搭建简单"
+    text: 从库自动跳过已执行过的 GTID，故障切换与新从库搭建简单
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi4-4
-    text: "可对比主从的 GTID 集合判断是否一致（Retrieved/Executed set）"
+    text: 可对比主从的 GTID 集合判断是否一致（Retrieved/Executed set）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

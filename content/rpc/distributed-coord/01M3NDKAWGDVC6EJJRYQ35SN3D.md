@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGDVC6EJJRYQ35SN3D
 blockId: rpc/distributed-coord
-relatedBlocks:
-  []
-question: "雪花算法的原理和时钟回拨？"
+relatedBlocks: []
+question: 雪花算法的原理和时钟回拨？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 为什么不用 UUID 当主键？
 keyPoints:
   - id: kp-dc2-1
-    text: "64bit=符号位0+41时间戳+10机器id+12序列——趋势递增不重不漏"
+    text: 64bit=符号位0+41时间戳+10机器id+12序列——趋势递增不重不漏
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc2-2
-    text: "同毫秒内序列自增，毫秒内 4096 个——溢出候下一毫秒"
+    text: 同毫秒内序列自增，毫秒内 4096 个——溢出候下一毫秒
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc2-3
-    text: "时钟回拨：机器时间倒退会撞已发号——检测到回拨拒绝/候/切换备用位"
+    text: 时钟回拨：机器时间倒退会撞已发号——检测到回拨拒绝/候/切换备用位
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc2-4
-    text: "机器 id 分配：配置中心/DB 自增/ZK 顺序节点——防重复"
+    text: 机器 id 分配：配置中心/DB 自增/ZK 顺序节点——防重复
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-dc2-6
-    text: "趋势递增对 InnoDB 友好（自增主键同款收益：顺序写不分裂）"
+    text: 趋势递增对 InnoDB 友好（自增主键同款收益：顺序写不分裂）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **雪花 ID 的 64 位三段式**：

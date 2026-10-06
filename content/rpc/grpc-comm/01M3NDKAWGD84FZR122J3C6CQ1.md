@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGD84FZR122J3C6CQ1
 blockId: rpc/grpc-comm
-relatedBlocks:
-  []
-question: "gRPC 的四种通信模式？"
+relatedBlocks: []
+question: gRPC 的四种通信模式？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - HTTP/2 给 gRPC 提供了什么？
 keyPoints:
   - id: kp-gr1-1
-    text: "Unary 一元：一请求一响应——常规 RPC"
+    text: Unary 一元：一请求一响应——常规 RPC
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr1-2
-    text: "Server streaming：一请求多响应（服务端流）——推送/大结果分批"
+    text: Server streaming：一请求多响应（服务端流）——推送/大结果分批
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr1-3
-    text: "Client streaming：多请求一响应——批量上传/聚合"
+    text: Client streaming：多请求一响应——批量上传/聚合
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr1-4
-    text: "Bidirectional streaming：双向流——聊天/实时协作/IoT"
+    text: Bidirectional streaming：双向流——聊天/实时协作/IoT
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 四种**流形态**（按数据往哪个方向流）：

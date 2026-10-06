@@ -4,7 +4,7 @@ blockId: java/equals-hashcode
 relatedBlocks:
   - java/language-basics
   - java/hashmap
-question: "重写 hashCode 有什么最佳实践？"
+question: 重写 hashCode 有什么最佳实践？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -12,45 +12,45 @@ followUps:
   - 为什么不能把所有字段都塞进 hash？
 keyPoints:
   - id: kp-eh4-1
-    text: "参与字段 = equals 用到的字段（完全一致，多一字段少一字段都违约）"
+    text: 参与字段 = equals 用到的字段（完全一致，多一字段少一字段都违约）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-eh4-2
-    text: "Objects.hash(f1, f2, …) 一行生成，内部 Arrays.hashCode 风格乘 31"
+    text: Objects.hash(f1, f2, …) 一行生成，内部 Arrays.hashCode 风格乘 31
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-eh4-3
-    text: "不可变对象可缓存 hash（String 模式），可变对象切勿缓存"
+    text: 不可变对象可缓存 hash（String 模式），可变对象切勿缓存
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-eh4-4
-    text: "追求分布：乘奇素数累加；无关字段不要掺入"
+    text: 追求分布：乘奇素数累加；无关字段不要掺入
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 四条实践：

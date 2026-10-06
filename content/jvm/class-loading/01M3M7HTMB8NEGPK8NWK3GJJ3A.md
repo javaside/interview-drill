@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMB8NEGPK8NWK3GJJ3A
 blockId: jvm/class-loading
-relatedBlocks:
-  []
-question: "什么是双亲委派？为什么这么设计？"
+relatedBlocks: []
+question: 什么是双亲委派？为什么这么设计？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 怎么打破双亲委派？
 keyPoints:
   - id: kp-cl2-1
-    text: "子加载器先委托父加载，父搞不定才自己加载"
+    text: 子加载器先委托父加载，父搞不定才自己加载
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl2-2
-    text: "三层：启动（核心库）→扩展/平台→应用（classpath）"
+    text: 三层：启动（核心库）→扩展/平台→应用（classpath）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl2-3
-    text: "保证核心类唯一与安全：java.lang.String 永远由启动加载器加载"
+    text: 保证核心类唯一与安全：java.lang.String 永远由启动加载器加载
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-cl2-4
-    text: "防篡改：自定义的 java.lang.String 顶替不了真 String"
+    text: 防篡改：自定义的 java.lang.String 顶替不了真 String
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 **双亲委派**=「有事先问爹」：收到加载请求，**先层层上抛给最顶层的加载器**，父加载器搞不定的才自己动手。

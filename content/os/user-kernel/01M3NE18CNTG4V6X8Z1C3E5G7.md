@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTG4V6X8Z1C3E5G7
 blockId: os/user-kernel
-relatedBlocks:
-  []
-question: "内核旁路（DPDK/io_uring）解决什么问题？"
+relatedBlocks: []
+question: 内核旁路（DPDK/io_uring）解决什么问题？
 cardType: enumeration
 appliesTo: Linux
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 为什么数据库对 io_uring 越来越积极？
 keyPoints:
   - id: kp-uk5-1
-    text: "内核网络栈路径长：中断+软中断+协议栈+拷贝+唤醒——微秒级"
+    text: 内核网络栈路径长：中断+软中断+协议栈+拷贝+唤醒——微秒级
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk5-2
-    text: "DPDK：网卡直通用户态轮询收包——免中断免拷贝免切换"
+    text: DPDK：网卡直通用户态轮询收包——免中断免拷贝免切换
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk5-3
-    text: "io_uring：提交/完成双环共享内存——批量系统调用合并"
+    text: io_uring：提交/完成双环共享内存——批量系统调用合并
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk5-4
-    text: "代价：独占 CPU 轮询、绕过内核安全与调试设施"
+    text: 代价：独占 CPU 轮询、绕过内核安全与调试设施
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk5-5
-    text: "适用：超高包量网关/存储引擎；常规业务收益配不上复杂度"
+    text: 适用：超高包量网关/存储引擎；常规业务收益配不上复杂度
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
 ---
 
 内核是**通用公平**的设计，代价是**路径长**：一个包进来——硬中断→软中断协议栈→socket 缓冲→唤醒进程（切换）→拷贝到用户态。每步几十微秒不显眼，**百万 PPS 的时候全是税**。

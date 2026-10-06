@@ -3,7 +3,7 @@ id: 01M3M7HTMBSTC29P00FXB19R8F
 blockId: jvm/object-engine
 relatedBlocks:
   - jvm/gc-basics
-question: "对象访问定位有哪两种方式？"
+question: 对象访问定位有哪两种方式？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,45 +11,45 @@ followUps:
   - HotSolar 为什么选直接指针？
 keyPoints:
   - id: kp-oe4-1
-    text: "句柄访问：引用指向句柄池，句柄存对象与类数据地址——移动对象只改句柄"
+    text: 句柄访问：引用指向句柄池，句柄存对象与类数据地址——移动对象只改句柄
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe4-2
-    text: "直接指针访问：引用直接存对象地址——HotSpot 采用，访问快一步"
+    text: 直接指针访问：引用直接存对象地址——HotSpot 采用，访问快一步
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe4-3
-    text: "句柄的代价：多一次寻址；收益：GC 搬家不用改所有引用"
+    text: 句柄的代价：多一次寻址；收益：GC 搬家不用改所有引用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-oe4-4
-    text: "直接指针的代价：GC 移动对象要改全部引用（记忆集/根扫描定位）"
+    text: 直接指针的代价：GC 移动对象要改全部引用（记忆集/根扫描定位）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 引用（reference）怎么找到对象？两种**门牌方案**：

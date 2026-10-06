@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMAARH72QH9X6XSQBN7
 blockId: jvm/memory-areas
-relatedBlocks:
-  []
-question: "StackOverflowError 和 OutOfMemoryError 的区别？"
+relatedBlocks: []
+question: StackOverflowError 和 OutOfMemoryError 的区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 怎么构造一个堆 OOM？
 keyPoints:
   - id: kp-ma3-1
-    text: "SOE：栈深超限——递归失控的典型信号（空间固定小）"
+    text: SOE：栈深超限——递归失控的典型信号（空间固定小）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma3-2
-    text: "OOM：空间不够装——堆满/元空间满/直接内存满/线程过多"
+    text: OOM：空间不够装——堆满/元空间满/直接内存满/线程过多
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma3-3
-    text: "SOE 修代码（递归终止条件）；OOM 治容量或治泄漏"
+    text: SOE 修代码（递归终止条件）；OOM 治容量或治泄漏
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-ma3-4
-    text: "-Xss 调小则更浅的递归就爆栈；-Xmx 是堆 OOM 的顶"
+    text: '-Xss 调小则更浅的递归就爆栈；-Xmx 是堆 OOM 的顶'
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 两个都是「装不下」，**病因相反**：

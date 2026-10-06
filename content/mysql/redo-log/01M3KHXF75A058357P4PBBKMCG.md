@@ -2,7 +2,7 @@
 id: 01M3KHXF75A058357P4PBBKMCG
 blockId: mysql/redo-log
 relatedBlocks: []
-question: "redo log 和 undo log 的区别？"
+question: redo log 和 undo log 的区别？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: mid
@@ -10,9 +10,9 @@ followUps:
   - 为什么 undo 也要 redo 保护？
 keyPoints:
   - id: kp-rd3-1
-    text: "redo 记「做了什么」用于重放（保持久性）；undo 记「改前是什么」用于回滚（保原子性）"
+    text: redo 记「做了什么」用于重放（保持久性）；undo 记「改前是什么」用于回滚（保原子性）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd3-2
-    text: "redo 物理页级日志循环写；undo 逻辑日志按段管理、随 purge 清理"
+    text: redo 物理页级日志循环写；undo 逻辑日志按段管理、随 purge 清理
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd3-3
-    text: "崩溃恢复：未提交事务按 undo 回滚，已提交按 redo 重放"
+    text: 崩溃恢复：未提交事务按 undo 回滚，已提交按 redo 重放
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd3-4
-    text: "undo 本身的修改也受 redo 保护"
+    text: undo 本身的修改也受 redo 保护
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

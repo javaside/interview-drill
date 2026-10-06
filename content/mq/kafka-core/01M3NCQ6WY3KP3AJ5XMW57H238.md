@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WY3KP3AJ5XMW57H238
 blockId: mq/kafka-core
-relatedBlocks:
-  []
-question: "Kafka 的整体架构？"
+relatedBlocks: []
+question: Kafka 的整体架构？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 为什么读写都走 Leader？
 keyPoints:
   - id: kp-kc1-1
-    text: "Broker 集群 + ZooKeeper/KRaft 元数据 + 生产/消费客户端"
+    text: Broker 集群 + ZooKeeper/KRaft 元数据 + 生产/消费客户端
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc1-2
-    text: "Topic 逻辑分类 → Partition 物理分片（有序队列，分散在 Broker）"
+    text: Topic 逻辑分类 → Partition 物理分片（有序队列，分散在 Broker）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc1-3
-    text: "每 partition 多副本：1 Leader + N Follower，读写都走 Leader"
+    text: 每 partition 多副本：1 Leader + N Follower，读写都走 Leader
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc1-4
-    text: "消费者组：组内分摊 partition，组间互不影响"
+    text: 消费者组：组内分摊 partition，组间互不影响
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **Kafka 的四层积木**：

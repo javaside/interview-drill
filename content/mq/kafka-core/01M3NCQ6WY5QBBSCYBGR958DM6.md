@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WY5QBBSCYBGR958DM6
 blockId: mq/kafka-core
-relatedBlocks:
-  []
-question: "Partition 和消费者组怎么配合？"
+relatedBlocks: []
+question: Partition 和消费者组怎么配合？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 怎么减少 rebalance 的影响？
 keyPoints:
   - id: kp-kc2-1
-    text: "组内 rebalance：partition 重新分配给组内消费者"
+    text: 组内 rebalance：partition 重新分配给组内消费者
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc2-2
-    text: "触发：消费者增减/订阅变化/partition 扩容"
+    text: 触发：消费者增减/订阅变化/partition 扩容
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc2-3
-    text: "rebalance 期间整组 STOP THE WORLD——不能消费（长顿的元凶）"
+    text: rebalance 期间整组 STOP THE WORLD——不能消费（长顿的元凶）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc2-4
-    text: "消费者数 > partition 数则多余实例闲置——并行上限锁死在分区数"
+    text: 消费者数 > partition 数则多余实例闲置——并行上限锁死在分区数
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc2-5
-    text: "分配策略：Range/RoundRobin/Sticky/CooperativeSticky（增量再平衡）"
+    text: 分配策略：Range/RoundRobin/Sticky/CooperativeSticky（增量再平衡）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **消费组是动态的**：有人加入（扩容上线）、有人退出（宕机/被运维杀）——partition 的**归属要重新分**，这就是 **rebalance**。

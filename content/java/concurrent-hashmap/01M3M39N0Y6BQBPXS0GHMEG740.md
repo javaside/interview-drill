@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0Y6BQBPXS0GHMEG740
 blockId: java/concurrent-hashmap
-relatedBlocks:
-  []
-question: "ConcurrentHashMap 的 key/value 为什么不允许 null？"
+relatedBlocks: []
+question: ConcurrentHashMap 的 key/value 为什么不允许 null？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,35 +10,35 @@ followUps:
   - HashMap 允许 null key 的原因？
 keyPoints:
   - id: kp-ch2-1
-    text: "二义性问题：get 返回 null 无法区分「不存在」还是「存了 null」——并发下无法像 HashMap 那样用 containsKey 复核"
+    text: 二义性问题：get 返回 null 无法区分「不存在」还是「存了 null」——并发下无法像 HashMap 那样用 containsKey 复核
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ch2-2
-    text: "HashMap 允许 null 是因为单线程下可用 containsKey 复核语义"
+    text: HashMap 允许 null 是因为单线程下可用 containsKey 复核语义
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ch2-3
-    text: "并发下 containsKey 与 get 两步之间可能被其他线程改掉，复核语义失效"
+    text: 并发下 containsKey 与 get 两步之间可能被其他线程改掉，复核语义失效
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 HashMap 里 `get(k)` 返回 null，可以用 `containsKey(k)` 复核「到底是没有还是值是 null」——**单线程**里这两步连起来答案是可靠的。

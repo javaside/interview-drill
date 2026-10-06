@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0XRJKYFZ9RXS69XV5Z
 blockId: java/string
-relatedBlocks:
-  []
-question: "String、StringBuilder、StringBuffer 怎么选？"
+relatedBlocks: []
+question: String、StringBuilder、StringBuffer 怎么选？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 编译器会把 + 优化成 StringBuilder 吗？
 keyPoints:
   - id: kp-st2-1
-    text: "String 不可变：少量固定字符串直接用"
+    text: String 不可变：少量固定字符串直接用
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st2-2
-    text: "StringBuilder 可变且非线程安全：单线程拼接的首选（最快）"
+    text: StringBuilder 可变且非线程安全：单线程拼接的首选（最快）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st2-3
-    text: "StringBuffer 可变且方法加 synchronized：多线程共享拼接才需要"
+    text: StringBuffer 可变且方法加 synchronized：多线程共享拼接才需要
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st2-4
-    text: "循环内用 + 拼接 = 每轮新建对象，必须换 StringBuilder"
+    text: 循环内用 + 拼接 = 每轮新建对象，必须换 StringBuilder
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st2-5
-    text: "StringBuilder 可预设容量避免反复扩容拷贝"
+    text: StringBuilder 可预设容量避免反复扩容拷贝
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 按场景选：

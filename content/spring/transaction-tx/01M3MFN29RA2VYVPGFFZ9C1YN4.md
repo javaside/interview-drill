@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RA2VYVPGFFZ9C1YN4
 blockId: spring/transaction-tx
-relatedBlocks:
-  []
-question: "事务隔离级别在 Spring 里怎么配？"
+relatedBlocks: []
+question: 事务隔离级别在 Spring 里怎么配？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: low
@@ -11,45 +10,45 @@ followUps:
   - readonly=true 是什么作用？
 keyPoints:
   - id: kp-tx5-1
-    text: "@Transactional(isolation=...)：DEFAULT/READ_UNCOMMITTED/READ_COMMITTED/REPEATABLE_READ/SERIALIZABLE"
+    text: '@Transactional(isolation=...)：DEFAULT/READ_UNCOMMITTED/READ_COMMITTED/REPEATABLE_READ/SERIALIZABLE'
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx5-2
-    text: "DEFAULT 跟随数据源默认（MySQL 是 RR）"
+    text: DEFAULT 跟随数据源默认（MySQL 是 RR）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx5-3
-    text: "Spring 只是传递者：隔离最终由 JDBC Connection.setTransactionIsolation 落实"
+    text: Spring 只是传递者：隔离最终由 JDBC Connection.setTransactionIsolation 落实
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx5-4
-    text: "方法级注解覆盖类级；与传播行为组合决定实际连接行为"
+    text: 方法级注解覆盖类级；与传播行为组合决定实际连接行为
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 Spring 的隔离配置是**转发**：注解里的 isolation 最终通过 `Connection.setTransactionIsolation()` 传给数据库——语义与隔离级别表完全一致（脏读/不可重复读/幻读的取舍，见 MySQL 事务块）。**DEFAULT** = 跟数据源默认走（MySQL RR、PG RC）。

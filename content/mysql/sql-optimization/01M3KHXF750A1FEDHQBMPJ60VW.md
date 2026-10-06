@@ -2,7 +2,7 @@
 id: 01M3KHXF750A1FEDHQBMPJ60VW
 blockId: mysql/sql-optimization
 relatedBlocks: []
-question: "EXPLAIN 输出里最该关注哪些列？"
+question: EXPLAIN 输出里最该关注哪些列？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - rows 是怎么估出来的？
 keyPoints:
   - id: kp-opt-1
-    text: "type：访问类型，是否走索引、走得好不好（好→差：const→ref→range→index→ALL）"
+    text: type：访问类型，是否走索引、走得好不好（好→差：const→ref→range→index→ALL）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt-2
-    text: "key / key_len：实际用了哪个索引、用了几列"
+    text: key / key_len：实际用了哪个索引、用了几列
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt-3
-    text: "rows：预估扫描行数，数量级直接反映代价"
+    text: rows：预估扫描行数，数量级直接反映代价
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt-4
-    text: "Extra：Using filesort/Using temporary 是坏味道；Using index 是好信号"
+    text: Extra：Using filesort/Using temporary 是坏味道；Using index 是好信号
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

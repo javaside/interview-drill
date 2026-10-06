@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0ZFPH32DQQN6BGCAGQ
 blockId: java/exceptions
-relatedBlocks:
-  []
-question: "finally 里 return，方法返回什么？"
+relatedBlocks: []
+question: finally 里 return，方法返回什么？
 cardType: atomic
 appliesTo: Java 17+
 frequency: high
@@ -11,15 +10,15 @@ followUps:
   - 阿里规范为什么禁这个写法？
 keyPoints:
   - id: kp-ex4-1
-    text: "返回 finally 的值：try 的返回值与异常都被丢弃（字节码把覆盖路径编进返回）"
+    text: 返回 finally 的值：try 的返回值与异常都被丢弃（字节码把覆盖路径编进返回）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 答案：**finally 说了算**——try 里 `return 1`、finally 里 `return 2`，方法返回 **2**；try 抛异常而 finally return？异常被吞，照样返回 2。

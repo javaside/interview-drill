@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMMRV6H6CDEV5EB4PR
 blockId: distributed/consensus
-relatedBlocks:
-  []
-question: "强一致性和最终一致性的取舍？"
+relatedBlocks: []
+question: 强一致性和最终一致性的取舍？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 为什么多数业务选最终一致？
 keyPoints:
   - id: kp-cs3-1
-    text: "强一致（线性一致）：读到的永远是最新写——代价是延迟与可用性"
+    text: 强一致（线性一致）：读到的永远是最新写——代价是延迟与可用性
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs3-2
-    text: "最终一致：停止写入后有限时间收敛一致——AP 路线"
+    text: 最终一致：停止写入后有限时间收敛一致——AP 路线
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs3-3
-    text: "账户/库存选强一致；浏览量/点赞选最终一致"
+    text: 账户/库存选强一致；浏览量/点赞选最终一致
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs3-4
-    text: "Quorum 可调一致性：W+R>N 则强、否则弱"
+    text: Quorum 可调一致性：W+R>N 则强、否则弱
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 一致性不是「强就好」——它是**延迟和可用性的价格牌**：

@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29SXPHFZNSN8AFVT4BQ
 blockId: spring/security-basics
-relatedBlocks:
-  []
-question: "密码为什么要用 BCrypt 存？"
+relatedBlocks: []
+question: 密码为什么要用 BCrypt 存？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - BCrypt 怎么校验（盐不存怎么对得上）？
 keyPoints:
   - id: kp-sec4-1
-    text: "自带随机盐：同密码每次哈希结果不同——彩虹表报废"
+    text: 自带随机盐：同密码每次哈希结果不同——彩虹表报废
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec4-2
-    text: "慢哈希（可调 cost）：暴力破解成本被拉高几个数量级"
+    text: 慢哈希（可调 cost）：暴力破解成本被拉高几个数量级
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec4-3
-    text: "盐内嵌于输出——存储无需单独盐字段"
+    text: 盐内嵌于输出——存储无需单独盐字段
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-sec4-4
-    text: "MD5/SHA 系列：快=易被 GPU 撞库，且无盐同码同文"
+    text: MD5/SHA 系列：快=易被 GPU 撞库，且无盐同码同文
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 密码存储三宗罪：**明文**（拖库即裸奔）、**MD5**（快哈希——GPU 每秒千亿次撞库；无盐时「同密码同密文」还能彩虹表批量反查）、**固定盐**（盐泄露同前）。

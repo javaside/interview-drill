@@ -2,7 +2,7 @@
 id: 01M3KJ46DK95AVBNDQ9Z02CCAK
 blockId: mysql/sql-optimization
 relatedBlocks: []
-question: "慢查询怎么定位？"
+question: 慢查询怎么定位？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 为什么优先优化总耗时最高的 SQL？
 keyPoints:
   - id: kp-opt5-1
-    text: "开启慢查询日志 slow_query_log，long_query_time 定阈值（如 0.1s）"
+    text: 开启慢查询日志 slow_query_log，long_query_time 定阈值（如 0.1s）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt5-2
-    text: "pt-query-digest 聚合慢日志：按总耗时排序找「大头 SQL」"
+    text: pt-query-digest 聚合慢日志：按总耗时排序找「大头 SQL」
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt5-3
-    text: "对 top SQL 逐条 explain 看执行计划（type/key/rows/Extra）"
+    text: 对 top SQL 逐条 explain 看执行计划（type/key/rows/Extra）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt5-4
-    text: "performance_schema / sys.statements_with_full_table_scans 可实时发现全表扫语句"
+    text: performance_schema / sys.statements_with_full_table_scans 可实时发现全表扫语句
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

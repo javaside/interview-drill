@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEAQ9JE8BG3DY6X841
 blockId: concurrency/thread-basics
-relatedBlocks:
-  []
-question: "线程有哪几种状态？"
+relatedBlocks: []
+question: 线程有哪几种状态？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,59 +10,55 @@ followUps:
   - sleep 和 wait 分别落在哪个状态？
 keyPoints:
   - id: kp-tb3-1
-    text: "NEW：创建了未 start"
+    text: NEW：创建了未 start
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb3-2
-    text: "RUNNABLE：可运行（含运行中和就绪，Java 不区分）"
+    text: RUNNABLE：可运行（含运行中和就绪，Java 不区分）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb3-3
-    text: "BLOCKED：抢 monitor 锁未果，阻塞在同步块外"
+    text: BLOCKED：抢 monitor 锁未果，阻塞在同步块外
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb3-4
-    text: "WAITING / TIMED_WAITING：park/join/sleep 造成的无限或限时停泊"
+    text: WAITING / TIMED_WAITING：park/join/sleep 造成的无限或限时停泊
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb3-5
-    text: "TERMINATED：run 结束（正常或异常），不可复生"
+    text: TERMINATED：run 结束（正常或异常），不可复生
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 Java 线程的**六态**（Thread.State）：

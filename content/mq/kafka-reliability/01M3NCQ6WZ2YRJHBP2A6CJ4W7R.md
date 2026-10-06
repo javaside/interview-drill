@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
 blockId: mq/kafka-reliability
-relatedBlocks:
-  []
-question: "怎么实现精确一次（Exactly-Once）？"
+relatedBlocks: []
+question: 怎么实现精确一次（Exactly-Once）？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,65 +10,65 @@ followUps:
   - idempotent 生产者的局限是什么？
 keyPoints:
   - id: kp-kr3-1
-    text: "idempotent 生产者：PID 与序号防重防乱序（限单分区单会话）"
+    text: idempotent 生产者：PID 与序号防重防乱序（限单分区单会话）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr3-2
-    text: "事务：跨分区原子写+消费-处理-生产闭环（read-process-write）"
+    text: 事务：跨分区原子写+消费-处理-生产闭环（read-process-write）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr3-3
-    text: "事务协调者两阶段提交，offset 与消息原子提交"
+    text: 事务协调者两阶段提交，offset 与消息原子提交
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr3-4
-    text: "端到端精确一次即idempotent 生产、事务、read_committed 三合一"
+    text: 端到端精确一次即idempotent 生产、事务、read_committed 三合一
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr3-5
-    text: "更普遍的工程答案：at-least-once 配消费端防重（唯一键/状态机）"
+    text: 更普遍的工程答案：at-least-once 配消费端防重（唯一键/状态机）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kr3-6
-    text: "transactional.id 跨会话复用防僵尸生产者"
+    text: transactional.id 跨会话复用防僵尸生产者
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 Kafka 原生的三层方案：

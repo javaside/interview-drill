@@ -2,7 +2,7 @@
 id: 01M3KJ46DK9NYNFFFMJJDEYHVP
 blockId: mysql/log-architecture
 relatedBlocks: []
-question: "崩溃恢复（crash recovery）的完整流程是什么？"
+question: 崩溃恢复（crash recovery）的完整流程是什么？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 为什么敢把未提交事务的页修改也重放？
 keyPoints:
   - id: kp-log4-1
-    text: "从 checkpoint LSN 起重放 redo（含未提交事务的页修改）"
+    text: 从 checkpoint LSN 起重放 redo（含未提交事务的页修改）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-log4-2
-    text: "找出处于 prepare 且 binlog 完整的事务 → 提交"
+    text: 找出处于 prepare 且 binlog 完整的事务 → 提交
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-log4-3
-    text: "binlog 不完整或压根没到 prepare 的 → 按 undo 回滚"
+    text: binlog 不完整或压根没到 prepare 的 → 按 undo 回滚
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-log4-4
-    text: "恢复时页 LSN 已够新的直接跳过，重复执行也安全"
+    text: 恢复时页 LSN 已够新的直接跳过，重复执行也安全
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMAS9MZNBNT2SRG1Z3M
 blockId: jvm/gc-basics
-relatedBlocks:
-  []
-question: "怎么判断对象可以回收？"
+relatedBlocks: []
+question: 怎么判断对象可以回收？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 引用计数为什么不被 JVM 采用？
 keyPoints:
   - id: kp-gb1-1
-    text: "可达性分析：从 GC Roots 出发，引用链够不着的即垃圾"
+    text: 可达性分析：从 GC Roots 出发，引用链够不着的即垃圾
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gb1-2
-    text: "GC Roots：栈帧局部变量、静态变量、常量、JNI 引用"
+    text: GC Roots：栈帧局部变量、静态变量、常量、JNI 引用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gb1-3
-    text: "引用计数：循环引用计数永不归零——主流 JVM 弃用"
+    text: 引用计数：循环引用计数永不归零——主流 JVM 弃用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gb1-4
-    text: "不可达并非立刻死：软/弱/虚引用与 finalize 留了缓刑通道"
+    text: 不可达并非立刻死：软/弱/虚引用与 finalize 留了缓刑通道
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 判定标准一句话：**从根出发摸不着的，就是垃圾**。

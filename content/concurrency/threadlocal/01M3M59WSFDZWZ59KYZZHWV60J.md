@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSFDZWZ59KYZZHWV60J
 blockId: concurrency/threadlocal
-relatedBlocks:
-  []
-question: "ThreadLocal 的典型使用场景？"
+relatedBlocks: []
+question: ThreadLocal 的典型使用场景？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - traceId 为什么用 ThreadLocal 存？
 keyPoints:
   - id: kp-tl3-1
-    text: "按线程隔离的工具实例：SimpleDateFormat、Random（非线程安全者的白手套）"
+    text: 按线程隔离的工具实例：SimpleDateFormat、Random（非线程安全者的白手套）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl3-2
-    text: "传递上下文：用户身份、traceId、事务上下文（避免层层传参）"
+    text: 传递上下文：用户身份、traceId、事务上下文（避免层层传参）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl3-3
-    text: "数据库连接/会话绑定（早期事务管理的实现方式）"
+    text: 数据库连接/会话绑定（早期事务管理的实现方式）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl3-4
-    text: "替代方案：上下文参数显式传递（不可见性换可测性）"
+    text: 替代方案：上下文参数显式传递（不可见性换可测性）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 两大类场景：

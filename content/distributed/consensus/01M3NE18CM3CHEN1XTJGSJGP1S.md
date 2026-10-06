@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CM3CHEN1XTJGSJGP1S
 blockId: distributed/consensus
-relatedBlocks:
-  []
-question: "什么是脑裂？怎么防？"
+relatedBlocks: []
+question: 什么是脑裂？怎么防？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 过半机制怎么防的？
 keyPoints:
   - id: kp-cs4-1
-    text: "分区时两段各自选主——双 Leader 同时接受写"
+    text: 分区时两段各自选主——双 Leader 同时接受写
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs4-2
-    text: "防核心：过半票决——少数派永远选不出主"
+    text: 防核心：过半票决——少数派永远选不出主
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs4-3
-    text: "辅助：quorum 读写（双主写互不达过半，超时自动失效）"
+    text: 辅助：quorum 读写（双主写互不达过半，超时自动失效）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-cs4-4
-    text: "仲裁/fencing token：共享资源拒绝旧主的指令"
+    text: 仲裁/fencing token：共享资源拒绝旧主的指令
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **脑裂**=网络分区把集群劈成两半，各自以为对方死了，**各选一个 Leader，双主并行写**——数据从根上撕裂。

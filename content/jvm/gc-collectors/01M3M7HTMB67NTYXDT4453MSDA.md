@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMB67NTYXDT4453MSDA
 blockId: jvm/gc-collectors
-relatedBlocks:
-  []
-question: "ZGC 为什么能做到亚毫秒停顿？"
+relatedBlocks: []
+question: ZGC 为什么能做到亚毫秒停顿？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 染色指针是什么？
 keyPoints:
   - id: kp-gc2-1
-    text: "标记、转移、重定位几乎全并发——STW 只剩根扫描瞬时"
+    text: 标记、转移、重定位几乎全并发——STW 只剩根扫描瞬时
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc2-2
-    text: "染色指针：64 位指针高位存标记与转移位——对象自带 GC 元数据"
+    text: 染色指针：64 位指针高位存标记与转移位——对象自带 GC 元数据
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc2-3
-    text: "读屏障：业务读到过期引用时顺路修正到新地址（自愈）"
+    text: 读屏障：业务读到过期引用时顺路修正到新地址（自愈）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc2-4
-    text: "吞吐代价约 5-10%（CPU 换停顿），TB 级堆停顿仍亚毫秒"
+    text: 吞吐代价约 5-10%（CPU 换停顿），TB 级堆停顿仍亚毫秒
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 ZGC 的野心：**停顿与堆大小无关**（16TB 堆也亚毫秒）。三板斧：

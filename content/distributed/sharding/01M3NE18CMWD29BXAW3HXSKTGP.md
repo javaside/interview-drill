@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMWD29BXAW3HXSKTGP
 blockId: distributed/sharding
-relatedBlocks:
-  []
-question: "什么时候需要分库分表？"
+relatedBlocks: []
+question: 什么时候需要分库分表？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 单表 2000 万行一定要拆吗？
 keyPoints:
   - id: kp-sh1-1
-    text: "信号：单表行数过大（数千万级 B+ 树变高）、单库写 QPS 到顶、磁盘容量受限"
+    text: 信号：单表行数过大（数千万级 B+ 树变高）、单库写 QPS 到顶、磁盘容量受限
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh4-6
-    text: "先穷尽低代价方案：索引优化/读写分离/缓存/归档冷数据"
+    text: 先穷尽低代价方案：索引优化/读写分离/缓存/归档冷数据
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh4-7
-    text: "垂直拆分（按业务/字段）优先于水平拆分（按行）"
+    text: 垂直拆分（按业务/字段）优先于水平拆分（按行）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh4-4x
-    text: "分库解决写与容量；分表解决单表大小——两者独立可组合"
+    text: 分库解决写与容量；分表解决单表大小——两者独立可组合
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **拆分是最后手段**——先问三个更便宜的问题：

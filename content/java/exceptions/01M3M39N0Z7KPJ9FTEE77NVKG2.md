@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0Z7KPJ9FTEE77NVKG2
 blockId: java/exceptions
-relatedBlocks:
-  []
-question: "try-with-resources 是怎么工作的？"
+relatedBlocks: []
+question: try-with-resources 是怎么工作的？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 为什么不推荐手动 close？
 keyPoints:
   - id: kp-ex3-1
-    text: "资源实现 AutoCloseable，try 声明即自动 close（编译器生成 finally 语义）"
+    text: 资源实现 AutoCloseable，try 声明即自动 close（编译器生成 finally 语义）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex33-2
-    text: "多个资源按声明逆序关闭"
+    text: 多个资源按声明逆序关闭
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex3-3
-    text: "try 抛异常、close 也抛：close 的进 suppressed（不覆盖主异常）"
+    text: try 抛异常、close 也抛：close 的进 suppressed（不覆盖主异常）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex3-4
-    text: "引用必须有效 final；Java 9 起可用 effectively final 变量直接声明"
+    text: 引用必须有效 final；Java 9 起可用 effectively final 变量直接声明
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 老写法的苦难：`InputStream in = null; try { … } finally { if (in != null) in.close(); }`——啰嗦、close 还要再 try（它也抛受检）。

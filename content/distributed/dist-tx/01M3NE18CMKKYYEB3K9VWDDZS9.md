@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMKKYYEB3K9VWDDZS9
 blockId: distributed/dist-tx
-relatedBlocks:
-  []
-question: "Saga 模式怎么工作？"
+relatedBlocks: []
+question: Saga 模式怎么工作？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 补偿不了怎么办？
 keyPoints:
   - id: kp-dt3-1
-    text: "长事务拆成本地事务链：T1→T2→T3 每步独立提交"
+    text: 长事务拆成本地事务链：T1→T2→T3 每步独立提交
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt3-2
-    text: "失败补偿：T3 失败则逆序执行 C2、C1 抵消"
+    text: 失败补偿：T3 失败则逆序执行 C2、C1 抵消
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt3-3
-    text: "无全局锁（对比 2PC）——吞吐高但不隔离"
+    text: 无全局锁（对比 2PC）——吞吐高但不隔离
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt3-4
-    text: "编排（中心协调）vs 协同（事件订阅）两种实现"
+    text: 编排（中心协调）vs 协同（事件订阅）两种实现
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt3-5
-    text: "补偿必须 idempotent 且可重试；不可补偿的操作不进链"
+    text: 补偿必须 idempotent 且可重试；不可补偿的操作不进链
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **Saga** = 把长事务**拆成本地事务链**，失败就**逆序补偿**：

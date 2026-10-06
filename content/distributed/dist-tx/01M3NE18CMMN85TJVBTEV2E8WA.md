@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CMMN85TJVBTEV2E8WA
 blockId: distributed/dist-tx
-relatedBlocks:
-  []
-question: "TCC 模式怎么工作？"
+relatedBlocks: []
+question: TCC 模式怎么工作？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 空回滚和悬挂是什么？
 keyPoints:
   - id: kp-dt2-1
-    text: "Try：预留资源（冻结 100 元而非真扣）"
+    text: Try：预留资源（冻结 100 元而非真扣）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt2-2
-    text: "Confirm：确认扣减（冻结转真扣）——必须成功（重试到成功）"
+    text: Confirm：确认扣减（冻结转真扣）——必须成功（重试到成功）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt2-3
-    text: "Cancel：取消预留（解冻）——同样必须成功"
+    text: Cancel：取消预留（解冻）——同样必须成功
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt2-4
-    text: "三方法皆需 idempotent 与防悬挂（Cancel 先到 Try 后到）"
+    text: 三方法皆需 idempotent 与防悬挂（Cancel 先到 Try 后到）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt2-5
-    text: "对比 2PC：锁变成业务级冻结——性能好但要写三套逻辑"
+    text: 对比 2PC：锁变成业务级冻结——性能好但要写三套逻辑
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **TCC（Try-Confirm-Cancel）**=把 2PC 的「数据库锁」换成「**业务级预留**」：

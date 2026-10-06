@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEK3CJX64G4RDE10ED
 blockId: concurrency/volatile-jmm
-relatedBlocks:
-  []
-question: "volatile 保证什么、不保证什么？"
+relatedBlocks: []
+question: volatile 保证什么、不保证什么？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - i++ 加了 volatile 为什么还是错的？
 keyPoints:
   - id: kp-vj1-1
-    text: "保证可见性：写立即刷回主存，读强制拉最新值"
+    text: 保证可见性：写立即刷回主存，读强制拉最新值
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj1-2
-    text: "保证有序性：读写点插入内存屏障，禁止指令重排越界"
+    text: 保证有序性：读写点插入内存屏障，禁止指令重排越界
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj1-3
-    text: "不保证原子性：count++ 这类复合操作照样丢更新"
+    text: 不保证原子性：count++ 这类复合操作照样丢更新
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-vj1-4
-    text: "单次读写天然原子的类型（long/double 除外历史）加 volatile 才是安全的标志位用法"
+    text: 单次读写天然原子的类型（long/double 除外历史）加 volatile 才是安全的标志位用法
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 volatile 的两保一不保：

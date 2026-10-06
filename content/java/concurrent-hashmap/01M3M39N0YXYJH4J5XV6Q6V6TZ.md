@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0YXYJH4J5XV6Q6V6TZ
 blockId: java/concurrent-hashmap
-relatedBlocks:
-  []
-question: "JDK 8 的 ConcurrentHashMap 是怎么保证线程安全的？"
+relatedBlocks: []
+question: JDK 8 的 ConcurrentHashMap 是怎么保证线程安全的？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 为什么不再用分段锁？
 keyPoints:
   - id: kp-ch1-1
-    text: "无锁读：get 不加锁（Node.val/hash 用 volatile 保证可见性）"
+    text: 无锁读：get 不加锁（Node.val/hash 用 volatile 保证可见性）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ch1-2
-    text: "put：CAS 初始化桶/空桶插入，非空桶 synchronized 锁桶头节点"
+    text: put：CAS 初始化桶/空桶插入，非空桶 synchronized 锁桶头节点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ch1-3
-    text: "锁粒度=单桶：不同桶的写完全并行"
+    text: 锁粒度=单桶：不同桶的写完全并行
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ch1-4
-    text: "size 用 CounterCell 分散计数（无全局锁热点）"
+    text: size 用 CounterCell 分散计数（无全局锁热点）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ch1-5
-    text: "key 的 hash 与 val 均 volatile，读线程立即可见最新值"
+    text: key 的 hash 与 val 均 volatile，读线程立即可见最新值
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 1.8 的方案——**读无锁 + 写锁单桶**：

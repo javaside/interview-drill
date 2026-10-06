@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNQ6Y0D2F4H6J8M0N
 blockId: network/http-protocol
-relatedBlocks:
-  []
-question: "浏览器 HTTP 缓存：强缓存与协商缓存？"
+relatedBlocks: []
+question: 浏览器 HTTP 缓存：强缓存与协商缓存？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - ETag 怎么生成才有意义？
 keyPoints:
   - id: kp-hp5-1
-    text: "强缓存：Cache-Control（max-age）内不发请求，直接用本地副本"
+    text: 强缓存：Cache-Control（max-age）内不发请求，直接用本地副本
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9111'
+      locator: RFC 9111
   - id: kp-hp5-2
-    text: "协商缓存：带 If-None-Match/If-Modified-Since 问一下，没变回 304"
+    text: 协商缓存：带 If-None-Match/If-Modified-Since 问一下，没变回 304
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9111'
+      locator: RFC 9111
   - id: kp-hp5-3
-    text: "ETag 优先于 Last-Modified：内容指纹精确，秒级修改不漏判"
+    text: ETag 优先于 Last-Modified：内容指纹精确，秒级修改不漏判
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9111'
+      locator: RFC 9111
   - id: kp-hp5-4
-    text: "资源刷新策略：带 hash 文件名万年长缓存，HTML 本身不缓存"
+    text: 资源刷新策略：带 hash 文件名万年长缓存，HTML 本身不缓存
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9111'
+      locator: RFC 9111
   - id: kp-hp5-5
-    text: "私有与共享：private 仅浏览器，public 允许 CDN/代理缓存"
+    text: 私有与共享：private 仅浏览器，public 允许 CDN/代理缓存
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9111'
+      locator: RFC 9111
 ---
 
 HTTP 缓存分两级，**先问要不要发请求**：

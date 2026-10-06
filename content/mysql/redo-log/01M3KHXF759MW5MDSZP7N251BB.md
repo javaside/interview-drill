@@ -2,7 +2,7 @@
 id: 01M3KHXF759MW5MDSZP7N251BB
 blockId: mysql/redo-log
 relatedBlocks: []
-question: "innodb_flush_log_at_trx_commit 和 sync_binlog 这「双 1」是什么？"
+question: innodb_flush_log_at_trx_commit 和 sync_binlog 这「双 1」是什么？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 性能敏感场景常见的 100/2 组合牺牲了什么？
 keyPoints:
   - id: kp-rd2-1
-    text: "innodb_flush_log_at_trx_commit=1：每次提交把 redo 刷盘，最安全"
+    text: innodb_flush_log_at_trx_commit=1：每次提交把 redo 刷盘，最安全
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd2-2
-    text: "=0 时每秒刷一次，宕机丢最多 1 秒已提交事务"
+    text: '=0 时每秒刷一次，宕机丢最多 1 秒已提交事务'
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd2-3
-    text: "=2 时写到 OS 缓存每秒 fsync，MySQL 崩不丢、主机崩丢 1 秒"
+    text: '=2 时写到 OS 缓存每秒 fsync，MySQL 崩不丢、主机崩丢 1 秒'
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-rd2-4
-    text: "sync_binlog=1：每次提交 fsync binlog——与 redo=1 合称「双 1」，最可靠配置"
+    text: sync_binlog=1：每次提交 fsync binlog——与 redo=1 合称「双 1」，最可靠配置
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

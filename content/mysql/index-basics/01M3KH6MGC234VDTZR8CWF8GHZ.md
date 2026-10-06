@@ -14,43 +14,43 @@ keyPoints:
   - id: kp-bpt-1
     text: 非叶子节点只存键不存数据，一页能容纳更多键，树更矮
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-bpt-2
     text: 叶子节点存全部键与数据，且按键有序、用链表串联
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-bpt-3
     text: 树矮意味着查一行经过的节点少，磁盘 IO 次数少
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
   - id: kp-bpt-4
     text: 范围查询可沿叶子层链表顺序扫描，不必回树上多次查找
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
-      locator: '15.6.2.2'
+      locator: 15.6.2.2
 ---
 
 先想一个问题：数据在磁盘上，读一次磁盘比读内存慢几万倍，怎么让查询**少读几次磁盘**？答案是把索引做成一棵矮胖的树——**B+ 树**。

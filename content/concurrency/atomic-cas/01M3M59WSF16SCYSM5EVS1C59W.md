@@ -1,46 +1,45 @@
 ---
 id: 01M3M59WSF16SCYSM5EVS1C59W
 blockId: concurrency/atomic-cas
-relatedBlocks:
-  []
-question: "CAS 和互斥锁怎么选？"
+relatedBlocks: []
+question: CAS 和互斥锁怎么选？
 cardType: judgment
-conclusion: 'depends'
+conclusion: depends
 appliesTo: Java 17+
 frequency: high
 followUps:
   - 为什么说 CAS 是乐观锁？
 keyPoints:
   - id: kp-ac4-1
-    text: "低竞争且临界区极小：CAS 无挂起开销，完胜"
+    text: 低竞争且临界区极小：CAS 无挂起开销，完胜
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac4-2
-    text: "高竞争或临界区长：自旋空转烧 CPU，互斥锁排队挂起更划算"
+    text: 高竞争或临界区长：自旋空转烧 CPU，互斥锁排队挂起更划算
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
   - id: kp-ac4-3
-    text: "多变量一致性：CAS 只保单点，多变量必须锁或整体替换引用"
+    text: 多变量一致性：CAS 只保单点，多变量必须锁或整体替换引用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'juc'
+      locator: juc
 ---
 
 **看竞争烈度和临界区长度**：

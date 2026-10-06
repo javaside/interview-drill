@@ -1,48 +1,45 @@
 ---
 id: 01M3M59WSEK18S0G6S5KZJE0ZR
 blockId: concurrency/synchronized
-relatedBlocks:
-  []
-question: "synchronized 是可重入的吗？怎么实现？"
+relatedBlocks: []
+question: synchronized 是可重入的吗？怎么实现？
 cardType: judgment
-conclusion: yes
+conclusion: 'yes'
 appliesTo: Java 17+
 frequency: high
 followUps:
   - 如果不可重入会怎样？
 keyPoints:
   - id: kp-sy3-1
-    text: "可重入：同一线程可重复获取自己已持有的锁，不会把自己锁死"
+    text: 可重入：同一线程可重复获取自己已持有的锁，不会把自己锁死
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-sy3-2
-    text: "实现：monitor 记录持有线程 id 与计数器，重入 +1、退出 -1，归零才真正释放"
+    text: 实现：monitor 记录持有线程 id 与计数器，重入 +1、退出 -1，归零才真正释放
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-sy3-3
-    text: "价值：同步方法互相调用（a() 调 b()）不会自锁"
+    text: 价值：同步方法互相调用（a() 调 b()）不会自锁
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 **是可重入的**——同一线程拿过的锁，可以**再拿**：

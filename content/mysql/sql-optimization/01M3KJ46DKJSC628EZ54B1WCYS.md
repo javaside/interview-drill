@@ -2,7 +2,7 @@
 id: 01M3KJ46DKJSC628EZ54B1WCYS
 blockId: mysql/sql-optimization
 relatedBlocks: []
-question: "什么是覆盖索引？为什么快？"
+question: 什么是覆盖索引？为什么快？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 覆盖索引和联合索引是什么关系？
 keyPoints:
   - id: kp-opt4-1
-    text: "查询所需的所有列都包含在索引里，无需回表"
+    text: 查询所需的所有列都包含在索引里，无需回表
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt4-2
-    text: "explain Extra 出现 Using index 即覆盖生效"
+    text: explain Extra 出现 Using index 即覆盖生效
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt4-3
-    text: "索引比整行窄得多，扫描的页更少"
+    text: 索引比整行窄得多，扫描的页更少
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-opt4-4
-    text: "常用手段：把高频查询的 select 列并入联合索引"
+    text: 常用手段：把高频查询的 select 列并入联合索引
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

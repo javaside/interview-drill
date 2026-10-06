@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRR3V3X5Z7D9F1
 blockId: network/io-multiplexing
-relatedBlocks:
-  []
-question: "select、poll、epoll 的区别？"
+relatedBlocks: []
+question: select、poll、epoll 的区别？
 cardType: comparison
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 连接全活跃时 epoll 还有优势吗？
 keyPoints:
   - id: kp-io2-1
-    text: "select：fd 集合上限 1024，每次调用全量传入+线性扫描"
+    text: select：fd 集合上限 1024，每次调用全量传入+线性扫描
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io2-2
-    text: "poll：链表突破 1024，但仍是全量拷贝+O(n) 扫描"
+    text: poll：链表突破 1024，但仍是全量拷贝+O(n) 扫描
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io2-3
-    text: "epoll：内核建红黑树注册一次，就绪链表只返回活跃 fd"
+    text: epoll：内核建红黑树注册一次，就绪链表只返回活跃 fd
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io2-4
-    text: "epoll 复杂度 O(活跃数)——万连接少数活跃时碾压"
+    text: epoll 复杂度 O(活跃数)——万连接少数活跃时碾压
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
   - id: kp-io2-5
-    text: "共同点：三者都只是「就绪通知」，数据拷贝仍要自己 read"
+    text: 共同点：三者都只是「就绪通知」，数据拷贝仍要自己 read
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
-      locator: 'epoll(7)'
+      locator: epoll(7)
 ---
 
 三者是**「怎么候一批 fd」**的三代方案：

@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RMTFSJACBA35694TQ
 blockId: spring/aop
-relatedBlocks:
-  []
-question: "AOP 的核心术语？"
+relatedBlocks: []
+question: AOP 的核心术语？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - Spring AOP 和 AspectJ 的区别？
 keyPoints:
   - id: kp-aop1-1
-    text: "切面 Aspect=切点+通知的模块；连接点=可织入的方法执行点"
+    text: 切面 Aspect=切点+通知的模块；连接点=可织入的方法执行点
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop1-2
-    text: "切点 Pointcut=哪些方法（表达式筛选连接点）；通知 Advice=织入干什么"
+    text: 切点 Pointcut=哪些方法（表达式筛选连接点）；通知 Advice=织入干什么
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop1-3
-    text: "五种通知：@Before/@After/@AfterReturning/@AfterThrowing/@Around"
+    text: 五种通知：@Before/@After/@AfterReturning/@AfterThrowing/@Around
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop1-4
-    text: "织入 Weaving=把切面套到目标上——Spring 是运行时代理织入"
+    text: 织入 Weaving=把切面套到目标上——Spring 是运行时代理织入
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 一套「**在哪（切点）干什么（通知）**」的词汇表：

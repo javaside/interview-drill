@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CM14GQSBX70PZXA4C7
 blockId: distributed/arch-evolution
-relatedBlocks:
-  []
-question: "单体到微服务的演进动机？"
+relatedBlocks: []
+question: 单体到微服务的演进动机？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 微服务拆得越细越好吗？
 keyPoints:
   - id: kp-ae1-1
-    text: "单体：开发简单部署简单——小团队最快路径"
+    text: 单体：开发简单部署简单——小团队最快路径
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae2-2
-    text: "痛点随规模到来：一改全发、故障牵连、技术栈锁死"
+    text: 痛点随规模到来：一改全发、故障牵连、技术栈锁死
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae1-3
-    text: "微服务：独立部署/扩展/技术栈——代价是分布式复杂度"
+    text: 微服务：独立部署/扩展/技术栈——代价是分布式复杂度
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-ae1-4
-    text: "演进节奏：先模块化单体（好拆）→ 团队规模到了再拆"
+    text: 演进节奏：先模块化单体（好拆）→ 团队规模到了再拆
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **不是革命是演进**——规模决定形态：

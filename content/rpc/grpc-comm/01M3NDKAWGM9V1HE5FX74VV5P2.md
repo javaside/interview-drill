@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWGM9V1HE5FX74VV5P2
 blockId: rpc/grpc-comm
-relatedBlocks:
-  []
-question: "REST 和 gRPC 怎么选？"
+relatedBlocks: []
+question: REST 和 gRPC 怎么选？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 为什么对外接口不推荐 gRPC？
 keyPoints:
   - id: kp-gr2-1
-    text: "对外/开放 API：REST（HTTP 生态、调试友好、浏览器直连）"
+    text: 对外/开放 API：REST（HTTP 生态、调试友好、浏览器直连）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr2-2
-    text: "内部高性能服务间：gRPC（protobuf+HTTP2 多路复用）"
+    text: 内部高性能服务间：gRPC（protobuf+HTTP2 多路复用）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr2-3
-    text: "流式/双向实时：gRPC 四种流天然支持"
+    text: 流式/双向实时：gRPC 四种流天然支持
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-gr2-4
-    text: "浏览器直连 gRPC 需要 grpc-web 转换层（HTTP/2 限制）"
+    text: 浏览器直连 gRPC 需要 grpc-web 转换层（HTTP/2 限制）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 按**给谁用**选：

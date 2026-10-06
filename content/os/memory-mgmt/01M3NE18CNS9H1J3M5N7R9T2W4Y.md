@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNS9H1J3M5N7R9T2W4Y
 blockId: os/memory-mgmt
-relatedBlocks:
-  []
-question: "malloc 的底层怎么工作？"
+relatedBlocks: []
+question: malloc 的底层怎么工作？
 cardType: enumeration
 appliesTo: Linux
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - 内存池为什么比裸 malloc 快？
 keyPoints:
   - id: kp-mm3-1
-    text: "小内存走 brk 扩堆，大内存走 mmap 直映"
+    text: 小内存走 brk 扩堆，大内存走 mmap 直映
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'malloc(3)'
+      locator: malloc(3)
   - id: kp-mm3-2
-    text: "glibc malloc 加arena 内存池：空闲链/桶分级，减少系统调用"
+    text: glibc malloc 加arena 内存池：空闲链/桶分级，减少系统调用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'malloc(3)'
+      locator: malloc(3)
   - id: kp-mm3-3
-    text: "free 不还内核：池里复用——RSS 居高不下常是碎片"
+    text: free 不还内核：池里复用——RSS 居高不下常是碎片
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'malloc(3)'
+      locator: malloc(3)
   - id: kp-mm3-4
-    text: "多线程各自的 arena 减少锁竞争（64 位默认最多 8×核数）"
+    text: 多线程各自的 arena 减少锁竞争（64 位默认最多 8×核数）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'malloc(3)'
+      locator: malloc(3)
   - id: kp-mm3-5
-    text: "brk 顶部有洞就不能收缩——碎片让 RSS 只涨不降"
+    text: brk 顶部有洞就不能收缩——碎片让 RSS 只涨不降
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'malloc(3)'
+      locator: malloc(3)
 ---
 
 `malloc` 是 **glibc 的用户态库**，不是系统调用——它替你管「**问内核要大块，切成小块批发**」：

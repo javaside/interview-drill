@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSFA2RSG2K6KNQH05AB
 blockId: concurrency/threadlocal
-relatedBlocks:
-  []
-question: "InheritableThreadLocal 和 TransmittableThreadLocal 解决什么？"
+relatedBlocks: []
+question: InheritableThreadLocal 和 TransmittableThreadLocal 解决什么？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,48 +10,45 @@ followUps:
   - 为什么 ITL 在线程池里失效？
 keyPoints:
   - id: kp-tl4-1
-    text: "ITL：父线程创建子线程时拷贝上下文给子线程"
+    text: ITL：父线程创建子线程时拷贝上下文给子线程
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl4-2
-    text: "局限：线程池的线程早已创建——复用时不再发生拷贝"
+    text: 局限：线程池的线程早已创建——复用时不再发生拷贝
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl4-3
-    text: "TTL（阿里）：提交任务时抓快照、执行时回放——池化场景的上下文搬运工"
+    text: TTL（阿里）：提交任务时抓快照、执行时回放——池化场景的上下文搬运工
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tl4-4
-    text: "用法：TtlRunnable.get(runnable) 包装或 Agent 字节码增强"
+    text: 用法：TtlRunnable.get(runnable) 包装或 Agent 字节码增强
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 - **InheritableThreadLocal**：**创建子线程那一刻**把父线程的值抄给孩子——`new Thread()` 场景 OK；

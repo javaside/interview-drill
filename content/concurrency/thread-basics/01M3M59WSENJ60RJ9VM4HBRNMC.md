@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSENJ60RJ9VM4HBRNMC
 blockId: concurrency/thread-basics
-relatedBlocks:
-  []
-question: "守护线程（daemon）是什么？"
+relatedBlocks: []
+question: 守护线程（daemon）是什么？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: mid
@@ -11,48 +10,45 @@ followUps:
   - 为什么不能在守护线程里写文件？
 keyPoints:
   - id: kp-tb4-1
-    text: "为用户线程服务的后台线程：JVM 只剩守护线程时直接退出"
+    text: 为用户线程服务的后台线程：JVM 只剩守护线程时直接退出
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb4-2
-    text: "setDaemon(true) 必须在 start 前调用"
+    text: setDaemon(true) 必须在 start 前调用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb4-3
-    text: "守护线程被 JVM 粗暴终止：不跑 finally、不做清理，慎放关键资源"
+    text: 守护线程被 JVM 粗暴终止：不跑 finally、不做清理，慎放关键资源
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tb4-4
-    text: "典型用途：GC 线程、心跳上报、日志刷盘这 类「没了也无妨」的工作"
+    text: 典型用途：GC 线程、心跳上报、日志刷盘这 类「没了也无妨」的工作
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 线程分两种身份：

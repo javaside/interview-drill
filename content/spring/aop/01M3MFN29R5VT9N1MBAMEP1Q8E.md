@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29R5VT9N1MBAMEP1Q8E
 blockId: spring/aop
-relatedBlocks:
-  []
-question: "同类方法自调用为什么切面失效？"
+relatedBlocks: []
+question: 同类方法自调用为什么切面失效？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - private 方法加 @Transactional 为什么也失效？
 keyPoints:
   - id: kp-aop3-1
-    text: "切面=代理拦截；自调用走 this（原始对象）绕过代理"
+    text: 切面=代理拦截；自调用走 this（原始对象）绕过代理
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop3-2
-    text: "典型受害：@Transactional 方法被同类直调，事务没开"
+    text: 典型受害：@Transactional 方法被同类直调，事务没开
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop3-3
-    text: "解法 1：注入自身（@Lazy self）再通过 self 调用"
+    text: 解法 1：注入自身（@Lazy self）再通过 self 调用
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-aop3-4
-    text: "解法 2：AopContext.currentProxy()（需 exposeProxy=true）；或拆类"
+    text: 解法 2：AopContext.currentProxy()（需 exposeProxy=true）；或拆类
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **根因一句话**：代理拦截的入口在「**外面的调用**」，而 `this.methodB()` 压根**没过代理**——this 是原始对象，通知链自然没人执行：

@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTM3E5G7K9S1V3X5
 blockId: os/linux-commands
-relatedBlocks:
-  []
-question: "网络不通/变慢，排查命令怎么组织？"
+relatedBlocks: []
+question: 网络不通/变慢，排查命令怎么组织？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 为什么建议先 ss 后 tcpdump？
 keyPoints:
   - id: kp-lc4-1
-    text: "分层思路：先通断（ping/telnet）再链路（traceroute）再本端（ss/listen）"
+    text: 分层思路：先通断（ping/telnet）再链路（traceroute）再本端（ss/listen）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'ss(8)'
+      locator: ss(8)
   - id: kp-lc4-2
-    text: "ss -tnlp 看监听与连接状态——TIME_WAIT/CLOSE_WAIT 堆积各指一种病"
+    text: ss -tnlp 看监听与连接状态——TIME_WAIT/CLOSE_WAIT 堆积各指一种病
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'ss(8)'
+      locator: ss(8)
   - id: kp-lc4-3
-    text: "tcpdump 抓包看事实：重传/RST/半握手——证据之王"
+    text: tcpdump 抓包看事实：重传/RST/半握手——证据之王
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'ss(8)'
+      locator: ss(8)
   - id: kp-lc4-4
-    text: "curl -w 计时分解：dns/connect/tls/首字节——慢在哪一段"
+    text: curl -w 计时分解：dns/connect/tls/首字节——慢在哪一段
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'ss(8)'
+      locator: ss(8)
   - id: kp-lc4-5
-    text: "连通但慢 vs 不通：不通查路由防火墙，慢查重传与队列"
+    text: 连通但慢 vs 不通：不通查路由防火墙，慢查重传与队列
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'ss(8)'
+      locator: ss(8)
 ---
 
 按**成本从低到高**逐层逼近：

@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNRM5G7K9S1V3X5
 blockId: network/dns-cdn
-relatedBlocks:
-  []
-question: "DNS 劫持和 DNS 污染怎么区分、怎么防？"
+relatedBlocks: []
+question: DNS 劫持和 DNS 污染怎么区分、怎么防？
 cardType: enumeration
 appliesTo: 通用
 frequency: mid
@@ -12,55 +11,55 @@ followUps:
   - HTTPDNS 为什么 APP 都在用？
 keyPoints:
   - id: kp-dn4-1
-    text: "劫持：掌握 DNS 权限的人（运营商/路由器）返回假答案"
+    text: 劫持：掌握 DNS 权限的人（运营商/路由器）返回假答案
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn4-2
-    text: "污染：旁路伪造响应抢答——比真答案先到即得逞"
+    text: 污染：旁路伪造响应抢答——比真答案先到即得逞
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn4-3
-    text: "共同危害：用户被引到假站点（钓鱼/插广告）"
+    text: 共同危害：用户被引到假站点（钓鱼/插广告）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn4-4
-    text: "根治方向：让 DNS 答案无法伪造——DNSSEC 签名验证"
+    text: 根治方向：让 DNS 答案无法伪造——DNSSEC 签名验证
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
   - id: kp-dn4-5
-    text: "工程绕法：DoH/DoT 加密 DNS 查询，或 HTTPDNS 走 HTTP 通道"
+    text: 工程绕法：DoH/DoT 加密 DNS 查询，或 HTTPDNS 走 HTTP 通道
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
-      locator: 'RFC 1034'
+      locator: RFC 1034
 ---
 
 两个「假答案」来源不同：

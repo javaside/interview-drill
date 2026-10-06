@@ -2,7 +2,7 @@
 id: 01M3KHXF73KZ58QW2B9NJA32E1
 blockId: mysql/transactions
 relatedBlocks: []
-question: "事务的 ACID 四个特性分别是什么意思？"
+question: 事务的 ACID 四个特性分别是什么意思？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - InnoDB 分别用什么机制实现这四个特性？
 keyPoints:
   - id: kp-tac-1
-    text: "原子性 Atomicity：事务内的操作要么全部生效，要么全部不生效（回滚）"
+    text: 原子性 Atomicity：事务内的操作要么全部生效，要么全部不生效（回滚）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac-2
-    text: "一致性 Consistency：事务前后数据都满足业务约束，处于合法状态"
+    text: 一致性 Consistency：事务前后数据都满足业务约束，处于合法状态
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac-3
-    text: "隔离性 Isolation：并发事务互不干扰，像各自独占数据库一样"
+    text: 隔离性 Isolation：并发事务互不干扰，像各自独占数据库一样
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-tac-4
-    text: "持久性 Durability：事务一旦提交，断电重启后修改仍在"
+    text: 持久性 Durability：事务一旦提交，断电重启后修改仍在
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

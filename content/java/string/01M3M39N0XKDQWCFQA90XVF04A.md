@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0XKDQWCFQA90XVF04A
 blockId: java/string
-relatedBlocks:
-  []
-question: "String 为什么设计成不可变的？"
+relatedBlocks: []
+question: String 为什么设计成不可变的？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 不可变带来了什么性能代价？
 keyPoints:
   - id: kp-st1-1
-    text: "不可变对象可安全共享：字符串常量池、缓存 hashCode 成为可能"
+    text: 不可变对象可安全共享：字符串常量池、缓存 hashCode 成为可能
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st1-2
-    text: "天然线程安全，无需任何同步"
+    text: 天然线程安全，无需任何同步
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st1-3
-    text: "作为 HashMap 的 key 安全：hashCode 可缓存且永不变化"
+    text: 作为 HashMap 的 key 安全：hashCode 可缓存且永不变化
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st1-4
-    text: "类final + 私有char数组 + 不提供修改方法，三者共同保证不可变"
+    text: 类final + 私有char数组 + 不提供修改方法，三者共同保证不可变
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-st1-5
-    text: "字符串常量池让同一字面量全 JVM 只存一份"
+    text: 字符串常量池让同一字面量全 JVM 只存一份
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 `String s = "a"; s += "b";` 每一步都在造**新对象**——因为 String 一旦生成就**终生不变**。为什么这么设计？三个红利：

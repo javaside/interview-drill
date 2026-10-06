@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMB8JP9K8XMNWY4GCMW
 blockId: jvm/gc-collectors
-relatedBlocks:
-  []
-question: "CMS 和 G1 的核心区别？"
+relatedBlocks: []
+question: CMS 和 G1 的核心区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - CMS 的 Concurrent Mode Failure 是什么？
 keyPoints:
   - id: kp-gc1-1
-    text: "CMS：老年代低停顿收集器，标记-清除（有碎片）"
+    text: CMS：老年代低停顿收集器，标记-清除（有碎片）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc1-2
-    text: "G1：整堆 Region 化，整理+复制，停顿可预测"
+    text: G1：整堆 Region 化，整理+复制，停顿可预测
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc1-3
-    text: "G1 按停顿预算选收益最高的 Region 回收（MaxGCPauseMillis）"
+    text: G1 按停顿预算选收益最高的 Region 回收（MaxGCPauseMillis）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc1-4
-    text: "CMS 碎片最终触发并发失败退化 Serial Old——9 废弃、14 移除"
+    text: CMS 碎片最终触发并发失败退化 Serial Old——9 废弃、14 移除
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 两代「低停顿」代表：

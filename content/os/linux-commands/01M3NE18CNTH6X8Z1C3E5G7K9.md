@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTH6X8Z1C3E5G7K9
 blockId: os/linux-commands
-relatedBlocks:
-  []
-question: "CPU 100% 怎么一步步定位？"
+relatedBlocks: []
+question: CPU 100% 怎么一步步定位？
 cardType: sequence
 appliesTo: Linux
 frequency: high
@@ -12,60 +11,60 @@ followUps:
   - 为什么是线程不是进程？
 keyPoints:
   - id: kp-lc1-1
-    text: "top 确认进程与 CPU 构成：us 用户/sys 内核/si 软中断"
+    text: top 确认进程与 CPU 构成：us 用户/sys 内核/si 软中断
     public: false
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'top(1)'
+      locator: top(1)
   - id: kp-lc1-2
-    text: "top -H -p 找出进程内吃 CPU 的线程号"
+    text: top -H -p 找出进程内吃 CPU 的线程号
     public: false
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'top(1)'
+      locator: top(1)
   - id: kp-lc1-3
-    text: "线程号转十六进制，去线程栈/jstack 定位代码行"
+    text: 线程号转十六进制，去线程栈/jstack 定位代码行
     public: false
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'top(1)'
+      locator: top(1)
   - id: kp-lc1-4
-    text: "按构成分诊：us 高查业务代码，sys 高查系统调用与锁，si 高查网络"
+    text: 按构成分诊：us 高查业务代码，sys 高查系统调用与锁，si 高查网络
     public: false
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'top(1)'
+      locator: top(1)
   - id: kp-lc1-5
-    text: "佐证：perf top 看热点函数，pidstat 看波动是否持续"
+    text: 佐证：perf top 看热点函数，pidstat 看波动是否持续
     public: false
     order: 5
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
-      locator: 'top(1)'
+      locator: top(1)
 ---
 
 标准链路五步（**先看构成再钻进程**）：

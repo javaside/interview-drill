@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNT7Z7B9D1F3H5J7M9Q
 blockId: os/io-model
-relatedBlocks:
-  []
-question: "缓冲 IO 和直接 IO（O_DIRECT）怎么选？"
+relatedBlocks: []
+question: 缓冲 IO 和直接 IO（O_DIRECT）怎么选？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 直接 IO 为什么要求对齐？
 keyPoints:
   - id: kp-di1-1
-    text: "缓冲 IO：write 只进页缓存即返回——快但有掉电丢失窗口"
+    text: 缓冲 IO：write 只进页缓存即返回——快但有掉电丢失窗口
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di1-2
-    text: "页缓存红利：重复读命中免盘；预读放大顺序读"
+    text: 页缓存红利：重复读命中免盘；预读放大顺序读
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di1-3
-    text: "直接 IO：绕开页缓存直达磁盘——无重复拷贝但自己管缓存"
+    text: 直接 IO：绕开页缓存直达磁盘——无重复拷贝但自己管缓存
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di1-4
-    text: "数据库选直接 IO 的理据：自己有 buffer pool，页缓存纯浪费"
+    text: 数据库选直接 IO 的理据：自己有 buffer pool，页缓存纯浪费
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
   - id: kp-di1-5
-    text: "普通应用默认缓冲 IO——靠 fsync 控制持久化时点"
+    text: 普通应用默认缓冲 IO——靠 fsync 控制持久化时点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
-      locator: 'block'
+      locator: block
 ---
 
 **默认的 write 是「写到内存就算完」**——页缓存（PageCache）是内核替所有进程做的**读写缓存**：

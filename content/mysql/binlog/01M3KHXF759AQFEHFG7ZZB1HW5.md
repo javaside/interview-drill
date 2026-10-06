@@ -2,7 +2,7 @@
 id: 01M3KHXF759AQFEHFG7ZZB1HW5
 blockId: mysql/binlog
 relatedBlocks: []
-question: "binlog 有哪三种格式？各有什么优缺点？"
+question: binlog 有哪三种格式？各有什么优缺点？
 cardType: enumeration
 appliesTo: MySQL 8.0+
 frequency: high
@@ -10,9 +10,9 @@ followUps:
   - 为什么 RR 下 statement 才安全？
 keyPoints:
   - id: kp-bi-1
-    text: "statement：记 SQL 原文，量小；但 now()/uuid() 这类不确定函数主从可能不一致"
+    text: statement：记 SQL 原文，量小；但 now()/uuid() 这类不确定函数主从可能不一致
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -20,9 +20,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi-2
-    text: "row：记每行改动的前后镜像，绝对一致；日志量大"
+    text: row：记每行改动的前后镜像，绝对一致；日志量大
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -30,9 +30,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi-3
-    text: "mixed：默认 statement，检测到不安全语句自动切 row"
+    text: mixed：默认 statement，检测到不安全语句自动切 row
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
@@ -40,9 +40,9 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
   - id: kp-bi-4
-    text: "binlog 是 Server 层日志，所有引擎都有；redo 是 InnoDB 引擎层特有"
+    text: binlog 是 Server 层日志，所有引擎都有；redo 是 InnoDB 引擎层特有
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:

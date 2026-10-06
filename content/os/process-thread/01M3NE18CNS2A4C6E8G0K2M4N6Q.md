@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNS2A4C6E8G0K2M4N6Q
 blockId: os/process-thread
-relatedBlocks:
-  []
-question: "进程和线程的区别？"
+relatedBlocks: []
+question: 进程和线程的区别？
 cardType: comparison
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 什么时候选多进程什么时候多线程？
 keyPoints:
   - id: kp-pt1-1
-    text: "进程=资源单位（独立地址空间/fd/内存）；线程=调度单位（共享进程资源）"
+    text: 进程=资源单位（独立地址空间/fd/内存）；线程=调度单位（共享进程资源）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'sched(7)'
+      locator: sched(7)
   - id: kp-pt1-2
-    text: "同进程多线程共享：代码/堆/全局变量/fd；私有：栈/寄存器/errno"
+    text: 同进程多线程共享：代码/堆/全局变量/fd；私有：栈/寄存器/errno
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'sched(7)'
+      locator: sched(7)
   - id: kp-pt1-3
-    text: "切换成本：线程切换不换地址空间，进程切换连页表一起换"
+    text: 切换成本：线程切换不换地址空间，进程切换连页表一起换
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'sched(7)'
+      locator: sched(7)
   - id: kp-pt1-4
-    text: "隔离性：进程崩溃互不牵连；线程一人崩全进程陪葬"
+    text: 隔离性：进程崩溃互不牵连；线程一人崩全进程陪葬
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'sched(7)'
+      locator: sched(7)
   - id: kp-pt1-5
-    text: "通信成本：进程要 IPC（管道/共享内存），线程直接读写共享变量+锁"
+    text: 通信成本：进程要 IPC（管道/共享内存），线程直接读写共享变量+锁
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
-      locator: 'sched(7)'
+      locator: sched(7)
 ---
 
 记分水岭：**进程管资源、线程管执行**。

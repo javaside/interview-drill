@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEQKQYZN64JNA2A5CZ
 blockId: concurrency/thread-pools
-relatedBlocks:
-  []
-question: "线程池的核心参数有哪些？"
+relatedBlocks: []
+question: 线程池的核心参数有哪些？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,59 +10,55 @@ followUps:
   - 为什么必须给线程命名？
 keyPoints:
   - id: kp-tp1-1
-    text: "corePoolSize 常驻线程数；maximumPoolSize 峰值上限"
+    text: corePoolSize 常驻线程数；maximumPoolSize 峰值上限
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp1-2
-    text: "workQueue 任务队列：无界/有界/同步移交（SynchronousQueue）"
+    text: workQueue 任务队列：无界/有界/同步移交（SynchronousQueue）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp1-3
-    text: "keepAliveTime：超过 core 的空闲线程的存活时限"
+    text: keepAliveTime：超过 core 的空闲线程的存活时限
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp1-4
-    text: "threadFactory 线程工厂（命名——排查的救命稻草）"
+    text: threadFactory 线程工厂（命名——排查的救命稻草）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp1-5
-    text: "rejectedExecutionHandler 拒绝策略：队列满且线程到顶之后怎么办"
+    text: rejectedExecutionHandler 拒绝策略：队列满且线程到顶之后怎么办
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 `ThreadPoolExecutor` 的**七大件**（把下面按语义排）：

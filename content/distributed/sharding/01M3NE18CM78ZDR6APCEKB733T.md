@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CM78ZDR6APCEKB733T
 blockId: distributed/sharding
-relatedBlocks:
-  []
-question: "分片键怎么选？"
+relatedBlocks: []
+question: 分片键怎么选？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 商家维度查询怎么办？
 keyPoints:
   - id: kp-sh2-1
-    text: "高频查询条件优先：绝大多数查询能命中单片（免跨片扫描）"
+    text: 高频查询条件优先：绝大多数查询能命中单片（免跨片扫描）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh2-2
-    text: "用户 id/订单 id 常见——同用户数据同片（亲和）"
+    text: 用户 id/订单 id 常见——同用户数据同片（亲和）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh2-3
-    text: "分布均匀：取模/hash 打散；range 利于范围但易热点"
+    text: 分布均匀：取模/hash 打散；range 利于范围但易热点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-sh2-4
-    text: "避免热点：单调递增主键做分片键=全写一片"
+    text: 避免热点：单调递增主键做分片键=全写一片
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 分片键（sharding key）选择的**金标准：带着最贵的查询选**：

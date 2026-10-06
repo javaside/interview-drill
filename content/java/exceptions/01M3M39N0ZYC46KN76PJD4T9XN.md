@@ -1,9 +1,8 @@
 ---
 id: 01M3M39N0ZYC46KN76PJD4T9XN
 blockId: java/exceptions
-relatedBlocks:
-  []
-question: "Java 异常的类层次是怎样的？"
+relatedBlocks: []
+question: Java 异常的类层次是怎样的？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 受检 vs 非受检的本质区别？
 keyPoints:
   - id: kp-ex1-1
-    text: "Throwable 为根：Error 与 Exception 两大分支"
+    text: Throwable 为根：Error 与 Exception 两大分支
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex1-2
-    text: "Error：JVM 层致命错误（OutOfMemoryError/StackOverflowError），不应捕获"
+    text: Error：JVM 层致命错误（OutOfMemoryError/StackOverflowError），不应捕获
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex1-3
-    text: "Exception 分两支：受检异常（编译器强制处理）与运行时异常（RuntimeException 系）"
+    text: Exception 分两支：受检异常（编译器强制处理）与运行时异常（RuntimeException 系）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
   - id: kp-ex1-4
-    text: "NPE/数组越界/类转型 属运行时异常；IOException/SQLException 属受检"
+    text: NPE/数组越界/类转型 属运行时异常；IOException/SQLException 属受检
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 ```

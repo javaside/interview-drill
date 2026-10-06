@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RA0VTYKNWVA4SY5XJ
 blockId: spring/spring-mvc
-relatedBlocks:
-  []
-question: "RESTful 接口怎么统一异常处理？"
+relatedBlocks: []
+question: RESTful 接口怎么统一异常处理？
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 404 应该怎么处理？
 keyPoints:
   - id: kp-mv3-1
-    text: "@RestControllerAdvice + @ExceptionHandler：全局按异常类型分发出错响应"
+    text: '@RestControllerAdvice + @ExceptionHandler：全局按异常类型分发出错响应'
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv3-2
-    text: "自定义业务异常携带错误码，统一响应体（code/message/data）"
+    text: 自定义业务异常携带错误码，统一响应体（code/message/data）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv3-3
-    text: "参数校验异常（MethodArgumentNotValidException）单独接住转 400"
+    text: 参数校验异常（MethodArgumentNotValidException）单独接住转 400
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-mv3-4
-    text: "未知异常兜底 500 且不泄露堆栈，日志记全"
+    text: 未知异常兜底 500 且不泄露堆栈，日志记全
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **统一异常三件套**：

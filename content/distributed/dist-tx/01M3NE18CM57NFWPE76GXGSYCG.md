@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CM57NFWPE76GXGSYCG
 blockId: distributed/dist-tx
-relatedBlocks:
-  []
-question: "2PC 的流程和缺陷？"
+relatedBlocks: []
+question: 2PC 的流程和缺陷？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 3PC 修好了吗？
 keyPoints:
   - id: kp-dt1-1
-    text: "准备阶段：协调者问所有参与者能否提交，各自锁资源应答"
+    text: 准备阶段：协调者问所有参与者能否提交，各自锁资源应答
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt1-2
-    text: "提交阶段：全 YES 则统一提交，任一 NO 则统一回滚"
+    text: 提交阶段：全 YES 则统一提交，任一 NO 则统一回滚
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt1-3
-    text: "缺陷 1 同步阻塞：准备后到提交前全员锁资源干候"
+    text: 缺陷 1 同步阻塞：准备后到提交前全员锁资源干候
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt1-4
-    text: "缺陷 2 协调者单点：其二阶段决策前挂，参与者进退不得"
+    text: 缺陷 2 协调者单点：其二阶段决策前挂，参与者进退不得
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
   - id: kp-dt1-5
-    text: "缺陷 3 数据不一致：二阶段消息部分到达（网络分区）"
+    text: 缺陷 3 数据不一致：二阶段消息部分到达（网络分区）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
-      locator: 'DDIA'
+      locator: DDIA
 ---
 
 **两阶段提交（2PC）**=「先投票、再执行」：

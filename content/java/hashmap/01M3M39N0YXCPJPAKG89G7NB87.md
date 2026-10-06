@@ -3,7 +3,7 @@ id: 01M3M39N0YXCPJPAKG89G7NB87
 blockId: java/hashmap
 relatedBlocks:
   - java/collections-overview
-question: "HashMap 的 hash 扰动函数为什么那样设计？"
+question: HashMap 的 hash 扰动函数为什么那样设计？
 cardType: atomic
 appliesTo: Java 17+
 frequency: high
@@ -11,15 +11,15 @@ followUps:
   - 不扰动会怎样？
 keyPoints:
   - id: kp-hm2-1
-    text: "h = key.hashCode() ^ (h >>> 16)：高 16 位异或进低 16 位，让高位也参与定位"
+    text: h = key.hashCode() ^ (h >>> 16)：高 16 位异或进低 16 位，让高位也参与定位
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
-      locator: 'JLS 17'
+      locator: JLS 17
 ---
 
 定位下标只用了 hash 的**低几位**（`(n-1) & hash`，n=16 时就是低 4 位）。如果 key 的 hash **只有高位有差异**（常见于内存地址连续的小对象），低 4 位全一样 → 全挤进**同一个桶**。

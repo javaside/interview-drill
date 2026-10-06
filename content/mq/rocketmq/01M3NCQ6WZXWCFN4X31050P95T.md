@@ -3,7 +3,7 @@ id: 01M3NCQ6WZXWCFN4X31050P95T
 blockId: mq/rocketmq
 relatedBlocks:
   - mq/mq-fundamentals
-question: "RocketMQ 的事务消息怎么工作？"
+question: RocketMQ 的事务消息怎么工作？
 cardType: sequence
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,49 +11,49 @@ followUps:
   - 回查失败了怎么办？
 keyPoints:
   - id: kp-rq1-1
-    text: "发送半消息（half message）：对消费者不可见"
+    text: 发送半消息（half message）：对消费者不可见
     public: true
     order: 1
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq1-2
-    text: "执行本地事务（比如订单落库）"
+    text: 执行本地事务（比如订单落库）
     public: true
     order: 2
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq1-3
-    text: "提交或回滚半消息（commit 则消息可见）"
+    text: 提交或回滚半消息（commit 则消息可见）
     public: true
     order: 3
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-rq1-4
-    text: "回查兜底：broker 未收到二次确认时反查生产者的本地事务状态"
+    text: 回查兜底：broker 未收到二次确认时反查生产者的本地事务状态
     public: true
     order: 4
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **事务消息**解决「**本地事务与发消息的原子性**」（要么都成、要么都不生效）：

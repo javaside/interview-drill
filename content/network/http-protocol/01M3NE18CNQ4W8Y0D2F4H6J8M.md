@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNQ4W8Y0D2F4H6J8M
 blockId: network/http-protocol
-relatedBlocks:
-  []
-question: "HTTP/1.1、HTTP/2、HTTP/3 各解决了什么？"
+relatedBlocks: []
+question: HTTP/1.1、HTTP/2、HTTP/3 各解决了什么？
 cardType: enumeration
 appliesTo: 通用
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - 为什么 QUIC 选 UDP 而不改 TCP？
 keyPoints:
   - id: kp-hp3-1
-    text: "1.1：长连接+管道化复用 TCP，但队头阻塞在 HTTP 层（响应串行）"
+    text: 1.1：长连接+管道化复用 TCP，但队头阻塞在 HTTP 层（响应串行）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
   - id: kp-hp3-2
-    text: "2.0：二进制分帧+多路复用，一个 TCP 并行多流——消 HTTP 队头"
+    text: 2.0：二进制分帧+多路复用，一个 TCP 并行多流——消 HTTP 队头
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
   - id: kp-hp3-3
-    text: "2.0 遗症：TCP 层队头阻塞（丢一个包全员卡）+TLS 指纹被识别"
+    text: 2.0 遗症：TCP 层队头阻塞（丢一个包全员卡）+TLS 指纹被识别
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
   - id: kp-hp3-4
-    text: "3.0：换 QUIC（UDP 上重建可靠多路复用+内建 TLS 1.3）"
+    text: 3.0：换 QUIC（UDP 上重建可靠多路复用+内建 TLS 1.3）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
   - id: kp-hp3-5
-    text: "3.0 连接迁移：用 Connection ID 标识连接，换网不断流"
+    text: 3.0 连接迁移：用 Connection ID 标识连接，换网不断流
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
-      locator: 'RFC 9110'
+      locator: RFC 9110
 ---
 
 每一代都在拆上一代的墙：

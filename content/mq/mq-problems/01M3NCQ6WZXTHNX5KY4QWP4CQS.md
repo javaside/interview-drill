@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WZXTHNX5KY4QWP4CQS
 blockId: mq/mq-problems
-relatedBlocks:
-  []
-question: "怎么实现延迟队列的效果？"
+relatedBlocks: []
+question: 怎么实现延迟队列的效果？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,56 +10,55 @@ followUps:
   - 30 分钟订单超时取消选哪种？
 keyPoints:
   - id: kp-mp3-1
-    text: "RocketMQ 延迟消息（4.x 固定档 / 5.x 任意时长）"
+    text: RocketMQ 延迟消息（4.x 固定档 / 5.x 任意时长）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp3-2
-    text: "Kafka：按延迟档建延迟 topic + 定时搬运（到点转投目标 topic）"
+    text: Kafka：按延迟档建延迟 topic + 定时搬运（到点转投目标 topic）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp3-3
-    text: "Redis ZSet（score=到期时间戳）+ 定时扫描投递"
+    text: Redis ZSet（score=到期时间戳）+ 定时扫描投递
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp3-4
-    text: "时间轮：海量定时器的 O(1) 方案（Netty/内建）"
+    text: 时间轮：海量定时器的 O(1) 方案（Netty/内建）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-mp3-5
-    text: "超时取消必须与状态机 CAS 配合防并发踩踏"
+    text: 超时取消必须与状态机 CAS 配合防并发踩踏
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
-
+      locator: doc
 ---
 
 四条路线按场景选：

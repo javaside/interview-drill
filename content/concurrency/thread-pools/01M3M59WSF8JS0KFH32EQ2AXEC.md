@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSF8JS0KFH32EQ2AXEC
 blockId: concurrency/thread-pools
-relatedBlocks:
-  []
-question: "shutdown 和 shutdownNow 的区别？"
+relatedBlocks: []
+question: shutdown 和 shutdownNow 的区别？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 为什么推荐 shutdown + awaitTermination 组合？
 keyPoints:
   - id: kp-tp4-1
-    text: "shutdown：温和收摊——不接新任务，存量任务（含队列）跑完"
+    text: shutdown：温和收摊——不接新任务，存量任务（含队列）跑完
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp4-2
-    text: "shutdownNow：立刻打烊——不接新任务、中断运行中线程、清空队列并返回未执行任务"
+    text: shutdownNow：立刻打烊——不接新任务、中断运行中线程、清空队列并返回未执行任务
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp4-3
-    text: "awaitTermination：设定时限候收摊完成（与 shutdown 成对使用）"
+    text: awaitTermination：设定时限候收摊完成（与 shutdown 成对使用）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-tp4-4
-    text: "返回的 List<Runnable> 是被抛弃的存量任务，调用方自行处置"
+    text: 返回的 List<Runnable> 是被抛弃的存量任务，调用方自行处置
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 两种关店方式：

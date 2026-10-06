@@ -1,9 +1,8 @@
 ---
 id: 01M3M59WSEHSMWYDSYW8CRMY0F
 blockId: concurrency/aqs-lock
-relatedBlocks:
-  []
-question: "Condition 相比 wait/notify 的优势？"
+relatedBlocks: []
+question: Condition 相比 wait/notify 的优势？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,48 +10,45 @@ followUps:
   - 生产者消费者的双 Condition 怎么设计？
 keyPoints:
   - id: kp-aq3-1
-    text: "一把锁多个条件队列：不同条件的阻塞各排各的队"
+    text: 一把锁多个条件队列：不同条件的阻塞各排各的队
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq3-2
-    text: "精准唤醒：notFull.signal 只唤醒在「不满」条件上候着的线程"
+    text: 精准唤醒：notFull.signal 只唤醒在「不满」条件上候着的线程
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq3-3
-    text: "wait/notify 只有一间全员候车室，notify 叫醒谁全凭运气"
+    text: wait/notify 只有一间全员候车室，notify 叫醒谁全凭运气
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
-
+      locator: java.util.concurrent
   - id: kp-aq3-4
-    text: "await/signal 必须持锁调用（同 wait/notify 的纪律）"
+    text: await/signal 必须持锁调用（同 wait/notify 的纪律）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
-      locator: 'java.util.concurrent'
+      locator: java.util.concurrent
 ---
 
 `wait/notify` 的痛：一个对象锁只有**一间候车室**——生产者消费者全挤一起，`notify()` 随手叫醒一个：消费者叫醒消费者、白站一站（虚假唤醒还得 while 兜底）。

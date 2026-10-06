@@ -1,55 +1,54 @@
 ---
 id: 01M3M7HTMBH4404AEK6EXEEV9W
 blockId: jvm/jvm-tools
-relatedBlocks:
-  []
-question: "常用的 JVM 参数有哪些？"
+relatedBlocks: []
+question: 常用的 JVM 参数有哪些？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
 followUps:
-  - -Xms 和 -Xmx 为什么常设成一样？
+  - '-Xms 和 -Xmx 为什么常设成一样？'
 keyPoints:
   - id: kp-jt3-1
-    text: "内存：-Xms/-Xmx（堆初始与顶）、-Xmn（新生代）、-Xss（栈）、MetaspaceSize"
+    text: 内存：-Xms/-Xmx（堆初始与顶）、-Xmn（新生代）、-Xss（栈）、MetaspaceSize
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-jt3-2
-    text: "GC：-XX:+UseG1GC、MaxGCPauseMillis、PrintGC/HandlePromotionFailure"
+    text: GC：-XX:+UseG1GC、MaxGCPauseMillis、PrintGC/HandlePromotionFailure
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-jt3-3
-    text: "排障：HeapDumpOnOutOfMemoryError、+HeapDumpPath"
+    text: 排障：HeapDumpOnOutOfMemoryError、+HeapDumpPath
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-jt3-4
-    text: "日志：-Xlog:gc*（9+）/ PrintGCDetails（8）"
+    text: 日志：-Xlog:gc*（9+）/ PrintGCDetails（8）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 **四组高频参数**：

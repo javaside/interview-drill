@@ -1,9 +1,8 @@
 ---
 id: 01M3NCQ6WYSMTEEETJJ2XH9FBX
 blockId: mq/kafka-core
-relatedBlocks:
-  []
-question: "offset 是什么？怎么提交？"
+relatedBlocks: []
+question: offset 是什么？怎么提交？
 cardType: enumeration
 appliesTo: Kafka 3.x / RocketMQ 5.x
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - 自动提交为什么会丢消息？
 keyPoints:
   - id: kp-kc4-1
-    text: "offset=消息在 partition 里的位点号（单调递增）"
+    text: offset=消息在 partition 里的位点号（单调递增）
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc4-2
-    text: "消费进度=已提交 offset；重启从提交位点继续"
+    text: 消费进度=已提交 offset；重启从提交位点继续
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc4-3
-    text: "自动提交（enable.auto.commit）定时交——可能重复（处理完没交就崩）或丢（交了没处理就崩）"
+    text: 自动提交（enable.auto.commit）定时交——可能重复（处理完没交就崩）或丢（交了没处理就崩）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc4-4
-    text: "手动提交：处理成功后 commitSync/commitAsync——精确但慢一点"
+    text: 手动提交：处理成功后 commitSync/commitAsync——精确但慢一点
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
   - id: kp-kc4-5
-    text: "offset 存在内部 topic __consumer_offsets（不是 ZK，0.9+）"
+    text: offset 存在内部 topic __consumer_offsets（不是 ZK，0.9+）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
-      locator: 'doc'
+      locator: doc
 ---
 
 **offset = partition 内的座位号**（0,1,2,…）。消费组记住「我读到几号了」——**重启从这儿接着读**。

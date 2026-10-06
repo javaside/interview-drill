@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNS7F9H1J3M5N7R9T2W
 blockId: os/memory-mgmt
-relatedBlocks:
-  []
-question: "虚拟内存是什么？页表怎么工作？"
+relatedBlocks: []
+question: 虚拟内存是什么？页表怎么工作？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - TLB 和 CPU 缓存是一回事吗？
 keyPoints:
   - id: kp-mm1-1
-    text: "每进程一套虚拟地址空间，隔离互踩——物理内存统一由内核调度"
+    text: 每进程一套虚拟地址空间，隔离互踩——物理内存统一由内核调度
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
   - id: kp-mm1-2
-    text: "页=分配最小单位（4KB）；页表把虚拟页号翻译成物理帧号"
+    text: 页=分配最小单位（4KB）；页表把虚拟页号翻译成物理帧号
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
   - id: kp-mm1-3
-    text: "多级页表省空间：只用到的区域才建下层页表"
+    text: 多级页表省空间：只用到的区域才建下层页表
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
   - id: kp-mm1-4
-    text: "TLB 缓存翻译结果——命中免查表，失效是切进程的大头"
+    text: TLB 缓存翻译结果——命中免查表，失效是切进程的大头
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
   - id: kp-mm1-5
-    text: "换页：物理不够时把冷页写 swap，腾给热页"
+    text: 换页：物理不够时把冷页写 swap，腾给热页
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
-      locator: 'mm concepts'
+      locator: mm concepts
 ---
 
 **虚拟内存**是操作系统最大的魔术之一：每个进程都以为自己独占一整条连续内存（如 48 位地址空间），实际物理内存由内核**按页拆借**：

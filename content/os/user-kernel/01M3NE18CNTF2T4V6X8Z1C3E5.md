@@ -1,9 +1,8 @@
 ---
 id: 01M3NE18CNTF2T4V6X8Z1C3E5
 blockId: os/user-kernel
-relatedBlocks:
-  []
-question: "上下文切换到底切换了什么？进程切换和线程切换差在哪？"
+relatedBlocks: []
+question: 上下文切换到底切换了什么？进程切换和线程切换差在哪？
 cardType: enumeration
 appliesTo: Linux
 frequency: high
@@ -12,55 +11,55 @@ followUps:
   - cs 很高怎么排查？
 keyPoints:
   - id: kp-uk4-1
-    text: "切换内容：寄存器+PC+内核栈——这是直接成本（微秒级）"
+    text: 切换内容：寄存器+PC+内核栈——这是直接成本（微秒级）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk4-2
-    text: "隐形大头：CPU 缓存/TLB 被新上下文冲脏——间接成本更大"
+    text: 隐形大头：CPU 缓存/TLB 被新上下文冲脏——间接成本更大
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk4-3
-    text: "进程切换额外换页表（CR3）——TLB 大换血"
+    text: 进程切换额外换页表（CR3）——TLB 大换血
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk4-4
-    text: "线程同进程共享地址空间——切栈与寄存器即可"
+    text: 线程同进程共享地址空间——切栈与寄存器即可
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
   - id: kp-uk4-5
-    text: "自愿切换（候 IO/锁）vs 抢占（时间片到）；vmstat cs 监控"
+    text: 自愿切换（候 IO/锁）vs 抢占（时间片到）；vmstat cs 监控
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
-      locator: 'Intro'
+      locator: Intro
 ---
 
 **上下文切换**=CPU 从执行 A 换到执行 B 的搬家仪式：

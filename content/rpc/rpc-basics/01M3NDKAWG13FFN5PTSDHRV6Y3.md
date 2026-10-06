@@ -1,9 +1,8 @@
 ---
 id: 01M3NDKAWG13FFN5PTSDHRV6Y3
 blockId: rpc/rpc-basics
-relatedBlocks:
-  []
-question: "序列化协议怎么选？"
+relatedBlocks: []
+question: 序列化协议怎么选？
 cardType: enumeration
 appliesTo: Dubbo 3 / gRPC
 frequency: high
@@ -11,65 +10,65 @@ followUps:
   - 为什么内部服务推荐 Protobuf？
 keyPoints:
   - id: kp-rb2-1
-    text: "JSON：可读、跨语言、体积大——调试友好的人类格式"
+    text: JSON：可读、跨语言、体积大——调试友好的人类格式
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb2-2
-    text: "Protobuf：二进制强类型，schema 先行——体积最小速度最快"
+    text: Protobuf：二进制强类型，schema 先行——体积最小速度最快
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb2-3
-    text: "Hessian2：Dubbo 默认，二进制自描述，跨语言一般"
+    text: Hessian2：Dubbo 默认，二进制自描述，跨语言一般
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb2-4
-    text: "Kryo：Java 系最快，跨语言差（不推荐长期存储）"
+    text: Kryo：Java 系最快，跨语言差（不推荐长期存储）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb2-5
-    text: "选型维度：体积/速度/跨语言/可读性/演进兼容"
+    text: 选型维度：体积/速度/跨语言/可读性/演进兼容
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
   - id: kp-rb2-7
-    text: "JSON 的字段名冗余在压缩后差距缩小"
+    text: JSON 的字段名冗余在压缩后差距缩小
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
-      locator: 'doc'
+      locator: doc
 ---
 
 **序列化=对象怎么变成线上字节**。四个维度的排序题：

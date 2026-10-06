@@ -1,9 +1,8 @@
 ---
 id: 01M3M7HTMB44X28BZT234Y9BJH
 blockId: jvm/gc-collectors
-relatedBlocks:
-  []
-question: "各收集器怎么选？"
+relatedBlocks: []
+question: 各收集器怎么选？
 cardType: enumeration
 appliesTo: Java 17+
 frequency: high
@@ -11,45 +10,45 @@ followUps:
   - 吞吐优先和延迟优先怎么权衡？
 keyPoints:
   - id: kp-gc5-1
-    text: "吞吐优先：Parallel 系——批处理与后台计算"
+    text: 吞吐优先：Parallel 系——批处理与后台计算
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc5-2
-    text: "延迟敏感在线服务（默认推荐）：G1"
+    text: 延迟敏感在线服务（默认推荐）：G1
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc5-3
-    text: "超大堆或超低停顿：ZGC 与 Shenandoah"
+    text: 超大堆或超低停顿：ZGC 与 Shenandoah
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
   - id: kp-gc5-4
-    text: "收集器与区域搭配有约束（CMS 不能配 Parallel Scavenge）"
+    text: 收集器与区域搭配有约束（CMS 不能配 Parallel Scavenge）
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
-      locator: 'JVMS'
+      locator: JVMS
 ---
 
 按**要什么**分三派：

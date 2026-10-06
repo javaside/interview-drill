@@ -1,9 +1,8 @@
 ---
 id: 01M3MFN29RN89VZP3XS9BEYE8N
 blockId: spring/transaction-tx
-relatedBlocks:
-  []
-question: "@Transactional 的传播行为有哪些？"
+relatedBlocks: []
+question: '@Transactional 的传播行为有哪些？'
 cardType: enumeration
 appliesTo: Spring 6+
 frequency: high
@@ -11,55 +10,55 @@ followUps:
   - REQUIRED 和 NESTED 的区别？
 keyPoints:
   - id: kp-tx1-1
-    text: "REQUIRED（默认）：有事务加入，没有就新建"
+    text: REQUIRED（默认）：有事务加入，没有就新建
     public: true
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx1-2
-    text: "REQUIRES_NEW：挂起当前事务，另起独立新事务"
+    text: REQUIRES_NEW：挂起当前事务，另起独立新事务
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx1-3
-    text: "NESTED：嵌套事务（savepoint），外层回滚带动内层"
+    text: NESTED：嵌套事务（savepoint），外层回滚带动内层
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx1-4
-    text: "SUPPORTS 有则加入无则非事务；MANDATORY 必须有否则异常；NEVER 相反"
+    text: SUPPORTS 有则加入无则非事务；MANDATORY 必须有否则异常；NEVER 相反
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
   - id: kp-tx1-5
-    text: "NOT_SUPPORTED：挂起事务以非事务方式执行"
+    text: NOT_SUPPORTED：挂起事务以非事务方式执行
     public: false
-    verifiedAt: '2026-09-28'
+    verifiedAt: 2026-09-28
     excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
-      locator: 'core'
+      locator: core
 ---
 
 **传播行为**=「方法被调用时，事务怎么接续」。高频四档：
