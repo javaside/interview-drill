@@ -58,21 +58,29 @@ test('思考吃光额度（finish_reason=length + 正文空）报的是「上限
     choices: [{ message: { reasoning: '想了八千字……', content: '' }, finish_reason: 'length' }],
   })
   await expect(makeLlmScorer(provider, { fetchImpl: impl })('P'))
-    .rejects.toThrow(/被 max_tokens=8000 截断/)
+    .rejects.toThrow(new RegExp(`被 max_tokens=${JUDGE_MAX_TOKENS} 截断`))
 })
 
 test('截断一律作废：正文非空但 finish_reason=length 也报错（少掉的编号会被静默记成 no）', async () => {
   const { impl } = fetchStub({
     choices: [{ message: { content: '[1,2' }, finish_reason: 'length' }],
   })
-  await expect(makeLlmScorer(provider, { fetchImpl: impl })('P')).rejects.toThrow(/被 max_tokens=8000 截断（正文不完整）/)
+  await expect(makeLlmScorer(provider, { fetchImpl: impl })('P'))
+    .rejects.toThrow(new RegExp(`被 max_tokens=${JUDGE_MAX_TOKENS} 截断（正文不完整）`))
 })
 
-test('上限优先取显式传参，其次 provider.maxTokens（家之间天花板不同）', async () => {
-  const lowCeiling = { ...provider, maxTokens: 3000 }
-  const { impl, calls } = fetchStub({ choices: [{ message: { content: '[]' }, finish_reason: 'stop' }] })
-  await makeLlmScorer(lowCeiling, { fetchImpl: impl })('P')
-  expect(JSON.parse(String(calls[0]!.init.body)).max_tokens).toBe(3000)
+test('判定预算与问答预算解耦：默认 JUDGE_MAX_TOKENS，不看 provider.maxTokens；显式传参最高', async () => {
+  // provider.maxTokens 是问答的 QA_MAX_OUTPUT_TOKENS（全家居同一个值），不是家特有
+  // 天花板——判定批爆思考动辄 8000+，被它劫持会把批整批截断（2026-10-06 实测
+  // sameBlock 层 15/259 批作废；此前两值同为 8000 掩盖了短路）。
+  const qaProvider = { ...provider, maxTokens: 8000 }
+  const def = fetchStub({ choices: [{ message: { content: '[]' }, finish_reason: 'stop' }] })
+  await makeLlmScorer(qaProvider, { fetchImpl: def.impl })('P')
+  expect(JSON.parse(String(def.calls[0]!.init.body)).max_tokens).toBe(JUDGE_MAX_TOKENS)
+
+  const explicit = fetchStub({ choices: [{ message: { content: '[]' }, finish_reason: 'stop' }] })
+  await makeLlmScorer(qaProvider, { fetchImpl: explicit.impl, maxTokens: 3000 })('P')
+  expect(JSON.parse(String(explicit.calls[0]!.init.body)).max_tokens).toBe(3000)
 })
 
 test('非 2xx 与缺正文都抛中文可读的错误（交给 batch 重试 → fail-closed）', async () => {

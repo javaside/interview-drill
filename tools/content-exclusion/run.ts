@@ -17,8 +17,12 @@ import type { RawScorer } from './batch.js'
  * 约 7 条候选的批就要 1301 输出 tokens（≈185/条），其中绝大部分是思考。取 4000 时
  * 已经出现「思考吃光额度、正文 0 字」的批次（finish_reason=length）。提到与问答同档的
  * 8000：**上限是天花板不是收费额，成本由真实生成量决定**，放宽只防截断。
+ *
+ * 2026-10-06 全量跑实测：8000 仍不够——sameBlock 层 259 批里 15 批（5.8%）思考
+ * 吃满 8000、正文 0 字整批作废（单批峰值顶到 8001）。翻倍到 16000：正常批输出均
+ * ~2700 不受影响，只有爆思考的批才用得上高区间。
  */
-export const JUDGE_MAX_TOKENS = 8000
+export const JUDGE_MAX_TOKENS = 16000
 
 export function resolveProvider(env: Record<string, string | undefined>): QaProviderRuntime {
   const selection = selectProvider(env)
@@ -56,7 +60,11 @@ export function makeLlmScorer(
         model: provider.model,
         messages: [{ role: 'user', content: prompt }],
         stream: false,
-        max_tokens: opts.maxTokens ?? provider.maxTokens ?? JUDGE_MAX_TOKENS,
+        // 判定预算与问答预算（provider.maxTokens = QA_MAX_OUTPUT_TOKENS）**解耦**：
+        // 判定批 18-40 条候选、思考型模型动辄爆到 8000+，用问答的单题上限会把
+        // 爆思考的批整批截断作废（2026-10-06 实测 sameBlock 层 15/259 批如此；
+        // 此前两值同为 8000，短路从未暴露）。显式注入的 opts.maxTokens 仍最高。
+        max_tokens: opts.maxTokens ?? JUDGE_MAX_TOKENS,
       }),
     })
     if (!res.ok) {
@@ -77,7 +85,7 @@ export function makeLlmScorer(
     // 少掉的那几项会被静默记成 `no`（错判），而重试一次只花几分钱。
     if (finish === 'length') {
       throw new Error(
-        `${provider.label} 的输出被 max_tokens=${opts.maxTokens ?? provider.maxTokens ?? JUDGE_MAX_TOKENS} 截断` +
+        `${provider.label} 的输出被 max_tokens=${opts.maxTokens ?? JUDGE_MAX_TOKENS} 截断` +
         `${typeof content === 'string' && content.trim() !== '' ? '（正文不完整）' : '（思考吃光额度、正文为 0）'}` +
         '：整批作废重试（可调大上限或把 MAX_BATCH 切小）',
       )
