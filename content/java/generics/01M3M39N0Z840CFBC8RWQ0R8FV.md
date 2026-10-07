@@ -42,11 +42,13 @@ keyPoints:
       locator: JLS 17
 ---
 
-子类重写泛型父类方法时，擦除会把父类方法签名变掉（`compare(T o1)` → `compare(Object)`）——**多态要炸**。编译器默默补一个**桥方法**（synthetic bridge）：
+你写 `class MyComp implements Comparator<String>` 并重写 compare——擦除让签名**对不上**，多态要炸。编译器默默补一个**桥方法**（synthetic bridge）：
 
 ```java
-// 你写的：int compare(String a, String b)
-// 编译器补：int compare(Object a, Object b) { return compare((String)a, …); } // 桥
+// 接口里声明的：       int compare(T o1, T o2)        // T 是泛型参数
+// 擦除后接口里实际的： int compare(Object o1, Object o2)
+// 你写的实现：         int compare(String a, String b) // T 落地为 String——签名对不上
+// 编译器补的桥：       int compare(Object a, Object b) { return compare((String)a, (String)b); }
 ```
 
 父类引用调 `compare(Object,Object)` 时落在桥上，桥里强转后转调你的具体版本——**擦除世界的多态胶水**。反射遍历方法列表（带 synthetic/bridge 标记）能看到它。
