@@ -2,7 +2,7 @@
 id: 01M3M39N0ZV9ZPBXYWF2XMT3RC
 blockId: java/generics
 relatedBlocks: []
-question: List<String> 能赋给 List<Object> 吗？
+question: 把 List<String> 赋给 List<Object>，编译会通过吗？
 cardType: judgment
 conclusion: 'no'
 appliesTo: Java 17+

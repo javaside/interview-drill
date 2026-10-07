@@ -33,7 +33,8 @@ keyPoints:
     text: lock in share mode 显式加 S；for update 显式加 X
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWJHGBGZ57DWPS0FSTNG8
     confirmedIndependentOf: []
     source:
       kind: official-doc

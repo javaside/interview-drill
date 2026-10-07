@@ -14,7 +14,6 @@ keyPoints:
     public: true
     verifiedAt: 2026-09-28
     excludeAsDistractorFor:
-      - 01M3M59WSF16SCYSM5EVS1C59W
       - 01M3M59WSFF26KY8FVRTKXXDJA
       - 01M3NE18CNY8W0B2D4F6H8K0N2
       - 01M3NE18CNY9X1C3E5G7J9M1P3
@@ -53,7 +52,6 @@ keyPoints:
     public: false
     verifiedAt: 2026-09-28
     excludeAsDistractorFor:
-      - 01M3M59WSF16SCYSM5EVS1C59W
       - 01M3NE18CNY8W0B2D4F6H8K0N2
       - 01M3NE18CP04F0H2J4M6Q8S0V2
     confirmedIndependentOf: []

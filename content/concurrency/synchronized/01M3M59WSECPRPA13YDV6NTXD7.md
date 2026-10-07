@@ -26,7 +26,6 @@ keyPoints:
     verifiedAt: 2026-09-28
     excludeAsDistractorFor:
       - 01M3M59WSEHWBH8KSWXZYEAEY0
-      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -38,7 +37,6 @@ keyPoints:
     verifiedAt: 2026-09-28
     excludeAsDistractorFor:
       - 01M3M59WSEHSMWYDSYW8CRMY0F
-      - 01M3M59WSF16SCYSM5EVS1C59W
       - 01M3M59WSFQ6DJYJ18QPFWZQBD
     confirmedIndependentOf: []
     source:
@@ -49,8 +47,7 @@ keyPoints:
     text: RLL 必须手动 unlock 且放 finally；忘了就是灾难
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor:
-      - 01M3M59WSF16SCYSM5EVS1C59W
+    excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc

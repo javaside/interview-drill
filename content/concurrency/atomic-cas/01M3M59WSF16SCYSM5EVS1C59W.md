@@ -2,7 +2,7 @@
 id: 01M3M59WSF16SCYSM5EVS1C59W
 blockId: concurrency/atomic-cas
 relatedBlocks: []
-question: CAS 和互斥锁怎么选？
+question: CAS 和互斥锁，选哪个会更好？
 cardType: judgment
 conclusion: depends
 appliesTo: Java 17+

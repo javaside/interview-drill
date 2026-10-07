@@ -2,7 +2,7 @@
 id: 01M3NE18CNRA5G7K9P1R3T5V
 blockId: network/https-security
 relatedBlocks: []
-question: HTTPS 能完全防住中间人攻击吗？
+question: HTTPS 会完全挡住中间人攻击吗？
 cardType: judgment
 conclusion: depends
 appliesTo: 通用

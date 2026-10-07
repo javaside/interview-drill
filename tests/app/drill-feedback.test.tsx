@@ -52,7 +52,7 @@ test('批改版上下文：题面可见 + 每个选项带当时的勾选痕迹�
 /** judgment 卡：题面 + 结论三选 + 要点勾选（卡 4 实型） */
 const judgmentBase = {
   card: {
-    cardId: 'c9', blockName: 'MVCC', question: 'RR 隔离级别下 MVCC 能完全避免幻读吗？',
+    cardId: 'c9', blockName: 'MVCC', question: 'RR 隔离级别下 MVCC 会完全避免幻读吗？',
     cardType: 'judgment' as const, conclusion: 'no' as const, detail: '先说**幻读**是什么……',
     keyPoints: [],
   } as never,

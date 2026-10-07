@@ -3,7 +3,7 @@ id: 01M3M59WSFE19XRY3CQJ3BVSH6
 blockId: concurrency/threadlocal
 relatedBlocks:
   - concurrency/thread-pools
-question: 父线程修改 ThreadLocal 后子线程能看到吗？
+question: 父线程修改 ThreadLocal 后子线程会看到吗？
 cardType: judgment
 conclusion: 'no'
 appliesTo: Java 17+

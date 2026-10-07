@@ -2,7 +2,7 @@
 id: 01M2YHWJHGBGZ57DWPS0FSTNG8
 blockId: mysql/mvcc-undo
 relatedBlocks: []
-question: RR 隔离级别下 MVCC 能完全避免幻读吗？
+question: RR 隔离级别下 MVCC 会完全避免幻读吗？
 cardType: judgment
 appliesTo: MySQL 8.0+
 frequency: high

@@ -2,7 +2,7 @@
 id: 01M3M59WSEK18S0G6S5KZJE0ZR
 blockId: concurrency/synchronized
 relatedBlocks: []
-question: synchronized 是可重入的吗？怎么实现？
+question: 同一个线程会重复获取自己已持有的 synchronized 锁吗？怎么实现？
 cardType: judgment
 conclusion: 'yes'
 appliesTo: Java 17+

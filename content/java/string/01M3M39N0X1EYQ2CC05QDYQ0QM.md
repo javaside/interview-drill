@@ -2,7 +2,7 @@
 id: 01M3M39N0X1EYQ2CC05QDYQ0QM
 blockId: java/string
 relatedBlocks: []
-question: String s = new String(「abc」) 创建了几个对象？
+question: String s = new String(「abc」) 会创建几个对象？
 cardType: judgment
 conclusion: depends
 appliesTo: Java 17+

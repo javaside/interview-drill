@@ -14,8 +14,7 @@ keyPoints:
     text: h = key.hashCode() ^ (h >>> 16)：高 16 位异或进低 16 位，让高位也参与定位
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor:
-      - 01M3M39N0YJQ9ETGS6ZDRW1J9B
+    excludeAsDistractorFor: []
     confirmedIndependentOf: []
     source:
       kind: official-doc
