@@ -42,10 +42,11 @@ keyPoints:
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
   - id: kp-ex3-4
-    text: 引用必须有效 final；Java 9 起可用 effectively final 变量直接声明
+    text: Java 9 起可直接把外部已声明、从未重新赋值的变量（effectively final）放进 try(...)
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZPY04TDHYNN09KFS7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -63,9 +64,18 @@ try (var in = new FileInputStream(f); var out = new FileOutputStream(g)) {
 }
 ```
 
+Java 9 起，括号里还可以直接放**外面已有的变量**——条件是它从赋值后**从未被重新赋值**（这种「事实上不可变」的变量叫 effectively final，没写 final 关键字但效果等同）：
+
+```java
+var in = Files.newInputStream(path);  // 外面声明
+try (in) { … }                        // Java 9+：直接放进去，用完照样自动关
+```
+
+为什么要求「从未重新赋值」？编译器要把这个变量抄进自动生成的关闭逻辑——如果你中途让它指向别的对象，它就不知道该关哪个了。
+
 更妙的是**异常不互吞**：主体异常为主，close 的异常挂进 `getSuppressed()`——堆栈里两全其美。
 
-**术语速查**：AutoCloseable=一个 close 方法的接口｜逆序关闭=后开的先关｜suppressed=被收纳的次要异常
+**术语速查**：AutoCloseable=一个 close 方法的接口｜逆序关闭=后开的先关｜suppressed=被收纳的次要异常｜effectively final=没写 final 但从未重新赋值
 
 <!--advanced-->
-编译产物即嵌套 try+finally+addSuppressed；close 幂等性建议（重复关无害）。老式的 close 覆盖主异常问题由此根治。JDK 9 起 effectively final 引用可裸入 try(...)。Files.newBufferedReader 等流式工厂天然适配。
+编译产物即嵌套 try+finally+addSuppressed；close 幂等性建议（重复关无害）。老式的 close 覆盖主异常问题由此根治。JDK 9 起（JEP 213）effectively final 引用可裸入 try(...)。Files.newBufferedReader 等流式工厂天然适配。
