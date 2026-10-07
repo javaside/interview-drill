@@ -13,7 +13,8 @@ keyPoints:
     text: 直接 kill：在途请求被拦腰斩断——用户看到 502
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF8JS0KFH32EQ2AXEC
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,9 @@ keyPoints:
     text: 优雅停机：先摘流量→处理完存量→再退出
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF8JS0KFH32EQ2AXEC
+      - 01M3NE18CMDD5CJ936BEH04P60
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,8 @@ keyPoints:
     text: K8s：preStop 钩子 + terminationGracePeriodSeconds 配合
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,8 @@ keyPoints:
     text: 注册中心注销先行：消费者缓存刷新后才真下线
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
     confirmedIndependentOf: []
     source:
       kind: official-doc

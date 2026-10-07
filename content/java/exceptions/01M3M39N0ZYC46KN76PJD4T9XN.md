@@ -23,7 +23,8 @@ keyPoints:
     text: Error：JVM 层致命错误（OutOfMemoryError/StackOverflowError），不应捕获
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZPY04TDHYNN09KFS7
     confirmedIndependentOf: []
     source:
       kind: official-doc

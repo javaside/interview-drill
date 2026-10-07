@@ -13,7 +13,8 @@ keyPoints:
     text: 全局事务标识 server_uuid:transaction_id，每个事务在集群内唯一
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,8 @@ keyPoints:
     text: 从库自动跳过已执行过的 GTID，故障切换与新从库搭建简单
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
     confirmedIndependentOf: []
     source:
       kind: official-doc

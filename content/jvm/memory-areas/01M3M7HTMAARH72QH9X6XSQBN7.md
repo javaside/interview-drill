@@ -23,7 +23,8 @@ keyPoints:
     text: OOM：空间不够装——堆满/元空间满/直接内存满/线程过多
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,8 @@ keyPoints:
     text: SOE 修代码（递归终止条件）；OOM 治容量或治泄漏
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,9 @@ keyPoints:
     text: '-Xss 调小则更浅的递归就爆栈；-Xmx 是堆 OOM 的顶'
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBH4404AEK6EXEEV9W
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc

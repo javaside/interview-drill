@@ -33,7 +33,8 @@ keyPoints:
     text: setAccessible(true) 跳过访问检查也是提速点
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZEV2KKE9DEHDVCJAC
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -54,7 +54,9 @@ keyPoints:
     text: D 状态（不可中断 IO）杀不掉——通常磁盘/存储卡死，查硬件路径
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTK1C3E5G7K9S1V3
+      - 01M3NE18CNTN5G7K9S1V3X5Z7
     confirmedIndependentOf: []
     source:
       kind: official-doc

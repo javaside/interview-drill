@@ -13,7 +13,11 @@ keyPoints:
     text: 接入层：DNS/GSLB→CDN→LB（L4/L7）→网关
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMATBK5C1308CM5A5V
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +27,12 @@ keyPoints:
     text: 应用层：无状态服务（聚合/编排）——横向扩展
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM14GQSBX70PZXA4C7
+      - 01M3NE18CMATBK5C1308CM5A5V
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +42,11 @@ keyPoints:
     text: 数据层：缓存（本地+分布式）→ DB（主从/分片）+ 异构存储（ES/数仓）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMATBK5C1308CM5A5V
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +56,10 @@ keyPoints:
     text: 支撑：注册配置中心/MQ/链路监控——横切全栈
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMATBK5C1308CM5A5V
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc

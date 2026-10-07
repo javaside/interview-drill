@@ -14,7 +14,9 @@ keyPoints:
     text: 定位并加行锁，写 undo log 记录旧值
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWH5R70FFC6TGAN0VP7ZS
+      - 01M3KHXF75A058357P4PBBKMCG
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -25,7 +27,11 @@ keyPoints:
     text: 在 buffer pool 中修改数据页成脏页，写 redo 到 log buffer
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75A058357P4PBBKMCG
+      - 01M3KHXF75XT8GXGAC3HAWDNJG
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
+      - 01M3KJ46DKA96Z7J019CVJXCAY
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -36,7 +42,12 @@ keyPoints:
     text: 提交时 redo 写盘标记 prepare，写 binlog 并落盘
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF759MW5MDSZP7N251BB
+      - 01M3KHXF75BZGZ60GV618ERYXY
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -47,7 +58,13 @@ keyPoints:
     text: redo 标记 commit，返回客户端成功；脏页由后台异步刷盘
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF73KZ58QW2B9NJA32E1
+      - 01M3KHXF75BZGZ60GV618ERYXY
+      - 01M3KHXF75MB2TSZ8Z02239NXG
+      - 01M3KHXF75XT8GXGAC3HAWDNJG
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc

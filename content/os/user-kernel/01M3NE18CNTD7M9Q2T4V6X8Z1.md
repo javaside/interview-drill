@@ -44,7 +44,8 @@ keyPoints:
     text: 三条路殊途同归：保存现场→进 Ring0 →处理→返回
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTE9Q2T4V6X8Z1C3
     confirmedIndependentOf: []
     source:
       kind: official-doc

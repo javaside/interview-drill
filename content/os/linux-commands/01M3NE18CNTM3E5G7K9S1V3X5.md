@@ -24,7 +24,8 @@ keyPoints:
     text: ss -tnlp 看监听与连接状态——TIME_WAIT/CLOSE_WAIT 堆积各指一种病
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRC9P1R3T5V7X9
     confirmedIndependentOf: []
     source:
       kind: official-doc

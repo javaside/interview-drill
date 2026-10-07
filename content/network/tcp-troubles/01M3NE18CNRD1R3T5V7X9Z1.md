@@ -14,7 +14,8 @@ keyPoints:
     text: 根源：TCP 是字节流——没有消息边界，「包」的概念不存在
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: 粘=多条消息一次读到；拆=一条消息分多次读到
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc

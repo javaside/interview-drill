@@ -43,7 +43,8 @@ keyPoints:
     text: 普通快照读不加任何行锁（靠 MVCC），与 S/X 都不冲突
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWJHGBGZ57DWPS0FSTNG8
     confirmedIndependentOf: []
     source:
       kind: official-doc

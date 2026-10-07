@@ -13,7 +13,8 @@ keyPoints:
     text: innodb_flush_log_at_trx_commit=1：每次提交把 redo 刷盘，最安全
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: '=0 时每秒刷一次，宕机丢最多 1 秒已提交事务'
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: '=2 时写到 OS 缓存每秒 fsync，MySQL 崩不丢、主机崩丢 1 秒'
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,9 @@ keyPoints:
     text: sync_binlog=1：每次提交 fsync binlog——与 redo=1 合称「双 1」，最可靠配置
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc

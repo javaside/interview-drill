@@ -24,7 +24,8 @@ keyPoints:
     text: 实现：monitor 记录持有线程 id 与计数器，重入 +1、退出 -1，归零才真正释放
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSETRSSPGFJWEA22AW4
     confirmedIndependentOf: []
     source:
       kind: official-doc

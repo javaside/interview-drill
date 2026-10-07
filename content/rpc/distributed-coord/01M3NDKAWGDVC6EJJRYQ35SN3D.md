@@ -53,7 +53,8 @@ keyPoints:
     text: 趋势递增对 InnoDB 友好（自增主键同款收益：顺序写不分裂）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT8B9D1F3H5J7M9Q2
     confirmedIndependentOf: []
     source:
       kind: official-doc

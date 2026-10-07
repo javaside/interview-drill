@@ -14,7 +14,10 @@ keyPoints:
     public: true
     order: 1
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -25,7 +28,11 @@ keyPoints:
     public: true
     order: 2
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -36,7 +43,12 @@ keyPoints:
     public: true
     order: 3
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -47,7 +59,11 @@ keyPoints:
     public: true
     order: 4
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
+      - 01M3NCQ6WZSBF3W44G9NYDNG6T
     confirmedIndependentOf: []
     source:
       kind: official-doc

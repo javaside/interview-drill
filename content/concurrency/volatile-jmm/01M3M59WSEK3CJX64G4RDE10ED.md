@@ -13,7 +13,8 @@ keyPoints:
     text: 保证可见性：写立即刷回主存，读强制拉最新值
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSE515VZJT4KBTVTFX0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 保证有序性：读写点插入内存屏障，禁止指令重排越界
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSE515VZJT4KBTVTFX0
     confirmedIndependentOf: []
     source:
       kind: official-doc

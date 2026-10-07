@@ -13,7 +13,9 @@ keyPoints:
     text: In-Sync Replicas：与 Leader 保持同步的副本集合（含 Leader）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: 落后超阈值的副本被踢出 ISR，追上再回来
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,10 @@ keyPoints:
     text: Leader 选举只从 ISR 里挑——保证新 Leader 拥有全部已确认消息
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,11 @@ keyPoints:
     text: acks=all 的「all」指的就是 ISR 里的全部成员
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
+      - 01M3NCQ6WZNW1B22CKKBTJG3DB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +64,9 @@ keyPoints:
     text: HW 高水位限定消费者可见范围
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -63,7 +76,9 @@ keyPoints:
     text: LeaderEpoch 机制防副本截断不一致
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc

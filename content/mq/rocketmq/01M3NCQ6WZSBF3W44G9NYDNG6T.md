@@ -14,7 +14,8 @@ keyPoints:
     text: 触发：重试耗尽（RocketMQ 默认 16 次）消息进 %DLQ%消费组
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,9 @@ keyPoints:
     text: 用途：隔离毒消息保消费组前进 + 人工介入/修复后重放
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +37,9 @@ keyPoints:
     text: Kafka 无内建 DLQ——Spring Kafka 处理失败可发往自定义死信 topic
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +49,8 @@ keyPoints:
     text: 死信要监控告警：死信堆积=业务异常面
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ6MQVQ9GJCQ4QT23Y
     confirmedIndependentOf: []
     source:
       kind: official-doc

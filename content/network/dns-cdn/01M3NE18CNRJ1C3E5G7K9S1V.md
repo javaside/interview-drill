@@ -24,7 +24,8 @@ keyPoints:
     text: 权重/地理调度：权威 DNS 按来源网段返回就近机房 IP
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRK3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +35,8 @@ keyPoints:
     text: CDN 的 CNAME 接力：域名 CNAME 到 CDN，由 CDN 调度
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRK3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc

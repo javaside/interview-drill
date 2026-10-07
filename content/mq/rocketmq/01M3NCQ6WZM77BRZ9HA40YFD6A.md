@@ -34,7 +34,8 @@ keyPoints:
     text: fanout：广播到所有绑定队列；headers：按头字段匹配
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WYEV6W4H3YHJNRC2BP
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +45,8 @@ keyPoints:
     text: queue 持久化+消息持久化才保不丢（两开关都要开）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -23,7 +23,8 @@ keyPoints:
     text: state 语义由子类定义：ReentrantLock 记重入次数、Semaphore 记许可数、CountDownLatch 记计数
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFN60YZ9DZ669FESZW
     confirmedIndependentOf: []
     source:
       kind: official-doc

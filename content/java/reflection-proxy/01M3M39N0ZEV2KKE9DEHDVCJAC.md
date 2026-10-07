@@ -13,7 +13,8 @@ keyPoints:
     text: setAccessible(true) 关闭访问检查后可读写 private 字段/调用 private 方法
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZMFXRFEA8Z56QTXX6
     confirmedIndependentOf: []
     source:
       kind: official-doc

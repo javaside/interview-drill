@@ -24,7 +24,8 @@ keyPoints:
     text: 端口与复用：ip_local_port_range 扩段、tcp_tw_reuse 缓解短连接
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRC9P1R3T5V7X9
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +35,8 @@ keyPoints:
     text: 缓冲区：tcp_rmem/wmem 自适应上限——高 BDP 长肥管道要放开
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +46,8 @@ keyPoints:
     text: TIME_WAIT 相关只动 reuse 方向，recycle 已废不碰
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRC9P1R3T5V7X9
     confirmedIndependentOf: []
     source:
       kind: official-doc

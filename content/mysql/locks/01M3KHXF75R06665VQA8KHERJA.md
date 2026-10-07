@@ -13,7 +13,8 @@ keyPoints:
     text: 插行前对间隙的意向标记：彼此兼容、仅与间隙锁冲突
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75T0YE2NHBEJRQ9WG6
     confirmedIndependentOf: []
     source:
       kind: official-doc

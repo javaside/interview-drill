@@ -13,7 +13,8 @@ keyPoints:
     text: JSON：可读、跨语言、体积大——调试友好的人类格式
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,9 @@ keyPoints:
     text: Protobuf：二进制强类型，schema 先行——体积最小速度最快
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
+      - 01M3NDKAWGVFS9XRMXX5P75QX0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,8 @@ keyPoints:
     text: Hessian2：Dubbo 默认，二进制自描述，跨语言一般
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8VXS5C5CB76431BX
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +57,8 @@ keyPoints:
     text: 选型维度：体积/速度/跨语言/可读性/演进兼容
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -63,7 +68,8 @@ keyPoints:
     text: JSON 的字段名冗余在压缩后差距缩小
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
     confirmedIndependentOf: []
     source:
       kind: official-doc

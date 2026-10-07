@@ -13,7 +13,10 @@ keyPoints:
     text: 运行时动态代理：接口走 JDK 代理，无接口走 CGLIB 子类化
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R50DZHWB1PETZVT4Z
+      - 01M3MFN29RJHQASHN5D8GS4XSV
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,9 @@ keyPoints:
     text: AbstractAutoProxyCreator（BPP）在初始化后判定切点命中则生成代理
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29QXTP76JD3G6EERP34
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,9 @@ keyPoints:
     text: 代理拦截方法调用：按序执行拦截器链（各通知转成的 MethodInterceptor）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R5VT9N1MBAMEP1Q8E
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,8 @@ keyPoints:
     text: Boot 2+ 默认 proxyTargetClass=true（全 CGLIB）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RJHQASHN5D8GS4XSV
     confirmedIndependentOf: []
     source:
       kind: official-doc

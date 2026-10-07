@@ -13,7 +13,8 @@ keyPoints:
     text: 核心指标：lag（堆积）、消费延迟、失败率、死信量
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: lag 持续上涨=消费力不足；lag 突跳=生产暴增或消费挂
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 处理耗时分布（P99）暴露慢消费（RPC/慢 SQL）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,9 @@ keyPoints:
     text: 死信告警=业务异常面；端到端对账=丢失终极防线
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
+      - 01M3NCQ6WZSBF3W44G9NYDNG6T
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +58,8 @@ keyPoints:
     text: rebalance 频次是消费组健康的隐性指标
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -63,7 +69,8 @@ keyPoints:
     text: rebalance 频次是消费组健康的隐性指标
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
     confirmedIndependentOf: []
     source:
       kind: official-doc

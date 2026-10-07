@@ -33,7 +33,8 @@ keyPoints:
     text: 幻读：同一事务内两次同范围查询，多出了别人新插入的行
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWJHGBGZ57DWPS0FSTNG8
     confirmedIndependentOf: []
     source:
       kind: official-doc

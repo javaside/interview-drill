@@ -13,7 +13,8 @@ keyPoints:
     text: RocketMQ 延迟消息（4.x 固定档 / 5.x 任意时长）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZGHHN4S9QKFHPV38M
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: Kafka：按延迟档建延迟 topic + 定时搬运（到点转投目标 topic）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZGHHN4S9QKFHPV38M
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: Redis ZSet（score=到期时间戳）+ 定时扫描投递
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZGHHN4S9QKFHPV38M
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: 时间轮：海量定时器的 O(1) 方案（Netty/内建）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZGHHN4S9QKFHPV38M
     confirmedIndependentOf: []
     source:
       kind: official-doc

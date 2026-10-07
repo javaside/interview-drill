@@ -13,7 +13,11 @@ keyPoints:
     text: AtomicLong：单点 CAS——N 线程全在一个变量上自旋互踩
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
+      - 01M3M59WSF16SCYSM5EVS1C59W
+      - 01M3M59WSFCEKJTYGRCCNXC96Y
+      - 01M3NE18CNY8W0B2D4F6H8K0N2
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +27,10 @@ keyPoints:
     text: LongAdder：base 加 Cell 数组分散格子——冲突时换格子各自累加
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
+      - 01M3M59WSFCEKJTYGRCCNXC96Y
+      - 01M3NE18CNY8W0B2D4F6H8K0N2
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +40,9 @@ keyPoints:
     text: sum 时才把 base 与全格子求和（弱一致瞬时值）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFCEKJTYGRCCNXC96Y
+      - 01M3NE18CNY8W0B2D4F6H8K0N2
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +52,11 @@ keyPoints:
     text: 场景：统计计数、监控打点——只加少读的热点
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CNY8W0B2D4F6H8K0N2
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +66,8 @@ keyPoints:
     text: sum 的弱一致换 O(1) 写入：读少写多的吞吐契约
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY8W0B2D4F6H8K0N2
     confirmedIndependentOf: []
     source:
       kind: official-doc

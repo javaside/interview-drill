@@ -13,7 +13,8 @@ keyPoints:
     text: 无锁读：get 不加锁（Node.val/hash 用 volatile 保证可见性）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y1T0NTKM4TJMKPFMG
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: put：CAS 初始化桶/空桶插入，非空桶 synchronized 锁桶头节点
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y1T0NTKM4TJMKPFMG
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 锁粒度=单桶：不同桶的写完全并行
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y1T0NTKM4TJMKPFMG
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,9 @@ keyPoints:
     text: size 用 CounterCell 分散计数（无全局锁热点）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y1T0NTKM4TJMKPFMG
+      - 01M3M39N0YQ71TTF3175EXE143
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +58,8 @@ keyPoints:
     text: key 的 hash 与 val 均 volatile，读线程立即可见最新值
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y1T0NTKM4TJMKPFMG
     confirmedIndependentOf: []
     source:
       kind: official-doc

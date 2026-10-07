@@ -13,7 +13,8 @@ keyPoints:
     text: ArrayList 底层 Object 数组：随机访问 O(1)，尾部追加均摊 O(1)
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y9TXHK3XYMAC70KFA
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: LinkedList 双向链表：随机访问 O(n)，头尾插删 O(1)
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y9TXHK3XYMAC70KFA
     confirmedIndependentOf: []
     source:
       kind: official-doc

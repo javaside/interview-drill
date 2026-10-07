@@ -15,7 +15,8 @@ keyPoints:
     public: true
     order: 1
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB6A429AJDHQV5SSP9
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -48,7 +49,8 @@ keyPoints:
     public: true
     order: 4
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBQ2GQWERJME800QH7
     confirmedIndependentOf: []
     source:
       kind: official-doc

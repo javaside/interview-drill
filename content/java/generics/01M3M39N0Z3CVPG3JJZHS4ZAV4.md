@@ -13,7 +13,8 @@ keyPoints:
     text: 擦除后 T 只是 Object/边界，编译器不知道具体类，无法实例化
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YNEJ902KWVMJ0XVSJ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,8 @@ keyPoints:
     text: 更优：由调用方传工厂/Supplier<T> 或直接构造具体集合
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZMFXRFEA8Z56QTXX6
     confirmedIndependentOf: []
     source:
       kind: official-doc

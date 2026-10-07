@@ -24,7 +24,8 @@ keyPoints:
     text: du -x 逐层对比定位大目录；df/du 差值=被删未释放的幽灵文件
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT6X5Z7B9D1F3H5J7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +35,9 @@ keyPoints:
     text: iostat -x 看 await/util；iotop -o 找到正在 IO 的进程
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT9D1F3H5J7M9Q2T
+      - 01M3NE18CNTN5G7K9S1V3X5Z7
     confirmedIndependentOf: []
     source:
       kind: official-doc

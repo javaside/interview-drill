@@ -13,7 +13,10 @@ keyPoints:
     text: JDK：面向接口，Proxy.newProxyInstance + InvocationHandler
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R50DZHWB1PETZVT4Z
+      - 01M3MFN29R5PKX9E9ZPC6XSAPB
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,9 @@ keyPoints:
     text: CGLIB：面向继承，运行时生成子类覆盖方法（MethodInterceptor）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R5PKX9E9ZPC6XSAPB
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,9 @@ keyPoints:
     text: CGLIB 限制：final 类/方法、private、static 不可代理
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R5PKX9E9ZPC6XSAPB
+      - 01M3MFN29RD2NVBJQYQFZNV35F
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,8 @@ keyPoints:
     text: Boot 2+ 默认全 CGLIB——避免「注入类型必须接口」的割裂
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R5PKX9E9ZPC6XSAPB
     confirmedIndependentOf: []
     source:
       kind: official-doc

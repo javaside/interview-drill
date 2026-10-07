@@ -13,7 +13,9 @@ keyPoints:
     text: 生产段：发送无确认/确认被忽略——acks=all+失败重试+本地消息表
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,8 @@ keyPoints:
     text: 存储段：单副本/刷盘未落——多副本+min.insync.replicas
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,10 @@ keyPoints:
     text: 消费段：先提交后处理或异常被吞——手动提交加idempotent
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WYSMTEEETJJ2XH9FBX
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,9 @@ keyPoints:
     text: 定位手段：traceId 全链路追踪 + 生产/消费两端对账
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
+      - 01M3NCQ6WZ6MQVQ9GJCQ4QT23Y
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +61,8 @@ keyPoints:
     text: 生产回调记日志让发送失败可观测
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ6MQVQ9GJCQ4QT23Y
     confirmedIndependentOf: []
     source:
       kind: official-doc

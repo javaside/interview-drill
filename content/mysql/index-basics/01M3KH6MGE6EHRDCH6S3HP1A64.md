@@ -14,7 +14,9 @@ keyPoints:
     text: 聚簇索引叶子存整行数据；二级索引叶子只存索引列 + 主键值
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGC234VDTZR8CWF8GHZ
+      - 01M3KH6MGEVMPNVC2P2E2KZG96
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +26,8 @@ keyPoints:
     text: 一张表只有一个聚簇索引（按主键组织），二级索引可以有多个
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGC234VDTZR8CWF8GHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +37,10 @@ keyPoints:
     text: 查二级索引拿不到整行时需回表：拿主键回聚簇索引再查一次
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGC234VDTZR8CWF8GHZ
+      - 01M3KH6MGEVMPNVC2P2E2KZG96
+      - 01M3KJ46DKJSC628EZ54B1WCYS
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +50,8 @@ keyPoints:
     text: 没有显式主键时，InnoDB 用第一个非空唯一索引，或隐藏的 row_id 兜底
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGC234VDTZR8CWF8GHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc

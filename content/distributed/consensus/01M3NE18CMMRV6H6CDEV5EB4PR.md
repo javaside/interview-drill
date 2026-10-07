@@ -13,7 +13,8 @@ keyPoints:
     text: 强一致（线性一致）：读到的永远是最新写——代价是延迟与可用性
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 最终一致：停止写入后有限时间收敛一致——AP 路线
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,9 @@ keyPoints:
     text: 账户/库存选强一致；浏览量/点赞选最终一致
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc

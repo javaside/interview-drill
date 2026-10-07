@@ -34,7 +34,8 @@ keyPoints:
     text: 共享内存+信号量：同块物理内存映射两进程——最快，配信号量同步
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT1M4N6Q8S1V3X5Z7B
     confirmedIndependentOf: []
     source:
       kind: official-doc

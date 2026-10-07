@@ -25,7 +25,8 @@ keyPoints:
     text: 能防冒充：伪造证书无法通过信任链验证
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ9E5G7K9P1R3T5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -35,7 +36,8 @@ keyPoints:
     text: 前提：客户端信任库未被污染且会真正校验（老代码忽略验签是重灾区）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ9E5G7K9P1R3T5
     confirmedIndependentOf: []
     source:
       kind: official-doc

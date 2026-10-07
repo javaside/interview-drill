@@ -13,7 +13,10 @@ keyPoints:
     text: 查询所需的所有列都包含在索引里，无需回表
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGC234VDTZR8CWF8GHZ
+      - 01M3KH6MGEVMPNVC2P2E2KZG96
+      - 01M3KHXF75Q620Q8Q4F6P2JSDV
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,10 @@ keyPoints:
     text: 索引比整行窄得多，扫描的页更少
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGC234VDTZR8CWF8GHZ
+      - 01M3KH6MGE6EHRDCH6S3HP1A64
+      - 01M3KHXF75Q620Q8Q4F6P2JSDV
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,8 @@ keyPoints:
     text: 常用手段：把高频查询的 select 列并入联合索引
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75Q620Q8Q4F6P2JSDV
     confirmedIndependentOf: []
     source:
       kind: official-doc

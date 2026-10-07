@@ -14,7 +14,8 @@ keyPoints:
     text: 1.1：长连接+管道化复用 TCP，但队头阻塞在 HTTP 层（响应串行）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: 2.0：二进制分帧+多路复用，一个 TCP 并行多流——消 HTTP 队头
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +36,8 @@ keyPoints:
     text: 2.0 遗症：TCP 层队头阻塞（丢一个包全员卡）+TLS 指纹被识别
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -43,7 +43,8 @@ keyPoints:
     text: 看家三件：互斥/无死锁（超时兜底）/容错（锁服务挂了怎么办）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS6E8G0K2M4N6Q8S1V
     confirmedIndependentOf: []
     source:
       kind: official-doc

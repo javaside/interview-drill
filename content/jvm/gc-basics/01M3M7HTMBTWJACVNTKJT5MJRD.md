@@ -13,7 +13,8 @@ keyPoints:
     text: 白=未扫、灰=自身已扫但其引用未扫完、黑=完全扫毕
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMAS9MZNBNT2SRG1Z3M
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,9 @@ keyPoints:
     text: 增量更新：黑对象加新引用时退回灰（CMS 采用）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB8JP9K8XMNWY4GCMW
+      - 01M3M7HTMBQZ1TPKXGJKA9GZK8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,9 @@ keyPoints:
     text: SATB：按开扫时刻的快照判活——删掉的当仍活着（G1 采用）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB8JP9K8XMNWY4GCMW
+      - 01M3M7HTMBQZ1TPKXGJKA9GZK8
     confirmedIndependentOf: []
     source:
       kind: official-doc

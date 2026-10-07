@@ -13,7 +13,8 @@ keyPoints:
     text: synchronized：语法级，自动释放（异常也不漏），JIT 持续优化——默认选择
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,9 @@ keyPoints:
     text: ReentrantLock：tryLock 尝试获取/超时获取、可中断、公平锁
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEHWBH8KSWXZYEAEY0
+      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,10 @@ keyPoints:
     text: ReentrantLock 支持多条件队列（多个 Condition 精准唤醒）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEHSMWYDSYW8CRMY0F
+      - 01M3M59WSF16SCYSM5EVS1C59W
+      - 01M3M59WSFQ6DJYJ18QPFWZQBD
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,8 @@ keyPoints:
     text: RLL 必须手动 unlock 且放 finally；忘了就是灾难
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,8 @@ keyPoints:
     text: 多数 DDL 会造成隐式提交：当前事务先被悄悄提交
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75Y7X2477T9CVCV22J
     confirmedIndependentOf: []
     source:
       kind: official-doc

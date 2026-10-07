@@ -13,7 +13,8 @@ keyPoints:
     text: 公平：先到先得，抢锁前查队列有无前驱
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSECPRPA13YDV6NTXD7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 非公平：直接 CAS 抢，抢到算你的——默认形态
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSECPRPA13YDV6NTXD7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 非公平吞吐高：省去排队唤醒的往返，但可能饥饿
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSECPRPA13YDV6NTXD7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: 公平锁保证无饥饿但上下文切换多
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSECPRPA13YDV6NTXD7
     confirmedIndependentOf: []
     source:
       kind: official-doc

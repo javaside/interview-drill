@@ -13,7 +13,8 @@ keyPoints:
     text: 永久代在堆内、容量开局钉死——动态类一多就 OOM
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMAARH72QH9X6XSQBN7
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,8 @@ keyPoints:
     text: 原子性 Atomicity：事务内的操作要么全部生效，要么全部不生效（回滚）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWH5R70FFC6TGAN0VP7ZS
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,9 @@ keyPoints:
     text: 持久性 Durability：事务一旦提交，断电重启后修改仍在
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75MB2TSZ8Z02239NXG
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,10 @@ keyPoints:
     text: 消息先写页缓存（OS）——log.flush.interval 默认交给 OS 择机刷盘
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZ2NN8RWDEQY5XT6X8
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,10 @@ keyPoints:
     text: 机器整体断电页缓存丢——多副本才是可靠性主轴
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +39,9 @@ keyPoints:
     text: 单副本+强制刷盘（flush.messages=1）吞吐暴跌
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2NN8RWDEQY5XT6X8
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +51,10 @@ keyPoints:
     text: 副本跨机架/可用区——物理故障域隔离
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +64,9 @@ keyPoints:
     text: 副本放置策略应跨故障域分布
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -63,7 +76,8 @@ keyPoints:
     text: 云盘自身的冗余层与 Kafka 副本互补
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc

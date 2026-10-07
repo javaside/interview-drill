@@ -15,7 +15,8 @@ keyPoints:
     text: 不能完全避免：快照读靠 ReadView 不见幻行，但当前读看最新数据仍可能撞见幻行
     public: true
     verifiedAt: 2026-09-20
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75DZNX5JX7A9JYXJ7V
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -26,7 +27,9 @@ keyPoints:
     text: InnoDB 靠 next-key lock（间隙锁）在当前读时锁住范围，才补上这个缺口
     public: false
     verifiedAt: 2026-09-20
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75EQAKBS12MY82KVGM
+      - 01M3KHXF75T0YE2NHBEJRQ9WG6
     confirmedIndependentOf: []
     source:
       kind: official-doc

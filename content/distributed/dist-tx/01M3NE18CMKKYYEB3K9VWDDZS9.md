@@ -13,7 +13,10 @@ keyPoints:
     text: 长事务拆成本地事务链：T1→T2→T3 每步独立提交
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CMVMB5H7HE12AFSJNW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,10 @@ keyPoints:
     text: 失败补偿：T3 失败则逆序执行 C2、C1 抵消
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CMVMB5H7HE12AFSJNW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +39,10 @@ keyPoints:
     text: 无全局锁（对比 2PC）——吞吐高但不隔离
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CMVMB5H7HE12AFSJNW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +52,8 @@ keyPoints:
     text: 编排（中心协调）vs 协同（事件订阅）两种实现
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMVMB5H7HE12AFSJNW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +63,11 @@ keyPoints:
     text: 补偿必须 idempotent 且可重试；不可补偿的操作不进链
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc

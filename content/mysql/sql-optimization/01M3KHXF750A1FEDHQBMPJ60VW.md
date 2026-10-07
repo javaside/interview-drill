@@ -13,7 +13,8 @@ keyPoints:
     text: type：访问类型，是否走索引、走得好不好（好→差：const→ref→range→index→ALL）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK95AVBNDQ9Z02CCAK
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: key / key_len：实际用了哪个索引、用了几列
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK95AVBNDQ9Z02CCAK
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: rows：预估扫描行数，数量级直接反映代价
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK95AVBNDQ9Z02CCAK
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,9 @@ keyPoints:
     text: Extra：Using filesort/Using temporary 是坏味道；Using index 是好信号
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK95AVBNDQ9Z02CCAK
+      - 01M3KJ46DKJSC628EZ54B1WCYS
     confirmedIndependentOf: []
     source:
       kind: official-doc

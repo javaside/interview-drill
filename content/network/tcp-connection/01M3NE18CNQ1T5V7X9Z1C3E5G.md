@@ -15,7 +15,8 @@ keyPoints:
     public: false
     order: 1
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNP9R3T5V7X9Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -26,7 +27,8 @@ keyPoints:
     public: false
     order: 2
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNP9R3T5V7X9Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -37,7 +39,8 @@ keyPoints:
     public: false
     order: 3
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNP9R3T5V7X9Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -48,7 +51,8 @@ keyPoints:
     public: false
     order: 4
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNP9R3T5V7X9Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -59,7 +63,8 @@ keyPoints:
     public: false
     order: 5
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNP9R3T5V7X9Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -33,7 +33,8 @@ keyPoints:
     text: 预防 1：所有线程按相同顺序抢锁（全局锁排序）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,9 @@ keyPoints:
     text: 预防 2：tryLock 带超时——拿不齐就放弃已持有的（打破持有并守候）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSECPRPA13YDV6NTXD7
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc

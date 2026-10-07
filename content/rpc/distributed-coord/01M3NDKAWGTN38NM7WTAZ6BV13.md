@@ -13,7 +13,9 @@ keyPoints:
     text: ZK：CP 型（ZAB 一致性优先）——选主/分布式锁/强一致元数据
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG02XR7GZ4F436Z7BM
+      - 01M3NDKAWGH3ZAN5C4S100CG20
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: Nacos：AP/CP 可切（Raft/Distro 双模式）——注册中心+配置中心二合一
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG02XR7GZ4F436Z7BM
+      - 01M3NDKAWGCNRJ86JXV8YV9G2A
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,8 @@ keyPoints:
     text: 注册中心场景 AP 通常更优：可用性>强一致（宁要旧地址不要全体瘫痪）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG02XR7GZ4F436Z7BM
     confirmedIndependentOf: []
     source:
       kind: official-doc

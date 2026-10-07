@@ -13,7 +13,10 @@ keyPoints:
     text: Try：预留资源（冻结 100 元而非真扣）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,10 @@ keyPoints:
     text: Confirm：确认扣减（冻结转真扣）——必须成功（重试到成功）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +39,10 @@ keyPoints:
     text: Cancel：取消预留（解冻）——同样必须成功
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +52,10 @@ keyPoints:
     text: 三方法皆需 idempotent 与防悬挂（Cancel 先到 Try 后到）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +65,11 @@ keyPoints:
     text: 对比 2PC：锁变成业务级冻结——性能好但要写三套逻辑
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc

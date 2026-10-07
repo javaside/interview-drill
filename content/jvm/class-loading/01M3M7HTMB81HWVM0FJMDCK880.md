@@ -13,7 +13,8 @@ keyPoints:
     text: 全限定名 + 定义类加载器，两者都相同才是同一个类
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB8NEGPK8NWK3GJJ3A
     confirmedIndependentOf: []
     source:
       kind: official-doc

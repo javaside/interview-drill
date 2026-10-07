@@ -13,7 +13,8 @@ keyPoints:
     text: 路由式：带分片键——直达单片，与单表无差
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
     confirmedIndependentOf: []
     source:
       kind: official-doc

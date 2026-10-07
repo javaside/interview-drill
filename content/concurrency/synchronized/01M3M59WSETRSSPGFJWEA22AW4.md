@@ -13,7 +13,8 @@ keyPoints:
     text: 锁的是对象头里的 monitor（监视器），不是代码本身
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEK18S0G6S5KZJE0ZR
     confirmedIndependentOf: []
     source:
       kind: official-doc

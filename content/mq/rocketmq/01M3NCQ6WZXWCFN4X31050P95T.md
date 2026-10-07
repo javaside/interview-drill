@@ -15,7 +15,9 @@ keyPoints:
     public: true
     order: 1
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -26,7 +28,9 @@ keyPoints:
     public: true
     order: 2
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -37,7 +41,9 @@ keyPoints:
     public: true
     order: 3
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -48,7 +54,9 @@ keyPoints:
     public: true
     order: 4
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
     confirmedIndependentOf: []
     source:
       kind: official-doc

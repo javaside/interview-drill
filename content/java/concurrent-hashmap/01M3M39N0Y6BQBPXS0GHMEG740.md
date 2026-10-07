@@ -13,7 +13,8 @@ keyPoints:
     text: 二义性问题：get 返回 null 无法区分「不存在」还是「存了 null」——并发下无法像 HashMap 那样用 containsKey 复核
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y1T0NTKM4TJMKPFMG
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,9 @@ keyPoints:
     text: 并发下 containsKey 与 get 两步之间可能被其他线程改掉，复核语义失效
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y1T0NTKM4TJMKPFMG
+      - 01M3M39N0YTT2S98167BKRG71P
     confirmedIndependentOf: []
     source:
       kind: official-doc

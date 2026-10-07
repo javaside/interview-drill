@@ -13,7 +13,8 @@ keyPoints:
     text: 按标记路由：请求带 tag（用户组/地域/设备），全链路同 tag 服务互调
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 网关注入标记；RPC 框架按标记选实例（泳道隔离）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 权重分流：无标记流量按比例（5%→30%→100%）渐进
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,9 @@ keyPoints:
     text: 对外/开放 API：REST（HTTP 生态、调试友好、浏览器直连）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8VXS5C5CB76431BX
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: 内部高性能服务间：gRPC（protobuf+HTTP2 多路复用）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG13FFN5PTSDHRV6Y3
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,10 @@ keyPoints:
     text: 流式/双向实时：gRPC 四种流天然支持
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGQ7Z67WW8WA14FZQV
+      - 01M3NDKAWGVFS9XRMXX5P75QX0
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,8 @@ keyPoints:
     text: 浏览器直连 gRPC 需要 grpc-web 转换层（HTTP/2 限制）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc

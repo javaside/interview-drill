@@ -13,7 +13,8 @@ keyPoints:
     text: 先定目标：吞吐 or 停顿——没有指标的调优是玄学
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB44X28BZT234Y9BJH
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,9 @@ keyPoints:
     text: 先度量：GC 日志 + 监控（GC 频次/时长/各代趋势）找瓶颈
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB44X28BZT234Y9BJH
+      - 01M3M7HTMBMG22BR4930FJMMAA
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: 最后才是收集器与参数微调；一次只改一个变量验证
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB44X28BZT234Y9BJH
     confirmedIndependentOf: []
     source:
       kind: official-doc

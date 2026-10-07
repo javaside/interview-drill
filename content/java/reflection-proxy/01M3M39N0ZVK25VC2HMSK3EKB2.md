@@ -13,7 +13,8 @@ keyPoints:
     text: 运行时生成实现接口的代理类（$Proxy0），方法调用统一转发 InvocationHandler
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZN56GBPCFKG3NM67J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: InvocationHandler.invoke(proxy, method, args)：切面逻辑的落点
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZN56GBPCFKG3NM67J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 只能代理接口（代理类继承 Proxy 类，Java 单继承已占用）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZN56GBPCFKG3NM67J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: Spring AOP 默认策略：有接口走 JDK 代理，无接口走 CGLIB
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZN56GBPCFKG3NM67J
     confirmedIndependentOf: []
     source:
       kind: official-doc

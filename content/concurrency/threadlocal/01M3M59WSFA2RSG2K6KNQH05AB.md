@@ -13,7 +13,8 @@ keyPoints:
     text: ITL：父线程创建子线程时拷贝上下文给子线程
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFE19XRY3CQJ3BVSH6
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 局限：线程池的线程早已创建——复用时不再发生拷贝
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFE19XRY3CQJ3BVSH6
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: TTL（阿里）：提交任务时抓快照、执行时回放——池化场景的上下文搬运工
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFE19XRY3CQJ3BVSH6
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,8 @@ keyPoints:
     text: 定位：消费速率 < 生产速率多久了——监控 lag（堆积量）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ6MQVQ9GJCQ4QT23Y
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 临时扩容：加消费者实例（上限=partition 数），或升级消费端配置
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY5QBBSCYBGR958DM6
     confirmedIndependentOf: []
     source:
       kind: official-doc

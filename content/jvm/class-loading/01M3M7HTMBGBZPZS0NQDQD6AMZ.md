@@ -33,7 +33,8 @@ keyPoints:
     text: OSGi 与 Web 容器：模块化/应用隔离要求各自加载各自的类
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB81HWVM0FJMDCK880
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -34,7 +34,9 @@ keyPoints:
     text: postProcessAfterInitialization：AOP 代理生成、@Configuration 增强
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R5PKX9E9ZPC6XSAPB
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc

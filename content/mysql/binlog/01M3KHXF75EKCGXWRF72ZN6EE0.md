@@ -13,7 +13,8 @@ keyPoints:
     text: 层次：binlog 是 Server 层（所有引擎）；redo 是 InnoDB 引擎层
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75BZGZ60GV618ERYXY
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,9 @@ keyPoints:
     text: 用途：binlog 复制与归档恢复；redo 崩溃恢复
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75BZGZ60GV618ERYXY
+      - 01M3KHXF75MB2TSZ8Z02239NXG
     confirmedIndependentOf: []
     source:
       kind: official-doc

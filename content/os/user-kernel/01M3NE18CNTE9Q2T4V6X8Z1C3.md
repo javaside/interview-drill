@@ -14,7 +14,8 @@ keyPoints:
     text: 开销构成：模式切换（保存现场+切栈+安全检查）+内核逻辑本身
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTG4V6X8Z1C3E5G7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: syscall 指令百纳秒级——但内核逻辑可达微秒毫秒（read 触盘）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTG4V6X8Z1C3E5G7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +46,8 @@ keyPoints:
     text: 优化方向：减少次数（缓冲/批量/vDSO）而非单次加速
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTG4V6X8Z1C3E5G7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +57,8 @@ keyPoints:
     text: 对比：一次系统调用 ≈ 上千次函数调用——高频小 IO 是反模式
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTG4V6X8Z1C3E5G7
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -15,7 +15,10 @@ keyPoints:
     text: 入桶后修改参与 hash 的字段：hash 变了，元素留在旧桶——之后查不到
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0XKDQWCFQA90XVF04A
+      - 01M3M39N0YA1HP86YF1S7YW43K
+      - 01M3M39N0YWCHF3XP50BM5S57W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -25,7 +28,10 @@ keyPoints:
     text: get/remove 都按新 hash 找新桶，旧桶里的它成了孤儿（内存泄漏式滞留）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0XKDQWCFQA90XVF04A
+      - 01M3M39N0YA1HP86YF1S7YW43K
+      - 01M3M39N0YWCHF3XP50BM5S57W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -35,7 +41,9 @@ keyPoints:
     text: 规范：key 用 String/Integer 或含 final 字段的不可变对象
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YA1HP86YF1S7YW43K
+      - 01M3M39N0YWCHF3XP50BM5S57W
     confirmedIndependentOf: []
     source:
       kind: official-doc

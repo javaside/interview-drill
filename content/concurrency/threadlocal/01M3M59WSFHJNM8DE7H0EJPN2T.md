@@ -13,7 +13,8 @@ keyPoints:
     text: Entry 的键是弱引用：ThreadLocal 对象可被回收，键变 null
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF2ZWAAB0BBFR4YXFV
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 但值是强引用：键 null 的条目里值仍被线程牵着
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF2ZWAAB0BBFR4YXFV
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 线程长期存活（线程池）→ null 键条目累积 → 值无法回收
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF2ZWAAB0BBFR4YXFV
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,9 @@ keyPoints:
     text: 许可计数器：acquire 领许可（不足则阻塞），release 还许可
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFQ6DJYJ18QPFWZQBD
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,10 @@ keyPoints:
     text: 限流并发度：保护脆弱资源（DB 连接、外部接口）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,8 @@ keyPoints:
     text: 许可数可动态调整（release 多还则净增）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,8 @@ keyPoints:
     text: acquire(n) 与 tryAcquire(timeout) 支持批量与限时
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc

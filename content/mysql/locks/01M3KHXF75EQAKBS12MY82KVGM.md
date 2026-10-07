@@ -13,7 +13,8 @@ keyPoints:
     text: 记录锁 Record Lock：锁住单条索引记录本身
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75T0YE2NHBEJRQ9WG6
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,9 @@ keyPoints:
     text: 间隙锁 Gap Lock：锁住两条记录之间的开区间，阻止区间内插入新行
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWJHGBGZ57DWPS0FSTNG8
+      - 01M3KHXF75T0YE2NHBEJRQ9WG6
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,9 @@ keyPoints:
     text: next-key lock = 记录锁 + 它前面的间隙，左开右闭区间，RR 防幻读的当前读手段
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWJHGBGZ57DWPS0FSTNG8
+      - 01M3KHXF75T0YE2NHBEJRQ9WG6
     confirmedIndependentOf: []
     source:
       kind: official-doc

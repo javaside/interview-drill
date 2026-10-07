@@ -13,7 +13,8 @@ keyPoints:
     text: 不可变对象可安全共享：字符串常量池、缓存 hashCode 成为可能
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0XRJKYFZ9RXS69XV5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 天然线程安全，无需任何同步
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0XRJKYFZ9RXS69XV5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,10 @@ keyPoints:
     text: 作为 HashMap 的 key 安全：hashCode 可缓存且永不变化
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0XRJKYFZ9RXS69XV5Z
+      - 01M3M39N0YA1HP86YF1S7YW43K
+      - 01M3M39N0YJQ9ETGS6ZDRW1J9B
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +48,8 @@ keyPoints:
     text: 类final + 私有char数组 + 不提供修改方法，三者共同保证不可变
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0XRJKYFZ9RXS69XV5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +59,8 @@ keyPoints:
     text: 字符串常量池让同一字面量全 JVM 只存一份
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0X1EYQ2CC05QDYQ0QM
     confirmedIndependentOf: []
     source:
       kind: official-doc

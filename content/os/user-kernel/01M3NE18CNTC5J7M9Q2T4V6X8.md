@@ -24,7 +24,8 @@ keyPoints:
     text: 用户态碰不了：裸 IO 端口/页表/中断——设备与内存必须内核统管
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTG4V6X8Z1C3E5G7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +45,8 @@ keyPoints:
     text: 系统调用=受控的门：用户通过固定入口请内核代办
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTD7M9Q2T4V6X8Z1
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +56,9 @@ keyPoints:
     text: 切换有成本：寄存器/栈切换+安全检查——高频调用要节制
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTE9Q2T4V6X8Z1C3
+      - 01M3NE18CNTG4V6X8Z1C3E5G7
     confirmedIndependentOf: []
     source:
       kind: official-doc

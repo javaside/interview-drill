@@ -13,7 +13,8 @@ keyPoints:
     text: 在事务内设置保存点，ROLLBACK TO 可只撤销保存点之后的操作而不放弃整个事务
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWH5R70FFC6TGAN0VP7ZS
     confirmedIndependentOf: []
     source:
       kind: official-doc

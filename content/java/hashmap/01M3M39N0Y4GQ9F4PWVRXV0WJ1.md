@@ -14,7 +14,8 @@ keyPoints:
     text: 负载因子 0.75：size > cap × 0.75 触发扩容，容量翻倍
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMCYRK8M2K2GAK4BY5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: 容量恒为 2 的幂（tableSizeFor 向上取），翻倍后保持
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMCYRK8M2K2GAK4BY5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +36,8 @@ keyPoints:
     text: JDK8 拆链优化：节点按 hash 新增那位是 0/1 分成两条原序子链（不再重算 hash）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y173S2T5DGGRY61MJ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +47,8 @@ keyPoints:
     text: 扩容是全量搬迁：默认初始 16，大量数据建议预估 initialCapacity
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMCYRK8M2K2GAK4BY5
     confirmedIndependentOf: []
     source:
       kind: official-doc

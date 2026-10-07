@@ -14,7 +14,8 @@ keyPoints:
     text: 进程=资源单位（独立地址空间/fd/内存）；线程=调度单位（共享进程资源）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTF2T4V6X8Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: 同进程多线程共享：代码/堆/全局变量/fd；私有：栈/寄存器/errno
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTF2T4V6X8Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +36,8 @@ keyPoints:
     text: 切换成本：线程切换不换地址空间，进程切换连页表一起换
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTF2T4V6X8Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc

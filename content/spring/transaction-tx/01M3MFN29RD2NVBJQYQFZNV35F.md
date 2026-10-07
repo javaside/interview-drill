@@ -13,7 +13,10 @@ keyPoints:
     text: 同类自调用：this 不走代理，事务拦截器根本没机会执行
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R5VT9N1MBAMEP1Q8E
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
+      - 01M3MFN29RQG76PR28N5HX1K6K
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,9 @@ keyPoints:
     text: 方法非 public（CGLIB/代理拦截不到）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
+      - 01M3MFN29RQG76PR28N5HX1K6K
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,8 @@ keyPoints:
     text: 异常被 catch 吞掉，或抛的是受检异常而未配 rollbackFor
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +59,9 @@ keyPoints:
     text: 多线程里调用：事务绑定 ThreadLocal 连接，子线程无事务
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
+      - 01M3MFN29RQG76PR28N5HX1K6K
     confirmedIndependentOf: []
     source:
       kind: official-doc

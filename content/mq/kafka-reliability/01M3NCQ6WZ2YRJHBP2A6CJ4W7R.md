@@ -13,7 +13,11 @@ keyPoints:
     text: idempotent 生产者：PID 与序号防重防乱序（限单分区单会话）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
+      - 01M3NCQ6WZTXVFFZ8CA7GTX61J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +27,11 @@ keyPoints:
     text: 事务：跨分区原子写+消费-处理-生产闭环（read-process-write）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +41,11 @@ keyPoints:
     text: 事务协调者两阶段提交，offset 与消息原子提交
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WYSMTEEETJJ2XH9FBX
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +55,11 @@ keyPoints:
     text: 端到端精确一次即idempotent 生产、事务、read_committed 三合一
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +69,12 @@ keyPoints:
     text: 更普遍的工程答案：at-least-once 配消费端防重（唯一键/状态机）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -63,7 +84,9 @@ keyPoints:
     text: transactional.id 跨会话复用防僵尸生产者
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
     confirmedIndependentOf: []
     source:
       kind: official-doc

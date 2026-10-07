@@ -13,7 +13,8 @@ keyPoints:
     text: relay log=从库收到 binlog 的中转文件；堆积=SQL 线程重放速度跟不上主库写入
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF757YPGRM9WQ11B8Y9J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,8 @@ keyPoints:
     text: 影响：主从延迟扩大，读从库拿到旧数据
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF757YPGRM9WQ11B8Y9J
     confirmedIndependentOf: []
     source:
       kind: official-doc

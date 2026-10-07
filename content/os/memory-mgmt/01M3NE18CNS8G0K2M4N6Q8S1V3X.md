@@ -14,7 +14,10 @@ keyPoints:
     text: 缺页：访问的页不在内存——触发中断由内核补页（读盘/分配/换入）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS7F9H1J3M5N7R9T2W
+      - 01M3NE18CNT1M4N6Q8S1V3X5Z7B
+      - 01M3NE18CNTD7M9Q2T4V6X8Z1
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +27,8 @@ keyPoints:
     text: 类型：良性（按需调入）/ 换入（从 swap 回来）/ 恶性（越权→段错误）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS7F9H1J3M5N7R9T2W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +38,8 @@ keyPoints:
     text: 物理满则置换：挑冷页让位——LRU 家族是主流
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS7F9H1J3M5N7R9T2W
     confirmedIndependentOf: []
     source:
       kind: official-doc

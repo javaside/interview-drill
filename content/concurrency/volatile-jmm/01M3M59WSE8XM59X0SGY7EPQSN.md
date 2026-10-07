@@ -13,7 +13,8 @@ keyPoints:
     text: 编译器/JIT、CPU、缓存层都会调整指令顺序以提升流水线效率
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSE515VZJT4KBTVTFX0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,8 @@ keyPoints:
     text: 多线程下重排会撕开「先行后写」的直觉依赖
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSE515VZJT4KBTVTFX0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,8 @@ keyPoints:
     text: 经典受害：双重检查锁定的半成品对象（构造指令与引用赋值重排）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSE515VZJT4KBTVTFX0
     confirmedIndependentOf: []
     source:
       kind: official-doc

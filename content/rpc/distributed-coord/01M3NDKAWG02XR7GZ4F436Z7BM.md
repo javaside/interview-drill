@@ -13,7 +13,8 @@ keyPoints:
     text: CAP：分区必现时，一致性 C 与可用性 A 二选一
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: P 是前提：网络分区不是选项而是常态（必须容忍）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: BASE：Basically Available + 软状态 + 最终一致——AP 路线的工程化
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: 最终一致：停止更新后经过有限时间达成一致
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +57,8 @@ keyPoints:
     text: 实践：按业务逐点选（账户余额 CP、商品浏览量 AP）——不是系统级单选
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc

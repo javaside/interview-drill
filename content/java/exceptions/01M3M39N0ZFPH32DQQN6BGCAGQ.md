@@ -13,7 +13,10 @@ keyPoints:
     text: 返回 finally 的值：try 的返回值与异常都被丢弃（字节码把覆盖路径编进返回）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0X9CV1HJ9G0XDVHS6P
+      - 01M3M39N0ZPY04TDHYNN09KFS7
+      - 01M3M39N0ZSX6Z9F21G4KHMHHW
     confirmedIndependentOf: []
     source:
       kind: official-doc

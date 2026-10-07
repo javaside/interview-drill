@@ -13,7 +13,10 @@ keyPoints:
     text: 读写分离：主写从读——读扩容的第一步
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CMRKEPF4W9K1RM7HRB
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,9 @@ keyPoints:
     text: 主从延迟问题：写后立读可能读到旧值（路由强制的坑）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,9 @@ keyPoints:
     text: CQRS：命令与查询模型分离——写库与读库异构
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM7FPX5TGQH5R1Z7Z5
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,9 @@ keyPoints:
     text: 同步管道：binlog/CDC 驱动写模型→读模型（ES/宽表）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM7FPX5TGQH5R1Z7Z5
+      - 01M3NE18CMTB6TCQT0VZ7GZ1CR
     confirmedIndependentOf: []
     source:
       kind: official-doc

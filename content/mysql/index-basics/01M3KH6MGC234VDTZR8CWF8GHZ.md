@@ -25,7 +25,8 @@ keyPoints:
     text: 叶子节点存全部键与数据，且按键有序、用链表串联
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGE6EHRDCH6S3HP1A64
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -15,7 +15,8 @@ keyPoints:
     text: 参与字段 = equals 用到的字段（完全一致，多一字段少一字段都违约）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YX2ADDB4VJHFJY98B
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -35,7 +36,8 @@ keyPoints:
     text: 不可变对象可缓存 hash（String 模式），可变对象切勿缓存
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0XKDQWCFQA90XVF04A
     confirmedIndependentOf: []
     source:
       kind: official-doc

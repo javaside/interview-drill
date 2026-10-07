@@ -23,7 +23,9 @@ keyPoints:
     text: Topic 逻辑分类 → Partition 物理分片（有序队列，分散在 Broker）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
+      - 01M3NCQ6WZ2NN8RWDEQY5XT6X8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,11 @@ keyPoints:
     text: 消费者组：组内分摊 partition，组间互不影响
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WY5QBBSCYBGR958DM6
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
+      - 01M3NCQ6WYEV6W4H3YHJNRC2BP
     confirmedIndependentOf: []
     source:
       kind: official-doc

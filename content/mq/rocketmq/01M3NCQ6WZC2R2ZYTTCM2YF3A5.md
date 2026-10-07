@@ -14,7 +14,10 @@ keyPoints:
     text: 唯一键约束：业务号（订单号+事件类型）插库天然去重
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +27,11 @@ keyPoints:
     text: 状态机：只允许合法迁移（已支付收到取消前的扣款消息→跳过）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
+      - 01M3NCQ6WZTXVFFZ8CA7GTX61J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +41,10 @@ keyPoints:
     text: Redis setnx/SETNX+过期时间挡住短窗口重复
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +54,11 @@ keyPoints:
     text: 版本号/乐观锁：带版本更新，重复消息第二次影响为零
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
+      - 01M3NCQ6WZTXVFFZ8CA7GTX61J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +68,10 @@ keyPoints:
     text: 选择标准：强一致用库唯一键；高频用 Redis；流程类用状态机
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc

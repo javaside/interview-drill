@@ -13,7 +13,8 @@ keyPoints:
     text: 标记、转移、重定位几乎全并发——STW 只剩根扫描瞬时
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB44X28BZT234Y9BJH
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,8 @@ keyPoints:
     text: 吞吐代价约 5-10%（CPU 换停顿），TB 级堆停顿仍亚毫秒
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB44X28BZT234Y9BJH
     confirmedIndependentOf: []
     source:
       kind: official-doc

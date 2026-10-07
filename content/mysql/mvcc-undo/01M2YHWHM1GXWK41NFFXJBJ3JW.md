@@ -24,7 +24,8 @@ keyPoints:
     text: RR 在事务内第一次快照读时建 ReadView，之后整个事务复用它
     public: false
     verifiedAt: 2026-09-20
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWJHGBGZ57DWPS0FSTNG8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -35,7 +36,8 @@ keyPoints:
     text: 因此 RC 每次读都能看到已提交的新数据，RR 整个事务看到同一份快照
     public: false
     verifiedAt: 2026-09-20
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWJHGBGZ57DWPS0FSTNG8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -46,7 +48,8 @@ keyPoints:
     text: RC 会出现不可重复读，RR 在快照读层面消除不可重复读
     public: false
     verifiedAt: 2026-09-20
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75DZNX5JX7A9JYXJ7V
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -57,7 +60,8 @@ keyPoints:
     text: 两者的当前读都读最新已提交版本，与 ReadView 无关
     public: false
     verifiedAt: 2026-09-20
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWJHGBGZ57DWPS0FSTNG8
     confirmedIndependentOf: []
     source:
       kind: official-doc

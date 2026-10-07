@@ -13,7 +13,8 @@ keyPoints:
     text: 限流：入口控制并发/速率——保自己不死（量的问题）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,9 @@ keyPoints:
     text: 熔断：下游故障率超阈值时直接断路快速失败——保自己不被拖死
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
+      - 01M3NDKAWGJ7BTBF0M6AT4TW7T
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,8 @@ keyPoints:
     text: 降级：有损服务——核心保住、旁路舍弃或返回兜底值
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,8 @@ keyPoints:
     text: 三者常联动：熔断触发后走降级逻辑；限流是常态防御
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
     confirmedIndependentOf: []
     source:
       kind: official-doc

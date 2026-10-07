@@ -13,7 +13,8 @@ keyPoints:
     text: buffer pool：数据页的内存缓存，命中免磁盘
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75XT8GXGAC3HAWDNJG
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,10 @@ keyPoints:
     text: log buffer：redo 的内存缓冲，事务提交时刷盘
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF759MW5MDSZP7N251BB
+      - 01M3KHXF75MB2TSZ8Z02239NXG
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,8 @@ keyPoints:
     text: OS page cache：文件系统缓存，redo/binlog 的 fsync 边界即冲它
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +48,8 @@ keyPoints:
     text: change buffer：非唯一二级索引改动的暂存区
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75G0DM6BH2RG78KD4D
     confirmedIndependentOf: []
     source:
       kind: official-doc

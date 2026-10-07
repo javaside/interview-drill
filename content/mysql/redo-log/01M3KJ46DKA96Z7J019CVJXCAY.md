@@ -13,7 +13,10 @@ keyPoints:
     text: 脏页=buffer pool 中已修改但未刷回磁盘的数据页
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75XT8GXGAC3HAWDNJG
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,10 @@ keyPoints:
     text: redo log 写满逼近：checkpoint 强制推进，刷最老脏页腾日志空间
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +39,10 @@ keyPoints:
     text: 内存不足淘汰页：LRU 逐出的页若是脏页必须先刷
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75XT8GXGAC3HAWDNJG
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +52,9 @@ keyPoints:
     text: 正常后台节奏刷脏 + shutdown 时全量刷
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc

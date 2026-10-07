@@ -23,7 +23,8 @@ keyPoints:
     text: 新生代 = Eden + 两个 Survivor，Minor GC 的地盘
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBATQ8AZC2PFT8FR9G
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,8 @@ keyPoints:
     text: 老年代：熬过多次 Minor 的对象与前置分配的大对象
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBATQ8AZC2PFT8FR9G
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,8 @@ keyPoints:
     text: Minor 收新生代、Major 收老年代、Full 收全堆
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBATQ8AZC2PFT8FR9G
     confirmedIndependentOf: []
     source:
       kind: official-doc

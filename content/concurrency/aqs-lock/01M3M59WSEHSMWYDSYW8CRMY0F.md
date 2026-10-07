@@ -13,7 +13,9 @@ keyPoints:
     text: 一把锁多个条件队列：不同条件的阻塞各排各的队
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSECPRPA13YDV6NTXD7
+      - 01M3M59WSFQ6DJYJ18QPFWZQBD
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: 精准唤醒：notFull.signal 只唤醒在「不满」条件上候着的线程
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSECPRPA13YDV6NTXD7
+      - 01M3M59WSFQ6DJYJ18QPFWZQBD
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,9 @@ keyPoints:
     text: wait/notify 只有一间全员候车室，notify 叫醒谁全凭运气
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSECPRPA13YDV6NTXD7
+      - 01M3M59WSFQ6DJYJ18QPFWZQBD
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,8 @@ keyPoints:
     text: await/signal 必须持锁调用（同 wait/notify 的纪律）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFQ6DJYJ18QPFWZQBD
     confirmedIndependentOf: []
     source:
       kind: official-doc

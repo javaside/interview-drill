@@ -23,7 +23,8 @@ keyPoints:
     text: ConcurrentHashMap：读无锁、写锁桶，高并发吞吐数量级领先
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YXYJH4J5XV6Q6V6TZ
     confirmedIndependentOf: []
     source:
       kind: official-doc

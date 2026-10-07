@@ -13,7 +13,8 @@ keyPoints:
     text: 集中存储+版本化（谁在何时改了什么可回滚）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 推拉结合：长轮询推送变更 + 客户端兜底定时全量拉
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,9 @@ keyPoints:
     text: 灰度发布：按 ip/集群/标签分批生效
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8XB86HYWEEYE5JPF
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,8 @@ keyPoints:
     text: 本地快照：配置中心全挂，客户端用最后一份缓存启动
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +58,8 @@ keyPoints:
     text: 敏感配置加密（数据库密码）+ 变更审计
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGTN38NM7WTAZ6BV13
     confirmedIndependentOf: []
     source:
       kind: official-doc

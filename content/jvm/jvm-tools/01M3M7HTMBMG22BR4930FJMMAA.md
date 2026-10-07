@@ -13,7 +13,8 @@ keyPoints:
     text: 现象：Full GC 后老年代只升不降、GC 间隔越来越短
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,9 @@ keyPoints:
     text: dump 堆（jmap 或 HeapDumpOnOutOfMemoryError）交 MAT
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBKPNMCKZR15CJHFC2
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,8 @@ keyPoints:
     text: MAT 看 Dominator Tree 与 Leak Suspects：谁霸着内存不放
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,8 @@ keyPoints:
     text: 常见根因：静态集合只进不出、ThreadLocal 不 remove、监听器不注销、连接不关
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc

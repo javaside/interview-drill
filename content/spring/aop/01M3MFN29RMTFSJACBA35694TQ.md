@@ -13,7 +13,8 @@ keyPoints:
     text: 切面 Aspect=切点+通知的模块；连接点=可织入的方法执行点
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 切点 Pointcut=哪些方法（表达式筛选连接点）；通知 Advice=织入干什么
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,10 @@ keyPoints:
     text: 织入 Weaving=把切面套到目标上——Spring 是运行时代理织入
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R5PKX9E9ZPC6XSAPB
+      - 01M3MFN29R5VT9N1MBAMEP1Q8E
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc

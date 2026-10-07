@@ -13,7 +13,9 @@ keyPoints:
     text: 缓存磁盘数据页的内存池：读走缓存命中免磁盘，改先改缓存页成为脏页
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
+      - 01M3KJ46DKA96Z7J019CVJXCAY
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,8 @@ keyPoints:
     text: 以页（默认 16KB）为单位管理，是 InnoDB 性能的第一支柱
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,8 @@ keyPoints:
     text: 大小 innodb_buffer_pool_size，通常给到机器内存的 50%~70%
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,10 @@ keyPoints:
     text: 脏页由后台线程按 checkpoint 机制异步刷回磁盘
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
+      - 01M3KJ46DKA96Z7J019CVJXCAY
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +60,8 @@ keyPoints:
     text: BP 可划分为多个 instance 降低内部锁争用
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
     confirmedIndependentOf: []
     source:
       kind: official-doc

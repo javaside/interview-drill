@@ -34,7 +34,8 @@ keyPoints:
     text: epoll：内核建红黑树注册一次，就绪链表只返回活跃 fd
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRT7Z7D9F1H3J5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +45,8 @@ keyPoints:
     text: epoll 复杂度 O(活跃数)——万连接少数活跃时碾压
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRT7Z7D9F1H3J5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +56,9 @@ keyPoints:
     text: 共同点：三者都只是「就绪通知」，数据拷贝仍要自己 read
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRQ1S1V3X5Z7D9
+      - 01M3NE18CNRT7Z7D9F1H3J5
     confirmedIndependentOf: []
     source:
       kind: official-doc

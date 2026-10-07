@@ -13,7 +13,8 @@ keyPoints:
     text: 依赖聚合 + 自动配置的打包：引一个 starter 得到全家桶
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RH9SVY37857E08RQR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: spring-boot-starter-web=SpringMVC+Jackson+Tomcat 版本对齐
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RH9SVY37857E08RQR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 解决依赖地狱：版本由 Boot BOM 统一仲裁
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RH9SVY37857E08RQR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: 约定优于配置：默认即可跑，要改走 yml
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RH9SVY37857E08RQR
     confirmedIndependentOf: []
     source:
       kind: official-doc

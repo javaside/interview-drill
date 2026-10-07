@@ -13,7 +13,8 @@ keyPoints:
     text: 编译后泛型参数被替换：无界 → Object，有界 → 边界类型
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Z3CVPG3JJZHS4ZAV4
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 运行时 List<String> 与 List<Integer> 是同一个 Class（List.class）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Z3CVPG3JJZHS4ZAV4
     confirmedIndependentOf: []
     source:
       kind: official-doc

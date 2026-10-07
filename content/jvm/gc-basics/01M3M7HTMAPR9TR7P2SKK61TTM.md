@@ -13,7 +13,8 @@ keyPoints:
     text: 强引用：new 出来的普通引用——不可达绝不回收
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMAS9MZNBNT2SRG1Z3M
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 软引用 SoftReference：内存不足才回收——缓存的第一档
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMAS9MZNBNT2SRG1Z3M
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 弱引用 WeakReference：下次 GC 必回收——ThreadLocal 的键
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMAS9MZNBNT2SRG1Z3M
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: 虚引用 PhantomReference：不影响生死，只做回收通知
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMAS9MZNBNT2SRG1Z3M
     confirmedIndependentOf: []
     source:
       kind: official-doc

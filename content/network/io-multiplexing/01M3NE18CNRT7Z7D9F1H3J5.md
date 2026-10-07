@@ -54,7 +54,8 @@ keyPoints:
     text: 对偶 Proactor：事件是「完成通知」而非「就绪通知」——真异步 IO 的框架形态
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRQ1S1V3X5Z7D9
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,9 @@ keyPoints:
     text: 本地消息表：业务与消息记录同库同事务落盘，后台扫表投递
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: RocketMQ 事务消息：半消息+回查（MQ 内建）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,9 @@ keyPoints:
     text: 事务结果驱动投递：commit 后消息可见，rollback 则废弃
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,10 @@ keyPoints:
     text: 下游消费端防重闭环——生产原子加消费端防重即端到端一致
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +62,9 @@ keyPoints:
     text: binlog 订阅可替代扫表驱动投递
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc

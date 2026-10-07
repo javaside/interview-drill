@@ -14,7 +14,10 @@ keyPoints:
     text: HDD：寻道+旋转毫秒级——顺序尚可、随机极慢
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT8B9D1F3H5J7M9Q2
+      - 01M3NE18CNT9D1F3H5J7M9Q2T
+      - 01M3NE18CNTA1F3H5J7M9Q2T4
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +27,10 @@ keyPoints:
     text: SSD：电子寻址微秒级——随机读轻松数十万 IOPS
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT8B9D1F3H5J7M9Q2
+      - 01M3NE18CNT9D1F3H5J7M9Q2T
+      - 01M3NE18CNTA1F3H5J7M9Q2T4
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +40,8 @@ keyPoints:
     text: SSD 写约束：擦除块大、先擦后写——引出写放大与 GC
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT8B9D1F3H5J7M9Q2
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +61,9 @@ keyPoints:
     text: 对应用的意义：小 IO 延迟、对齐、避免频繁原地改写
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT7Z7B9D1F3H5J7M9Q
+      - 01M3NE18CNT8B9D1F3H5J7M9Q2
     confirmedIndependentOf: []
     source:
       kind: official-doc

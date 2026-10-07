@@ -24,7 +24,8 @@ keyPoints:
     text: 页缓存红利：重复读命中免盘；预读放大顺序读
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT8B9D1F3H5J7M9Q2
     confirmedIndependentOf: []
     source:
       kind: official-doc

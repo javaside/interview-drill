@@ -13,7 +13,9 @@ keyPoints:
     text: 值 A 到 B 再回 A：CAS 只看当前值，感知不到中途变过
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
+      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: 数值场景多数无害；引用场景可能拿回「同值不同命」的对象
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
+      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,10 @@ keyPoints:
     text: 解法：版本戳——AtomicStampedReference 值与版本双比对
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
+      - 01M3M59WSF16SCYSM5EVS1C59W
+      - 01M3M59WSFCEKJTYGRCCNXC96Y
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,9 @@ keyPoints:
     text: 无锁栈的典型受害：A 弹出后复用同地址再压回
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
+      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +62,8 @@ keyPoints:
     text: 版本戳比对要求调用方成对传入引用与整型戳
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,9 @@ keyPoints:
     text: offset=消息在 partition 里的位点号（单调递增）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: 消费进度=已提交 offset；重启从提交位点继续
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,8 @@ keyPoints:
     text: 自动提交（enable.auto.commit）定时交——可能重复（处理完没交就崩）或丢（交了没处理就崩）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +48,10 @@ keyPoints:
     text: 手动提交：处理成功后 commitSync/commitAsync——精确但慢一点
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +61,8 @@ keyPoints:
     text: offset 存在内部 topic __consumer_offsets（不是 ZK，0.9+）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
     confirmedIndependentOf: []
     source:
       kind: official-doc

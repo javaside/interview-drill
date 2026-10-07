@@ -23,7 +23,8 @@ keyPoints:
     text: 表锁：lock tables 或 DDL 加在表级别，锁粒度大、并发差
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DHF8DAT54DRTRGZ3GT
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,8 @@ keyPoints:
     text: 行锁：InnoDB 在索引记录上加锁，粒度最细、并发最好
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75EQAKBS12MY82KVGM
     confirmedIndependentOf: []
     source:
       kind: official-doc

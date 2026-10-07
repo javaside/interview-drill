@@ -45,7 +45,9 @@ keyPoints:
     text: 二级索引叶子存主键副本，主键越短二级索引越小
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGC234VDTZR8CWF8GHZ
+      - 01M3KH6MGE6EHRDCH6S3HP1A64
     confirmedIndependentOf: []
     source:
       kind: official-doc

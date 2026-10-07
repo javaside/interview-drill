@@ -23,7 +23,8 @@ keyPoints:
     text: workQueue 任务队列：无界/有界/同步移交（SynchronousQueue）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFM8NJKCXFZ3M12AVT
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,8 @@ keyPoints:
     text: threadFactory 线程工厂（命名——排查的救命稻草）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFM8NJKCXFZ3M12AVT
     confirmedIndependentOf: []
     source:
       kind: official-doc

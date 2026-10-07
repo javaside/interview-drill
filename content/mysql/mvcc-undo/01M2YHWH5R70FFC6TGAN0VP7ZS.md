@@ -14,7 +14,10 @@ keyPoints:
     text: 事务回滚：记录修改前的旧值，回滚时逆向应用还原数据
     public: true
     verifiedAt: 2026-09-20
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF73KZ58QW2B9NJA32E1
+      - 01M3KHXF75A058357P4PBBKMCG
+      - 01M3KJ46DK9NYNFFFMJJDEYHVP
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +27,8 @@ keyPoints:
     text: 为 MVCC 快照读构造旧版本，供 ReadView 读取可见的历史行
     public: false
     verifiedAt: 2026-09-20
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75A058357P4PBBKMCG
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +38,10 @@ keyPoints:
     text: 崩溃恢复中回滚重启时仍未提交的事务
     public: false
     verifiedAt: 2026-09-20
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF73KZ58QW2B9NJA32E1
+      - 01M3KHXF75A058357P4PBBKMCG
+      - 01M3KJ46DK9NYNFFFMJJDEYHVP
     confirmedIndependentOf: []
     source:
       kind: official-doc

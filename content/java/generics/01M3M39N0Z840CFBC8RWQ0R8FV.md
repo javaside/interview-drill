@@ -13,7 +13,8 @@ keyPoints:
     text: 编译器为擦除后多态生成的合成转发方法（synthetic bridge）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YNEJ902KWVMJ0XVSJ
     confirmedIndependentOf: []
     source:
       kind: official-doc

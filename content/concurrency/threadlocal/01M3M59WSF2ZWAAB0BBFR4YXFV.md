@@ -13,7 +13,9 @@ keyPoints:
     text: 每个 Thread 内置一个 ThreadLocalMap：键是 ThreadLocal 弱引用，值是变量副本
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFE19XRY3CQJ3BVSH6
+      - 01M3M59WSFHJNM8DE7H0EJPN2T
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,8 @@ keyPoints:
     text: set/get 都先摸到当前线程自己的 map——天然按线程隔离
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFE19XRY3CQJ3BVSH6
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,9 @@ keyPoints:
     text: 同一个 ThreadLocal 在不同线程中各存各的互不可见
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFDZWZ59KYZZHWV60J
+      - 01M3M59WSFE19XRY3CQJ3BVSH6
     confirmedIndependentOf: []
     source:
       kind: official-doc

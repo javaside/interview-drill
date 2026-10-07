@@ -13,7 +13,10 @@ keyPoints:
     text: 多机房同时提供服务——单机房故障秒级切流
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,8 @@ keyPoints:
     text: 核心难点：数据双向同步的冲突（两地同时改一条数据
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,9 @@ keyPoints:
     text: 主流解：单元化——按用户分片路由到固定机房（封闭修改）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,10 @@ keyPoints:
     text: 数据异步互备 + 冲突按时间戳/业务规则收敛
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +62,9 @@ keyPoints:
     text: 全局服务（库存/账户）集中部署或按业务分片
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc

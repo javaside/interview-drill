@@ -13,7 +13,9 @@ keyPoints:
     text: 起步依赖引入 jar → AutoConfiguration.imports 声明候选配置类
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R31DZVVDW8KSP6GE7
+      - 01M3MFN29RH9SVY37857E08RQR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,8 @@ keyPoints:
     text: '@ConditionalOnClass/MissingBean/Property 按条件生效'
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RH9SVY37857E08RQR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,8 @@ keyPoints:
     text: '@ConditionalOnMissingBean：你配了就以你的为准（默认可覆盖）'
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RH9SVY37857E08RQR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,8 @@ keyPoints:
     text: 配置属性绑定：@EnableConfigurationProperties + @ConfigurationProperties
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RH9SVY37857E08RQR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +58,8 @@ keyPoints:
     text: 排除不想要的自动配置：exclude 或 excludeName
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RA438786CM1T76NY9
     confirmedIndependentOf: []
     source:
       kind: official-doc

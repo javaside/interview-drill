@@ -13,7 +13,10 @@ keyPoints:
     text: 首选 BlockingQueue：put 与 take 自带满阻塞与空阻塞
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,10 @@ keyPoints:
     text: ArrayBlockingQueue 有界（生产推荐）；LinkedBlockingQueue 可设界
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,9 @@ keyPoints:
     text: PriorityBlockingQueue 按优先级出队；DelayQueue 到期才可取
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc

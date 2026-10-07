@@ -14,7 +14,8 @@ keyPoints:
     text: 低竞争且临界区极小：CAS 无挂起开销，完胜
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: 高竞争或临界区长：自旋空转烧 CPU，互斥锁排队挂起更划算
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +36,8 @@ keyPoints:
     text: 多变量一致性：CAS 只保单点，多变量必须锁或整体替换引用
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
     confirmedIndependentOf: []
     source:
       kind: official-doc

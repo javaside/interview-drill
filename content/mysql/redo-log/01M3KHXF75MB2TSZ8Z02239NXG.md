@@ -13,7 +13,12 @@ keyPoints:
     text: 记录「做了什么修改」的物理日志，崩溃后照它重放，保证已提交修改不丢
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF73KZ58QW2B9NJA32E1
+      - 01M3KHXF75A058357P4PBBKMCG
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
+      - 01M3KJ46DK9NYNFFFMJJDEYHVP
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +28,11 @@ keyPoints:
     text: WAL 先写日志后写数据页：修改先记 redo，数据页延后刷盘
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF73KZ58QW2B9NJA32E1
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
+      - 01M3KJ46DK9NYNFFFMJJDEYHVP
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +42,9 @@ keyPoints:
     text: 顺序写日志代替随机写数据页，性能高数个量级
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
+      - 01M3NCQ6WZ2NN8RWDEQY5XT6X8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +54,12 @@ keyPoints:
     text: redo 是循环写的固定大小文件组，写满触发 checkpoint 强制刷脏页
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75A058357P4PBBKMCG
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
+      - 01M3KJ46DKA96Z7J019CVJXCAY
+      - 01M3NCQ6WZ83YT2YSABFFVPAST
     confirmedIndependentOf: []
     source:
       kind: official-doc

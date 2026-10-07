@@ -14,7 +14,8 @@ keyPoints:
     text: 接入：源站域名 CNAME 到 CDN 域名，调度系统选边缘节点
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRJ1C3E5G7K9S1V
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +45,8 @@ keyPoints:
     text: 缓存键与过期：URL 为键，TTL/Cache-Control 控制，刷新可强制
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ6Y0D2F4H6J8M0N
     confirmedIndependentOf: []
     source:
       kind: official-doc

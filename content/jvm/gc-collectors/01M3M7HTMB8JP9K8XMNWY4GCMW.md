@@ -13,7 +13,9 @@ keyPoints:
     text: CMS：老年代低停顿收集器，标记-清除（有碎片）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMA42BMPZZ2AGRE299W
+      - 01M3M7HTMB44X28BZT234Y9BJH
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,8 @@ keyPoints:
     text: G1：整堆 Region 化，整理+复制，停顿可预测
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB44X28BZT234Y9BJH
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,10 @@ keyPoints:
     text: G1 按停顿预算选收益最高的 Region 回收（MaxGCPauseMillis）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB44X28BZT234Y9BJH
+      - 01M3M7HTMBH4404AEK6EXEEV9W
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,8 @@ keyPoints:
     text: CMS 碎片最终触发并发失败退化 Serial Old——9 废弃、14 移除
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB44X28BZT234Y9BJH
     confirmedIndependentOf: []
     source:
       kind: official-doc

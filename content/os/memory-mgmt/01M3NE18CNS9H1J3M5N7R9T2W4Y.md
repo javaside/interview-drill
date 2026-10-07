@@ -14,7 +14,8 @@ keyPoints:
     text: 小内存走 brk 扩堆，大内存走 mmap 直映
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT1M4N6Q8S1V3X5Z7B
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +35,8 @@ keyPoints:
     text: free 不还内核：池里复用——RSS 居高不下常是碎片
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS0K2M4N6Q8S1V3X5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +56,8 @@ keyPoints:
     text: brk 顶部有洞就不能收缩——碎片让 RSS 只涨不降
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS0K2M4N6Q8S1V3X5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc

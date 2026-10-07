@@ -13,7 +13,10 @@ keyPoints:
     text: 自增 id 不可用：各分片会撞号——雪花/号段接管
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM78ZDR6APCEKB733T
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,10 @@ keyPoints:
     text: 跨片事务不能靠单库——本地消息表/Saga 最终一致
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +39,8 @@ keyPoints:
     text: 跨片 join 消失——业务层聚合或宽表冗余
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM7FPX5TGQH5R1Z7Z5
     confirmedIndependentOf: []
     source:
       kind: official-doc

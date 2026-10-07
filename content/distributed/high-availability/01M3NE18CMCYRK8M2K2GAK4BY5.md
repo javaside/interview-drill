@@ -13,7 +13,10 @@ keyPoints:
     text: 容量=单机容量×数量×水位折扣——压测得出单机基准
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,9 @@ keyPoints:
     text: 压测类型：基准（单接口）/链路（全链路压测）/浸泡（稳定性）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,9 @@ keyPoints:
     text: 全链路压测：影子库/影子表隔离压测数据——生产环境真实流量模型
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,10 @@ keyPoints:
     text: 容量目标：峰值×冗余系数（如 1.5 倍），瓶颈定位到具体资源
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +63,10 @@ keyPoints:
     text: 常态化：容量水位告警+弹性伸缩联动
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -36,7 +36,8 @@ keyPoints:
     public: false
     order: 3
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -47,7 +48,8 @@ keyPoints:
     public: false
     order: 4
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -58,7 +60,8 @@ keyPoints:
     public: false
     order: 5
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
     confirmedIndependentOf: []
     source:
       kind: official-doc

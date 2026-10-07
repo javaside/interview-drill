@@ -23,7 +23,9 @@ keyPoints:
     text: finally：try 块的收尾，正常或异常都会执行（释放资源的固定位置）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZPY04TDHYNN09KFS7
+      - 01M3M39N0ZSX6Z9F21G4KHMHHW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,8 @@ keyPoints:
     text: finally 不执行的三种情况：System.exit、JVM 崩溃、守护线程里的死循环
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZSX6Z9F21G4KHMHHW
     confirmedIndependentOf: []
     source:
       kind: official-doc

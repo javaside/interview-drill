@@ -13,7 +13,9 @@ keyPoints:
     text: 穿透：查不存在的 key——请求打到 DB（恶意伪造 id）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: 击穿：热点 key 过期瞬间——万计并发同时砸 DB
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,9 @@ keyPoints:
     text: 雪崩：大批 key 同时过期或缓存整体宕机——DB 被冲垮
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,10 @@ keyPoints:
     text: 穿透防：布隆过滤器/空值缓存（短 TTL）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +62,10 @@ keyPoints:
     text: 击穿防：互斥重建（只放一个请求去查库）；雪崩防：过期加随机+集群高可用
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc

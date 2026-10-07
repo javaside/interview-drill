@@ -14,7 +14,10 @@ keyPoints:
     text: 二级索引叶子只存主键，需再回聚簇索引取整行的第二次查找
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGC234VDTZR8CWF8GHZ
+      - 01M3KH6MGE6EHRDCH6S3HP1A64
+      - 01M3KJ46DKJSC628EZ54B1WCYS
     confirmedIndependentOf: []
     source:
       kind: official-doc

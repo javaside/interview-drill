@@ -13,7 +13,9 @@ keyPoints:
     text: Unary 一元：一请求一响应——常规 RPC
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
+      - 01M3NDKAWGVFS9XRMXX5P75QX0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,10 @@ keyPoints:
     text: Server streaming：一请求多响应（服务端流）——推送/大结果分批
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
+      - 01M3NDKAWGQ7Z67WW8WA14FZQV
+      - 01M3NDKAWGVFS9XRMXX5P75QX0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,9 @@ keyPoints:
     text: Client streaming：多请求一响应——批量上传/聚合
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
+      - 01M3NDKAWGVFS9XRMXX5P75QX0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,10 @@ keyPoints:
     text: Bidirectional streaming：双向流——聊天/实时协作/IoT
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
+      - 01M3NDKAWGQ7Z67WW8WA14FZQV
+      - 01M3NDKAWGVFS9XRMXX5P75QX0
     confirmedIndependentOf: []
     source:
       kind: official-doc

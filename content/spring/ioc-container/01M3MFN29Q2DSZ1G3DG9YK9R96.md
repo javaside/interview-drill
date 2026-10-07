@@ -43,7 +43,8 @@ keyPoints:
     text: 循环依赖时构造器注入直接失败——Setter/字段可被三级缓存救
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RF62WP8ZD6T4TYK8H
     confirmedIndependentOf: []
     source:
       kind: official-doc

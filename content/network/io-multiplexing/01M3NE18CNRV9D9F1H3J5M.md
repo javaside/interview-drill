@@ -14,7 +14,8 @@ keyPoints:
     text: 传统读发四次拷贝：磁盘→页缓存→用户态→socket 缓冲→网卡
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
     confirmedIndependentOf: []
     source:
       kind: official-doc

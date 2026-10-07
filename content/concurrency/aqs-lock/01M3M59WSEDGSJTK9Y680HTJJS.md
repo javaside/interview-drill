@@ -13,7 +13,12 @@ keyPoints:
     text: 读写分离：读读共存、读写/写写互斥——读多写少场景吞吐起飞
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
+      - 01M3M59WSFF26KY8FVRTKXXDJA
+      - 01M3NE18CNY8W0B2D4F6H8K0N2
+      - 01M3NE18CNY9X1C3E5G7J9M1P3
+      - 01M3NE18CP04F0H2J4M6Q8S0V2
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +28,9 @@ keyPoints:
     text: ReentrantReadWriteLock：可重入、支持锁降级（写→读）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY8W0B2D4F6H8K0N2
+      - 01M3NE18CP04F0H2J4M6Q8S0V2
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +40,9 @@ keyPoints:
     text: 坑：读线程长期占据可饿死写（写饥饿）——公平模式可解但降吞吐
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY8W0B2D4F6H8K0N2
+      - 01M3NE18CP04F0H2J4M6Q8S0V2
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +52,10 @@ keyPoints:
     text: StampedLock 的乐观读：不拿锁先读，验证戳未变即有效——读路径零锁
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
+      - 01M3NE18CNY8W0B2D4F6H8K0N2
+      - 01M3NE18CP04F0H2J4M6Q8S0V2
     confirmedIndependentOf: []
     source:
       kind: official-doc

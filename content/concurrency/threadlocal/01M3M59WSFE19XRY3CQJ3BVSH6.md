@@ -15,7 +15,9 @@ keyPoints:
     text: 普通 ThreadLocal：完全看不到，各线程各一张表
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF2ZWAAB0BBFR4YXFV
+      - 01M3M59WSFA2RSG2K6KNQH05AB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -25,7 +27,8 @@ keyPoints:
     text: InheritableThreadLocal：创建子线程那一刻的快照可继承
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFA2RSG2K6KNQH05AB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -35,7 +38,8 @@ keyPoints:
     text: 线程池复用线程：连 ITL 的创建时机都没有，需要 TTL 搬运
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFA2RSG2K6KNQH05AB
     confirmedIndependentOf: []
     source:
       kind: official-doc

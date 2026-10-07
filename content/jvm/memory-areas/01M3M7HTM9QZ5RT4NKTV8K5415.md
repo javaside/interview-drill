@@ -13,7 +13,8 @@ keyPoints:
     text: 堆：对象实例的主战场，线程共享，GC 的核心工作区
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMAHRS7YX8KPM4YXR8Y
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,8 @@ keyPoints:
     text: 方法区（元空间）：类信息、常量、静态变量；落在本机内存
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMA90JZ179PX8RG2VT9
     confirmedIndependentOf: []
     source:
       kind: official-doc

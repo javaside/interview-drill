@@ -13,7 +13,8 @@ keyPoints:
     text: InnoDB 自动对热点页建哈希入口，同值条件查询不再逐层爬 B+ 树
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
     confirmedIndependentOf: []
     source:
       kind: official-doc

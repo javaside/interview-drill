@@ -13,7 +13,8 @@ keyPoints:
     text: 组内 rebalance：partition 重新分配给组内消费者
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,9 @@ keyPoints:
     text: 消费者数 > partition 数则多余实例闲置——并行上限锁死在分区数
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WY92YKR2DWS380WRQF
     confirmedIndependentOf: []
     source:
       kind: official-doc

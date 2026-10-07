@@ -14,7 +14,8 @@ keyPoints:
     text: 强缓存：Cache-Control（max-age）内不发请求，直接用本地副本
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRK3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,9 @@ keyPoints:
     text: 协商缓存：带 If-None-Match/If-Modified-Since 问一下，没变回 304
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ3V7X9Z1C3E5G7K
+      - 01M3NE18CNRK3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +37,8 @@ keyPoints:
     text: ETag 优先于 Last-Modified：内容指纹精确，秒级修改不漏判
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRK3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +48,8 @@ keyPoints:
     text: 资源刷新策略：带 hash 文件名万年长缓存，HTML 本身不缓存
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRK3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +59,8 @@ keyPoints:
     text: 私有与共享：private 仅浏览器，public 允许 CDN/代理缓存
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRK3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc

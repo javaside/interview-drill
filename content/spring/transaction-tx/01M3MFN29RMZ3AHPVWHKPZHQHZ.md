@@ -13,7 +13,8 @@ keyPoints:
     text: AOP 环绕通知：TransactionInterceptor 拦截 @Transactional 方法
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RMTFSJACBA35694TQ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,8 @@ keyPoints:
     text: 正常返回 commit，异常按 rollbackFor 决定回滚
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RD2NVBJQYQFZNV35F
     confirmedIndependentOf: []
     source:
       kind: official-doc

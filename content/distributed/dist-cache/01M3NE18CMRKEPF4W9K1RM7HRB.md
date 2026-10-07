@@ -13,7 +13,10 @@ keyPoints:
     text: 主从：全量 RDB 同步 + 增量命令流复制——读写分离扩读
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNDSRTSJCNEHRAVWH0
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,9 @@ keyPoints:
     text: 哨兵 Sentinel：监控主——宕了自动挑从升主（故障转移）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,9 @@ keyPoints:
     text: 哨兵需过半同意才判定主死（防误判脑裂）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM3CHEN1XTJGSJGP1S
+      - 01M3NE18CMDD5CJ936BEH04P60
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,8 @@ keyPoints:
     text: 客户端订阅哨兵感知新主地址
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +61,9 @@ keyPoints:
     text: 异步复制的丢失窗口：主写完没来得及同步就挂——新主可能缺最新写
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CNDSRTSJCNEHRAVWH0
     confirmedIndependentOf: []
     source:
       kind: official-doc

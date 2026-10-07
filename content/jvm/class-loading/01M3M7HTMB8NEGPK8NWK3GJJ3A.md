@@ -33,7 +33,8 @@ keyPoints:
     text: 保证核心类唯一与安全：java.lang.String 永远由启动加载器加载
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB81HWVM0FJMDCK880
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,8 @@ keyPoints:
     text: 防篡改：自定义的 java.lang.String 顶替不了真 String
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB81HWVM0FJMDCK880
     confirmedIndependentOf: []
     source:
       kind: official-doc

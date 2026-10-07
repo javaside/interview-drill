@@ -13,7 +13,8 @@ keyPoints:
     text: 资源实现 AutoCloseable，try 声明即自动 close（编译器生成 finally 语义）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZPY04TDHYNN09KFS7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,8 @@ keyPoints:
     text: try 抛异常、close 也抛：close 的进 suppressed（不覆盖主异常）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZPY04TDHYNN09KFS7
     confirmedIndependentOf: []
     source:
       kind: official-doc

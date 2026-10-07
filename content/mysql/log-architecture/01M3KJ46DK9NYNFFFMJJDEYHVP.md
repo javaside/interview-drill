@@ -13,7 +13,9 @@ keyPoints:
     text: 从 checkpoint LSN 起重放 redo（含未提交事务的页修改）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75A058357P4PBBKMCG
+      - 01M3KHXF75MB2TSZ8Z02239NXG
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: 找出处于 prepare 且 binlog 完整的事务 → 提交
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75BZGZ60GV618ERYXY
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,11 @@ keyPoints:
     text: binlog 不完整或压根没到 prepare 的 → 按 undo 回滚
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWH5R70FFC6TGAN0VP7ZS
+      - 01M3KHXF75A058357P4PBBKMCG
+      - 01M3KHXF75BZGZ60GV618ERYXY
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +51,8 @@ keyPoints:
     text: 恢复时页 LSN 已够新的直接跳过，重复执行也安全
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75MB2TSZ8Z02239NXG
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,8 @@ keyPoints:
     text: 可达性分析：从 GC Roots 出发，引用链够不着的即垃圾
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBMG22BR4930FJMMAA
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: GC Roots：栈帧局部变量、静态变量、常量、JNI 引用
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBMG22BR4930FJMMAA
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,9 @@ keyPoints:
     text: 不可达并非立刻死：软/弱/虚引用与 finalize 留了缓刑通道
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0X9CV1HJ9G0XDVHS6P
+      - 01M3M7HTMAPR9TR7P2SKK61TTM
     confirmedIndependentOf: []
     source:
       kind: official-doc

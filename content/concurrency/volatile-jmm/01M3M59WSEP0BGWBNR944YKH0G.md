@@ -13,7 +13,10 @@ keyPoints:
     text: Compare-And-Swap：比较内存值与预期，相同则换成新值——CPU 级原子指令
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFCEKJTYGRCCNXC96Y
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,11 @@ keyPoints:
     text: 乐观策略：不加锁，失败就重试（自旋）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
+      - 01M3M59WSFCEKJTYGRCCNXC96Y
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +40,10 @@ keyPoints:
     text: ABA 问题：值 A→B→A，CAS 察觉不到中途变化——版本号/AtomicStampedReference 解决
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
+      - 01M3M59WSFTNGZWGA0D1AH4S9G
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +53,10 @@ keyPoints:
     text: 自旋失败率高时烧 CPU（长期抢不过就该上锁/LongAdder）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSF16SCYSM5EVS1C59W
+      - 01M3M59WSFMHAG2JTWE04XH3N0
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -14,7 +14,8 @@ keyPoints:
     text: free 列=完全空闲；available=还能给应用的量（含可回收缓存）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS0K2M4N6Q8S1V3X5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: buff/cache 不是被偷走——是内核拿闲内存做缓存，可即时让渡
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS0K2M4N6Q8S1V3X5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +36,8 @@ keyPoints:
     text: 判断内存压力看 available 与 swap 是否增长，不是看 free
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS0K2M4N6Q8S1V3X5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +47,8 @@ keyPoints:
     text: sar -r 看趋势，ps aux --sort=-rss 找大户
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS0K2M4N6Q8S1V3X5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +58,8 @@ keyPoints:
     text: 交换两信号：si/so 持续非零=真缺内存；偶发换出是正常调剂
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS0K2M4N6Q8S1V3X5Z
     confirmedIndependentOf: []
     source:
       kind: official-doc

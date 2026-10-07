@@ -13,7 +13,9 @@ keyPoints:
     text: 分区时两段各自选主——双 Leader 同时接受写
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMATBK5C1308CM5A5V
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,10 @@ keyPoints:
     text: 防核心：过半票决——少数派永远选不出主
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMATBK5C1308CM5A5V
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,10 @@ keyPoints:
     text: 辅助：quorum 读写（双主写互不达过半，超时自动失效）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMATBK5C1308CM5A5V
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +51,10 @@ keyPoints:
     text: 仲裁/fencing token：共享资源拒绝旧主的指令
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMATBK5C1308CM5A5V
+      - 01M3NE18CMDD5CJ936BEH04P60
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
     confirmedIndependentOf: []
     source:
       kind: official-doc

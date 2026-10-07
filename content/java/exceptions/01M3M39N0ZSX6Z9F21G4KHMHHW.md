@@ -13,7 +13,8 @@ keyPoints:
     text: 正常/异常/return 三种路径都会先走 finally 再结束方法
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0X9CV1HJ9G0XDVHS6P
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,10 @@ keyPoints:
     text: 坑 1：finally 里 return 会吞掉 try 的返回值与异常
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0X9CV1HJ9G0XDVHS6P
+      - 01M3M39N0ZFPH32DQQN6BGCAGQ
+      - 01M3M39N0ZPY04TDHYNN09KFS7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,9 @@ keyPoints:
     text: 坑 2：finally 里抛异常会顶替 try 的原始异常
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0X9CV1HJ9G0XDVHS6P
+      - 01M3M39N0ZPY04TDHYNN09KFS7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +49,9 @@ keyPoints:
     text: finally 在 return 表达式求值之后、真正返回之前执行
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0X9CV1HJ9G0XDVHS6P
+      - 01M3M39N0ZFPH32DQQN6BGCAGQ
     confirmedIndependentOf: []
     source:
       kind: official-doc

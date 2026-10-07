@@ -13,7 +13,11 @@ keyPoints:
     text: 本地消息表：业务与消息同库同事务——强可靠，侵入 DB
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +27,11 @@ keyPoints:
     text: 事务消息：MQ 半消息+回查——不侵入业务库，绑 MQ 能力
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +41,9 @@ keyPoints:
     text: 两者目标相同：本地事务与消息发送的原子性
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +53,12 @@ keyPoints:
     text: 最终一致都依赖：消费端 idempotent 加失败重试加对账
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CMTB6TCQT0VZ7GZ1CR
+      - 01M3NE18CMVMB5H7HE12AFSJNW
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,8 @@ keyPoints:
     text: 吞吐优先：Parallel 系——批处理与后台计算
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 延迟敏感在线服务（默认推荐）：G1
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 超大堆或超低停顿：ZGC 与 Shenandoah
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: 收集器与区域搭配有约束（CMS 不能配 Parallel Scavenge）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,8 @@ keyPoints:
     text: 一次提交要同时写 redo 与 binlog 两本账，任何顺序都存在中间态
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 先 binlog 后 redo：崩溃于中间→主库回滚而从库已重放→主少从多
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 先 redo 后 binlog：崩溃于中间→主库已提交而从库没收到→主多从少
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,11 @@ keyPoints:
     text: 解法：redo 先写为 prepare，binlog 落盘成功后才把 redo 标记 commit——崩溃恢复以 binlog 是否完整裁定
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF759MW5MDSZP7N251BB
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
+      - 01M3KJ46DK9NYNFFFMJJDEYHVP
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -23,7 +23,8 @@ keyPoints:
     text: 隐患：new 分配→构造→赋值给引用 可被重排为 先赋值后构造
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSE8XM59X0SGY7EPQSN
     confirmedIndependentOf: []
     source:
       kind: official-doc

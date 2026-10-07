@@ -14,7 +14,9 @@ keyPoints:
     text: 核心四指标：r/s ws（频率）、await（每次 IO 候+服务的毫秒）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTK1C3E5G7K9S1V3
+      - 01M3NE18CNTN5G7K9S1V3X5Z7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +26,9 @@ keyPoints:
     text: avgqu-sz 队列深度：排队越长积压越重
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTK1C3E5G7K9S1V3
+      - 01M3NE18CNTN5G7K9S1V3X5Z7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +38,9 @@ keyPoints:
     text: '%util 设备忙的百分比——SSD 并行下 100% 并非即饱和'
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTK1C3E5G7K9S1V3
+      - 01M3NE18CNTN5G7K9S1V3X5Z7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +50,9 @@ keyPoints:
     text: 看 await 是否恶化比看 util 更可靠：await 数倍于常态即病
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTK1C3E5G7K9S1V3
+      - 01M3NE18CNTN5G7K9S1V3X5Z7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +62,9 @@ keyPoints:
     text: 配合 iotop 找到发起 IO 的进程，dstat 看读写构成
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTK1C3E5G7K9S1V3
+      - 01M3NE18CNTN5G7K9S1V3X5Z7
     confirmedIndependentOf: []
     source:
       kind: official-doc

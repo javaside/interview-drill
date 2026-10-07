@@ -14,7 +14,8 @@ keyPoints:
     text: 握手 2-RTT → 1-RTT：ClientHello 直接带密钥交换参数
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ4W8Y0D2F4H6J8M
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: 0-RTT 恢复：带早期数据重连续传，首请求即带业务数据
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ4W8Y0D2F4H6J8M
     confirmedIndependentOf: []
     source:
       kind: official-doc

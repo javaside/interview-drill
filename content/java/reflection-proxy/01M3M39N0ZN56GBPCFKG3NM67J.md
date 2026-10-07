@@ -13,7 +13,8 @@ keyPoints:
     text: JDK 代理：基于接口，代理类实现接口并转发 InvocationHandler
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZVK25VC2HMSK3EKB2
     confirmedIndependentOf: []
     source:
       kind: official-doc

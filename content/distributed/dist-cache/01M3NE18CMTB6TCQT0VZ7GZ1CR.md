@@ -13,7 +13,8 @@ keyPoints:
     text: 主流：Cache Aside——读 miss 回源回填；写先更 DB 再删缓存
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +54,10 @@ keyPoints:
     text: 接受短暂不一致（TTL 兜底）是多数业务的现实选择
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMMRV6H6CDEV5EB4PR
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
+      - 01M3NE18CNYXR11H0D7PRZ1EMN
     confirmedIndependentOf: []
     source:
       kind: official-doc

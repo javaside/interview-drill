@@ -14,7 +14,8 @@ keyPoints:
     public: false
     order: 1
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CK1PSW0XJR26K8F82K
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -25,7 +26,8 @@ keyPoints:
     public: false
     order: 2
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CK1PSW0XJR26K8F82K
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -36,7 +38,9 @@ keyPoints:
     public: false
     order: 3
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CK1PSW0XJR26K8F82K
+      - 01M3NE18CM3CHEN1XTJGSJGP1S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -47,7 +51,8 @@ keyPoints:
     public: false
     order: 4
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CK1PSW0XJR26K8F82K
     confirmedIndependentOf: []
     source:
       kind: official-doc

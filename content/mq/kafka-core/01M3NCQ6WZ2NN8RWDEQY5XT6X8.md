@@ -13,7 +13,8 @@ keyPoints:
     text: 顺序写：日志只追加（append）——磁盘顺序写接近内存
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 页缓存：读写都走 OS page cache——不自己管缓存
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 零拷贝：sendfile 直送网卡，数据不经用户态
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,9 @@ keyPoints:
     text: 批量+压缩：攒批传输、端到端压缩，摊薄网络与 IO
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WY92YKR2DWS380WRQF
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +58,10 @@ keyPoints:
     text: 分区并行：吞吐随 partition 数与 Broker 数水平扩展
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WY92YKR2DWS380WRQF
     confirmedIndependentOf: []
     source:
       kind: official-doc

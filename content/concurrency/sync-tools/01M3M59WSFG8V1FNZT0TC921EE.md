@@ -13,7 +13,8 @@ keyPoints:
     text: Future：提交后领凭据——get 阻塞领结果，不能组合、不能回调
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,9 @@ keyPoints:
     text: CompletableFuture：回调式异步——thenApply 与 thenCompose 链式组合
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,8 @@ keyPoints:
     text: 异常传播：exceptionally 与 handle 统一接住链上任意环节的错
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,9 @@ keyPoints:
     text: 默认跑 ForkJoinPool.commonPool，生产应 supplyAsync 传自家线程池
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc

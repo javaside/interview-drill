@@ -13,7 +13,8 @@ keyPoints:
     text: Failover（默认）：失败换一台重试——只读操作的默认
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGJ7BTBF0M6AT4TW7T
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: Failfast：一次失败立即报错——写操作且未做防重时用它
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGJ7BTBF0M6AT4TW7T
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: Failsafe：失败忽略只记日志——写审计日志这类可丢场景
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGJ7BTBF0M6AT4TW7T
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: Failback：失败记录后台异步重发——消息通知类最终一致
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGJ7BTBF0M6AT4TW7T
     confirmedIndependentOf: []
     source:
       kind: official-doc

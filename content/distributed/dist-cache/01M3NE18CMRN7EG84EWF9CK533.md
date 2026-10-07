@@ -13,7 +13,8 @@ keyPoints:
     text: 16384 个哈希槽：key 的 CRC16 取模落槽，槽分配到节点
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQFGY7ZQBDA3P1QXB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: hash tag {user1000}.x 强制同 key 同槽（多键操作的前提）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM78ZDR6APCEKB733T
     confirmedIndependentOf: []
     source:
       kind: official-doc

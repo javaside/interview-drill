@@ -13,7 +13,10 @@ keyPoints:
     text: Kafka 只保证 partition 内有序——全局有序需单 partition
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZTXVFFZ8CA7GTX61J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,10 @@ keyPoints:
     text: 同 key 哈希到同一 partition（默认分区器）——key 级有序
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WZTXVFFZ8CA7GTX61J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +39,9 @@ keyPoints:
     text: 重试与 in.flight>1 组合可能乱序——idempotent 生产者防住
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZTXVFFZ8CA7GTX61J
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +51,9 @@ keyPoints:
     text: 扩分区会改变 key 的落点——顺序敏感的 topic 提前规划够多分区
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
+      - 01M3NCQ6WZTXVFFZ8CA7GTX61J
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -15,7 +15,9 @@ keyPoints:
     text: equals 相同 ⇒ hashCode 必须相同（硬性要求）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YSQCVGCANWW33S0N7
+      - 01M3M39N0YWCHF3XP50BM5S57W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -25,7 +27,8 @@ keyPoints:
     text: hashCode 相同 ⇏ equals 相同（碰撞合法，只是性能问题）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YWCHF3XP50BM5S57W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -35,7 +38,9 @@ keyPoints:
     text: 只重写 equals 不重写 hashCode：对象进 HashMap/HashSet 后找不到
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YSQCVGCANWW33S0N7
+      - 01M3M39N0YWCHF3XP50BM5S57W
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -45,7 +50,8 @@ keyPoints:
     text: IDE/Objects.hash 可生成合格实现；参与字段必须与 equals 完全一致
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YWCHF3XP50BM5S57W
     confirmedIndependentOf: []
     source:
       kind: official-doc

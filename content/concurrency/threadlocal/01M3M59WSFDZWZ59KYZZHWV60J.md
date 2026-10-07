@@ -23,7 +23,8 @@ keyPoints:
     text: 传递上下文：用户身份、traceId、事务上下文（避免层层传参）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFA2RSG2K6KNQH05AB
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -33,7 +33,8 @@ keyPoints:
     text: TreeMap/TreeSet/Arrays.sort 均可选其一
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YXSC9CC75JQX0ZQET
     confirmedIndependentOf: []
     source:
       kind: official-doc

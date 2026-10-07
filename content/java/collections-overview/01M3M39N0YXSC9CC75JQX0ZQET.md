@@ -13,7 +13,8 @@ keyPoints:
     text: HashSet：哈希去重，无序，增删查 O(1)——默认选择
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y9TXHK3XYMAC70KFA
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: LinkedHashSet：HashSet + 双向链表记插入序，遍历按放入顺序
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y9TXHK3XYMAC70KFA
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: TreeSet：红黑树按比较序（自然序或 Comparator），O(log n)
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y9TXHK3XYMAC70KFA
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,8 @@ keyPoints:
     text: 去重判定 HashSet 用 hash+equals；TreeSet 用 compareTo/compare（0 即重复）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YSQCVGCANWW33S0N7
     confirmedIndependentOf: []
     source:
       kind: official-doc

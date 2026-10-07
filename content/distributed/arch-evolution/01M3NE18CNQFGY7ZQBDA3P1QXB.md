@@ -43,7 +43,8 @@ keyPoints:
     text: 缓存：热点短码进缓存+布隆防穿透
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMV6N4KQQ9A7KDZ3BR
     confirmedIndependentOf: []
     source:
       kind: official-doc

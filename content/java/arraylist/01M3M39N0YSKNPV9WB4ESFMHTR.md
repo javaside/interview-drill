@@ -13,7 +13,8 @@ keyPoints:
     text: 按下标 remove：删元素后把后半段整体前移一位（System.arraycopy）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YB2X9VHX7VG25RCR8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +44,9 @@ keyPoints:
     text: modCount++ 使并发迭代中的删除触发 fail-fast
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0Y9Y1HVSZ7WECWVP9R
+      - 01M3M39N0YT67P0ZN2045PD8WT
     confirmedIndependentOf: []
     source:
       kind: official-doc

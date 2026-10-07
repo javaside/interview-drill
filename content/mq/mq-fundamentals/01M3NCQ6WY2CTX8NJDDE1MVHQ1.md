@@ -23,7 +23,9 @@ keyPoints:
     text: 拉：消费者按能力拉取——自然背压、跟不上就攒着
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: Kafka 纯拉：消费端 poll 控制节奏；空轮询问题由长轮询缓解
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
     confirmedIndependentOf: []
     source:
       kind: official-doc

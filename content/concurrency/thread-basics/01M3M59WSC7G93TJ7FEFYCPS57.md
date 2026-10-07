@@ -53,7 +53,8 @@ keyPoints:
     text: 本质只有 new Thread().start() 一种启动方式，其余都是任务的形态
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSECQMYXT0PT0DYQH0B
     confirmedIndependentOf: []
     source:
       kind: official-doc

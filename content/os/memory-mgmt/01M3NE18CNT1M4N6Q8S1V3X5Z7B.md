@@ -14,7 +14,9 @@ keyPoints:
     text: mmap：把文件/匿名内存映射进地址空间——访问内存即读写文件
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRV9D9F1H3J5M
+      - 01M3NE18CNS9H1J3M5N7R9T2W4Y
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +26,8 @@ keyPoints:
     text: 匿名映射：纯内存（malloc 大块/加载器建堆）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS9H1J3M5N7R9T2W4Y
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +37,8 @@ keyPoints:
     text: 文件映射：页缓存即视图——读文件零拷贝进用户态
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRV9D9F1H3J5M
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +48,8 @@ keyPoints:
     text: MAP_SHARED：两进程映射同一文件/同 shm——写完即互通
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc

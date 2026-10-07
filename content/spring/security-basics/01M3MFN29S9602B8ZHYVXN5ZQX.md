@@ -13,7 +13,8 @@ keyPoints:
     text: 认证 Authentication：你是谁（登录/JWT 验签）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 鉴权 Authorization：你能干什么（角色/权限校验）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,8 @@ keyPoints:
     text: 401=未认证；403=已认证但无权限
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R8NK408F20XC6CJBC
     confirmedIndependentOf: []
     source:
       kind: official-doc

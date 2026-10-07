@@ -14,7 +14,9 @@ keyPoints:
     text: 短连接：每请求建连断连——简单但握手与 TIME_WAIT 成本高
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ4W8Y0D2F4H6J8M
+      - 01M3NE18CNRC9P1R3T5V7X9
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +26,9 @@ keyPoints:
     text: 长连接：keep-alive 复用 TCP——HTTP/1.1 默认，配合连接池
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ4W8Y0D2F4H6J8M
+      - 01M3NE18CNRC9P1R3T5V7X9
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +48,8 @@ keyPoints:
     text: 升级路径：HTTP 先握手 101 Switching Protocols 再转 WS
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ3V7X9Z1C3E5G7K
     confirmedIndependentOf: []
     source:
       kind: official-doc

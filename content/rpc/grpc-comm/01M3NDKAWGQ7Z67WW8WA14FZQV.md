@@ -13,7 +13,8 @@ keyPoints:
     text: 短连接：一次请求一次建连——简单但握手/慢启动开销大
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 长连接：建一次复用——省握手、低延迟，但需心跳保活与连接管理
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 连接池=长连接的工程化：池化复用+上限+健康检查
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +46,10 @@ keyPoints:
     text: HTTP keep-alive 即长连接复用；gRPC/Dubbo 默认长连
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8VXS5C5CB76431BX
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +59,11 @@ keyPoints:
     text: 注意连接级负载不均：长连 + L4 LB 可能压偏（请求级均衡才均匀）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8CF6C9PGA4451HNQ
+      - 01M3NDKAWGM9V1HE5FX74VV5P2
+      - 01M3NDKAWGNWPDP2H7CQCBZE3V
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -33,7 +33,8 @@ keyPoints:
     text: 延迟关联：先用覆盖索引把目标主键查出来，再回表取整行
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGEVMPNVC2P2E2KZG96
     confirmedIndependentOf: []
     source:
       kind: official-doc

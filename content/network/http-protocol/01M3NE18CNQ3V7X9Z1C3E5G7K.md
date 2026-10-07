@@ -24,7 +24,8 @@ keyPoints:
     text: 3xx 重定向：301 永久 / 302 临时 / 304 缓存有效省传输
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ6Y0D2F4H6J8M0N
     confirmedIndependentOf: []
     source:
       kind: official-doc

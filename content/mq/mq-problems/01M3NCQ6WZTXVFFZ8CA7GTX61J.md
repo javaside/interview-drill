@@ -13,7 +13,9 @@ keyPoints:
     text: 单分区有序 + 同 key 同分区——生产端保序
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,10 @@ keyPoints:
     text: idempotent 生产者防重试造成乱序
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +38,10 @@ keyPoints:
     text: 消费端带版本号可实现乱序自愈
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +51,11 @@ keyPoints:
     text: 消费端：单线程消费保序，提速靠分区并行而非线程池乱放
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
+      - 01M3NCQ6WY92YKR2DWS380WRQF
+      - 01M3NCQ6WZ2NN8RWDEQY5XT6X8
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +65,10 @@ keyPoints:
     text: 多线程消费时按 key 再哈希到固定内存队列/线程
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
+      - 01M3NCQ6WY92YKR2DWS380WRQF
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -63,7 +78,10 @@ keyPoints:
     text: 终极兜底：消息带版本/时间戳，消费端只接受更新的（乱序丢弃旧）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY7KZGFE6X0HZ0K9KC
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZC00C1NKK1Y7X64MR
     confirmedIndependentOf: []
     source:
       kind: official-doc

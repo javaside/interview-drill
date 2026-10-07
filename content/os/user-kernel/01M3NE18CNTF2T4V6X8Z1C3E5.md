@@ -14,7 +14,9 @@ keyPoints:
     text: 切换内容：寄存器+PC+内核栈——这是直接成本（微秒级）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTE9Q2T4V6X8Z1C3
+      - 01M3NE18CNTG4V6X8Z1C3E5G7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +26,9 @@ keyPoints:
     text: 隐形大头：CPU 缓存/TLB 被新上下文冲脏——间接成本更大
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTE9Q2T4V6X8Z1C3
+      - 01M3NE18CNTG4V6X8Z1C3E5G7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +38,9 @@ keyPoints:
     text: 进程切换额外换页表（CR3）——TLB 大换血
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS2A4C6E8G0K2M4N6Q
+      - 01M3NE18CNTE9Q2T4V6X8Z1C3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +50,8 @@ keyPoints:
     text: 线程同进程共享地址空间——切栈与寄存器即可
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS2A4C6E8G0K2M4N6Q
     confirmedIndependentOf: []
     source:
       kind: official-doc

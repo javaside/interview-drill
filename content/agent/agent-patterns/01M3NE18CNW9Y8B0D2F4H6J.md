@@ -14,7 +14,8 @@ keyPoints:
     text: 痛点：每个应用 × 每个模型 × 每个工具都要单独对接——M×N 爆炸
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNX3C6F8H0K2N5Q7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: MCP 统一「工具/资源/提示」的发现与调用协议——M+N
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNX3C6F8H0K2N5Q7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +36,8 @@ keyPoints:
     text: 角色：Host（应用）连接 MCP Server（工具提供方），即插即用
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNX3C6F8H0K2N5Q7
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +47,8 @@ keyPoints:
     text: 类比 USB：工具做成标准外设，任何支持 MCP 的应用都能插
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNX3C6F8H0K2N5Q7
     confirmedIndependentOf: []
     source:
       kind: official-doc

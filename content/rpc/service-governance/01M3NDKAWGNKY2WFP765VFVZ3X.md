@@ -53,7 +53,8 @@ keyPoints:
     text: 价值：慢在哪一环、错在哪一层、一次请求的完整路径
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTM3E5G7K9S1V3X5
     confirmedIndependentOf: []
     source:
       kind: official-doc

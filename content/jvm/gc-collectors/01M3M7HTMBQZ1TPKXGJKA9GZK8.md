@@ -13,7 +13,8 @@ keyPoints:
     text: 卡表：老年代切成 512B 的卡，指向新生代的卡标脏——Minor 只扫脏卡
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBATQ8AZC2PFT8FR9G
     confirmedIndependentOf: []
     source:
       kind: official-doc

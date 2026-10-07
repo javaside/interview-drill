@@ -24,7 +24,8 @@ keyPoints:
     text: 非阻塞 IO：read 立即返回，没数据报 EWOULDBLOCK——轮询由你
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRT7Z7D9F1H3J5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +35,8 @@ keyPoints:
     text: IO 多路复用：一个线程用 select/epoll 同时盯多个 fd 就绪
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRT7Z7D9F1H3J5
     confirmedIndependentOf: []
     source:
       kind: official-doc

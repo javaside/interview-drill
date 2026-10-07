@@ -14,7 +14,10 @@ keyPoints:
     text: 每进程一套虚拟地址空间，隔离互踩——物理内存统一由内核调度
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS2A4C6E8G0K2M4N6Q
+      - 01M3NE18CNT1M4N6Q8S1V3X5Z7B
+      - 01M3NE18CNTF2T4V6X8Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +27,8 @@ keyPoints:
     text: 页=分配最小单位（4KB）；页表把虚拟页号翻译成物理帧号
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNT1M4N6Q8S1V3X5Z7B
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +48,9 @@ keyPoints:
     text: TLB 缓存翻译结果——命中免查表，失效是切进程的大头
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS2A4C6E8G0K2M4N6Q
+      - 01M3NE18CNTF2T4V6X8Z1C3E5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +60,8 @@ keyPoints:
     text: 换页：物理不够时把冷页写 swap，腾给热页
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS8G0K2M4N6Q8S1V3X
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -24,7 +24,8 @@ keyPoints:
     text: 大量来源：高频短连接（每请求一连）与自身做主动关闭方
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +35,8 @@ keyPoints:
     text: 危害：占端口（客户端 6 万上限）与内存，拖新连接建立
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +46,9 @@ keyPoints:
     text: 治本：连接池/长连接复用，把短连接变长连接
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNQ4W8Y0D2F4H6J8M
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +58,8 @@ keyPoints:
     text: 治标参数：扩 port range、开 tcp_tw_reuse（需 timestamp）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRG7X9Z1C3E5G7
     confirmedIndependentOf: []
     source:
       kind: official-doc

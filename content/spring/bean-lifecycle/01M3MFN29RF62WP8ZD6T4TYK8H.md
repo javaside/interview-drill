@@ -44,7 +44,8 @@ keyPoints:
     text: 只解 setter/字段注入的单例循环；构造器循环与 prototype 直接失败
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29Q2DSZ1G3DG9YK9R96
     confirmedIndependentOf: []
     source:
       kind: official-doc

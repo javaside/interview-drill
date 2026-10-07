@@ -13,7 +13,8 @@ keyPoints:
     text: 内存：-Xms/-Xmx（堆初始与顶）、-Xmn（新生代）、-Xss（栈）、MetaspaceSize
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,9 @@ keyPoints:
     text: GC：-XX:+UseG1GC、MaxGCPauseMillis、PrintGC/HandlePromotionFailure
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMB44X28BZT234Y9BJH
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,9 @@ keyPoints:
     text: 排障：HeapDumpOnOutOfMemoryError、+HeapDumpPath
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBMG22BR4930FJMMAA
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +48,9 @@ keyPoints:
     text: 日志：-Xlog:gc*（9+）/ PrintGCDetails（8）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBMG22BR4930FJMMAA
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc

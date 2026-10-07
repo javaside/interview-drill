@@ -14,7 +14,8 @@ keyPoints:
     text: RocketMQ 4.x：18 个固定级别的延迟队列（SCHEDULE_TOPIC_XXXX 中转）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZXTHNX5KY4QWP4CQS
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: 5.x 支持任意时间：timer wheel 定时轮
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZXTHNX5KY4QWP4CQS
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +36,8 @@ keyPoints:
     text: Kafka 无内建延迟——业务自建：延迟库+定时扫描、或时间轮轮次推进
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZXTHNX5KY4QWP4CQS
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +47,8 @@ keyPoints:
     text: 经典用法：订单超时未支付自动取消（延迟 30 分钟）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WX3PGTA0MFVSB8WBYN
     confirmedIndependentOf: []
     source:
       kind: official-doc

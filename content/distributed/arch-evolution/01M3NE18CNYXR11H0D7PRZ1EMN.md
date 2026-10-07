@@ -13,7 +13,9 @@ keyPoints:
     text: 漏斗逐层削流：CDN 静态→网关限流→队列削峰→DB 短事务
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM79Q3MZ0JMWFRJ6FB
+      - 01M3NE18CMDD5CJ936BEH04P60
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,9 @@ keyPoints:
     text: MQ 排队下单：请求入队立即返回「排队中」，消费端匀速建单
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSFQ6DJYJ18QPFWZQBD
+      - 01M3NE18CMDD5CJ936BEH04P60
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,8 @@ keyPoints:
     text: 防刷：答题/验证码打散瞬时尖峰+限 uid 频次
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMDD5CJ936BEH04P60
     confirmedIndependentOf: []
     source:
       kind: official-doc

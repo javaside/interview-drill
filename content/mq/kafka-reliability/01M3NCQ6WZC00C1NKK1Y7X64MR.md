@@ -13,7 +13,11 @@ keyPoints:
     text: 先处理业务、成功后手动提交 offset（at-least-once）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WYSMTEEETJJ2XH9FBX
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +27,10 @@ keyPoints:
     text: 业务idempotent：唯一键/状态机/Redis 去重拦住重投
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZC2R2ZYTTCM2YF3A5
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +40,11 @@ keyPoints:
     text: 处理失败：重试有限次后进死信（retry topic / DLQ）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY92YKR2DWS380WRQF
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
+      - 01M3NCQ6WZSBF3W44G9NYDNG6T
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +54,11 @@ keyPoints:
     text: 禁止：先提交后处理（丢消息）、异常静默吞掉（假成功）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WYSMTEEETJJ2XH9FBX
+      - 01M3NCQ6WZ2YRJHBP2A6CJ4W7R
+      - 01M3NCQ6WZ8A7RXJJMTBCSZWHW
+      - 01M3NCQ6WZCBCQ402KD1EGFN27
     confirmedIndependentOf: []
     source:
       kind: official-doc

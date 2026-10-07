@@ -24,7 +24,9 @@ keyPoints:
     text: CNAME：别名指向另一个域名——CDN/多层调度的基础
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRJ1C3E5G7K9S1V
+      - 01M3NE18CNRK3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +46,8 @@ keyPoints:
     text: TTL 大：缓存多负载小，但切换生效慢
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRJ1C3E5G7K9S1V
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +57,8 @@ keyPoints:
     text: TTL 小：切换快，但解析压力与故障半径变大
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRJ1C3E5G7K9S1V
     confirmedIndependentOf: []
     source:
       kind: official-doc

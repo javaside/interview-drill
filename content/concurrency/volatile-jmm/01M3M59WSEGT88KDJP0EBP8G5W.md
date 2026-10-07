@@ -13,7 +13,9 @@ keyPoints:
     text: JMM 的可见性契约：A happens-before B，则 A 的结果对 B 可见且有序
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSE515VZJT4KBTVTFX0
+      - 01M3M59WSEK3CJX64G4RDE10ED
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,8 @@ keyPoints:
     text: 解锁 先行于 后续加锁；volatile 写 先行于 后续读；start/join 先行规则
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSE515VZJT4KBTVTFX0
     confirmedIndependentOf: []
     source:
       kind: official-doc

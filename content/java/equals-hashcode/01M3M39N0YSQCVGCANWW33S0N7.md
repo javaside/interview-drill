@@ -15,7 +15,8 @@ keyPoints:
     text: 两个内容相同的对象 hash 不同 → 落入 HashMap 不同桶 → contains/get 找不到、HashSet 去重失效
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0YJQ9ETGS6ZDRW1J9B
     confirmedIndependentOf: []
     source:
       kind: official-doc

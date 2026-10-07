@@ -34,7 +34,8 @@ keyPoints:
     text: invokevirtual：实例方法——按接收者实际类型虚分派
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0X0G14QQV3EYXSHC61
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +45,8 @@ keyPoints:
     text: invokeinterface：接口方法——接口表的迟绑定查找
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0X0G14QQV3EYXSHC61
     confirmedIndependentOf: []
     source:
       kind: official-doc

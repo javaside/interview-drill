@@ -13,7 +13,8 @@ keyPoints:
     text: 独占：同一时刻一个线程持有（ReentrantLock、线程池 Worker）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEWBB5J408AHXNNYN8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,10 @@ keyPoints:
     text: 共享：可多线程同时持有（Semaphore、CountDownLatch、读写锁的读锁）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEDGSJTK9Y680HTJJS
+      - 01M3M59WSEWBB5J408AHXNNYN8
+      - 01M3M59WSFN60YZ9DZ669FESZW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,8 @@ keyPoints:
     text: 独占释放只唤醒队头一个；共享释放沿队列连续唤醒（传播）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEWBB5J408AHXNNYN8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +48,8 @@ keyPoints:
     text: 子类按需实现 tryAcquire/tryRelease 或 tryAcquireShared/tryReleaseShared 其一
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEWBB5J408AHXNNYN8
     confirmedIndependentOf: []
     source:
       kind: official-doc

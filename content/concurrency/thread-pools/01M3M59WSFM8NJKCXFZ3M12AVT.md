@@ -13,7 +13,10 @@ keyPoints:
     text: newFixedThreadPool/newSingleThreadExecutor：无界 LinkedBlockingQueue——任务堆积撑爆内存
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,10 @@ keyPoints:
     text: newCachedThreadPool：max 是 Integer.MAX_VALUE——线程数失控
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +39,9 @@ keyPoints:
     text: newScheduledThreadPool：同样无界队列
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +51,10 @@ keyPoints:
     text: 阿里规范：手动 new ThreadPoolExecutor——显式有界队列 + 明确参数 + 命名工厂
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNY7V9X1C3E5G7J9M1
+      - 01M3NE18CP02B6D8F0H2J4M6Q8
+      - 01M3NE18CP03D8F0H2J4M6Q8S0
     confirmedIndependentOf: []
     source:
       kind: official-doc

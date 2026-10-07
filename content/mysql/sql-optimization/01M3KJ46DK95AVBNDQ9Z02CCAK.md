@@ -33,7 +33,8 @@ keyPoints:
     text: 对 top SQL 逐条 explain 看执行计划（type/key/rows/Extra）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF750A1FEDHQBMPJ60VW
     confirmedIndependentOf: []
     source:
       kind: official-doc

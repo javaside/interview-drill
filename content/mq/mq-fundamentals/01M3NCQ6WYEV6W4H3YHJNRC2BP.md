@@ -33,7 +33,9 @@ keyPoints:
     text: Kafka 以消费组实现两态：组内竞争（点对点）、组间广播
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WY3KP3AJ5XMW57H238
+      - 01M3NCQ6WY5QBBSCYBGR958DM6
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,8 @@ keyPoints:
     text: RabbitMQ 的 fanout/exchange 路由模型天然广播；queue 自身是点对点
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NCQ6WZM77BRZ9HA40YFD6A
     confirmedIndependentOf: []
     source:
       kind: official-doc

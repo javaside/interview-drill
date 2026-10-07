@@ -13,7 +13,8 @@ keyPoints:
     text: 一组 Filter 构成的链（FilterChainProxy），在 DispatcherServlet 之前守门
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R4TDV0YXT34VACC3M
     confirmedIndependentOf: []
     source:
       kind: official-doc

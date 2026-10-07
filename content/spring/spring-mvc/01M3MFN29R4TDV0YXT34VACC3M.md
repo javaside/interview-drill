@@ -43,7 +43,8 @@ keyPoints:
     text: 拦截器可注入 Spring Bean 天然；Filter 若需注入要 DelegatingFilterProxy
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29S6KZDRDJH39WR9PAA
     confirmedIndependentOf: []
     source:
       kind: official-doc

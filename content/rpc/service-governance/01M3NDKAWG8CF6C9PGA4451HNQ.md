@@ -33,7 +33,9 @@ keyPoints:
     text: 南北向流量治理：灰度路由（按头/权重分流版本）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG8XB86HYWEEYE5JPF
+      - 01M3NDKAWGGBQW2ZSY0KFMDHQR
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -43,7 +43,8 @@ keyPoints:
     text: 效果：扫描类冷页很快被逐出，频繁访问的热页留在 young 区不被冲刷
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +54,8 @@ keyPoints:
     text: young 区头部 1/4 的重复访问不再前移，减少链表抖动
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK7WT94BWAHSE3FNZB
     confirmedIndependentOf: []
     source:
       kind: official-doc

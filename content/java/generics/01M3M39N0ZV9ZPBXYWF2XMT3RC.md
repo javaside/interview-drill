@@ -34,7 +34,8 @@ keyPoints:
     text: 需要多态时用 List<? extends Object>（即 List<?>）读
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M39N0ZAM96P346K7E77E44
     confirmedIndependentOf: []
     source:
       kind: official-doc

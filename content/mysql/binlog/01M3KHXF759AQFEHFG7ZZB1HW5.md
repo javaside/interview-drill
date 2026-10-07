@@ -43,7 +43,9 @@ keyPoints:
     text: binlog 是 Server 层日志，所有引擎都有；redo 是 InnoDB 引擎层特有
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KHXF75BZGZ60GV618ERYXY
+      - 01M3KHXF75EKCGXWRF72ZN6EE0
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,8 @@ keyPoints:
     text: 准备阶段：协调者问所有参与者能否提交，各自锁资源应答
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMVMB5H7HE12AFSJNW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: 提交阶段：全 YES 则统一提交，任一 NO 则统一回滚
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CMVMB5H7HE12AFSJNW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,9 @@ keyPoints:
     text: 缺陷 1 同步阻塞：准备后到提交前全员锁资源干候
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMVMB5H7HE12AFSJNW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,9 @@ keyPoints:
     text: 缺陷 2 协调者单点：其二阶段决策前挂，参与者进退不得
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMVMB5H7HE12AFSJNW
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +59,9 @@ keyPoints:
     text: 缺陷 3 数据不一致：二阶段消息部分到达（网络分区）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CM9Z0N0J16G60B7G2H
+      - 01M3NE18CMVMB5H7HE12AFSJNW
     confirmedIndependentOf: []
     source:
       kind: official-doc

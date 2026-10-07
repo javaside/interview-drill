@@ -13,7 +13,10 @@ keyPoints:
     text: redo 记「做了什么」用于重放（保持久性）；undo 记「改前是什么」用于回滚（保原子性）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWH5R70FFC6TGAN0VP7ZS
+      - 01M3KHXF73KZ58QW2B9NJA32E1
+      - 01M3KHXF75MB2TSZ8Z02239NXG
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,11 @@ keyPoints:
     text: 崩溃恢复：未提交事务按 undo 回滚，已提交按 redo 重放
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M2YHWH5R70FFC6TGAN0VP7ZS
+      - 01M3KHXF73KZ58QW2B9NJA32E1
+      - 01M3KHXF75MB2TSZ8Z02239NXG
+      - 01M3KJ46DK9NYNFFFMJJDEYHVP
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +50,8 @@ keyPoints:
     text: undo 本身的修改也受 redo 保护
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK9NYNFFFMJJDEYHVP
     confirmedIndependentOf: []
     source:
       kind: official-doc

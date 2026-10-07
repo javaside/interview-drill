@@ -53,7 +53,9 @@ keyPoints:
     text: 版本与限流头：/v1 前缀或 Accept 头；统一错误体
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RA0VTYKNWVA4SY5XJ
+      - 01M3NDKAWGGBQW2ZSY0KFMDHQR
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -13,7 +13,9 @@ keyPoints:
     text: jps：列出 JVM 进程；jstat：GC 与类加载的实时统计
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBMG22BR4930FJMMAA
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,9 @@ keyPoints:
     text: jmap：堆快照/直方图（histo）与 dump 导出
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBMG22BR4930FJMMAA
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,8 @@ keyPoints:
     text: jstack：线程快照——死锁/卡顿/CPU 飙高的第一现场
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +48,8 @@ keyPoints:
     text: jinfo 运行时参数查看与修改；arthas 是线上诊断的瑞士军刀
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +59,9 @@ keyPoints:
     text: JMC/jcmd 与 GC 日志（-Xlog:gc*）是趋势分析的底料
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBMG22BR4930FJMMAA
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc

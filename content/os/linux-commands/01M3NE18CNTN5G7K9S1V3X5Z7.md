@@ -44,7 +44,8 @@ keyPoints:
     text: CPU 闲但 load 高：D 态任务堆积——磁盘/存储卡死（含 NFS）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTK1C3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +55,8 @@ keyPoints:
     text: 分诊顺序：vmstat r 与 b 列→top 找 D 进程→iostat 确认 IO
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNTK1C3E5G7K9S1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc

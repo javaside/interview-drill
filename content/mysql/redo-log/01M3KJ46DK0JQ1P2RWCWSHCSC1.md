@@ -13,7 +13,8 @@ keyPoints:
     text: 单调递增的全局字节偏移，标记 redo 进度与数据页新旧程度
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KJ46DK9NYNFFFMJJDEYHVP
     confirmedIndependentOf: []
     source:
       kind: official-doc

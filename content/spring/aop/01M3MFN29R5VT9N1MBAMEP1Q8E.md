@@ -13,7 +13,10 @@ keyPoints:
     text: 切面=代理拦截；自调用走 this（原始对象）绕过代理
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29R5PKX9E9ZPC6XSAPB
+      - 01M3MFN29RD2NVBJQYQFZNV35F
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +26,9 @@ keyPoints:
     text: 典型受害：@Transactional 方法被同类直调，事务没开
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3MFN29RD2NVBJQYQFZNV35F
+      - 01M3MFN29RMZ3AHPVWHKPZHQHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc

@@ -47,7 +47,8 @@ keyPoints:
     text: range：索引范围扫描（between、>、in）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3KH6MGC234VDTZR8CWF8GHZ
     confirmedIndependentOf: []
     source:
       kind: official-doc

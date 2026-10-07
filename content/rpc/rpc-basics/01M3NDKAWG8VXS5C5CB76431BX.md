@@ -13,7 +13,8 @@ keyPoints:
     text: Feign：HTTP 为载体（默认配合 SpringMVC 语义），REST 风格
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,10 @@ keyPoints:
     text: Dubbo：TCP 长连接 + 自定义协议 + 二进制序列化，性能更高
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWG13FFN5PTSDHRV6Y3
+      - 01M3NDKAWGQ7Z67WW8WA14FZQV
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +37,8 @@ keyPoints:
     text: Feign 集成 Spring Cloud 生态（与注册中心/熔断丝滑）；Dubbo 自成体系治理完善
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +48,8 @@ keyPoints:
     text: 体感：Feign 声明式接口像写 Controller；Dubbo 像注入本地 Bean
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +59,8 @@ keyPoints:
     text: Feign 可换 httpclient/okhttp 底层实现
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -63,7 +70,8 @@ keyPoints:
     text: Dubbo3 的 Triple 协议与 gRPC 生态互通
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNS4C6E8G0K2M4N6Q8S
     confirmedIndependentOf: []
     source:
       kind: official-doc

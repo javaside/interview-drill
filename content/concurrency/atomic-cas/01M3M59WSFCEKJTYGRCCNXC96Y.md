@@ -13,7 +13,9 @@ keyPoints:
     text: CAS 自旋 + volatile 读：读可见、写原子
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEK3CJX64G4RDE10ED
+      - 01M3M59WSEP0BGWBNR944YKH0G
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +25,8 @@ keyPoints:
     text: incrementAndGet：循环里 CAS 旧值到旧值加一，失败重读重试
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +36,8 @@ keyPoints:
     text: getAndAccumulate 与 getAndUpdate：任意函数的 CAS 通用形态（8+）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,9 @@ keyPoints:
     text: LongAdder：热点计数不在这里——分散格子求和（空间换冲突）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
+      - 01M3M59WSFMHAG2JTWE04XH3N0
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -53,7 +59,8 @@ keyPoints:
     text: getIncrement 与 getAndSet 皆为自旋封装的单变量原语
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M59WSEP0BGWBNR944YKH0G
     confirmedIndependentOf: []
     source:
       kind: official-doc

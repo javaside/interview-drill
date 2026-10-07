@@ -13,7 +13,8 @@ keyPoints:
     text: 编号一旦使用不可改（线上字节流的字段定位全靠它）
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGGBQW2ZSY0KFMDHQR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +34,8 @@ keyPoints:
     text: 删除字段要 reserved 编号与名字——防新人复用酿事故
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGGBQW2ZSY0KFMDHQR
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +45,8 @@ keyPoints:
     text: 新增字段双方兼容：旧端读新数据忽略未知字段
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NDKAWGGBQW2ZSY0KFMDHQR
     confirmedIndependentOf: []
     source:
       kind: official-doc

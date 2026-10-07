@@ -14,7 +14,9 @@ keyPoints:
     text: TCP keepalive：内核发的探测空包——默认 2 小时才起探
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRG7X9Z1C3E5G7
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +26,8 @@ keyPoints:
     text: 应用心跳：业务自发的 ping/pong——间隔语义自己定
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +37,8 @@ keyPoints:
     text: 共同目的：探活对端是否还在，及时回收死连接资源
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +48,8 @@ keyPoints:
     text: 心跳优先：可控间隔、跨中间盒可靠（LB/防火墙会清空闲流表）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRZ7M7Q9T1V3
     confirmedIndependentOf: []
     source:
       kind: official-doc

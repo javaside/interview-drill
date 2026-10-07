@@ -13,7 +13,8 @@ keyPoints:
     text: Minor：只收新生代——频繁、快
     public: true
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMA2ZKQQFCQ383RZBZY
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -23,7 +24,8 @@ keyPoints:
     text: Major：收老年代（CMS 的并发收集即此语义）
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMA2ZKQQFCQ383RZBZY
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -33,7 +35,9 @@ keyPoints:
     text: Full：整堆加方法区的大扫除——最慢，调优目标是让它消失
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMA2ZKQQFCQ383RZBZY
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -43,7 +47,8 @@ keyPoints:
     text: Full 触发：老年代满、元空间满、担保失败、System.gc
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3M7HTMBN0XP1KW4TFKH5J95
     confirmedIndependentOf: []
     source:
       kind: official-doc

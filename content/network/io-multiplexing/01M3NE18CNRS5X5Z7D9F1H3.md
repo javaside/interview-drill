@@ -14,7 +14,8 @@ keyPoints:
     text: LT 水平触发：只要缓冲区还有数据，每次 epoll_wait 都报你
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRR3V3X5Z7D9F1
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -24,7 +25,8 @@ keyPoints:
     text: ET 边缘触发：仅在状态跃变（无→有）时通知一次
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRR3V3X5Z7D9F1
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -34,7 +36,8 @@ keyPoints:
     text: ET 必须一次读干（循环 read 到 EAGAIN），否则残留数据不再提醒
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRR3V3X5Z7D9F1
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -44,7 +47,8 @@ keyPoints:
     text: ET 必须配非阻塞 fd——阻塞 read 最后一口气会卡死
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRR3V3X5Z7D9F1
     confirmedIndependentOf: []
     source:
       kind: official-doc
@@ -54,7 +58,8 @@ keyPoints:
     text: LT 容错高是默认；ET 少唤醒高效但对写循环要求严苛
     public: false
     verifiedAt: 2026-09-28
-    excludeAsDistractorFor: []
+    excludeAsDistractorFor:
+      - 01M3NE18CNRR3V3X5Z7D9F1
     confirmedIndependentOf: []
     source:
       kind: official-doc
