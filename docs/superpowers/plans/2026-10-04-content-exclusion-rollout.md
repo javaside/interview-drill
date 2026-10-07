@@ -65,7 +65,7 @@
 
 **Files:** `content/**/*.md`（预计约 400 张）
 
-- [ ] **Step 1: 干跑看规模**
+- [x] **Step 1: 干跑看规模**
 
 ```bash
 git switch feat/content-exclusion
@@ -74,13 +74,13 @@ pnpm content:exclusion --normalize --dry-run
 
 Expected: `格式统一的卡：N / 404`（实测 N≈400）。
 
-- [ ] **Step 2: 落盘**
+- [x] **Step 2: 落盘**
 
 ```bash
 pnpm content:exclusion --normalize
 ```
 
-- [ ] **Step 3: 证明语义零变化**
+- [x] **Step 3: 证明语义零变化**
 
 ```bash
 pnpm typecheck && pnpm test
@@ -94,7 +94,7 @@ Expected: typecheck 干净、全量测试全绿；`content:audit` **不新增**�
 判定口径是本步前后错误条数一致（格式改动不引入新的内容错误）。
 另：`--normalize` 是幂等的（再跑一次 0 张变化）——已实测。
 
-- [ ] **Step 4: 单独 Commit**
+- [x] **Step 4: 单独 Commit**
 
 ```bash
 git add content/ && git commit -m "$(cat <<'EOF'
@@ -114,7 +114,7 @@ EOF
 
 **为什么有这个 Task**：这批实现是在「以为设计已批准」的前提下直接写进 main 的（已移回分支）。变成数据落地之前必须逐条过一遍。**独立评审已跑过一轮**（一名审计划、一名审代码），下表是裁决项 + 评审结论。
 
-- [ ] **Step 1: 摆出三处偏离，逐条等用户裁决**
+- [x] **Step 1: 摆出三处偏离，逐条等用户裁决**
 
 | # | 偏离 | 原设计文字 | 实际实现 | 我的建议 |
 |---|---|---|---|---|
@@ -122,7 +122,7 @@ EOF
 | 2 | `MIN_BLOCK_POOL` 位置 | 在 `audit.ts` | 挪到 `src/lib/content/pool.ts`，`audit.ts` 原样再导出 | **接受** —— 池下界有两个消费者，留在 audit 会成为 audit ↔ exclusion 环 |
 | 3 | overlap WIP 处置 | §8「以 exclusion 为唯一枚举器、单一账本」，需用户点头 | 未删，收进 `stash@{0}`（可恢复）；三层枚举与闸门语义已被吸收 | **保留在 stash**（涉及用户未提交成果） |
 
-- [ ] **Step 2: 评审已修复的问题清单（照实核对，别重犯）**
+- [x] **Step 2: 评审已修复的问题清单（照实核对，别重犯）**
 
 两轮评审的原始报数：**第一轮（审计划）Critical 4 / Important 12 / Minor 6；第二轮（审代码 + 验修复）
 Critical 2 / Important 5 / Minor 8 / 测试加固建议 4**（两轮条目有重叠，下表按**修复动作**归并成 13 行）。**均已在分支上修掉**：
@@ -143,7 +143,7 @@ Critical 2 / Important 5 / Minor 8 / 测试加固建议 4**（两轮条目有重
 | **C5**（第二轮审代码时实测）版本失效的恢复路径会 **fail-open**：`flush()` 每次落盘都把头部写成当前版本，而有批失败/用过 `--limit` 时账本里留着旧版本的判定 → 闸门报 0 错、静默通过 | 新增 `discardStaleVerdicts`：判定开始前发现版本不一致就**丢干净**（旧判定按定义无效），缺条目即为「未判定」；测试直接复现「同一场景下未丢弃时闸门静默通过、丢弃后报未判定」 | `exclusion.test.ts` |
 | **M7**（第二轮）计划文档的 git 现状写错（称 main 领先 origin/main、ff 不成立） | 实测：`main == origin/main == abc2931`，**可以 ff**；已改正（本表上方与 Task 9） | `git rev-parse` |
 
-- [ ] **Step 3: 确认没有残留的未修项**
+- [x] **Step 3: 确认没有残留的未修项**
 
 ```bash
 pnpm typecheck && pnpm test
@@ -152,7 +152,7 @@ pnpm content:exclusion --apply --dry-run      # 只读，看触线与免费池�
 
 Expected: 785 用例全绿；dry-run 打印 2 张触线（标定账本口径）与 65 张免费池为 0（exit 1 是设计如此）。
 
-- [ ] **Step 4: 用户说「可以」才继续**
+- [x] **Step 4: 用户说「可以」才继续**
 
 ---
 
@@ -163,7 +163,7 @@ Expected: 785 用例全绿；dry-run 打印 2 张触线（标定账本口径）�
 
 **Files:** `content/.exclusion-ledger`（标定会写进账本，属正常累积）
 
-- [ ] **Step 1: 小样标定（约 10–20 批，成本可忽略）**
+- [x] **Step 1: 小样标定（约 10–20 批，成本可忽略）**
 
 ```bash
 pnpm content:exclusion --judge --layer cross --limit 200 --concurrency 10
@@ -175,13 +175,13 @@ pnpm content:exclusion --judge --layer cross --limit 200 --concurrency 10
 用量（含失败重试）：输入 X tokens、输出 Y tokens（N 次调用，均 A / B 每批；单批峰值 P / Q）
 ```
 
-- [ ] **Step 2: 外推并把数字交给用户**
+- [x] **Step 2: 外推并把数字交给用户**
 
 用 `A`（均值输入）与 `B`（均值输出）乘 3,330 批，得出总输入/总输出；再用实测吞吐给出时长区间。
 **任务产出 = 用户对「约 X 输入 / Y 输出 tokens、Z 分钟」的明确批准。**
 未获批准不得进入 Task 3 的其余部分（`--limit` 之外）。
 
-- [ ] **Step 3: 记录批准**
+- [x] **Step 3: 记录批准**
 
 在 Task 3 的提交信息里写明「用户 YYYY-MM-DD 批准全量判定」，**不要只写在账本里**
 （账本每次 `--judge` 都会被重写，注释不保）。被否决 → 计划终止于 Task 1，工具留在分支备查。
@@ -192,7 +192,7 @@ pnpm content:exclusion --judge --layer cross --limit 200 --concurrency 10
 
 **Files:** `content/.exclusion-ledger`
 
-- [ ] **Step 1: 跑**
+- [x] **Step 1: 跑**
 
 ```bash
 pnpm content:exclusion --judge --layer same --concurrency 20
@@ -201,7 +201,7 @@ pnpm content:exclusion --judge --layer same --concurrency 20
 Expected: 363 批、候选数/批 8–24（**这一层永远不满批**，别以为跑错了）；结尾打印每层进度与真实用量。
 中途 Ctrl-C 也安全：已完成的批已落盘，重跑同命令从断点续判（幂等）。
 
-- [ ] **Step 2: 验收（不通过不许进下一层）**
+- [x] **Step 2: 验收（不通过不许进下一层）**
 
 ```bash
 pnpm content:exclusion --report --sample 20
@@ -214,7 +214,7 @@ Expected 与判定标准：
   `--judge --rejudge --layer same`——**这是一次全层重判，需重新批准（Task 2 Step 2 的流程）。**
 - 抽 20 条「是」人工看：是不是真的「按题意会勾」。
 
-- [ ] **Step 3: Commit（CI 此时会红 —— 闸门在正确工作）**
+- [x] **Step 3: Commit（CI 此时会红 —— 闸门在正确工作）**
 
 ```bash
 git add content/.exclusion-ledger
@@ -228,7 +228,7 @@ git commit -m "chore(content): 互斥判定 sameBlock 层入账（6475 组；用
 
 **Files:** `content/.exclusion-ledger`
 
-- [ ] **Step 1: 跑**
+- [x] **Step 1: 跑**
 
 ```bash
 pnpm content:exclusion --judge --layer cross --concurrency 20
@@ -236,7 +236,7 @@ pnpm content:exclusion --judge --layer cross --concurrency 20
 
 Expected: 1,395 批、候选数/批 1–40。失败批（重试后仍失败）不写账本，重跑同命令补齐。
 
-- [ ] **Step 2: 验收**
+- [x] **Step 2: 验收**
 
 ```bash
 pnpm content:exclusion --report --sample 30
@@ -245,7 +245,7 @@ pnpm content:exclusion --report --sample 30
 Expected: `crossBlock 判定 48307/48307`；「是」率**低于**同块层；抽 30 条人工看。
 **这一层的「是」就是用户实际会踩到的坑** —— 抽检里每一条都值得记住它解决了什么。
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add content/.exclusion-ledger
@@ -258,13 +258,13 @@ git commit -m "chore(content): 互斥判定 crossBlock 层入账（48307 组）"
 
 **Files:** `content/.exclusion-ledger`
 
-- [ ] **Step 1: 跑**
+- [x] **Step 1: 跑**
 
 ```bash
 pnpm content:exclusion --judge --layer neighbor --concurrency 20
 ```
 
-- [ ] **Step 2: 验收 + 一个待用户拍板的取舍**
+- [x] **Step 2: 验收 + 一个待用户拍板的取舍**
 
 ```bash
 pnpm content:exclusion --report --sample 30
@@ -275,7 +275,7 @@ spec §11 的未决项在此兑现：若「是」率 ≈0，可与用户商量�
 **那是缩小范围，必须重新拍板，不要在计划执行中自行决定。** 另注意：65 张卡的免费口径跨块+相邻池为 0，
 它们正是走 neighbor 兜底的那批，这一层的判定对免费用户尤其值钱。
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add content/.exclusion-ledger
@@ -288,25 +288,25 @@ git commit -m "chore(content): 互斥判定 neighbor 层入账（54109 组）"
 
 **Files:** 无（产出写进 spec §13）
 
-- [ ] **Step 1: 抽样**
+- [x] **Step 1: 抽样**
 
 ```bash
 pnpm content:exclusion --report --sample 100
 ```
 
-- [ ] **Step 2: 逐条判定并记录**
+- [x] **Step 2: 逐条判定并记录**
 
 判据（spec §3 一句话）：**只读目标题题干，一个称职的面试者会不会把这条要点勾进去？**
 产出：一致率 = 同意数 / 100。
 
-- [ ] **Step 3: 分支处理**
+- [x] **Step 3: 分支处理**
 
 - 一致率 **≥90%** → 进 Task 7。
 - **<90%** → 停：反例整理进 `batch.ts` 的 `JUDGE_GUIDE` 负例，`JUDGE_VERSION` 升到 `v2`，
   然后 `pnpm content:exclusion --judge --rejudge`（**全量、三层，需重新批准预算**）。
   这是判据回归，不是单条修。修复后的恢复通道已就绪（CLI 的 `--rejudge`）。
 
-- [ ] **Step 4: 把验收结果写进 spec §13（一行）**
+- [x] **Step 4: 把验收结果写进 spec §13（一行）**
 
 ```markdown
 - 抽检口径：2026-XX-XX 抽 100 条「是」，人工一致率 XX%（≥90% 达标）
@@ -318,7 +318,7 @@ pnpm content:exclusion --report --sample 100
 
 **Files:** `content/**/*.md`（Task 0 之后，**diff 只应包含 excludeAsDistractorFor 的增行**）
 
-- [ ] **Step 1: 先 dry-run（免费、可反复跑）**
+- [x] **Step 1: 先 dry-run（免费、可反复跑）**
 
 ```bash
 pnpm content:exclusion --apply --dry-run
@@ -328,7 +328,7 @@ Expected: 每卡一行三层余量；末尾「触线 … 张；免费口径跨�
 **已预知**：至少 11 张零余量卡 + 那 2 张已跌破的（`01M2YHWH5R70FFC6TGAN0VP7ZS` 11/12、
 `01M3KH6MGE6EHRDCH6S3HP1A64` 10/12）。真实判定跑完后这个数字会更大。
 
-- [ ] **Step 2: 触线处置（决策点，需用户过目）**
+- [x] **Step 2: 触线处置（决策点，需用户过目）**
 
 `--apply` 有任何卡触线时默认**拒绝落盘**（exit 1）。两条路：
 
@@ -340,7 +340,7 @@ Expected: 每卡一行三层余量；末尾「触线 … 张；免费口径跨�
 要点：**绝不允许为了过闸门而漏登记**——那是把 bug 放回线上。跨块/相邻层的登记不影响 `MIN_BLOCK_POOL`，
 所以「被触线卡住」的通常只是同块层余量。
 
-- [ ] **Step 3: 落盘**
+- [x] **Step 3: 落盘**
 
 ```bash
 pnpm content:exclusion --apply            # 或 --allow-touch
@@ -351,7 +351,7 @@ git diff content/ | grep -c '^+'          # 与实际「是」的条数对照，
 Expected: `已重写 N 张卡`；diff **只含 `excludeAsDistractorFor` 的增行**（Task 0 已把格式 churn 消化掉）。
 若 diff 里出现 `verifiedAt`/`relatedBlocks`/引号变化 → Task 0 没做干净，停下来查。
 
-- [ ] **Step 4: 闸门转绿**
+- [x] **Step 4: 闸门转绿**
 
 ```bash
 pnpm content:audit
@@ -361,7 +361,7 @@ Expected: `内容审计通过`，且无「尚未扫过 / 未判定 / 判定已�
 若报「判定已过期」（Task 0–7 期间又改过内容）→ `pnpm content:exclusion --judge`（只补过期的，幂等，
 **若数量成规模则属重判，需重新批准**）→ 再 `--apply`。
 
-- [ ] **Step 5: 全量验收 + Commit**
+- [x] **Step 5: 全量验收 + Commit**
 
 ```bash
 pnpm typecheck && pnpm test
@@ -374,7 +374,7 @@ git add content/ && git commit -m "feat(content): 互斥登记全量落盘——
 
 **Files:** 无（DB 数据）
 
-- [ ] **Step 1: 本地库（注意命令形式，见 Global Constraints）**
+- [x] **Step 1: 本地库（注意命令形式，见 Global Constraints）**
 
 ```bash
 pnpm exec tsx --env-file-if-exists=.env.local src/server/content-upsert/cli.ts
@@ -382,7 +382,7 @@ pnpm exec tsx --env-file-if-exists=.env.local src/server/content-upsert/cli.ts
 
 Expected: `已 upsert：81 块 / 404 卡 / 1769 要点 / 3 个岗位包`（要点数不变，变的是 `exclude_as_distractor_for`）。
 
-- [ ] **Step 2: 核对本地库真的写进去了**
+- [x] **Step 2: 核对本地库真的写进去了**
 
 ```bash
 psql "$(grep -o 'DATABASE_URL=.*' .env.local | cut -d= -f2-)" -c \
@@ -392,7 +392,7 @@ psql "$(grep -o 'DATABASE_URL=.*' .env.local | cut -d= -f2-)" -c \
 
 Expected: `已登记 > 0`（此前恒为 0）。没有 psql 时用 `pnpm exec tsx` 写个 8 行脚本读同一个 DB。
 
-- [ ] **Step 3: 生产库**
+- [x] **Step 3: 生产库**
 
 ```bash
 rsync -az -e "ssh -p 22222" content/ root@82.29.72.221:/opt/interview-drill/content/
@@ -405,7 +405,7 @@ ssh -p 22222 root@82.29.72.221 'cd /opt/interview-drill && \
 
 （本步只同步 `content/`，不重建应用——不需要 rsync 全量源码、不需要重启服务。）
 
-- [ ] **Step 4: 核对两边一致**
+- [x] **Step 4: 核对两边一致**
 
 **本机没有 `psql`**（实测 `which psql` 退出 1），用项目自带的 tsx 跑同一句 SQL。
 **脚本走 stdin、在项目根执行**——这个形式本地与生产都已实测通过
@@ -458,17 +458,17 @@ Expected: 两边**同值**。不一致 = 有一边没跑 upsert。
 
 **Files:** spec §13（状态 + §11 真实数字）、可能的 `AGENTS.md`
 
-- [ ] **Step 1: 处置 stash（按 Task 1 的裁决执行）**
+- [x] **Step 1: 处置 stash（按 Task 1 的裁决执行）**
 
 保留：不动 `stash@{0}`（overlap WIP）与 `stash@{1}`（更早的两张卡）；删除：`git stash drop`；
 另存：`git branch wip/overlap stash@{0}` 后 drop。
 
-- [ ] **Step 2: 决定 `review:pairs` 的去留**
+- [x] **Step 2: 决定 `review:pairs` 的去留**
 
 已被 `content:exclusion` 取代（只扫同块、字符重合度占位打分、交互式）。二选一：删文件 + 删脚本 + 删测试；
 或保留并在脚本描述里标注「已被 content:exclusion 取代」（AGENTS.md 已这么写）。
 
-- [ ] **Step 3: 写真实数字回 spec**
+- [x] **Step 3: 写真实数字回 spec**
 
 §11「成本与耗时」用实测替换：批数、真实输入/输出 tokens、实际耗时、抽检一致率、触线卡与处置方式。
 状态改「全部落地」。
