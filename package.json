@@ -11,6 +11,7 @@
     "start": "next start -H 127.0.0.1 -p 8300",
     "typecheck": "tsc --noEmit",
     "content:new": "tsx tools/content-new/index.ts",
+    "demo:sync": "tsx --env-file-if-exists=.env.local tools/demo-sync/index.ts",
     "content:audit": "tsx tools/audit-cli.ts",
     "content:upsert": "tsx src/server/content-upsert/cli.ts",
     "content:exclusion": "tsx --env-file-if-exists=.env.local tools/content-exclusion/cli.ts",
