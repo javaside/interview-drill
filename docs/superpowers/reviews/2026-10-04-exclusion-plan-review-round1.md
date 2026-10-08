@@ -46,7 +46,7 @@
   跑全部 108,891 对，恰好 `2882`。（注：批数按目标题分组切块，不是 `对/40` —— 见 Critical 3。）
 - **账本数字精确。** `--report --sample 0` 打印 `账本：247 条判定`、`sameBlock 判定 247/6475`、
   其余层 `0` —— 与计划第 72 行完全一致。
-- **Task 8 的主机/路径/端口与 `docs/deploy.md` 一致。** `ssh -p 22222 root@82.29.72.221`、
+- **Task 8 的主机/路径/端口与 `docs/deploy.md` 一致。** `ssh -p <SSH端口> root@<服务器IP>`、
   `/opt/interview-drill`、`set -a; source .env.production.local; set +a; pnpm content:upsert`
   与 `docs/deploy.md:10,12,52-59` 逐字相同。期望输出
   `已 upsert：81 块 / 404 卡 / 1769 要点 / 3 个岗位包` 与 `src/server/content-upsert/cli.ts:11`

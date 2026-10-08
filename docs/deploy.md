@@ -1,5 +1,8 @@
 # 生产部署（xibaojun.com/drill）
 
+> 开源脱敏说明：`<服务器IP>` / `<SSH端口>` / `<你的GitHub数字ID>` 为占位符，真实值由维护者本地保管；
+> 本文档面向自部署者，按自身环境替换占位符即可复用全部流程。
+
 interview-drill 部署在 https://xibaojun.com/drill（**自有前缀 /drill**，页面与 API 全在其下），
 与老 xibaojun 项目同机同域名但零路径交集。本文档 = 部署记录 + **日常升级只看「升级步骤」一节**。
 
@@ -7,7 +10,7 @@ interview-drill 部署在 https://xibaojun.com/drill（**自有前缀 /drill**�
 
 | 项 | 值 |
 |---|---|
-| 服务器 | `ssh -p 22222 root@82.29.72.221`（免密）AlmaLinux 10.2 x86_64，2.9G 内存 / 30G 盘 |
+| 服务器 | `ssh -p <SSH端口> root@<服务器IP>`（免密）AlmaLinux 10.2 x86_64，2.9G 内存 / 30G 盘 |
 | 访问入口 | https://xibaojun.com/drill（证书 certbot 管，续期自动，与老站共用） |
 | 应用目录 | `/opt/interview-drill`（rsync 全量源码，服务器上构建） |
 | 进程 | systemd `interview-drill.service` → `next start -H 127.0.0.1 -p 8300` |
@@ -43,13 +46,13 @@ interview-drill 部署在 https://xibaojun.com/drill（**自有前缀 /drill**�
 pnpm typecheck && pnpm test
 
 # 1) 同步代码（本地项目根执行；--delete 保持服务器与本地一致，排除项勿动）
-rsync -az --delete -e "ssh -p 22222" \
+rsync -az --delete -e "ssh -p <SSH端口>" \
   --exclude node_modules --exclude .next --exclude .git --exclude .codetui \
   --exclude .env.local --exclude .env.production.local --exclude docs/superpowers \
-  ./ root@82.29.72.221:/opt/interview-drill/
+  ./ root@<服务器IP>:/opt/interview-drill/
 
 # 2) 服务器：装依赖 + 构建（约 1 分钟；2G swap 已保障内存）
-ssh -p 22222 root@82.29.72.221
+ssh -p <SSH端口> root@<服务器IP>
 cd /opt/interview-drill
 pnpm install --frozen-lockfile && pnpm build
 
@@ -72,10 +75,10 @@ curl -s -o /dev/null -w "%{http_code}\n" https://xibaojun.com/drill   # 期望 2
 
 ```bash
 # 重启（改了代码/env 后必须重启才生效）——本地一条命令直达：
-ssh -p 22222 root@82.29.72.221 'systemctl restart interview-drill'
+ssh -p <SSH端口> root@<服务器IP> 'systemctl restart interview-drill'
 
 # 或者先登进服务器再操作：
-ssh -p 22222 root@82.29.72.221
+ssh -p <SSH端口> root@<服务器IP>
 systemctl restart interview-drill     # 重启
 systemctl stop interview-drill        # 停服（老站不受影响，/drill 会 502）
 systemctl start interview-drill       # 启动
@@ -125,7 +128,7 @@ sudo -u postgres psql drill                                     # 进库手工�
 #### 生成路径②：服务器 CLI（批量/自动化用）
 
 ```bash
-ssh -p 22222 root@82.29.72.221
+ssh -p <SSH端口> root@<服务器IP>
 cd /opt/interview-drill
 pnpm exec tsx --env-file-if-exists=.env.production.local tools/invite-new.ts 3 备注名
 # 参数：数量 + 备注；明文码打印在终端，同样仅此一次
@@ -146,7 +149,7 @@ AUTH_SECRET=<openssl rand -base64 32>
 NEXTAUTH_URL=https://xibaojun.com/drill/api/auth   # path 部分就是 NextAuth 基路径（v4 机制）
 GITHUB_ID=          # 生产 GitHub OAuth App（见下）——填好后 restart 生效
 GITHUB_SECRET=
-ADMIN_GITHUB_IDS=1187815
+ADMIN_GITHUB_IDS=<你的GitHub数字ID>
 ```
 
 **GitHub OAuth**：github.com → Settings → Developer settings → OAuth Apps 新建，

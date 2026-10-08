@@ -395,8 +395,8 @@ Expected: `已登记 > 0`（此前恒为 0）。没有 psql 时用 `pnpm exec ts
 - [x] **Step 3: 生产库**
 
 ```bash
-rsync -az -e "ssh -p 22222" content/ root@82.29.72.221:/opt/interview-drill/content/
-ssh -p 22222 root@82.29.72.221 'cd /opt/interview-drill && \
+rsync -az -e "ssh -p <SSH端口>" content/ root@<服务器IP>:/opt/interview-drill/content/
+ssh -p <SSH端口> root@<服务器IP> 'cd /opt/interview-drill && \
   pnpm exec tsx --env-file-if-exists=.env.production.local src/server/content-upsert/cli.ts'
 ```
 
@@ -427,7 +427,7 @@ main()
 EOF
 
 # 生产（同一段脚本塞进 ssh 的 stdin；heredoc 用引号包裹，别让本地 shell 先展开）
-ssh -p 22222 root@82.29.72.221 'cd /opt/interview-drill && pnpm exec tsx --env-file-if-exists=.env.production.local' <<'EOF'
+ssh -p <SSH端口> root@<服务器IP> 'cd /opt/interview-drill && pnpm exec tsx --env-file-if-exists=.env.production.local' <<'EOF'
 import pg from 'pg'
 const c = new pg.Client({ connectionString: process.env.DATABASE_URL })
 async function main() {

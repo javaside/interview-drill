@@ -1,5 +1,9 @@
 # interview-drill
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE) [![content](https://github.com/javaside/interview-drill/actions/workflows/content.yml/badge.svg)](https://github.com/javaside/interview-drill/actions/workflows/content.yml)
+
+**[线上体验 → xibaojun.com/drill](https://xibaojun.com/drill)** · 配套示例代码仓：[interview-code](https://github.com/javaside/interview-code)
+
 按知识块组织的后端面试题库 + 为**面试当天记忆峰值**优化的复习排期。
 
 程序员准备面试时，八股文「看了就忘」：面试题仓库（JavaGuide 等）只解决内容从哪来，不解决怎么记住；通用记忆软件（Anki）有算法但没内容，且算法为终身记忆而非短期冲刺优化——答对就翻倍间隔，一道卡会被排到面试之后。
@@ -14,6 +18,7 @@
 - **目标用户**：准备后端面试的程序员（当前 12 大类 81 块 404 卡，3 个岗位包：Java 后端 / 架构师 / Agent 开发）
 - **判分方式**：客观判分——要点本身就是选项，干扰项从同知识块其他题的要点池动态抽取（判分客观、单卡 15-25 秒、干扰项零内容成本）。五种题型：多选（恒 9 选项）/ 对比 / 判断 / 排序 / 单选（恒 4 选项）
 - **离线可用**：离线引擎（IndexedDB 本地队列 + 重连回放同步；PWA manifest/Service Worker 尚未接入）
+- **配套可运行示例**：java 大类每题一个可运行 Demo 类（[interview-code](https://github.com/javaside/interview-code)），App 内复盘/学习页可直接阅读（Java 语法着色 + GitHub 外链），AI 问答也感知示例代码；公开题目页只放提示不放代码（不泄露付费要点）
 - **付费模型**：排期免费、题量付费——免费用户选 2 个知识块享完整功能，**¥29 / 30 天通行证**解锁全量（`PASS_PRICE_CENTS` / `PASS_DAYS`，不自动续费，续期可叠加）；到期后有**宽限期**让已排的题跑完（冲刺跑到在期排期最后一天、常备模式 +14 天），权限判定看 `user_settings.paid_until`。在线支付上线前的现实解锁通道是**邀请码**（`/upgrade` 页兑换，同样发 30 天，管理后台 `/backstage` 铸码，见 docs/deploy.md）
 
 ## 快速开始
@@ -64,6 +69,7 @@ pnpm content:new    # 新建题卡脚手架（tools/content-new）
 pnpm content:audit  # 内容审计（tools/audit-cli）
 pnpm content:upsert # content/ → DB upsert（需 DATABASE_URL）
 pnpm review:pairs   # 要点互斥审核工具（tools/review，本地运行产 PR）
+pnpm demo:sync      # 示例代码仓 → content/ 快照同步（含 manifest 产出）
 ```
 
 ## 架构
@@ -88,7 +94,7 @@ pnpm review:pairs   # 要点互斥审核工具（tools/review，本地运行产 
 
 ## 测试
 
-vitest 双 project：`node`（纯核单测 + PGlite 集成测试）与 `jsdom`（组件测试）。集成测试用 PGlite 跑真实迁移文件建表，与生产同源；当前 674 个测试全绿（82 文件）。
+vitest 双 project：`node`（纯核单测 + PGlite 集成测试）与 `jsdom`（组件测试）。集成测试用 PGlite 跑真实迁移文件建表，与生产同源；当前 800+ 测试全绿（96 文件）。
 
 ## 付费与当前边界
 
@@ -103,3 +109,12 @@ vitest 双 project：`node`（纯核单测 + PGlite 集成测试）与 `jsdom`�
 - 路线图：`docs/superpowers/ROADMAP.md`
 - 实施计划：`docs/superpowers/plans/`（内容工具链 → 排期 → 干扰项/掌握度 → server 层 → UI → 支付）
 - 评审记录：`docs/superpowers/reviews/`
+- 自部署指南：`docs/deploy.md`（systemd + nginx 反代，敏感值为占位符，按自身环境替换）
+
+## 贡献
+
+欢迎加题卡、改代码、报问题——见 [CONTRIBUTING.md](./CONTRIBUTING.md)。加题卡是最高价值的贡献：题卡规范与内容工具链都在仓库里，`pnpm content:new` 起步。
+
+## License
+
+[MIT](./LICENSE) © 2026 javaside
