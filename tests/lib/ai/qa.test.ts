@@ -1,5 +1,5 @@
 import {
-  sanitizeHistory, buildQaMessages, selectProvider, providerKeyHints,
+  sanitizeHistory, buildQaMessages, selectProvider, providerKeyHints, MAX_DEMO_CHARS,
   MAX_HISTORY_MESSAGES, MAX_MESSAGE_CHARS, QA_MAX_OUTPUT_TOKENS, QA_DAILY_QUOTA,
   sanitizeOptions, MAX_OPTIONS, MAX_OPTION_CHARS, sanitizeAttempt, attemptFrom,
 } from '../../../src/lib/ai/qa.js'
@@ -383,4 +383,29 @@ describe('sanitizeAttempt：脏数据退化为「无作答」', () => {
     expect(sanitizeAttempt({ selected: [2, 5], correctChecked: 1, wrongChecked: 1, missed: 2 }))
       .toEqual({ selected: [2, 5], correctChecked: 1, wrongChecked: 1, missed: 2 })
   })
+})
+
+// ---- 示例代码上下文（2026-10-08 增量：AI 问答感知配套 Demo）----
+
+test('装配：demoCode 存在 → 题解后附「可运行示例」节；缺失不出现', () => {
+  const withDemo = buildQaMessages(
+    { ...card, demoCode: 'public class UndoLogDemo { UNIQ-DEMO-CODE }' },
+    [{ role: 'user', content: 'q' }],
+  )
+  const sys = withDemo[0]?.content ?? ''
+  expect(sys).toContain('可运行示例')
+  expect(sys).toContain('UNIQ-DEMO-CODE')
+  // 位置在题解之后
+  expect(sys.indexOf('可运行示例')).toBeGreaterThan(sys.indexOf('题解（进阶版）'))
+  // 无 demo 的卡不出现该节
+  const without = buildQaMessages(card, [{ role: 'user', content: 'q' }])
+  expect(without[0]?.content).not.toContain('可运行示例')
+})
+
+test('装配：demoCode 超长截断到 MAX_DEMO_CHARS 并标注', () => {
+  const long = `// ${'x'.repeat(MAX_DEMO_CHARS + 50)}`
+  const msgs = buildQaMessages({ ...card, demoCode: long }, [{ role: 'user', content: 'q' }])
+  const sys = msgs[0]?.content ?? ''
+  expect(sys).toContain('已截断')
+  expect(sys).not.toContain('x'.repeat(MAX_DEMO_CHARS + 50))
 })

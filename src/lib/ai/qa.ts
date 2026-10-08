@@ -29,12 +29,20 @@ export type QaCard = {
   cardType?: string
   /** 用户已交卷的作答与结果（仅屏②；屏① 传 null，天然不剧透） */
   attempt?: QaAttempt | null
+  /**
+   * 配套可运行示例源码（**已剥头**的 Demo 类——头注释的「要点口径」≈ 答案清单
+   * 明文，屏① 未作答也能问 AI，绝不能进上下文；server 侧 loadDemoCode 天然已剥）。
+   * 无 demo 的卡缺省（当前仅 java 大类 50 卡有）。
+   */
+  demoCode?: string
 }
 
 /** 选项条数上限（enum 型 9 条、atomic 4 条、sequence 为本题要点数，12 足够且防灌水） */
 export const MAX_OPTIONS = 12
 /** 单条选项字符上限（选项就是要点文本，正常远短于此） */
 export const MAX_OPTION_CHARS = 200
+/** 示例代码进 prompt 的字符上限（成本防御；当前最大剥头后 ~4.5KB 不触发） */
+export const MAX_DEMO_CHARS = 6000
 
 /** 清洗客户端传来的选项：只收字符串、去空、截长、限条数。任何输入都不抛错。 */
 export function sanitizeOptions(raw: unknown): string[] {
@@ -380,6 +388,21 @@ export function buildQaMessages(card: QaCard, history: QaMessage[]): ChatMessage
 
   sections.push('', `# 题解（入门版）\n${intro}`)
   if (advanced !== '') sections.push('', `# 题解（进阶版）\n${advanced}`)
+
+  // 配套示例（题解之后）：给 AI 可运行的代码上下文——「这段代码为什么这么写/
+  // 输出为什么是这样」从此有据可依。截断是成本防御（当前最大剥头后 ~4.5KB，
+  // 上限不触发；防将来长文件撑爆单次开销）。
+  const demoCode = card.demoCode ?? ''
+  if (demoCode !== '') {
+    const body = demoCode.length > MAX_DEMO_CHARS
+      ? `${demoCode.slice(0, MAX_DEMO_CHARS)}\n…（示例过长已截断）`
+      : demoCode
+    sections.push(
+      '',
+      '# 可运行示例（为这道题写的 Java 演示类，讲解时可结合其输出与代码结构）',
+      body,
+    )
+  }
 
   const trimmed = sanitizeHistory(history)
   const last = trimmed[trimmed.length - 1]

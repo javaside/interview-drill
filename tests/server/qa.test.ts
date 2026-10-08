@@ -401,3 +401,16 @@ describe('选项贯通（刷题页）', () => {
     }
   })
 })
+
+// ---- 示例代码上下文注入（2026-10-08 增量）----
+
+test('prepareQa：有 demo 的卡 → system 含「可运行示例」节（剥头源码）；无 demo 缺省', async () => {
+  const p = await prepareQa(deps({
+    loadDemoCode: (blockId, cardId) => (cardId === deps().cardId ? 'public class Demo { UNIQ-QA-DEMO }' : null),
+  }))
+  expect(p.messages[0]?.content).toContain('可运行示例')
+  expect(p.messages[0]?.content).toContain('UNIQ-QA-DEMO')
+
+  const noDemo = await prepareQa(deps({ loadDemoCode: () => null }))
+  expect(noDemo.messages[0]?.content).not.toContain('可运行示例')
+})

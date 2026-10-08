@@ -7,6 +7,7 @@ import {
   type QaMessage, type ChatMessage, type ProviderSelection, type QaProviderRuntime, type QaStreamEvent,
 } from '../lib/ai/qa.js'
 import { parseSseChunks, encodeSseFrame, sseDeltaOf, sseReasoningOf, chatAnswerOf } from '../lib/ai/sse.js'
+import { loadDemoCode } from './demo-code.js'
 
 /**
  * AI 问答编排层：纯核（lib/ai）注入 IO——DB 读卡、entitlement 校验、
@@ -95,6 +96,11 @@ export type QaDeps = {
   /** 注入测试；缺省全局 fetch */
   fetchImpl?: typeof fetch
   now?: () => number
+  /**
+   * 注入测试；缺省真实快照 loader（content/<块>/<卡>.java，已剥头——头注释的
+   * 要点口径 ≈ 答案清单，屏① 未作答也能问，绝不进上下文）。
+   */
+  loadDemoCode?: (blockId: string, cardId: string) => string | null
 }
 
 export type PreparedQa = { provider: QaProviderRuntime; messages: ChatMessage[] }
@@ -129,6 +135,10 @@ export async function prepareQa(deps: QaDeps): Promise<PreparedQa> {
       options: sanitizeOptions(deps.options),
       cardType: card.cardType,   // 服务端权威（cards 表），不取自客户端
       attempt: sanitizeAttempt(deps.attempt),
+      ...(() => {
+        const demo = (deps.loadDemoCode ?? loadDemoCode)(card.blockId, card.cardId)
+        return demo === null ? {} : { demoCode: demo }
+      })(),
     },
     history,
   )
