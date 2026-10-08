@@ -1,9 +1,10 @@
 import { readFileSync, existsSync, readdirSync, statSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 import { parseCard } from '../src/lib/content/parse.js'
 import { parseBlock } from '../src/lib/content/block.js'
 import { parseTrack } from '../src/lib/content/track.js'
 import { auditLibrary, checkIdLock } from '../src/lib/content/audit.js'
+import { parseDemoHeader, auditDemoSnapshots } from '../src/lib/content/demo-code.js'
 import { LEDGER_FILE, parseLedger } from '../src/lib/content/exclusion.js'
 import type { ExclusionLedger } from '../src/lib/content/exclusion.js'
 import type { Card } from '../src/lib/content/types.js'
@@ -65,6 +66,18 @@ if (existsSync(LOCK_FILE)) {
   const locked = readFileSync(LOCK_FILE, 'utf8').split('\n').map(s => s.trim()).filter(Boolean)
   issues.push(...checkIdLock(cards, locked))
 }
+
+// demo 快照闸门（spec §6）：content/**/*.java 头标记 ↔ 文件名/题卡/目录 一致
+const demoFacts = walk(CONTENT_DIR, n => n.endsWith('.java')).map(f => {
+  const h = parseDemoHeader(readFileSync(f, 'utf8'))
+  return {
+    file: relative(CONTENT_DIR, f).split('\\').join('/'),
+    headerUlid: h?.ulid ?? '',
+    headerBlock: h?.block ?? '',
+  }
+})
+const knownCardIds = new Set(cards.map(c => c.id))
+issues.push(...auditDemoSnapshots(demoFacts, knownCardIds))
 
 if (process.argv.includes('--write-lock')) {
   // 卡 id 和要点 id 都要锁。spec §8.1 的 review_log.distractorIds 存的是
