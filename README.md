@@ -117,4 +117,4 @@ vitest 双 project：`node`（纯核单测 + PGlite 集成测试）与 `jsdom`�
 
 ## License
 
-[MIT](./LICENSE) © 2026 javaside
+[MIT](./LICENSE) © 2026 Xinghua Zhou
