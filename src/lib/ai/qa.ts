@@ -399,7 +399,7 @@ export function buildQaMessages(card: QaCard, history: QaMessage[]): ChatMessage
       : demoCode
     sections.push(
       '',
-      '# 可运行示例（为这道题写的 Java 演示类，讲解时可结合其输出与代码结构）',
+      '# 可运行示例（为这道题写的演示类，讲解时可结合其输出与代码结构）',
       body,
     )
   }

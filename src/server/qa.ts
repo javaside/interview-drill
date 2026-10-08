@@ -127,6 +127,7 @@ export async function prepareQa(deps: QaDeps): Promise<PreparedQa> {
   const ent = entitlementOf(settings, nowMs)
   if (!isEntitled(ent, card.blockId)) throw new Error('这个块还没有解锁，先去解锁才能提问')
 
+  const demoCode = (deps.loadDemoCode ?? loadDemoCode)(card.blockId, card.cardId)
   const messages = buildQaMessages(
     {
       cardId: card.cardId,
@@ -135,10 +136,7 @@ export async function prepareQa(deps: QaDeps): Promise<PreparedQa> {
       options: sanitizeOptions(deps.options),
       cardType: card.cardType,   // 服务端权威（cards 表），不取自客户端
       attempt: sanitizeAttempt(deps.attempt),
-      ...(() => {
-        const demo = (deps.loadDemoCode ?? loadDemoCode)(card.blockId, card.cardId)
-        return demo === null ? {} : { demoCode: demo }
-      })(),
+      ...(demoCode === null ? {} : { demoCode }),
     },
     history,
   )
