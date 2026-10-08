@@ -7,6 +7,7 @@ import type { ReviewResult } from '../../server/review.js'
 import type { PreparedVariant } from '../../lib/options/prepare.js'
 import { splitDetail } from '../../lib/content/split.js'
 import { RichText } from '../RichText.js'
+import { DemoCodeBlock } from '../DemoCodeBlock.js'
 
 /** judgment 结论三选（与 DrillQuestion 的 CONCLUSION_OPTIONS 同映射：0=会 1=不会 2=取决于） */
 const CONCLUSION_LABELS = ['会', '不会', '取决于'] as const
@@ -124,6 +125,11 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
             </>
           )}
         </div>
+        {card.demoCode !== undefined && (
+          <div className="mt-6">
+            <DemoCodeBlock code={card.demoCode} />
+          </div>
+        )}
       </header>
 
       {card.cardType === 'judgment' && card.conclusion !== undefined && submission.kind === 'judgment' && (

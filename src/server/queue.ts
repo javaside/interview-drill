@@ -89,6 +89,8 @@ export type CardView = {
   keyPoints: Array<{ id: string; text: string }>
   /** 题解讲解（先学后练：屏①「先看讲解」的材料，对不会的用户先学再答） */
   detail: string
+  /** 剥头后的可运行示例源码（interview-code 快照）；无 demo 的卡缺省该字段（spec §5） */
+  demoCode?: string
 }
 
 /** CardSnapshot → SchedulableCard（schedule 的最小输入；保留 blockId 供 entitlement 过滤） */
@@ -112,6 +114,8 @@ export type DailyPayloadDeps = {
   ensureDailySession(today: LocalDate, queueSize: number): Promise<number>
   countTodayDone(today: LocalDate): Promise<number>
   countTodayMisses(today: LocalDate): Promise<number>
+  /** 示例代码快照读取（同步 + server 侧 memo；集成测试注入 fake） */
+  loadDemoCode(blockId: string, cardId: string): string | null
   serverNowMs: number
 }
 
@@ -179,6 +183,7 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
   // 屏①/屏② 展示元数据投影（只投队列内卡自身要点——免费用户不泄露未解锁块语料）
   const cardViews: CardView[] = result.todayQueue.map(({ cardId }) => {
     const c = cardByCard.get(cardId)!
+    const demoCode = deps.loadDemoCode(c.blockId, cardId)
     return {
       cardId,
       blockId: c.blockId,
@@ -189,6 +194,7 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
       ...(c.conclusion ? { conclusion: c.conclusion } : {}),
       keyPoints: c.keyPoints.map(k => ({ id: k.id, text: k.text })),
       detail: c.detail ?? '',
+      ...(demoCode === null ? {} : { demoCode }),
     }
   })
 
@@ -250,6 +256,7 @@ export async function practiceQueue(
   })
   const cardViews: CardView[] = ordered.map(c => {
     const card = cardByCard.get(c.id)!
+    const demoCode = deps.loadDemoCode(card.blockId, c.id)
     return {
       cardId: c.id,
       blockId: card.blockId,
@@ -260,6 +267,7 @@ export async function practiceQueue(
       ...(card.conclusion ? { conclusion: card.conclusion } : {}),
       keyPoints: card.keyPoints.map(k => ({ id: k.id, text: k.text })),
       detail: card.detail ?? '',
+      ...(demoCode === null ? {} : { demoCode }),
     }
   })
 

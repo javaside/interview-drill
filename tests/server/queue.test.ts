@@ -78,6 +78,7 @@ function mkDeps(t: TestDb, userId: string): DailyPayloadDeps {
     ensureDailySession: (today, size) => ensureDailySession(db, userId, today, size),
     countTodayDone: today => countTodayDone(db, userId, today),
     countTodayMisses: () => Promise.resolve(0),
+    loadDemoCode: () => null,
   }
 }
 
@@ -226,6 +227,25 @@ test('DailyPayload.cards 携带屏①/屏② 所需展示元数据（题面/块�
     // 免费用户：cards 里也不得泄露未解锁块的要点文本（只出队列内卡的自身要点）
     const queued = new Set(p.queue.map(q => q.cardId))
     expect(p.cards.every(c => queued.has(c.cardId))).toBe(true)
+  } finally {
+    await t.pg.close()
+  }
+})
+
+test('demoCode 注入：deps.loadDemoCode 命中的卡携带剥头源码，其余缺省（spec §5）', async () => {
+  const t = await seedQueueFixture()
+  try {
+    const d = mkDeps(t, 'u-free')
+    d.loadDemoCode = (blockId, cardId) => (cardId === 'b1-c0' ? 'public class Demo {}' : null)
+    const p = await buildDailyPayload(d)
+    // 夹具 daily_capacity=45、两块各 5 卡 fresh，首轮全进队列，b1-c0 必在
+    expect(p.cards.some(c => c.cardId === 'b1-c0')).toBe(true)
+    // 携带者恰为 b1-c0，且是 deps 给的剥头源码
+    const withDemo = p.cards.find(c => c.demoCode !== undefined)
+    expect(withDemo?.cardId).toBe('b1-c0')
+    expect(withDemo?.demoCode).toBe('public class Demo {}')
+    // 其余卡缺省该字段（无 demo 的卡不携带空串占位）
+    expect(p.cards.filter(c => c.cardId !== 'b1-c0').every(c => c.demoCode === undefined)).toBe(true)
   } finally {
     await t.pg.close()
   }

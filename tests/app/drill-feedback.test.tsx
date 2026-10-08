@@ -140,3 +140,24 @@ test('圆点序列：N 个节点，末尾为面试日红点', () => {
   expect(screen.getAllByTestId('plan-dot')).toHaveLength(2)
   expect(screen.getByTestId('plan-dot-final')).toBeInTheDocument()
 })
+
+test('demoCode 存在 → 讲解区下方渲染可运行示例折叠块（spec §5）', () => {
+  render(<DrillFeedback
+    card={{
+      cardId: 'c1', blockName: 'MVCC', question: 'undo log 有哪些作用？',
+      cardType: 'enumeration' as const, keyPoints: [],
+      demoCode: 'public class IntegerCacheDemo { }',
+    } as never}
+    variant={base.variant} submission={base.submission} offline={false}
+    result={{ score: { num: 2, den: 3 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 2, wrongChecked: 1, missed: 1 } } as never} />)
+  expect(screen.getByText('可运行示例（Java）')).toBeInTheDocument()
+  expect(document.querySelector('pre')?.textContent).toContain('IntegerCacheDemo')
+})
+
+test('无 demoCode → 不渲染示例块（字段缺省即无渲染）', () => {
+  const { container } = render(<DrillFeedback {...base} offline={false}
+    result={{ score: { num: 2, den: 3 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 2, wrongChecked: 1, missed: 1 } } as never} />)
+  // base 夹具无 detail（讲解折叠不展开）、无 demoCode——全树不应出现任何 details 折叠块
+  expect(container.querySelector('details')).toBeNull()
+  expect(screen.queryByText('可运行示例（Java）')).toBeNull()
+})
