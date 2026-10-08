@@ -7,7 +7,7 @@ import { isKnownLanguage, tokenize, type TokenKind } from '../lib/content/highli
  * 注释=蓝灰斜体、其余=粉笔白。刻意不引第二色相：全站荧光黄是唯一强调色，
  * 彩虹代码配色既是 AI 视觉指纹，也会与判分语义色（mark.good/miss/bad）撞车。
  */
-const TOKEN_CLASS: Record<TokenKind, string> = {
+export const TOKEN_CLASS: Record<TokenKind, string> = {
   plain: '',
   comment: 'text-paper-muted italic',
   keyword: 'text-accent',
