@@ -76,8 +76,9 @@ const demoFacts = walk(CONTENT_DIR, n => n.endsWith('.java')).map(f => {
     headerBlock: h?.block ?? '',
   }
 })
-const knownCardIds = new Set(cards.map(c => c.id))
-issues.push(...auditDemoSnapshots(demoFacts, knownCardIds))
+// 孤儿判定按「块/卡」同目录路径（spec §6），不是全库 ULID 存在性——块错位漂移靠它抓
+const knownCardPaths = new Set(cards.map(c => `${c.blockId}/${c.id}`))
+issues.push(...auditDemoSnapshots(demoFacts, knownCardPaths))
 
 if (process.argv.includes('--write-lock')) {
   // 卡 id 和要点 id 都要锁。spec §8.1 的 review_log.distractorIds 存的是

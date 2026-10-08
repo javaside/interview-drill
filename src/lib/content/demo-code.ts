@@ -54,8 +54,12 @@ export type DemoSnapshotFact = {
   headerBlock: string
 }
 
-/** audit 闸门（spec §6）：三条规则，返回中文错误信息（空数组 = 通过） */
-export function auditDemoSnapshots(facts: DemoSnapshotFact[], knownCardIds: ReadonlySet<string>): string[] {
+/**
+ * audit 闸门（spec §6）：三条规则，返回中文错误信息（空数组 = 通过）。
+ * knownCardPaths = 全库卡的 `<blockId>/<cardId>` 路径集合——孤儿判定按**同目录**
+ * 同名 .md 查（spec 原文），全库存在 ULID 不算数：块标记写错/题卡挪块的漂移必须在这抓住。
+ */
+export function auditDemoSnapshots(facts: DemoSnapshotFact[], knownCardPaths: ReadonlySet<string>): string[] {
   const issues: string[] = []
   for (const f of facts) {
     const stem = f.file.split('/').pop()!.replace(/\.java$/, '')
@@ -63,10 +67,10 @@ export function auditDemoSnapshots(facts: DemoSnapshotFact[], knownCardIds: Read
       issues.push(`demo 快照 ${f.file}：头注释 ULID 与文件名不一致（${f.headerUlid || '(缺失)'} ≠ ${stem}）`)
       continue   // 后两条以 headerUlid 为准，先失即无从判
     }
-    if (!knownCardIds.has(f.headerUlid)) {
-      issues.push(`demo 快照 ${f.file}：孤儿——没有同名片 ${f.headerUlid}.md（题卡被删/改名？重跑 demo:sync 前先核对）`)
-    }
     const dir = f.file.split('/').slice(0, -1).join('/')
+    if (!knownCardPaths.has(`${dir}/${f.headerUlid}`)) {
+      issues.push(`demo 快照 ${f.file}：孤儿——同目录没有同名片 ${dir}/${f.headerUlid}.md（题卡被删/改名/挪块？重跑 demo:sync 前先核对）`)
+    }
     if (f.headerBlock !== dir) {
       issues.push(`demo 快照 ${f.file}：头块标记 ${f.headerBlock || '(缺失)'} 与目录 ${dir} 不一致`)
     }

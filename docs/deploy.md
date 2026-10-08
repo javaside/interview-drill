@@ -156,7 +156,7 @@ Homepage `https://xibaojun.com/drill`，回调 `https://xibaojun.com/drill/api/a
 
 systemd unit：`/etc/systemd/system/interview-drill.service`（Restart=always，开机自启）。
 
-- `WorkingDirectory=/opt/interview-drill`：示例代码快照 loader（`src/server/demo-code.ts`）以 `process.cwd()` 为基准读 `content/`——缺此配置时该功能静默不可见（loader 会在 content/ 缺失时抛错，但 cwd 错误等于部署错误，必须核对）。
+- `WorkingDirectory=/opt/interview-drill`：示例代码快照 loader（`src/server/demo-code.ts`）以 `process.cwd()` 为基准读 `content/`——缺失或 cwd 配错时 `/q`、`/learn` 与刷题 payload 会直接抛错（fail-loud），部署后务必核对。
 
 ## 首次部署记录（2026-09-30，回溯用）
 
