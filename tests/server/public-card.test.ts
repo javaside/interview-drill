@@ -35,3 +35,11 @@ test('loadPublicCard：不存在的卡 → null', async () => {
   try { expect(await loadPublicCard(t.db as never, 'nope')).toBeNull() }
   finally { await t.pg.close() }
 })
+
+test('loadPublicCard 返回 blockId（供 demo 存在性判定；不含任何非 public 文本）', async () => {
+  const t = await seed()
+  try {
+    const card = await loadPublicCard(t.db as never, 'c1')
+    expect(card?.blockId).toBe('b1')
+  } finally { await t.pg.close() }
+})

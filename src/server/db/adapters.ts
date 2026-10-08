@@ -435,9 +435,10 @@ export async function listInviteCodes(
   }))
 }
 
-/** 公开题目页视图（§7 SEO 边界）：题面 + 块名 + 仅 public 要点 + 全部活要点数 */
+/** 公开题目页视图（§7 SEO 边界）：题面 + 块名 + 仅 public 要点 + 全部活要点数；blockId 仅供 demo 存在性判定 */
 export interface PublicCard {
   cardId: string
+  blockId: string
   question: string
   blockName: string
   publicKeyPoints: Array<{ id: string; text: string }>
@@ -452,8 +453,8 @@ export interface PublicCard {
  * 3) count(*) 全部活要点（`retired_at is null`）作 totalKeyPoints（分母，不含任何私有文本）。
  */
 export async function loadPublicCard(db: SqlRunner, cardId: string): Promise<PublicCard | null> {
-  const cardRes = await db.execute<{ question: string; block_name: string | null }>(sql`
-    select c.question, b.name as block_name
+  const cardRes = await db.execute<{ question: string; block_id: string; block_name: string | null }>(sql`
+    select c.question, c.block_id, b.name as block_name
     from cards c left join blocks b on b.id = c.block_id
     where c.id = ${cardId} and c.retired_at is null`)
   const card = cardRes.rows[0]
@@ -470,6 +471,7 @@ export async function loadPublicCard(db: SqlRunner, cardId: string): Promise<Pub
 
   return {
     cardId,
+    blockId: card.block_id,
     question: card.question,
     blockName: card.block_name ?? '',
     publicKeyPoints: kpRes.rows.map(r => ({ id: r.id, text: r.text })),

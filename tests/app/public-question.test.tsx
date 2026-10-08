@@ -18,3 +18,18 @@ test('无 cloaking：视图只吃 PublicCard，结构里没有隐藏的全文分
   // 只渲染传入的 2 条 public 要点，没有多出来的列表项
   expect(container.querySelectorAll('[data-testid="public-kp"]')).toHaveLength(2)
 })
+
+test('hasDemo：只放提示行，绝无代码（cloaking 纪律，spec §1）', () => {
+  const { container } = render(
+    <PublicQuestionView card={card as never} hasDemo />)
+  expect(screen.getByText(/本题配有可运行示例/)).toBeInTheDocument()
+  expect(screen.getAllByRole('link').some(a => a.getAttribute('href') === '/')).toBe(true)
+  // 代码永不上公开页：无 pre、无 code
+  expect(container.querySelector('pre')).toBeNull()
+  expect(container.querySelector('code')).toBeNull()
+})
+
+test('无 hasDemo：提示行不出现', () => {
+  render(<PublicQuestionView card={card as never} />)
+  expect(screen.queryByText(/本题配有可运行示例/)).not.toBeInTheDocument()
+})
