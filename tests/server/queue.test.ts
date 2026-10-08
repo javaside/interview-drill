@@ -79,6 +79,7 @@ function mkDeps(t: TestDb, userId: string): DailyPayloadDeps {
     countTodayDone: today => countTodayDone(db, userId, today),
     countTodayMisses: () => Promise.resolve(0),
     loadDemoCode: () => null,
+    loadDemoSourceUrl: () => null,
   }
 }
 
@@ -237,6 +238,7 @@ test('demoCode 注入：deps.loadDemoCode 命中的卡携带剥头源码，其�
   try {
     const d = mkDeps(t, 'u-free')
     d.loadDemoCode = (blockId, cardId) => (cardId === 'b1-c0' ? 'public class Demo {}' : null)
+    d.loadDemoSourceUrl = cardId => (cardId === 'b1-c0' ? 'https://github.com/javaside/interview-code/blob/main/java/src/D.java' : null)
     const p = await buildDailyPayload(d)
     // 夹具 daily_capacity=45、两块各 5 卡 fresh，首轮全进队列，b1-c0 必在
     expect(p.cards.some(c => c.cardId === 'b1-c0')).toBe(true)
@@ -244,8 +246,9 @@ test('demoCode 注入：deps.loadDemoCode 命中的卡携带剥头源码，其�
     const withDemo = p.cards.find(c => c.demoCode !== undefined)
     expect(withDemo?.cardId).toBe('b1-c0')
     expect(withDemo?.demoCode).toBe('public class Demo {}')
+    expect(withDemo?.demoSourceUrl).toBe('https://github.com/javaside/interview-code/blob/main/java/src/D.java')
     // 其余卡缺省该字段（无 demo 的卡不携带空串占位）
-    expect(p.cards.filter(c => c.cardId !== 'b1-c0').every(c => c.demoCode === undefined)).toBe(true)
+    expect(p.cards.filter(c => c.cardId !== 'b1-c0').every(c => c.demoCode === undefined && c.demoSourceUrl === undefined)).toBe(true)
   } finally {
     await t.pg.close()
   }

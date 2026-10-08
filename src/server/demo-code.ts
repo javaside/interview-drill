@@ -7,7 +7,7 @@
  */
 import { readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { stripDemoHeader } from '../lib/content/demo-code.js'
+import { stripDemoHeader, demoSourceUrl } from '../lib/content/demo-code.js'
 
 const memo = new Map<string, string | null>()
 let contentDirChecked = false
@@ -33,4 +33,29 @@ export function loadDemoCode(
   }
   memo.set(key, result)
   return result
+}
+
+/**
+ * GitHub 外链（spec §8）：读 demo-manifest.json（ULID → 源仓相对路径）拼 URL。
+ * 与 loadDemoCode 的失败语义不同——**外链是增强功能，全部降级为 null 不抛错**：
+ * manifest 缺失（旧部署）/ 卡无键，只是少一个链接，代码展示主体不受影响。
+ * manifest 按 baseDir 整体 memo（一次读盘、进程内复用）。
+ */
+const manifestMemo = new Map<string, Record<string, string> | null>()
+
+function demoManifest(baseDir: string): Record<string, string> | null {
+  if (manifestMemo.has(baseDir)) return manifestMemo.get(baseDir)!
+  const file = join(baseDir, 'demo-manifest.json')
+  let parsed: Record<string, string> | null = null
+  if (existsSync(file)) {
+    parsed = JSON.parse(readFileSync(file, 'utf8')) as Record<string, string>
+  }
+  manifestMemo.set(baseDir, parsed)
+  return parsed
+}
+
+export function loadDemoSourceUrl(cardId: string, baseDir = 'content'): string | null {
+  const manifest = demoManifest(baseDir)
+  const relPath = manifest?.[cardId]
+  return relPath === undefined ? null : demoSourceUrl(relPath)
 }

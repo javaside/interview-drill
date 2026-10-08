@@ -5,9 +5,10 @@
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync, mkdirSync, unlinkSync } from 'node:fs'
 import { join, relative, dirname } from 'node:path'
 import { parseDemoHeader } from '../../src/lib/content/demo-code.js'
-import { computeSyncPlan, type DemoSource, type ExistingSnapshot } from './plan.js'
+import { computeSyncPlan, manifestOf, type DemoSource, type ExistingSnapshot } from './plan.js'
 
 const CONTENT_DIR = 'content'
+const MANIFEST_FILE = 'demo-manifest.json'
 const DEMO_REPO = process.env.DEMO_REPO ?? '../interview-code'
 const allowEmpty = process.argv.includes('--allow-empty')
 
@@ -43,7 +44,7 @@ for (const f of walk(DEMO_REPO, n => n.endsWith('.java'))) {
     process.exit(1)
   }
   seen.set(h.ulid, f)
-  sources.push({ ulid: h.ulid, block: h.block, source: text })
+  sources.push({ ulid: h.ulid, block: h.block, source: text, origin: relative(DEMO_REPO, f).split('\\').join('/') })
 }
 
 // 闸门 2：0 个带标记文件 → 默认拒绝（防把全部现存快照判成孤儿删光）
@@ -64,6 +65,13 @@ for (const w of plan.write) {
   writeFileSync(abs, w.source)
 }
 for (const r of plan.remove) unlinkSync(join(CONTENT_DIR, r))
+
+// GitHub 外链清单（spec §8）：ULID → 源仓相对路径；内容有变化才重写（幂等；首次运行文件不存在直接写）
+const manifestPath = join(CONTENT_DIR, MANIFEST_FILE)
+const manifest = manifestOf(sources)
+if (!existsSync(manifestPath) || readFileSync(manifestPath, 'utf8') !== manifest) {
+  writeFileSync(manifestPath, manifest)
+}
 
 console.log(`demo:sync 完成——写入 ${plan.write.length}，跳过 ${plan.skip.length}，删除 ${plan.remove.length}，未识别 ${unrecognized.length}`)
 for (const u of unrecognized) console.log(`  未识别（无题卡标记，跳过）：${u}`)

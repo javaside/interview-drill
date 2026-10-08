@@ -127,7 +127,7 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
         </div>
         {card.demoCode !== undefined && (
           <div className="mt-6">
-            <DemoCodeBlock code={card.demoCode} />
+            <DemoCodeBlock code={card.demoCode} sourceUrl={card.demoSourceUrl} />
           </div>
         )}
       </header>

@@ -54,12 +54,25 @@ export type DemoSnapshotFact = {
   headerBlock: string
 }
 
+/** 示例代码仓（spec §8：GitHub 公开托管，外链指向 blob/main） */
+export const DEMO_REPO_URL = 'https://github.com/javaside/interview-code'
+
+/** 源相对路径 → GitHub 文件页 URL */
+export function demoSourceUrl(relPath: string): string {
+  return `${DEMO_REPO_URL}/blob/main/${relPath}`
+}
+
 /**
- * audit 闸门（spec §6）：三条规则，返回中文错误信息（空数组 = 通过）。
+ * audit 闸门（spec §6）：三条规则 + manifest 对账（第四条），返回中文错误信息（空数组 = 通过）。
  * knownCardPaths = 全库卡的 `<blockId>/<cardId>` 路径集合——孤儿判定按**同目录**
  * 同名 .md 查（spec 原文），全库存在 ULID 不算数：块标记写错/题卡挪块的漂移必须在这抓住。
+ * manifestKeys = content/demo-manifest.json 的键集（文件缺失传 undefined）——
+ * 有快照必查 manifest 一一对应；两者皆空（无 demo 的仓库状态）静默通过。
  */
-export function auditDemoSnapshots(facts: DemoSnapshotFact[], knownCardPaths: ReadonlySet<string>): string[] {
+export function auditDemoSnapshots(
+  facts: DemoSnapshotFact[], knownCardPaths: ReadonlySet<string>,
+  manifestKeys: ReadonlySet<string> | undefined,
+): string[] {
   const issues: string[] = []
   for (const f of facts) {
     const stem = f.file.split('/').pop()!.replace(/\.java$/, '')
@@ -73,6 +86,17 @@ export function auditDemoSnapshots(facts: DemoSnapshotFact[], knownCardPaths: Re
     }
     if (f.headerBlock !== dir) {
       issues.push(`demo 快照 ${f.file}：头块标记 ${f.headerBlock || '(缺失)'} 与目录 ${dir} 不一致`)
+    }
+  }
+  // 规则 4：manifest 对账（GitHub 外链的数据源，spec §8）
+  const snapshotUlids = new Set(facts.map(f => f.headerUlid).filter(u => u !== ''))
+  if (facts.length > 0 && manifestKeys === undefined) {
+    issues.push(`demo 快照 ${facts.length} 个但 content/demo-manifest.json 缺失——重跑 pnpm demo:sync`)
+  } else if (manifestKeys !== undefined) {
+    const extra = [...manifestKeys].filter(k => !snapshotUlids.has(k))
+    const missing = [...snapshotUlids].filter(u => !manifestKeys.has(u))
+    if (extra.length > 0 || missing.length > 0) {
+      issues.push(`demo manifest 与快照不一致：多余键 ${extra.slice(0, 3).join('、') || '无'}；缺失键 ${missing.slice(0, 3).join('、') || '无'}——重跑 pnpm demo:sync`)
     }
   }
   return issues

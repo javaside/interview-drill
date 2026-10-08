@@ -5,7 +5,13 @@
  * （含源仓已删的孤儿与手挪错位的旧副本）。
  */
 
-export type DemoSource = { ulid: string; block: string; source: string }
+export type DemoSource = {
+  ulid: string
+  block: string
+  source: string
+  /** 源仓内相对路径（posix，如 java/src/main/java/com/interview/java/generics/D.java）——manifest 值 */
+  origin: string
+}
 export type ExistingSnapshot = { file: string; source: string }
 export type SyncPlan = {
   write: Array<{ file: string; source: string }>
@@ -26,4 +32,15 @@ export function computeSyncPlan(sources: DemoSource[], existing: ExistingSnapsho
   }
   const remove = existing.map(e => e.file).filter(f => !targetOf.has(f))
   return { write, skip, remove }
+}
+
+/**
+ * GitHub 外链清单（spec §8）：`<ULID> → 源仓内相对路径`，键按 ULID 排序——
+ * 幂等（同输入同输出）且 diff 友好（增删一条不动其他行的缩进）。
+ */
+export function manifestOf(sources: DemoSource[]): string {
+  const sorted = [...sources].sort((a, b) => (a.ulid < b.ulid ? -1 : 1))
+  const obj: Record<string, string> = {}
+  for (const s of sorted) obj[s.ulid] = s.origin
+  return `${JSON.stringify(obj, null, 2)}\n`
 }

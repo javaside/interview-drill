@@ -1,7 +1,7 @@
 import { localDateOf } from './time.js'
 import { buildDistractorPools } from './queue.js'
 import type { DailyPayloadDeps } from './queue.js'
-import { loadDemoCode } from './demo-code.js'
+import { loadDemoCode, loadDemoSourceUrl } from './demo-code.js'
 import type { BlockMapDeps } from './map.js'
 import type { DistractorPools } from '../lib/options/types.js'
 import { gatewayOf } from './billing-gateway.js'
@@ -42,6 +42,7 @@ export function payloadDepsOf(db: SqlRunner, userId: string, serverNowMs: number
     countTodayDone: today => countTodayDone(db, userId, today),
     countTodayMisses: today => countTodayMisses(db, userId, today),
     loadDemoCode,
+    loadDemoSourceUrl,
   }
 }
 

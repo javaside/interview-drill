@@ -91,6 +91,8 @@ export type CardView = {
   detail: string
   /** 剥头后的可运行示例源码（interview-code 快照）；无 demo 的卡缺省该字段（spec §5） */
   demoCode?: string
+  /** GitHub 源文件外链（manifest 拼接）；无 demo 或 manifest 缺失时缺省 */
+  demoSourceUrl?: string
 }
 
 /** CardSnapshot → SchedulableCard（schedule 的最小输入；保留 blockId 供 entitlement 过滤） */
@@ -116,6 +118,8 @@ export type DailyPayloadDeps = {
   countTodayMisses(today: LocalDate): Promise<number>
   /** 示例代码快照读取（同步 + server 侧 memo；集成测试注入 fake） */
   loadDemoCode(blockId: string, cardId: string): string | null
+  /** GitHub 外链（增强功能，server 侧恒可返回 null 降级） */
+  loadDemoSourceUrl(cardId: string): string | null
   serverNowMs: number
 }
 
@@ -184,6 +188,7 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
   const cardViews: CardView[] = result.todayQueue.map(({ cardId }) => {
     const c = cardByCard.get(cardId)!
     const demoCode = deps.loadDemoCode(c.blockId, cardId)
+    const demoSourceUrl = deps.loadDemoSourceUrl(cardId)
     return {
       cardId,
       blockId: c.blockId,
@@ -195,6 +200,7 @@ export async function buildDailyPayload(deps: DailyPayloadDeps): Promise<DailyPa
       keyPoints: c.keyPoints.map(k => ({ id: k.id, text: k.text })),
       detail: c.detail ?? '',
       ...(demoCode === null ? {} : { demoCode }),
+      ...(demoSourceUrl === null ? {} : { demoSourceUrl }),
     }
   })
 
@@ -257,6 +263,7 @@ export async function practiceQueue(
   const cardViews: CardView[] = ordered.map(c => {
     const card = cardByCard.get(c.id)!
     const demoCode = deps.loadDemoCode(card.blockId, c.id)
+    const demoSourceUrl = deps.loadDemoSourceUrl(c.id)
     return {
       cardId: c.id,
       blockId: card.blockId,
@@ -268,6 +275,7 @@ export async function practiceQueue(
       keyPoints: card.keyPoints.map(k => ({ id: k.id, text: k.text })),
       detail: card.detail ?? '',
       ...(demoCode === null ? {} : { demoCode }),
+      ...(demoSourceUrl === null ? {} : { demoSourceUrl }),
     }
   })
 

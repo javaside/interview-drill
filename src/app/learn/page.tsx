@@ -5,7 +5,7 @@ import { LearnView } from './LearnView.js'
 import type { LearnCard } from './LearnView.js'
 import { authOptions } from '../../server/auth-config.js'
 import { loadSettings, loadAllCards, entitlementOf } from '../../server/db/adapters.js'
-import { loadDemoCode } from '../../server/demo-code.js'
+import { loadDemoCode, loadDemoSourceUrl } from '../../server/demo-code.js'
 import { entitledCards, isEntitled } from '../../lib/entitlement/entitlement.js'
 import { SignInPrompt } from '../SignInPrompt.js'
 
@@ -49,12 +49,14 @@ export default async function LearnPage(
     .filter(c => ids.has(c.cardId))
     .map((c): LearnCard => {
       const demo = loadDemoCode(c.blockId, c.cardId)
+      const sourceUrl = loadDemoSourceUrl(c.cardId)
       return {
         cardId: c.cardId,
         question: c.question ?? '',
         frequency: c.frequency,
         detail: c.detail ?? '',
         ...(demo === null ? {} : { demoCode: demo }),
+        ...(sourceUrl === null ? {} : { demoSourceUrl: sourceUrl }),
       }
     })
     .sort((a, b) => (a.cardId < b.cardId ? -1 : 1))

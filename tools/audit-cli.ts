@@ -78,7 +78,12 @@ const demoFacts = walk(CONTENT_DIR, n => n.endsWith('.java')).map(f => {
 })
 // 孤儿判定按「块/卡」同目录路径（spec §6），不是全库 ULID 存在性——块错位漂移靠它抓
 const knownCardPaths = new Set(cards.map(c => `${c.blockId}/${c.id}`))
-issues.push(...auditDemoSnapshots(demoFacts, knownCardPaths))
+// manifest 对账（规则 4，spec §8）：GitHub 外链清单与快照一一对应；文件缺失传 undefined
+const manifestFile = join(CONTENT_DIR, 'demo-manifest.json')
+const manifestKeys = existsSync(manifestFile)
+  ? new Set(Object.keys(JSON.parse(readFileSync(manifestFile, 'utf8')) as Record<string, string>))
+  : undefined
+issues.push(...auditDemoSnapshots(demoFacts, knownCardPaths, manifestKeys))
 
 if (process.argv.includes('--write-lock')) {
   // 卡 id 和要点 id 都要锁。spec §8.1 的 review_log.distractorIds 存的是

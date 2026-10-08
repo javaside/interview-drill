@@ -16,6 +16,8 @@ export type LearnCard = {
   detail: string
   /** 剥头后的可运行示例源码（page 侧 loadDemoCode 注入）；无 demo 缺省 */
   demoCode?: string
+  /** GitHub 源文件外链；缺省不渲染链接 */
+  demoSourceUrl?: string
 }
 
 const FREQ_LABEL = { high: '高频', mid: '中频', low: '低频' } as const
@@ -117,7 +119,7 @@ export function LearnView({
                 <DetailLayers detail={c.detail} indent={false} />
                 {c.demoCode !== undefined && (
                   <div className="mt-3">
-                    <DemoCodeBlock code={c.demoCode} />
+                    <DemoCodeBlock code={c.demoCode} sourceUrl={c.demoSourceUrl} />
                   </div>
                 )}
                 <CardQA cardId={c.cardId} />

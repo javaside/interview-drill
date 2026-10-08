@@ -47,3 +47,27 @@ test('剥头失败（快照无标记）→ throw（loud）', () => {
     expect(() => loadDemoCode('java/generics', '01M3M39N0Z840CFBC8RWQ0R9', base)).toThrow('题卡')
   } finally { rmSync(base, { recursive: true, force: true }) }
 })
+
+// ---- GitHub 外链 loader（spec §8 增量）----
+
+import { loadDemoSourceUrl } from '../../src/server/demo-code.js'
+import { writeFileSync as wfs } from 'node:fs'
+
+test('loadDemoSourceUrl：manifest 命中 → GitHub URL；无 manifest 文件 / 无键 → null', () => {
+  const base = makeRepo()
+  try {
+    wfs(join(base, 'demo-manifest.json'), JSON.stringify({ [ULID]: 'java/src/main/java/com/interview/java/generics/D.java' }))
+    expect(loadDemoSourceUrl(ULID, base))
+      .toBe('https://github.com/javaside/interview-code/blob/main/java/src/main/java/com/interview/java/generics/D.java')
+    expect(loadDemoSourceUrl('01M3M39N0ZZZZZZZZZZZZZZZZZZ', base)).toBeNull()
+    // memo：同 base 二次调用返回一致
+    expect(loadDemoSourceUrl(ULID, base)).toContain('github.com')
+  } finally { rmSync(base, { recursive: true, force: true }) }
+})
+
+test('loadDemoSourceUrl：manifest 文件缺失 → null（外链是增强功能，降级不抛错）', () => {
+  const base = makeRepo()
+  try {
+    expect(loadDemoSourceUrl(ULID, base)).toBeNull()
+  } finally { rmSync(base, { recursive: true, force: true }) }
+})
