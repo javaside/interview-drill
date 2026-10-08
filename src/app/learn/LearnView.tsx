@@ -7,12 +7,15 @@ import Link from 'next/link'
 import { splitDetail } from '../../lib/content/split.js'
 import { RichText } from '../RichText.js'
 import { CardQA } from '../CardQA.js'
+import { DemoCodeBlock } from '../DemoCodeBlock.js'
 
 export type LearnCard = {
   cardId: string
   question: string
   frequency: 'high' | 'mid' | 'low'
   detail: string
+  /** 剥头后的可运行示例源码（page 侧 loadDemoCode 注入）；无 demo 缺省 */
+  demoCode?: string
 }
 
 const FREQ_LABEL = { high: '高频', mid: '中频', low: '低频' } as const
@@ -112,6 +115,11 @@ export function LearnView({
                 </h2>
                 <div className="mt-1.5 eyebrow">{FREQ_LABEL[c.frequency]}</div>
                 <DetailLayers detail={c.detail} indent={false} />
+                {c.demoCode !== undefined && (
+                  <div className="mt-3">
+                    <DemoCodeBlock code={c.demoCode} />
+                  </div>
+                )}
                 <CardQA cardId={c.cardId} />
               </article>
             ))}

@@ -41,3 +41,19 @@ test('未解锁块：显示解锁引导（卡数 + 升级/设为免费块出口�
   expect(screen.queryByRole('link', { name: /开始测试/ })).not.toBeInTheDocument()
   expect(screen.queryByText(/还没有学习材料/)).not.toBeInTheDocument()
 })
+
+test('卡片带 demoCode → 正文后渲染可运行示例', () => {
+  render(<LearnView blockName="泛型" blockId="java/generics" cards={[{
+    cardId: 'c1', question: 'Q1', frequency: 'high', detail: '讲解',
+    demoCode: 'public class BridgeMethodDemo { }',
+  }]} />)
+  expect(screen.getByText('可运行示例（Java）')).toBeInTheDocument()
+  expect(document.querySelector('pre')?.textContent).toContain('BridgeMethodDemo')
+})
+
+test('卡片无 demoCode → 不渲染示例块', () => {
+  render(<LearnView blockName="泛型" blockId="java/generics" cards={[{
+    cardId: 'c1', question: 'Q1', frequency: 'high', detail: '讲解',
+  }]} />)
+  expect(screen.queryByText('可运行示例（Java）')).not.toBeInTheDocument()
+})
