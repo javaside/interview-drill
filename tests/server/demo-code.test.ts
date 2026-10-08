@@ -1,7 +1,8 @@
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { loadDemoCode } from '../../src/server/demo-code.js'
+import { loadDemoCode, loadDemoSourceUrl } from '../../src/server/demo-code.js'
+import { writeFileSync as wfs } from 'node:fs'
 
 const ULID = '01M3M39N0Z840CFBC8RWQ0R8FV'
 const JAVA = `package x;
@@ -50,9 +51,6 @@ test('剥头失败（快照无标记）→ throw（loud）', () => {
 
 // ---- GitHub 外链 loader（spec §8 增量）----
 
-import { loadDemoSourceUrl } from '../../src/server/demo-code.js'
-import { writeFileSync as wfs } from 'node:fs'
-
 test('loadDemoSourceUrl：manifest 命中 → GitHub URL；无 manifest 文件 / 无键 → null', () => {
   const base = makeRepo()
   try {
@@ -69,5 +67,16 @@ test('loadDemoSourceUrl：manifest 文件缺失 → null（外链是增强功能
   const base = makeRepo()
   try {
     expect(loadDemoSourceUrl(ULID, base)).toBeNull()
+  } finally { rmSync(base, { recursive: true, force: true }) }
+})
+
+test('loadDemoSourceUrl：坏 JSON（合并冲突态）→ 降级 null 不抛错（契约：外链永不打挂主循环）', () => {
+  const base = makeRepo()
+  try {
+    wfs(join(base, 'demo-manifest.json'), '<<<<<<< HEAD\n{"a":"b"}\n=======\n{}\n>>>>>>>\n')
+    expect(loadDemoSourceUrl(ULID, base)).toBeNull()
+    // 值非字符串的畸形 JSON 同样降级
+    wfs(join(base, 'demo-manifest.json'), JSON.stringify({ [ULID]: 42 }))
+    expect(loadDemoSourceUrl(ULID + 'x', base)).toBeNull()
   } finally { rmSync(base, { recursive: true, force: true }) }
 })

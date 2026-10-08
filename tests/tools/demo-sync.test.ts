@@ -1,4 +1,4 @@
-import { computeSyncPlan } from '../../tools/demo-sync/plan.js'
+import { computeSyncPlan, manifestOf } from '../../tools/demo-sync/plan.js'
 
 const S = (ulid: string, block: string, source = `// ${ulid}`, origin = `src/${ulid}.java`) =>
   ({ ulid, block, source, origin })
@@ -34,8 +34,6 @@ test('空源 + 已有快照：remove 全部（由 CLI 闸门在真实环境拦�
 })
 
 // ---- manifest 产出（GitHub 外链，2026-10-08 增量）----
-
-import { manifestOf } from '../../tools/demo-sync/plan.js'
 
 test('manifestOf：ULID → 源相对路径，键排序稳定（幂等 diff 友好）', () => {
   const a = manifestOf([S('B', 'java/string'), S('A', 'java/generics')])

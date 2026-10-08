@@ -1,5 +1,5 @@
 import {
-  parseDemoHeader, stripDemoHeader, auditDemoSnapshots,
+  parseDemoHeader, stripDemoHeader, auditDemoSnapshots, demoSourceUrl,
 } from '../../../src/lib/content/demo-code.js'
 
 const DEMO = `package com.interview.java.generics;
@@ -95,8 +95,6 @@ test('auditDemoSnapshots：空入参零问题', () => {
 })
 
 // ---- GitHub 外链（spec §8 后续项，2026-10-08 增量）----
-
-import { demoSourceUrl } from '../../../src/lib/content/demo-code.js'
 
 test('demoSourceUrl：仓库常量 + blob/main 拼接', () => {
   expect(demoSourceUrl('java/src/main/java/com/interview/java/generics/BridgeMethodDemo.java'))

@@ -48,7 +48,18 @@ function demoManifest(baseDir: string): Record<string, string> | null {
   const file = join(baseDir, 'demo-manifest.json')
   let parsed: Record<string, string> | null = null
   if (existsSync(file)) {
-    parsed = JSON.parse(readFileSync(file, 'utf8')) as Record<string, string>
+    try {
+      const raw = JSON.parse(readFileSync(file, 'utf8')) as unknown
+      // 值全字符串才算可用（畸形生成物/半合并状态一律降级 null，不拼坏 URL）
+      if (raw !== null && typeof raw === 'object'
+        && Object.values(raw).every(v => typeof v === 'string')) {
+        parsed = raw as Record<string, string>
+      } else {
+        console.warn('demo-manifest.json 结构异常（值须全字符串），GitHub 外链降级')
+      }
+    } catch {
+      console.warn('demo-manifest.json 解析失败（合并冲突/损坏？），GitHub 外链降级')
+    }
   }
   manifestMemo.set(baseDir, parsed)
   return parsed

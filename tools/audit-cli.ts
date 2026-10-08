@@ -79,10 +79,17 @@ const demoFacts = walk(CONTENT_DIR, n => n.endsWith('.java')).map(f => {
 // 孤儿判定按「块/卡」同目录路径（spec §6），不是全库 ULID 存在性——块错位漂移靠它抓
 const knownCardPaths = new Set(cards.map(c => `${c.blockId}/${c.id}`))
 // manifest 对账（规则 4，spec §8）：GitHub 外链清单与快照一一对应；文件缺失传 undefined
+// 坏 JSON（合并冲突/损坏）报中文规则错误而非裸栈——闸门的天职是报告
 const manifestFile = join(CONTENT_DIR, 'demo-manifest.json')
-const manifestKeys = existsSync(manifestFile)
-  ? new Set(Object.keys(JSON.parse(readFileSync(manifestFile, 'utf8')) as Record<string, string>))
-  : undefined
+let manifestKeys: Set<string> | undefined
+if (existsSync(manifestFile)) {
+  try {
+    manifestKeys = new Set(Object.keys(JSON.parse(readFileSync(manifestFile, 'utf8')) as Record<string, string>))
+  } catch {
+    issues.push(`demo manifest ${manifestFile} 不是合法 JSON（合并冲突/损坏？）——重跑 pnpm demo:sync`)
+    manifestKeys = new Set()
+  }
+}
 issues.push(...auditDemoSnapshots(demoFacts, knownCardPaths, manifestKeys))
 
 if (process.argv.includes('--write-lock')) {
