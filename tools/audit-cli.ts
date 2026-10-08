@@ -5,6 +5,7 @@ import { parseBlock } from '../src/lib/content/block.js'
 import { parseTrack } from '../src/lib/content/track.js'
 import { auditLibrary, checkIdLock } from '../src/lib/content/audit.js'
 import { parseDemoHeader, auditDemoSnapshots } from '../src/lib/content/demo-code.js'
+import { matchKnownDebt } from '../src/lib/content/audit.js'
 import { LEDGER_FILE, parseLedger } from '../src/lib/content/exclusion.js'
 import type { ExclusionLedger } from '../src/lib/content/exclusion.js'
 import type { Card } from '../src/lib/content/types.js'
@@ -107,9 +108,24 @@ if (process.argv.includes('--write-lock')) {
 console.log(`解析 ${files.length} 张卡文件、${blocks.length} 个块、${tracks.length} 个岗位包`)
 // 警告不拦构建，但必须打印 —— 「整层还没判」「账本有悬空条目」这类事实只能在这里看见
 for (const w of warnings) console.log(`  ! ${w}`)
-if (issues.length > 0) {
-  console.error(`\n发现 ${issues.length} 个问题：`)
-  for (const i of issues) console.error(`  - ${i}`)
+
+// 已知债登记（content/.audit-known-debt）：存量内容债降级为 warning，未登记的新问题仍然红。
+// 债只能登记一次、只能减不能增——登记文件进 git，消债后 stale 提示会催着清理。
+const DEBT_FILE = join(CONTENT_DIR, '.audit-known-debt')
+const registry: string[] = existsSync(DEBT_FILE)
+  ? readFileSync(DEBT_FILE, 'utf8').split('\n')
+      .map(l => l.trim())
+      .filter(l => l !== '' && !l.startsWith('#'))
+  : []
+const { open, known, stale } = matchKnownDebt(issues, registry)
+for (const k of known) console.log(`  ! [已知债·已登记] ${k}`)
+for (const s of stale) console.log(`  ! 已知债登记过期（audit 已不报，请从 ${DEBT_FILE} 清理）：${s}`)
+
+if (open.length > 0) {
+  console.error(`\n发现 ${open.length} 个问题：`)
+  for (const i of open) console.error(`  - ${i}`)
   process.exit(1)
 }
-console.log('内容审计通过')
+console.log(known.length > 0
+  ? `内容审计通过（${known.length} 条已知债已登记降级，见 ${DEBT_FILE}）`
+  : '内容审计通过')

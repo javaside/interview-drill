@@ -224,3 +224,56 @@ export function checkIdLock(cards: Card[], lockedIds: string[]): string[] {
   }
   return errors
 }
+
+// ---- 已知债登记（known debt registry）----
+//
+// 背景：题库扩产中途，部分块的干扰项池暂低于下界（MIN_BLOCK_POOL）——这是
+// 已知的存量内容债，补卡路上逐步消解。但 content:audit 全量红会挡 CI，
+// 外部贡献者的 PR 也会被存量债误伤。登记机制：**已登记的存量债降级为
+// warning（不进 exit 依据），未登记的新问题仍然红**——守卫价值不变，
+// 债只能登记一次、只能减不能增。
+// 登记文件 content/.audit-known-debt：每行一个指纹（`规则|块|卡`），# 注释。
+
+/** 指纹模式表：一条 issue 如何归约成稳定指纹（数字等易变部分不进指纹）。加新规则时补一行。 */
+const DEBT_FINGERPRINTS: ReadonlyArray<{
+  code: string
+  re: RegExp
+  fp: (m: RegExpMatchArray) => string
+}> = [
+  {
+    code: 'min-block-pool',
+    re: /^块 (\S+) 卡 (\S+)（\w+）的同块干扰项池不足/,
+    fp: m => `min-block-pool|${m[1]}|${m[2]}`,
+  },
+]
+
+export type KnownDebtMatch = {
+  /** 未登记（或无法指纹化）的问题——仍然挡 exit */
+  open: string[]
+  /** 登记命中的存量债——降级 warning */
+  known: string[]
+  /** 登记了但 audit 已不报——提示清理（债消解后登记要跟上） */
+  stale: string[]
+}
+
+export function matchKnownDebt(issues: string[], registry: readonly string[]): KnownDebtMatch {
+  const reg = new Set(registry)
+  const open: string[] = []
+  const known: string[] = []
+  const stale = new Set(registry)
+  for (const issue of issues) {
+    let fp: string | null = null
+    for (const p of DEBT_FINGERPRINTS) {
+      const m = issue.match(p.re)
+      if (m !== null) { fp = p.fp(m); break }
+    }
+    // 无指纹模式的 issue 一律 open：登记机制不吞没它不认识的规则
+    if (fp !== null && reg.has(fp)) {
+      known.push(issue)
+      stale.delete(fp)
+    } else {
+      open.push(issue)
+    }
+  }
+  return { open, known, stale: [...stale] }
+}

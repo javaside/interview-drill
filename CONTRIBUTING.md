@@ -20,7 +20,7 @@ pnpm typecheck
 
 1. `pnpm content:new <blockId> [cardType]` 生成脚手架（cardType：`enumeration | comparison | sequence | judgment | atomic`）
 2. 填写 front matter 与正文
-3. `pnpm content:audit` 审计——**写卡后必跑**
+3. `pnpm content:audit` 审计——**写卡后必跑**（存量池不足已登记降级为 warning；若你的改动让它变红，那就是新问题，修掉它）
 4. 新卡会带来大量「要点 × 目标题」未判定组合，audit 会指名报错；此时**维护者**需要跑 `pnpm content:exclusion --judge`（调 LLM 判定，仅维护者执行）→ `--apply`（账本写回）转绿。贡献者提交前如遇此报错，属正常现象，交给维护者处理即可
 5. 提 PR，`git diff` 里应只有题卡 `.md` 文件
 
