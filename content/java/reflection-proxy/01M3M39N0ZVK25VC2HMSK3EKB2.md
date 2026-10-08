@@ -58,13 +58,17 @@ keyPoints:
 给接口动态造一个「替身」，所有调用先过你的一段逻辑：
 
 ```java
-Foo proxy = (Foo) Proxy.newProxyInstance(loader, new Class[]{Foo.class},
-    (p, method, args) -> {
-        before();                    // 你的切面
-        Object r = real.foo(args);   // 真正干活
-        after();                     // 收尾
+Foo real = new FooImpl();                        // 真身（实现 Foo 接口的目标对象）
+Foo proxy = (Foo) Proxy.newProxyInstance(
+    Foo.class.getClassLoader(),                  // ① 类加载器
+    new Class[]{Foo.class},                      // ② 要代理的接口
+    (p, method, args) -> {                       // ③ InvocationHandler：p=代理实例，method=这次调的方法，args=原参数
+        before();                                // 你的切面（前）
+        Object r = method.invoke(real, args);    // 原样转发：反射调用真身的同一个方法
+        after();                                 // 你的切面（后）
         return r;
     });
+proxy.bar();                                     // 调任何方法都先进 handler，再到 real
 ```
 
 机理：JVM 运行时**生成字节码**造出 `$Proxy0 implements Foo`，它每个方法体只有一句——把参数打包**转发给你的 InvocationHandler.invoke**。限制：**只能代理接口**（代理类必须继承 Proxy 基类，Java 单继承名额被占了）——没接口就换 CGLIB（子类化）。
