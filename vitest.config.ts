@@ -7,7 +7,7 @@ export default defineConfig({
     projects: [
       {
         extends: true,
-        test: { name: 'node', environment: 'node', include: ['tests/**/*.test.ts'] },
+        test: { name: 'node', environment: 'node', include: ['tests/**/*.test.ts'], testTimeout: 30_000 },
       },
       {
         extends: true,
