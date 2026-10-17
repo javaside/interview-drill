@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { LearnView } from '../../src/app/learn/LearnView.js'
+import { LearnView, syllabusOf } from '../../src/app/learn/LearnView.js'
 import type { LearnCard } from '../../src/app/learn/LearnView.js'
 
 const cards: LearnCard[] = [
@@ -56,4 +56,33 @@ test('卡片无 demoCode → 不渲染示例块', () => {
     cardId: 'c1', question: 'Q1', frequency: 'high', detail: '讲解',
   }]} />)
   expect(screen.queryByText('可运行示例（Java）')).not.toBeInTheDocument()
+})
+
+test('学考对齐：讲解后列官方要点清单（考试范围明示），无要点的卡不渲染', () => {
+  render(<LearnView blockName="MVCC" blockId="mysql/mvcc-undo" cards={[{
+    cardId: 'c1', question: 'undo log 有哪些作用？', frequency: 'high', detail: '讲解',
+    keyPoints: [
+      { id: 'kp1', text: '回滚未提交事务，保证原子性' },
+      { id: 'kp2', text: '为 MVCC 构造旧版本读视图' },
+    ],
+  }, {
+    cardId: 'c2', question: 'Q2', frequency: 'low', detail: '讲解二',
+  }]} />)
+  expect(screen.getByText(/这道题的要点/)).toBeInTheDocument()
+  expect(screen.getByText(/考试就考这几条/)).toBeInTheDocument()
+  expect(screen.getByText('回滚未提交事务，保证原子性')).toBeInTheDocument()
+  expect(screen.getByText('为 MVCC 构造旧版本读视图')).toBeInTheDocument()
+  // 只有带要点的卡渲染清单（c2 无 keyPoints 字段 → 不渲染，旧路径防御）
+  expect(screen.getAllByText(/这道题的要点/)).toHaveLength(1)
+})
+
+test('syllabusOf：退役要点剔除、有 order 按 order 升序、无 order 保持原序', () => {
+  const sorted = syllabusOf([
+    { id: 'a', text: 'A', order: 2 },
+    { id: 'b', text: 'B', order: 1 },
+    { id: 'r', text: 'R', retiredAt: '2026-09-01', order: 0 },
+  ])
+  expect(sorted.map(k => k.id)).toEqual(['b', 'a'])   // 退役墓碑不出现在教材里
+  const plain = syllabusOf([{ id: 'x', text: 'X' }, { id: 'y', text: 'Y' }])
+  expect(plain.map(k => k.id)).toEqual(['x', 'y'])    // 稳定排序保内容原序
 })

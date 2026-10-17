@@ -14,6 +14,12 @@ export type LearnCard = {
   question: string
   frequency: 'high' | 'mid' | 'low'
   detail: string
+  /**
+   * 这张卡的官方要点清单（学考对齐：讲解是散文，考试考的是这几条原子要点——
+   * 教材必须把「考哪几条」明示出来，别让用户在限时作答时现场做 prose→要点的翻译）。
+   * 可选：装配层缺省即不渲染（旧路径防御）。
+   */
+  keyPoints?: Array<{ id: string; text: string }>
   /** 剥头后的可运行示例源码（page 侧 loadDemoCode 注入）；无 demo 缺省 */
   demoCode?: string
   /** GitHub 源文件外链；缺省不渲染链接 */
@@ -21,6 +27,20 @@ export type LearnCard = {
 }
 
 const FREQ_LABEL = { high: '高频', mid: '中频', low: '低频' } as const
+
+/**
+ * CardSnapshot 要点 → 教材要点清单：退役墓碑剔除（§7），sequence 按 order 升序，
+ * 无 order 的卡保持内容原序（稳定排序）。page 装配时调用，纯函数可单测。
+ */
+export function syllabusOf(
+  keyPoints: Array<{ id: string; text: string; retiredAt?: string; order?: number }>,
+): Array<{ id: string; text: string }> {
+  return keyPoints
+    .filter(kp => kp.retiredAt === undefined)
+    .map(kp => ({ id: kp.id, text: kp.text, order: kp.order }))
+    .sort((a, b) => (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER))
+    .map(({ id, text }) => ({ id, text }))
+}
 
 function DetailLayers({ detail, indent = true }: { detail: string; indent?: boolean }): React.JSX.Element {
   const { intro, advanced } = splitDetail(detail)
@@ -117,6 +137,19 @@ export function LearnView({
                 </h2>
                 <div className="mt-1.5 eyebrow">{FREQ_LABEL[c.frequency]}</div>
                 <DetailLayers detail={c.detail} indent={false} />
+                {c.keyPoints !== undefined && c.keyPoints.length > 0 && (
+                  <div className="mt-4 rounded-r-md border border-l-2 border-l-accent border-paper-line bg-paper-wash px-4 py-3">
+                    <p className="text-[13px] font-medium text-paper-muted">这道题的要点 · 考试就考这几条</p>
+                    <ol className="mt-2.5 space-y-1.5">
+                      {c.keyPoints.map((kp, i) => (
+                        <li key={kp.id} className="flex items-baseline gap-2.5 text-[15px] leading-relaxed text-paper-ink">
+                          <span className="tnum shrink-0 font-mono text-[11px] text-paper-muted">{String(i + 1).padStart(2, '0')}</span>
+                          <span>{kp.text}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
                 {c.demoCode !== undefined && (
                   <div className="mt-3">
                     <DemoCodeBlock code={c.demoCode} sourceUrl={c.demoSourceUrl} />

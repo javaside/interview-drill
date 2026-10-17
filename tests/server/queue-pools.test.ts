@@ -8,7 +8,7 @@ function kp(id: string, over: KpOver = {}): CardSnapshot['keyPoints'][number] {
   return { id, text: `要点 ${id}`, public: false, excludeAsDistractorFor: [], ...over }
 }
 function card(cardId: string, blockId: string, keyPoints: CardSnapshot['keyPoints']): CardSnapshot {
-  return { cardId, blockId, cardType: 'enumeration', frequency: 'mid', keyPoints }
+  return { cardId, blockId, cardType: 'enumeration', frequency: 'mid', question: `Q-${cardId}`, keyPoints }
 }
 
 /**
@@ -75,4 +75,15 @@ test('跨块层排除目标块自身（同块层已覆盖，不重复）', () =>
   const { all, categories } = mkFixture()
   const pools = buildDistractorPools(cardOf(all, 'b1-c0'), all, makePaidEntitlement(), categories)
   expect(pools.crossBlock.every(p => !p.id.startsWith('b1'))).toBe(true)
+})
+
+test('池装配携带来源题面：三层池的要点都挂 origin（错勾溯源的数据源）', () => {
+  const { all, categories } = mkFixture()
+  const pools = buildDistractorPools(cardOf(all, 'b1-c0'), all, makePaidEntitlement(), categories)
+  const expectOrigin = (p: { origin?: { cardId: string; blockId: string; question: string } }, cardId: string, blockId: string) => {
+    expect(p.origin).toEqual({ cardId, blockId, question: `Q-${cardId}` })
+  }
+  expectOrigin(pools.sameBlock.find(p => p.id === 'b1-c1-priv')!, 'b1-c1', 'b1')
+  expectOrigin(pools.crossBlock.find(p => p.id === 'b3-priv')!, 'b3-c0', 'b3')
+  expectOrigin(pools.neighbor.find(p => p.id === 'b4-pub')!, 'b4-c0', 'b4')
 })

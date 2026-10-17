@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import type { CardView } from '../../server/queue.js'
 import type { Submission } from '../../server/types.js'
 import type { ReviewResult } from '../../server/review.js'
@@ -50,8 +51,11 @@ function checkedSetOf(submission: Submission): Set<number> {
   return new Set()   // sequence 无勾选染色语义
 }
 
-/** 错勾归属提示：完整归属映射（distractorKeyPointIds → 归属块/题）为 4b 内衔接项，此处占位 */
-const WRONG_ATTRIBUTION = '属于本大类的另一道题'
+/** 错勾归属提示：variant 带 distractorOrigins 时给真实来源题面；旧缓存 variant 无该字段时回退通用文案 */
+function wrongAttributionOf(variant: PreparedVariant, i: number): string {
+  const origin = variant.distractorOrigins?.[i]
+  return origin !== undefined ? `属于《${origin.question}》` : '属于本大类的另一道题'
+}
 
 /**
  * 屏② 判分反馈（§6）。渲染得分、漏/错勾计数、逐条染色（勾对绿/漏选黄/错勾红）、
@@ -76,6 +80,11 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
     if (!isCorrect && isChecked) return 'wrong'
     return 'neutral'
   }
+
+  /** 收束清单：sequence = canonical 正确顺序（correctIndices 语义）；其余 = 呈现序中的正确项 */
+  const takeawayTexts = card.cardType === 'sequence'
+    ? variant.correctIndices.map(i => variant.optionTexts[i]!)
+    : variant.optionTexts.filter((_, i) => correct.has(i))
 
   return (
     <section className="rise pb-2 pt-2">
@@ -219,7 +228,7 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
                   {state !== 'neutral' && (
                     <span className="shrink-0 text-xs font-medium tracking-wide opacity-80">
                       {STATE_LABEL[state]}
-                      {state === 'wrong' && ` · ${WRONG_ATTRIBUTION}`}
+                      {state === 'wrong' && ` · ${wrongAttributionOf(variant, i)}`}
                     </span>
                   )}
                 </li>
@@ -228,6 +237,30 @@ export function DrillFeedback({ card, variant, submission, result, offline }: Dr
           </ul>
         </>
       )}
+
+      {/* ===== 收束区：判分后的 take-away——正确要点单独列出来「记住这几条」。
+          9 条染色的批改视图还原了整张卷，但「这道题到底考哪几条」要用户自己从
+          9 条里筛——这里直接给结论（sequence 按 canonical 顺序），并给出回学习页
+          的闭环出口。学考对齐的另一半（学习页有清单、判分后有收束）。 */}
+      <div className="card-flat mt-8 p-5" data-testid="takeaway">
+        <p className="text-[13px] font-medium text-paper-muted">
+          这道题的要点 · {card.cardType === 'sequence' ? '按这个顺序记' : '记住这几条'}
+        </p>
+        <ol className="mt-2.5 space-y-1.5">
+          {takeawayTexts.map((text, i) => (
+            <li key={i} className="flex items-baseline gap-2.5 text-[15px] leading-relaxed text-paper-ink">
+              <span className="tnum shrink-0 font-mono text-[11px] text-paper-muted">{i + 1}</span>
+              <span className="flex-1">{text}</span>
+            </li>
+          ))}
+        </ol>
+        <Link
+          href={`/learn?block=${card.blockId}`}
+          className="mt-4 inline-block text-sm text-accent underline underline-offset-4 transition-opacity hover:opacity-80"
+        >
+          回学习页再看一遍
+        </Link>
+      </div>
 
       <div className="mt-8">
         <div className="flex items-center gap-2">

@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { getDb } from '../../server/db/client.js'
-import { LearnView } from './LearnView.js'
+import { LearnView, syllabusOf } from './LearnView.js'
 import type { LearnCard } from './LearnView.js'
 import { authOptions } from '../../server/auth-config.js'
 import { loadSettings, loadAllCards, entitlementOf } from '../../server/db/adapters.js'
@@ -55,6 +55,7 @@ export default async function LearnPage(
         question: c.question ?? '',
         frequency: c.frequency,
         detail: c.detail ?? '',
+        keyPoints: syllabusOf(c.keyPoints),
         ...(demo === null ? {} : { demoCode: demo }),
         ...(sourceUrl === null ? {} : { demoSourceUrl: sourceUrl }),
       }

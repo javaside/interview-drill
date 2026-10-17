@@ -20,6 +20,20 @@ function toOptionCard(c: CardSnapshot): OptionCard {
 }
 
 /**
+ * CardSnapshot → OptionCard（要点挂来源题）。错勾溯源（屏②「这条属于哪道题」）的
+ * 数据源：池装配时就知道每条要点来自哪张卡，挂上 origin 透传到变体的 distractorOrigins。
+ * 展示口径与付费墙一致：sameBlock 本来可见；跨块层免费用户只含 public 要点——
+ * public 要点的题面在 /q/[id] 公开题页本就可见，归属不新增泄露面。
+ */
+function toOptionCardWithOrigin(c: CardSnapshot): OptionCard {
+  const origin = { cardId: c.cardId, blockId: c.blockId, question: c.question ?? '' }
+  return {
+    id: c.cardId, blockId: c.blockId, cardType: c.cardType,
+    keyPoints: c.keyPoints.map(kp => ({ ...kp, origin })),
+  }
+}
+
+/**
  * 唯一池装配入口（终审裁决）：全库唯一构造 DistractorPools 的地方。
  *
  * - sameBlock：目标块其他卡的要点（块已解锁，语料本来可见，**不过 public**）。
@@ -28,7 +42,8 @@ function toOptionCard(c: CardSnapshot): OptionCard {
  * - neighbor：相邻大类的要点，**同样**过 crossBlockPoolFor——免费层只留 public
  *   （终审裁决：neighbor 层也必过 public，两层都不得泄露未解锁语料）。
  *
- * 互斥（excludeAsDistractorFor）过滤不在这里做——drawDistractors 负责（职责分离）。
+ * 三层池的要点都挂 origin（错勾溯源）；互斥（excludeAsDistractorFor）过滤不在这里
+ * 做——drawDistractors 负责（职责分离）。
  */
 export function buildDistractorPools(
   target: CardSnapshot,
@@ -36,14 +51,14 @@ export function buildDistractorPools(
   ent: Entitlement,
   categories: Map<string, string>,
 ): DistractorPools {
-  const optionCards = all.map(toOptionCard)
-  const sameBlock = sameBlockPoolOf(toOptionCard(target), optionCards)
+  const optionCards = all.map(toOptionCardWithOrigin)
+  const sameBlock = sameBlockPoolOf(toOptionCardWithOrigin(target), optionCards)
 
   // 分层口径统一走 lib/options/layers（与内容侧 exclusion 工具同一规则）。
   // 同块层已由 sameBlockPoolOf 覆盖，这里跳过 'sameBlock' 不重复收。
   const crossRaw: OptionKeyPoint[] = []
   const neighborRaw: OptionKeyPoint[] = []
-  for (const c of all) {
+  for (const c of optionCards) {
     const layer = layerOf(target.blockId, c.blockId, categories)
     if (layer === 'crossBlock') crossRaw.push(...c.keyPoints)
     else if (layer === 'neighbor') neighborRaw.push(...c.keyPoints)

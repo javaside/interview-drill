@@ -161,3 +161,60 @@ test('无 demoCode → 不渲染示例块（字段缺省即无渲染）', () => 
   expect(container.querySelector('details')).toBeNull()
   expect(screen.queryByText('可运行示例（Java）')).toBeNull()
 })
+
+const pass = { score: { num: 3, den: 3 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 3, wrongChecked: 0, missed: 0 } } as never
+
+test('收束区：正确要点单独列成「记住这几条」清单（判分后的 take-away）', () => {
+  render(<DrillFeedback {...base} offline={false} result={pass} />)
+  const takeaway = screen.getByTestId('takeaway')
+  const items = takeaway.querySelectorAll('li')
+  expect(items).toHaveLength(3)                                  // = correctIndices [0,2,3]
+  expect(items[0]!.textContent).toContain('对1')
+  expect(items[1]!.textContent).toContain('对2')
+  expect(items[2]!.textContent).toContain('漏')
+  expect(takeaway.textContent).not.toContain('错勾')             // 干扰项不进收束清单
+})
+
+test('收束区：提供「回学习页」入口，链到 /learn?block=', () => {
+  render(
+    <DrillFeedback
+      card={{
+        cardId: 'c1', blockId: 'mysql/mvcc-undo', blockName: 'MVCC',
+        question: 'undo log 有哪些作用？', cardType: 'enumeration' as const, frequency: 'high' as const,
+        keyPoints: [], detail: '',
+      }}
+      variant={base.variant} submission={base.submission} offline={false} result={pass} />,
+  )
+  const link = screen.getByRole('link', { name: /回学习页/ })
+  expect(link).toHaveAttribute('href', '/learn?block=mysql/mvcc-undo')
+})
+
+test('错勾溯源：variant 带 distractorOrigins → 显示真实来源题面', () => {
+  render(
+    <DrillFeedback
+      card={base.card}
+      variant={{
+        ...base.variant,
+        distractorOrigins: { 1: { cardId: 'c2', blockId: 'b1', question: 'RC 和 RR 的区别？' } },
+      }}
+      submission={base.submission} offline={false}
+      result={{ score: { num: 2, den: 3 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 2, wrongChecked: 1, missed: 1 } } as never} />,
+  )
+  const opts = screen.getAllByTestId('option')
+  expect(opts[1]!.textContent).toContain('属于《RC 和 RR 的区别？》')   // 下标 1 是错勾的干扰项
+})
+
+test('错勾溯源：旧缓存 variant 无 origins → 回退通用文案（不炸）', () => {
+  render(<DrillFeedback {...base} offline={false}
+    result={{ score: { num: 2, den: 3 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 2, wrongChecked: 1, missed: 1 } } as never} />)
+  const opts = screen.getAllByTestId('option')
+  expect(opts[1]!.textContent).toContain('属于本大类的另一道题')
+})
+
+test('sequence 收束：按 canonical 正确顺序列要点', () => {
+  render(<DrillFeedback {...seqBase} offline={false}
+    result={{ score: { num: 1, den: 2 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 2, wrongChecked: 2, missed: 0 } } as never} />)
+  const items = screen.getByTestId('takeaway').querySelectorAll('li')
+  // 序号与文本同渲染（「1」「B」相邻）→ canonical 顺序 B,A,D,C
+  expect(Array.from(items).map(li => li.textContent)).toEqual(['1B', '2A', '3D', '4C'])
+})

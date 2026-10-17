@@ -175,3 +175,38 @@ test('degradedTo 上浮：两层枯竭走 neighbor 则顶层聚合为 neighbor�
   }
   expect(prepareOptions(seqCard, starved, S0, 'u1', 0, 2).degradedTo).toBe('none')
 })
+
+test('错勾溯源：干扰项按呈现下标携带来源题（origin），正确项与 sequence 不携带', () => {
+  // 装配层（buildDistractorPools）会给池内要点挂 origin——这里模拟该形态
+  const pools: DistractorPools = {
+    sameBlock: poolOf('s', 10).map((k, i) => ({
+      ...k,
+      origin: { cardId: `src-${i}`, blockId: 'b1', question: `来源题 ${i}` },
+    })),
+    crossBlock: [], neighbor: [],
+  }
+  const r = prepareOptions(enumCard(3), pools, S0, 'u1', 0, 2)
+  for (const v of r.variants) {
+    const origins = v.distractorOrigins!
+    const distractorIdxs = v.optionTexts
+      .map((_, i) => i)
+      .filter(i => !v.correctIndices.includes(i))
+      .sort((a, b) => a - b)
+    // 归属恰好覆盖全部干扰项下标、不碰正确项
+    expect(Object.keys(origins).map(Number).sort((a, b) => a - b)).toEqual(distractorIdxs)
+    for (const i of distractorIdxs) {
+      expect(origins[i]!.question).toMatch(/^来源题 \d+$/)
+      expect(origins[i]!.cardId).toMatch(/^src-/)
+    }
+  }
+
+  // sequence 无干扰项 → 无归属字段
+  const seqCard: OptionCard = {
+    id: 'q1', blockId: 'b1', cardType: 'sequence',
+    keyPoints: [kp('k0', { order: 1 }), kp('k1', { order: 2 }), kp('k2', { order: 3 })],
+  }
+  expect(prepareOptions(seqCard, pools, S0, 'u1', 0, 1).variants[0]!.distractorOrigins).toBeUndefined()
+
+  // 池里没挂 origin（旧路径/内容工具直调）→ 字段缺省不炸
+  expect(prepareOptions(enumCard(3), bigPools(), S0, 'u1', 0, 1).variants[0]!.distractorOrigins).toBeUndefined()
+})

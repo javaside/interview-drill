@@ -16,6 +16,12 @@ export type PreparedVariant = {
   correctIndices: number[]
   /** 被抽中的干扰项要点 id——只回传记录供复现，不用于渲染（§4.3） */
   distractorKeyPointIds: string[]
+  /**
+   * 呈现下标 → 干扰项来源题（错勾溯源：屏②「这条属于《…》」）。
+   * 来自池要点上的 origin 透传——池没挂 origin（旧缓存/内容工具直调）时
+   * 整个字段缺省，客户端回退通用文案。sequence 无干扰项，恒缺省。
+   */
+  distractorOrigins?: Record<number, { cardId: string; blockId: string; question: string }>
 }
 
 export type PreparedOptions = {
@@ -134,17 +140,30 @@ function buildVariant(
     rng,
   )
 
-  type Entry = { text: string; correct: boolean; distractorId?: string }
+  type Entry = {
+    text: string
+    correct: boolean
+    distractorId?: string
+    origin?: { cardId: string; blockId: string; question: string }
+  }
   const entries: Entry[] = [
     ...correctPoints.slice(0, correctCount).map(kp => ({ text: kp.text, correct: true })),
-    ...distractors.map(kp => ({ text: kp.text, correct: false, distractorId: kp.id })),
+    ...distractors.map(kp => ({
+      text: kp.text, correct: false, distractorId: kp.id, ...(kp.origin !== undefined ? { origin: kp.origin } : {}),
+    })),
   ]
   const arranged = shuffle(entries, rng)
+  // 错勾溯源：呈现下标 → 来源题（只有干扰项带 origin；全空则字段缺省）
+  const origins: Record<number, { cardId: string; blockId: string; question: string }> = {}
+  for (const [i, e] of arranged.entries()) {
+    if (e.origin !== undefined) origins[i] = e.origin
+  }
   return {
     variant: {
       optionTexts: arranged.map(e => e.text),
       correctIndices: arranged.flatMap((e, i) => (e.correct ? [i] : [])),
       distractorKeyPointIds: arranged.flatMap(e => (e.distractorId ? [e.distractorId] : [])),
+      ...(Object.keys(origins).length > 0 ? { distractorOrigins: origins } : {}),
     },
     degradedTo,
   }

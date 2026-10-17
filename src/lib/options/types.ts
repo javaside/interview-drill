@@ -19,6 +19,12 @@ export type OptionKeyPoint = {
   retiredAt?: string
   /** 仅 sequence 型：步骤序号，从 1 起——顺序就是这型题的答案 */
   order?: number
+  /**
+   * 来源题（server 池装配时挂上；lib 出题逻辑不消费，只透传到变体的
+   * distractorOrigins——屏② 错勾溯源「这条属于哪道题」的展示数据）。
+   * 可选：不挂即无溯源（旧路径/内容工具直调不炸）。
+   */
+  origin?: { cardId: string; blockId: string; question: string }
 }
 
 export type OptionCard = {
