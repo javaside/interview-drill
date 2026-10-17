@@ -18,6 +18,12 @@ vi.mock('../../src/server/db/adapters.js', async importOriginal => ({
 const DAY_MS = 86400_000
 const signedIn = () => vi.mocked(getServerSession).mockResolvedValue({ userId: 'u1' } as never)
 
+/** 上海时区的 YYYY-MM-DD（row.timezone 决定宽限日的本地口径；en-CA 恰为该格式） */
+const shanghaiDate = (d: Date): string =>
+  new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(d)
+
 const row = (over: Partial<Record<string, unknown>> = {}) => ({
   readyByDate: null, dailyCapacity: 45, timezone: 'Asia/Shanghai',
   plan: 'paid', freeBlockIds: [], paidUntil: null, graceUntil: null,
@@ -49,15 +55,18 @@ test('有效期内：剩余天数向上取整且至少 1 天（还剩 3 小时�
 
 test('宽限期：如实显示已到期与宽限截止日，且不给剩余天数（已过期不该有）', async () => {
   signedIn()
+  // 宽限截止日用「未来日期」相对计算——写死日历日会在翻页那天悄悄过期（2026-10-16 实测翻车）
+  const graceUntil = shanghaiDate(new Date(Date.now() + 7 * DAY_MS))
   vi.mocked(loadSettings).mockResolvedValue(row({
     paidUntil: new Date(Date.now() - DAY_MS),
-    graceUntil: '2026-10-16',
+    graceUntil,
     graceBlockIds: ['b1'],
     freeBlockIds: ['b1'],
   }) as never)
   render(await UpgradePage())
   expect(screen.getByText(/通行证已到期/)).toBeInTheDocument()
-  expect(screen.getByText(/2026-10-16/)).toBeInTheDocument()
+  // 日期是「已排的题可以刷到 {date}」长句的一部分——正则子串匹配
+  expect(screen.getByText(new RegExp(graceUntil))).toBeInTheDocument()
   expect(screen.queryByText(/还剩/)).not.toBeInTheDocument()
   expect(screen.queryByText(/已解锁全部题库/)).not.toBeInTheDocument()
 })
