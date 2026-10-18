@@ -16,6 +16,8 @@
     "content:upsert": "tsx src/server/content-upsert/cli.ts",
     "content:exclusion": "tsx --env-file-if-exists=.env.local tools/content-exclusion/cli.ts",
     "invite:new": "tsx --env-file-if-exists=.env.local tools/invite-new.ts",
+    "report:pull": "tsx --env-file-if-exists=.env.local tools/report-cli.ts pull",
+    "report:resolve": "tsx --env-file-if-exists=.env.local tools/report-cli.ts resolve",
     "review:pairs": "tsx tools/review/cli.ts"
   },
   "dependencies": {

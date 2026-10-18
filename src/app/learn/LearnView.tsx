@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { splitDetail } from '../../lib/content/split.js'
 import { RichText } from '../RichText.js'
 import { CardQA } from '../CardQA.js'
+import { AdminCardQA } from '../AdminCardQA.js'
 import { DemoCodeBlock } from '../DemoCodeBlock.js'
 
 export type LearnCard = {
@@ -60,7 +61,7 @@ function DetailLayers({ detail, indent = true }: { detail: string; indent?: bool
 }
 
 export function LearnView({
-  blockName, cards, blockId, locked = false, cardCount,
+  blockName, cards, blockId, locked = false, cardCount, admin = false, reportsByCard,
 }: {
   blockName: string
   cards: LearnCard[]
@@ -69,6 +70,10 @@ export function LearnView({
   locked?: boolean
   /** locked 时展示的真实卡数（知识地图公开的同一数字） */
   cardCount?: number
+  /** 管理员视角：每题多渲染一个审题问答框（page 侧 isAdminUser 判定，仅服务端） */
+  admin?: boolean
+  /** cardId → 该卡未处理报告数（admin 时 page 装配；防重复提交提示） */
+  reportsByCard?: Readonly<Record<string, number>>
 }): React.JSX.Element {
   return (
     <main className="rise mx-auto max-w-6xl px-6 pb-24 pt-2">
@@ -156,6 +161,9 @@ export function LearnView({
                   </div>
                 )}
                 <CardQA cardId={c.cardId} />
+                {admin && (
+                  <AdminCardQA cardId={c.cardId} openReports={reportsByCard?.[c.cardId] ?? 0} />
+                )}
               </article>
             ))}
           </div>

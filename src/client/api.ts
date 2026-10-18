@@ -5,6 +5,7 @@ import type { ReviewResult } from '../server/review.js'
 import type { SyncResult } from '../server/sync.js'
 import type { LocalDate } from '../lib/scheduler/date.js'
 import type { QaMessage, QaStreamEvent, QaAttempt } from '../lib/ai/qa.js'
+import type { ReportTurn } from '../lib/ai/admin-qa.js'
 import { parseSseChunks } from '../lib/ai/sse.js'
 
 /**
@@ -49,6 +50,31 @@ export interface Api {
     attempt?: QaAttempt | null,
     signal?: AbortSignal,
   ): Promise<void>
+  /**
+   * POST /api/admin/qa → 管理员审题问答（同 SSE 协议；上下文全量含答案，
+   * 服务端管理员鉴权）。历史由客户端按卡持有，服务端不落库。
+   */
+  postAdminQaStream(
+    cardId: string, history: QaMessage[],
+    handlers: { onDelta: (text: string) => void; onReasoning?: (text: string) => void },
+    signal?: AbortSignal,
+  ): Promise<void>
+  /** POST /api/admin/reports → 提交问题报告（结论 + 讨论记录 + 服务端题面快照），返回报告 id */
+  postCardReport(cardId: string, conclusion: string, turns: ReportTurn[]): Promise<{ id: string }>
+  /** GET /api/admin/reports → 报告台账（不带讨论记录，快照只留认卡字段） */
+  fetchCardReports(): Promise<AdminReportSummary[]>
+}
+
+/** 报告台账行（/api/admin/reports GET 的 DTO；transcript 不下发） */
+export type AdminReportSummary = {
+  id: string
+  cardId: string
+  status: 'open' | 'resolved'
+  conclusion: string
+  createdAt: string
+  resolvedAt: string | null
+  blockName: string
+  question: string
 }
 
 const JSON_HEADERS = { 'content-type': 'application/json' } as const
@@ -138,38 +164,71 @@ export function browserApi(): Api {
       })
       // 流开始之前的一切失败仍是既有协议：非 2xx 带 { error } 中文消息
       if (!res.ok) throw await errorOf(res)
-      if (res.body === null) throw new Error('AI 没有返回内容，换个问法试试')
-
-      const reader = res.body.getReader()
-      const decoder = new TextDecoder()
-      let buffer = ''
-      let gotDelta = false
-
-      for (;;) {
-        const { done, value } = await reader.read()
-        if (done) break
-        buffer += decoder.decode(value, { stream: true })
-        const { frames, rest } = parseSseChunks(buffer)
-        buffer = rest
-        for (const frame of frames) {
-          let event: QaStreamEvent
-          try {
-            event = JSON.parse(frame.data) as QaStreamEvent
-          } catch {
-            continue   // 认不出的帧跳过，不让脏数据打断整段回答
-          }
-          if (event.type === 'delta') {
-            gotDelta = true
-            handlers.onDelta(event.text)
-          } else if (event.type === 'reasoning') {
-            handlers.onReasoning?.(event.text)
-          } else if (event.type === 'error') {
-            throw new Error(event.message)
-          }
-        }
-      }
-      // 一条增量都没有、也没有 error 事件：服务端流异常收尾
-      if (!gotDelta) throw new Error('AI 没有返回内容，换个问法试试')
+      await consumeQaSse(res, handlers)
+    },
+    async postAdminQaStream(cardId, history, handlers, signal) {
+      const res = await fetch(withBase('/api/admin/qa'), {
+        method: 'POST', headers: JSON_HEADERS,
+        body: JSON.stringify({ cardId, history }),
+        ...(signal ? { signal } : {}),
+      })
+      if (!res.ok) throw await errorOf(res)
+      await consumeQaSse(res, handlers)
+    },
+    async postCardReport(cardId, conclusion, turns) {
+      return readJson<{ id: string }>(
+        await fetch(withBase('/api/admin/reports'), {
+          method: 'POST', headers: JSON_HEADERS,
+          body: JSON.stringify({ cardId, conclusion, turns }),
+        }),
+      )
+    },
+    async fetchCardReports() {
+      return readJson<AdminReportSummary[]>(
+        await fetch(withBase('/api/admin/reports'), { method: 'GET' }),
+      )
     },
   }
+}
+
+/**
+ * SSE 响应 → 事件回调（/api/qa 与 /api/admin/qa 共用一份消费循环）。
+ * 任何失败（含流中途的 error 事件）抛错，Error 携带中文消息，可直接进 role=alert。
+ */
+async function consumeQaSse(
+  res: Response,
+  handlers: { onDelta: (text: string) => void; onReasoning?: (text: string) => void },
+): Promise<void> {
+  if (res.body === null) throw new Error('AI 没有返回内容，换个问法试试')
+
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  let gotDelta = false
+
+  for (;;) {
+    const { done, value } = await reader.read()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+    const { frames, rest } = parseSseChunks(buffer)
+    buffer = rest
+    for (const frame of frames) {
+      let event: QaStreamEvent
+      try {
+        event = JSON.parse(frame.data) as QaStreamEvent
+      } catch {
+        continue   // 认不出的帧跳过，不让脏数据打断整段回答
+      }
+      if (event.type === 'delta') {
+        gotDelta = true
+        handlers.onDelta(event.text)
+      } else if (event.type === 'reasoning') {
+        handlers.onReasoning?.(event.text)
+      } else if (event.type === 'error') {
+        throw new Error(event.message)
+      }
+    }
+  }
+  // 一条增量都没有、也没有 error 事件：服务端流异常收尾
+  if (!gotDelta) throw new Error('AI 没有返回内容，换个问法试试')
 }

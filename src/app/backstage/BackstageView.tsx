@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { browserApi } from '../../client/api.js'
-import type { Api } from '../../client/api.js'
+import type { Api, AdminReportSummary } from '../../client/api.js'
 
 type LedgerRow = Awaited<ReturnType<Api['fetchInviteCodes']>>[number]
 
@@ -13,9 +13,12 @@ function fmt(iso: string): string {
 /**
  * 后台视图（/backstage，仅管理员可达——page 判定，View 只管功能）：
  * - 铸码：数量+备注 → 明文码当场逐张展示 + 一键复制（仅此一次，库里只有哈希）；
- * - 台账：全部码的备注/时间/状态（明文不可找回，hash 前缀仅作行识别）。
+ * - 台账：全部码的备注/时间/状态（明文不可找回，hash 前缀仅作行识别）；
+ * - 题库报告：管理员审题闭环的 open 台账（卡/结论/时间），全量记录在 DB。
  */
-export function BackstageView({ api }: { api?: Pick<Api, 'fetchInviteCodes' | 'postMintInvites'> }): React.JSX.Element {
+export function BackstageView(
+  { api }: { api?: Pick<Api, 'fetchInviteCodes' | 'postMintInvites' | 'fetchCardReports'> },
+): React.JSX.Element {
   const a = api ?? browserApi()
   const [n, setN] = useState('1')
   const [note, setNote] = useState('')
@@ -24,9 +27,11 @@ export function BackstageView({ api }: { api?: Pick<Api, 'fetchInviteCodes' | 'p
   const [error, setError] = useState<string | null>(null)
   const [ledger, setLedger] = useState<LedgerRow[] | null>(null)
   const [copied, setCopied] = useState<string | null>(null)
+  const [reports, setReports] = useState<AdminReportSummary[] | null>(null)
 
   useEffect(() => {
     a.fetchInviteCodes().then(setLedger).catch(e => setError(e instanceof Error ? e.message : '台账加载失败'))
+    a.fetchCardReports().then(setReports).catch(() => setReports([]))   // 报告台账失败不挡邀请码主功能
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -136,6 +141,44 @@ export function BackstageView({ api }: { api?: Pick<Api, 'fetchInviteCodes' | 'p
           </ul>
         )}
         <p className="mt-3 text-xs text-paper-muted">明文找回不可能——库里只有哈希；丢了的码作废重铸即可。</p>
+      </section>
+
+      {/* ===== 题库报告（审题闭环的线上台账） ===== */}
+      <section className="mt-10">
+        <div className="mb-4 flex items-baseline gap-4">
+          <h2 className="text-lg font-bold text-paper-ink">题库报告</h2>
+          <span aria-hidden="true" className="h-px flex-1 bg-paper-line" />
+          <span className="font-mono text-xs text-paper-muted">
+            {reports === null ? '…' : `${reports.filter(r => r.status === 'open').length} 条未处理 / 共 ${reports.length} 条`}
+          </span>
+        </div>
+        {reports === null ? (
+          <p className="py-8 text-center text-sm text-paper-muted">加载中…</p>
+        ) : reports.length === 0 ? (
+          <p className="py-8 text-center text-sm text-paper-muted">还没有审题报告——在 learn 页发现可疑的题，用「审题（管理员）」和 AI 讨论。</p>
+        ) : (
+          <ul className="card-flat divide-y divide-paper-line" data-testid="report-ledger">
+            {[...reports].sort((a, b) => (a.status === b.status ? 0 : a.status === 'open' ? -1 : 1)).map(r => (
+              <li key={r.id} className="px-5 py-3.5" data-testid={`report-${r.id}`}>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                  {r.status === 'open' ? (
+                    <span className="rounded-md bg-accent/15 px-2.5 py-1 text-xs font-semibold text-accent">未处理</span>
+                  ) : (
+                    <span className="rounded-md bg-paper-wash px-2.5 py-1 text-xs font-semibold text-paper-muted">已销单</span>
+                  )}
+                  <span className="min-w-[10rem] flex-1 text-[15px] text-paper-ink">{r.conclusion}</span>
+                  <span className="font-mono text-xs text-paper-muted">{r.blockName} · {fmt(r.createdAt)}</span>
+                </div>
+                <p className="mt-1 line-clamp-1 pl-[4.25rem] text-[13px] text-paper-muted">
+                  <span className="font-mono text-[11px]">{r.cardId}</span> · {r.question}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="mt-3 text-xs text-paper-muted">
+          开发者侧：<code className="font-mono">pnpm report:pull</code> 导出完整讨论 → 修 content/ → <code className="font-mono">pnpm report:resolve &lt;id&gt;</code> 销单。
+        </p>
       </section>
     </div>
   )

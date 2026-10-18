@@ -2,7 +2,11 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { BackstageView } from '../../src/app/backstage/BackstageView.js'
 
-const api = (over: Partial<Record<'fetchInviteCodes' | 'postMintInvites', unknown>>) => over as never
+const api = (over: Partial<Record<'fetchInviteCodes' | 'postMintInvites' | 'fetchCardReports', unknown>>) => ({
+  // 报告台账有默认空实现——只关心邀请码的用例不被它牵连
+  fetchCardReports: vi.fn(async () => []),
+  ...over,
+}) as never
 
 const ledger = [
   { id: 'ic1', note: '内测第一批', createdAt: '2026-09-30T10:00:00Z', usedByLogin: 'octocat', usedByGithubId: '1187815', usedAt: '2026-09-30T11:00:00Z' },

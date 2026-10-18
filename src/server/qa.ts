@@ -192,8 +192,11 @@ export async function qaStreamHandler(deps: QaDeps): Promise<ReadableStream<Uint
   return pumpProviderStream(res, provider.label)
 }
 
-/** 把 provider 的 SSE 转成我们自己的事件流（delta → done，故障 → error） */
-function pumpProviderStream(res: Response, label: string): ReadableStream<Uint8Array> {
+/**
+ * 把 provider 的 SSE 转成我们自己的事件流（delta → done，故障 → error）。
+ * 用户问答与管理员审题共用（admin-qa.ts 复用）——协议相同，只是装配的消息不同。
+ */
+export function pumpProviderStream(res: Response, label: string): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder()
   const decoder = new TextDecoder()
   const reader = res.body?.getReader()

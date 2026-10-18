@@ -17,6 +17,8 @@ pnpm content:upsert # content/ → DB upsert（需 DATABASE_URL，tsx 不读 .en
 pnpm content:exclusion --judge|--apply|--report|--prune   # 互斥判定（excludeAsDistractorFor，见下）
 pnpm review:pairs   # 要点互斥审核（旧工具，已被 content:exclusion 取代）
 pnpm invite:new N [备注]   # 铸造邀请码（读 .env.local）
+pnpm report:pull [--all]   # 导出管理员审题报告 → docs/card-reports/<id>.md（open；--all 含已销单）
+pnpm report:resolve <id>   # 审题报告销单（DB 置 resolved + 删导出文件）
 ```
 
 **改完代码的验收标准：`pnpm typecheck && pnpm test` 全绿。** 应用运行需要真 PG + `drizzle-kit migrate`（见 README 快速开始）；测试完全不需要。

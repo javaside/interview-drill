@@ -43,6 +43,13 @@
       "when": 1790957297950,
       "tag": "0005_lowly_swarm",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792338710422,
+      "tag": "0006_elite_quicksilver",
+      "breakpoints": true
     }
   ]
 }

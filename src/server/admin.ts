@@ -6,6 +6,8 @@
  */
 import { sql } from 'drizzle-orm'
 import type { SqlRunner } from './db/adapters.js'
+import { getDb } from './db/client.js'
+import { requireUserId } from './auth-config.js'
 
 /** 环境变量原文 → 干净的 id 集合（容忍空格；空串给空集） */
 export function parseAdminGithubIds(raw: string): Set<string> {
@@ -25,4 +27,19 @@ export async function isAdminUser(
     select github_id from users where id = ${userId}`)
   const githubId = row.rows[0]?.github_id
   return githubId !== undefined && allow.has(githubId)
+}
+
+/**
+ * 路由薄壳的管理员鉴权（登录取 NextAuth session，再过白名单）：
+ * 未登录 → 401 Response；非管理员 → 403 Response（「无权限」，与 /backstage
+ * 「不区分未登录/名单外」同口径的不泄细节策略）。用法同 requireUserId：
+ * `const uid = await requireAdminUserId(req); if (uid instanceof Response) return uid`
+ */
+export async function requireAdminUserId(request: Request): Promise<string | Response> {
+  const userId = await requireUserId(request)
+  if (userId instanceof Response) return userId
+  const ok = await isAdminUser(
+    { db: getDb(), adminGithubIds: process.env.ADMIN_GITHUB_IDS ?? '' }, userId)
+  if (!ok) return Response.json({ error: '无权限' }, { status: 403 })
+  return userId
 }

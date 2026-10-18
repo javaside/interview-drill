@@ -1,4 +1,5 @@
 import { pgTable, text, integer, timestamp, date, boolean, jsonb, uniqueIndex, index, primaryKey } from 'drizzle-orm/pg-core'
+import type { CardReportSnapshot, ReportTurn } from '../../lib/ai/admin-qa.js'
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),                    // ULID，注册时铸造
@@ -156,3 +157,26 @@ export const inviteCodes = pgTable('invite_codes', {
   usedBy: text('used_by').references(() => users.id),
   usedAt: timestamp('used_at', { withTimezone: true }),
 })
+
+/**
+ * 题卡问题报告（管理员审题闭环的线上半场）：管理员在 learn 页与 AI 讨论后
+ * 「确认有问题」提交——结论 + 讨论记录 + 题面快照落库（status=open）。
+ * 线下半场：`pnpm report:pull` 导出 docs/card-reports/<id>.md（开发者照着修
+ * content/），`pnpm report:resolve <id>` 销单。快照让报告自包含——content/ 后续
+ * 怎么改，报告都带着「当时在讨论什么」的语境；transcript 只存 role/content 对
+ * （思考型模型的 reasoning 是噪声不是结论）。
+ */
+export const cardReports = pgTable('card_reports', {
+  id: text('id').primaryKey(),                    // ULID
+  cardId: text('card_id').notNull(),
+  /** 'open' | 'resolved'——pull 只导 open；resolved 行是历史档案（--all 可重导） */
+  status: text('status').notNull().default('open'),
+  /** 管理员一句话结论（台账与导出文件的标题行） */
+  conclusion: text('conclusion').notNull(),
+  /** 与 AI 的讨论记录 */
+  transcript: jsonb('transcript').$type<ReportTurn[]>().notNull(),
+  /** 提交时的题面快照（题面/卡型/要点/题解/源文件路径），形状见 lib/ai/admin-qa */
+  snapshot: jsonb('snapshot').$type<CardReportSnapshot>().notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  resolvedAt: timestamp('resolved_at', { withTimezone: true }),
+}, t => [index('card_reports_card_idx').on(t.cardId)])

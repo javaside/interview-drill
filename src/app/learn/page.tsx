@@ -4,6 +4,8 @@ import { getDb } from '../../server/db/client.js'
 import { LearnView, syllabusOf } from './LearnView.js'
 import type { LearnCard } from './LearnView.js'
 import { authOptions } from '../../server/auth-config.js'
+import { isAdminUser } from '../../server/admin.js'
+import { openReportCountsByCard } from '../../server/card-report.js'
 import { loadSettings, loadAllCards, entitlementOf } from '../../server/db/adapters.js'
 import { loadDemoCode, loadDemoSourceUrl } from '../../server/demo-code.js'
 import { entitledCards, isEntitled } from '../../lib/entitlement/entitlement.js'
@@ -35,13 +37,20 @@ export default async function LearnPage(
   if (inBlockCards.length === 0) redirect('/map')   // 不存在的块：回地图
 
   const blockName = inBlockCards[0]?.blockName ?? block
-  if (!isEntitled(ent, block)) {
+
+  // 管理员判定放在免费墙之前——审题是运维动作，不该取决于付费状态：
+  // 管理员直读全部块（与 /api/admin/qa 无墙口径一致），并带未处理报告计数
+  // （一次 group by，量小；非管理员零额外查询）。
+  const admin = userId !== undefined
+    && await isAdminUser({ db: getDb(), adminGithubIds: process.env.ADMIN_GITHUB_IDS ?? '' }, userId)
+
+  if (!admin && !isEntitled(ent, block)) {
     return <LearnView blockName={blockName} cards={[]} blockId={block} locked cardCount={inBlockCards.length} />
   }
 
-  const schedulable = entitledCards(
-    ent, cards.map(c => ({ cardId: c.cardId, blockId: c.blockId, frequency: c.frequency })),
-  )
+  const schedulable = admin
+    ? cards.map(c => ({ cardId: c.cardId, blockId: c.blockId, frequency: c.frequency }))
+    : entitledCards(ent, cards.map(c => ({ cardId: c.cardId, blockId: c.blockId, frequency: c.frequency })))
   const ids = new Set(
     schedulable.filter(c => c.blockId === block).map(c => c.cardId),
   )
@@ -62,5 +71,6 @@ export default async function LearnPage(
     })
     .sort((a, b) => (a.cardId < b.cardId ? -1 : 1))
 
-  return <LearnView blockName={blockName} cards={inBlock} blockId={block} />
+  const reportsByCard = admin ? Object.fromEntries(await openReportCountsByCard({ db: getDb() })) : undefined
+  return <LearnView blockName={blockName} cards={inBlock} blockId={block} admin={admin} reportsByCard={reportsByCard} />
 }
