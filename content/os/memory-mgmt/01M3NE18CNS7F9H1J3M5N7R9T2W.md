@@ -67,6 +67,14 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
       locator: mm concepts
+misconceptions:
+  - id: mc-mm1-1
+    text: "TLB 命中说明数据已经在缓存里，处理器不用再访问内存"
+    why: "误解：TLB 存的是虚拟页号到物理帧号的翻译，命中只是省掉查页表；数据存取走的是 L1/L2/L3 那一套"
+  - id: mc-mm1-2
+    text: "物理内存 8G 的机器，单进程可申请的地址空间也被压在 8G 以内"
+    why: "误解：虚拟地址空间宽度由指令集位数决定，64 位下可达上百 TB，与物理内存多大无关；虚拟页不被真正用到就不占物理内存"
+
 ---
 
 **虚拟内存**是操作系统最大的魔术之一：每个进程都以为自己独占一整条连续内存（如 48 位地址空间），实际物理内存由内核**按页拆借**：

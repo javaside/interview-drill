@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-mf1-1
+    text: "引入 MQ 后整个系统可用性更高，MQ 本身绝不会成为故障点"
+    why: "误解：MQ 是新增的可用性依赖，它一挂全链路瘫，要靠集群化把它做成高可用，代价不会凭空消失"
+  - id: mc-mf1-2
+    text: "引入 MQ 后数据依然是强一致的，下游随时能读到最新状态"
+    why: "误解：异步投递把一致性降级成最终一致，下游要晚一段时间才处理完，期间读到的是旧状态"
+  - id: mc-mf1-3
+    text: "削峰就是 MQ 把超出消费能力的流量直接丢弃，只放行能处理的量"
+    why: "误解：削峰是入队缓冲排队消化，洪峰消息一条不少地存着，由消费端按自己的节奏喝，丢弃是另外的治理策略"
 ---
 
 三大收益（也是三大经典答案）：

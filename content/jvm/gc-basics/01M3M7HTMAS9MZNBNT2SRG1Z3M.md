@@ -53,6 +53,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-gb1-1
+    text: "A 与 B 互相引用时，可达性分析也收不掉它们，只能靠开发者手动置空解环"
+    why: "误解：可达性分析从根出发整体判活，互引但整体悬空的孤岛照样回收；循环引用只坑引用计数法"
+  - id: mc-gb1-2
+    text: "实例的成员变量也是 GC Roots，字段引用着谁谁就活着"
+    why: "误解：成员变量只是堆内对象间的引用链一环，从根够不着照样收；充当锚点的是栈帧局部变量、静态变量、常量与 JNI 引用"
+  - id: mc-gb1-3
+    text: "可达性分析从每个对象出发向上找引用它的人，找到引用就判活"
+    why: "误解：方向反了——从 GC Roots 沿引用链向下摸，够不着的判垃圾；从对象反查引用会把互引的孤岛也判活"
 ---
 
 判定标准一句话：**从根出发摸不着的，就是垃圾**。

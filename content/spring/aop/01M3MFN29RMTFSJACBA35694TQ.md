@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-aop1-1
+    text: "连接点和切点是同一个概念，都指最终被拦截到的那些方法"
+    why: "误解：连接点是程序里全部可织入的位置，切点才是用表达式从中筛出的子集——一个全集、一个筛选结果"
+  - id: mc-aop1-2
+    text: "切面就是通知，两者只是新旧叫法不同，指同一段横切逻辑"
+    why: "误解：切面是完整模块（切点+通知+组装），通知只是其中织入后干什么的那一片，粒度差着一级"
+  - id: mc-aop1-3
+    text: "Spring 里连接点也涵盖字段读写和构造器执行，只是默认没开启"
+    why: "误解：Spring AOP 建在代理之上，只拦得到方法执行；字段与构造器织入要换 AspectJ 的编译/加载期方案"
 ---
 
 一套「**在哪（切点）干什么（通知）**」的词汇表：

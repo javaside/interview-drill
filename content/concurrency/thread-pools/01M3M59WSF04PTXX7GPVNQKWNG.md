@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tp3-1
+    text: "线程池默认的拒绝策略是 CallerRunsPolicy"
+    why: "误解：不显式指定时默认 AbortPolicy，直接抛 RejectedExecutionException——快速失败才是默认设计"
+  - id: mc-tp3-2
+    text: "CallerRunsPolicy 会把任务交给池中最空闲的线程代跑，不占用提交方"
+    why: "误解：恰恰是提交任务的线程自己执行，提交方被拖住干活——反压限流正是这么来的"
+  - id: mc-tp3-3
+    text: "DiscardPolicy 丢弃任务时会打日志或抛异常，调用方总能感知到丢了任务"
+    why: "误解：Discard 彻底静默，无异常无日志，任务无声消失——这正是它被列为最危险的缘故"
 ---
 
 池满之后的**四种处置**：

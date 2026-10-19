@@ -56,6 +56,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-aq3-1
+    text: "signalAll 与 notifyAll 一样，把锁上全部条件队列的线程统统叫醒"
+    why: "误解：signalAll 只清空自己所属的那一个条件队列；对监听器全体候车人广播的是 notifyAll"
+  - id: mc-aq3-2
+    text: "线程被 signal 叫醒后立刻从 await 处继续跑，不用重新抢锁"
+    why: "误解：醒来只是离开条件队列、转去重新竞争锁，抢到手才从 await 返回——signal 只是挪位，不算放行"
+  - id: mc-aq3-3
+    text: "不持锁调用 Condition.await 照常工作，只是少了层保护"
+    why: "误解：不持锁调用 await 当场抛 IllegalMonitorStateException；它和 wait 用同一套规矩，先持锁再进门"
 ---
 
 `wait/notify` 的痛：一个对象锁只有**一间候车室**——生产者消费者全挤一起，`notify()` 随手叫醒一个：消费者叫醒消费者、白站一站（虚假唤醒还得 while 兜底）。

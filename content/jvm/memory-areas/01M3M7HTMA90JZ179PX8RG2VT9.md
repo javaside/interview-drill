@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-ma4-1
+    text: "元空间只是堆内换了块地方，仍然占 -Xmx 的配额"
+    why: "误解：元空间在本机内存、按需向操作系统申请；在堆里吃配额的是被它替换掉的永久代"
+  - id: mc-ma4-2
+    text: "字符串常量池 JDK 8 起搬进了元空间，和类信息住一起"
+    why: "误解：字符串常量池 7 起就搬进了堆；留在元空间的是类元数据与每类的运行时常量池"
+  - id: mc-ma4-3
+    text: "元空间默认无上限，所以永远不会 Metaspace OOM"
+    why: "误解：无上限只是不设人工顶，类加载失控会一路吃到物理内存上限然后照样抛 OOM；生产要设 MaxMetaspaceSize 防失控"
 ---
 
 **永久代（PermGen）**是历史包袱：把「方法区」实现在 **JVM 堆里**，容量开局钉死——动态类一多（CGLib、JSP、脚本引擎）直接 **PermGen OOM**，运维只能拍脑袋调参。

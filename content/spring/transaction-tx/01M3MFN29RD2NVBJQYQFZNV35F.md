@@ -67,6 +67,14 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+
+misconceptions:
+  - id: mc-tx2-1
+    text: CGLIB 代理基于子类继承，private 方法上的 @Transactional 也能被拦截生效
+    why: 误解：子类覆写不了 private 方法，CGLIB 一样拦不到；事务注解只对 public 方法生效
+  - id: mc-tx2-2
+    text: 配了 rollbackFor = Exception.class 后，异常即使被 catch 住不往外抛，事务也会照常回滚
+    why: 误解：回滚靠事务拦截器看到往上抛的异常才触发，吞掉异常它只见到正常返回，提交照旧；要回滚就得重新抛出
 ---
 
 **失效八宗罪**（高频考题，按踩坑率排）：

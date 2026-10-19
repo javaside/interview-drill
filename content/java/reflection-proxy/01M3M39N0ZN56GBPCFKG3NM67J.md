@@ -50,6 +50,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+
+misconceptions:
+  - id: mc-rf4-1
+    text: CGLIB 连 final 类也能代理，打开对应配置开关即可
+    why: 误解：CGLIB 靠生成子类拦截，final 禁止继承，语言层面就无解，配置救不回来
+  - id: mc-rf4-2
+    text: Spring 框架历来默认 CGLIB，有接口也照样生成子类代理
+    why: 误解：Spring 本体默认有接口走 JDK 代理，整体切到 CGLIB 是 Spring Boot 2 才开始的
+  - id: mc-rf4-3
+    text: JDK 动态代理生成的类继承自目标类，所以才能拦下方法调用
+    why: 误解：代理类继承的是 Proxy 基类、实现的是接口，与目标类没有继承关系
 ---
 
 两条流派：

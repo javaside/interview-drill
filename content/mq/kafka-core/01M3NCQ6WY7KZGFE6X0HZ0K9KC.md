@@ -59,6 +59,16 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-kc3-1
+    text: "同一个 Topic 的消息是全局有序的，消费者一定能按发送顺序收到"
+    why: "误解：顺序的边界是 partition 而不是 topic，跨分区没有全局序，要全局有序只能退到单分区"
+  - id: mc-kc3-2
+    text: "生产时指定了 key，消费端把消息丢进线程池也依然自动保序"
+    why: "误解：key 只保证同 key 进同一分区，线程池乱放照样乱序，需要按 key 二次哈希到固定线程或内存队列"
+  - id: mc-kc3-3
+    text: "生产端开了重试就一定保序，后发的批次不可能先写进 broker"
+    why: "误解：max.in.flight 大于 1 时前一批失败重发、后一批已经写入，顺序被插队破坏，要配 idempotent 生产者按序号拦截"
 ---
 
 **顺序的粒度**：Kafka 只保证 **partition 内有序**（单队列天然先进先出）。跨 partition 无全局序。

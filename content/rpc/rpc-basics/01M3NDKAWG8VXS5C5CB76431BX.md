@@ -77,6 +77,12 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+
+misconceptions:
+  - id: mc-rb3-1
+    text: Dubbo 的注册中心只能用 ZooKeeper，换注册中心就得改框架源码
+    why: 误解：注册中心是 Dubbo 的 SPI 扩展点，Nacos、Consul、Redis 都是现成可插拔实现
+
 ---
 
 两条路线的**气质差异**：

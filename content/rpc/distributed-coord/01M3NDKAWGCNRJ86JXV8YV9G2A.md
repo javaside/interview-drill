@@ -65,6 +65,13 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-dc4-1
+    text: "长轮询挂在服务端就绝不会漏变更，客户端无需再定时对账拉取"
+    why: "误解：长轮询的挂起连接会超时、会断，断口期间的变更通知就丢了——定时全量对账让漏掉的变更最多迟一个周期被补上"
+  - id: mc-dc4-2
+    text: "配置一改，运行中 Bean 里的旧配置值立刻自动换成新值"
+    why: "误解：Spring 里配置刷新靠 @RefreshScope 销毁重建 Bean——未标注的 Bean 与手工缓存进对象字段的旧值不会跟着变，得重启或重新注入"
 ---
 
 **配置中心=运维的遥控器**，五要件：

@@ -60,6 +60,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-bl2-1
+    text: "singleton 由容器自动加锁同步，多线程并发调用方法不会出问题"
+    why: "误解：容器只保证全容器一份实例，不管并发——可变共享字段照样有竞态，要自己无状态化或加锁"
+  - id: mc-bl2-2
+    text: "request 作用域的 Bean 注入 singleton 后，每个新请求都会自动重新注入一份新实例"
+    why: "误解：注入只在 Bean 创建时发生一次——跨请求要么直接注入失败，要么靠作用域代理把调用转发给当前请求的实例"
 ---
 
 作用域=「**这份配方造几份**」：

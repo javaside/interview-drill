@@ -84,6 +84,10 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-kr2-1
+    text: "ISR 是配置出来的固定集合，replication.factor 是几里面就永远有几个成员"
+    why: "误解：ISR 是动态判定的同步副本子集，掉队的副本会被实时踢出去，追上才拉回来，人数随时在变"
 ---
 
 **分区副本分两拨**：

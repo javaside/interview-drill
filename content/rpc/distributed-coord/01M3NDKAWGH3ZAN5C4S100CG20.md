@@ -60,6 +60,13 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-dc3-1
+    text: "释放锁就是执行 DEL，先校验再删除是画蛇添足"
+    why: "误解：校验与删除之间锁可能恰好过期易主，裸 DEL 会删掉别人的锁——把「value 对得上才删」写进同一段 Lua 原子完成才安全"
+  - id: mc-dc3-2
+    text: "上了分布式锁就一劳永逸，重复下单这类问题不可能再发生"
+    why: "误解：Redis 锁会因过期、主从切换而失守，互斥只是概率性防线——真正的兜底是业务侧防重设计，锁失效时重复请求照样会穿透"
 ---
 
 **三种锁实现按「快/稳/简」取舍**：

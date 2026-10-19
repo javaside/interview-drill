@@ -51,6 +51,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-bi4-1
+    text: "GTID 冒号后的序号是整个集群共享的自增计数器，由主库统一分配"
+    why: "误解：序号只在各自 server 内递增，全局唯一靠前缀 server_uuid 区分，谁的账本谁编号"
+  - id: mc-bi4-2
+    text: "server_uuid 和 server_id 是同一个东西，配置里随便填哪个都行"
+    why: "误解：server_id 是人工指定的整数、用于复制拓扑识别，server_uuid 是自动生成的 128 位标识，GTID 只认后者"
+  - id: mc-bi4-3
+    text: "启用 GTID 后从库能自动发现主库地址，复制连接参数都可以省去"
+    why: "误解：GTID 只解决从哪个事务接着拉的定位问题，主库地址、端口、账号仍要显式配置"
 ---
 
 老式复制像「磁带对位」：从库要记「我在主库的 mysql-bin.000003 文件的第 812 字节」——文件名+偏移，手工指定，错了就乱。

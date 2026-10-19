@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tl1-1
+    text: "ThreadLocal 内部维护一张全局 Map<Thread, 值>，所有线程并发读写同一张表"
+    why: "误解：表挂在每个 Thread 身上、以 ThreadLocal 实例为键，各摸各的表——全程没有共享与竞争"
+  - id: mc-tl1-2
+    text: "ThreadLocalMap 的哈希冲突用链表解决，每个桶后面挂着一条链"
+    why: "误解：它用开放地址的线性探测，冲突了就往后找下一个空位，表里根本没有链表结构"
+  - id: mc-tl1-3
+    text: "子线程创建时会拷贝父线程的 ThreadLocalMap，所以子线程 get 拿得到父线程 set 的值"
+    why: "误解：普通 ThreadLocal 的表从不拷贝；被继承的是另一张 inheritableThreadLocals，且要换 InheritableThreadLocal 才写入"
 ---
 
 **ThreadLocal = 线程私有的储物柜**。实现反直觉但妙：

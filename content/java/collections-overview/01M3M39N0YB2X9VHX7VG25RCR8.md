@@ -51,6 +51,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-co2-1
+    text: "链表插删是 O(1)，所以增删多的场景就该换 LinkedList"
+    why: "误解：O(1) 只是摘掉节点本身，先得 O(n) 顺链定位；加上缓存友好性，实践中默认仍是 ArrayList"
+  - id: mc-co2-2
+    text: "LinkedList 也实现了 List 接口，get(i) 的速度与 ArrayList 相近"
+    why: "误解：get(i) 要从头或尾顺链爬到第 i 个，O(n)；实现同一接口不代表访问成本相同"
+  - id: mc-co2-3
+    text: "LinkedList 节点按需分配，总体比 ArrayList 省内存"
+    why: "误解：每个节点多出两个引用与对象头，通常远贵于 ArrayList 尾部预留的空槽"
 ---
 
 数据结构课的直觉是「插删多用链表」——实践中几乎总是错的：

@@ -87,6 +87,10 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-mp2-1
+    text: "给消息打上时间戳，broker 就会按时间戳排序投递，乱序自动消失"
+    why: "误解：broker 从不重排消息，分区里进来什么序就出去什么序，时间戳只帮消费端识别并丢弃迟到的旧版本"
 ---
 
 **顺序的破坏点有三个**，逐个堵：

@@ -61,6 +61,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-ma1-1
+    text: "虚拟机栈是整个进程共享的一块大栈，所有线程的方法调用都压在这里"
+    why: "误解：虚拟机栈线程人手一份、随线程生灭；线程共享的只有堆与方法区"
+  - id: mc-ma1-2
+    text: "程序计数器也可能 OOM，只是五区里最难发生"
+    why: "误解：程序计数器只存当前字节码行号，占固定极小的空间，规范层面它是唯一不会 OOM 的区域"
 ---
 
 按「**谁的**」分两组记：

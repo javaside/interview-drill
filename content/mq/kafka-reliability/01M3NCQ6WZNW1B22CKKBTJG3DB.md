@@ -79,6 +79,10 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-kr1-1
+    text: "acks=all 配上就绝不丢消息，不用再关心 ISR 的收缩"
+    why: "误解：ISR 可能收缩到只剩 Leader，此时 all 退化成 1，要配 min.insync.replicas 卡底线，宁可拒写也不静默丢"
 ---
 
 **acks=生产端要求 broker 写到什么程度才算「收到」**：

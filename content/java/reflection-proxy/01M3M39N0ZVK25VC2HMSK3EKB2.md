@@ -53,6 +53,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+
+misconceptions:
+  - id: mc-rf3-1
+    text: 代理类是编译期生成的，构建时就进了产物包，运行时只是加载它
+    why: 误解：$ProxyN 由 JVM 在运行时按接口现场生成字节码，构建产物里根本找不到这个类
+  - id: mc-rf3-2
+    text: InvocationHandler 拦截后目标方法会自动执行，无需手动反射调用
+    why: 误解：目标跑不跑完全由 handler 里的代码决定，不写 method.invoke 就只是拦了一下，方法根本不会执行
+  - id: mc-rf3-3
+    text: 代理对象就是目标对象本身，可以放心转型成目标类来用
+    why: 误解：代理类只实现接口，与目标类没有继承关系，强转目标类型当场抛 ClassCastException
 ---
 
 给接口动态造一个「替身」，所有调用先过你的一段逻辑：

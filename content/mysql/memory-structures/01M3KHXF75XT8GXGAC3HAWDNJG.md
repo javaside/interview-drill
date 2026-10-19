@@ -67,6 +67,13 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-mem-1
+    text: "Buffer Pool 只缓存查询结果，update 直接改磁盘上的数据页"
+    why: "误解：读写都要经过 Buffer Pool，修改先落在缓存页上变成脏页，由后台线程延后刷回磁盘"
+  - id: mc-mem-2
+    text: "Buffer Pool 越大越好，配到机器内存的九成也没有副作用"
+    why: "误解：要给操作系统与连接、临时表留内存，常规给到五到七成，过大引发换页反而拖垮库"
 ---
 
 磁盘比内存慢几万倍，**Buffer Pool** 就是「数据页的内存缓存」：

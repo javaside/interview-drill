@@ -73,6 +73,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-dt3-1
+    text: "补偿就是数据库回滚：Saga 失败时把各步的本地事务统一 rollback 掉"
+    why: "误解：每步本地事务当场就已提交，库层面无滚可回；补偿是逆序发起的反向业务动作——撤单、退款、还库存"
+  - id: mc-dt3-2
+    text: "Saga 有补偿兜底，中间状态不会对外暴露，隔离性与 2PC 相当"
+    why: "误解：各步独立提交，中间态（订单已建但未付款）对外可见；无全局锁正是吞吐高的来源、也是不隔离的来源，要靠语义锁缓解"
 ---
 
 **Saga** = 把长事务**拆成本地事务链**，失败就**逆序补偿**：

@@ -56,6 +56,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: juc
+misconceptions:
+  - id: mc-aq5-1
+    text: "Semaphore 走独占模式：许可被一个线程抢走，其余全排队"
+    why: "误解：N 个许可就是 N 个人同时在场的共享模式；独占模式一次只放行一个人，语义对不上信号量"
+  - id: mc-aq5-2
+    text: "共享模式释放一次只敢放行一个后继，逐个接力防惊群"
+    why: "误解：共享释放会沿队列连锁唤醒相邻的共享节点（传播）；CountDownLatch 归零那刻是全体一起出门"
+  - id: mc-aq5-3
+    text: "ReentrantReadWriteLock 内部是两把独立 AQS，一把管读一把管写"
+    why: "误解：读写共用同一套 AQS 骨架和同一个 state——写走独占、读走共享，一个 int 高低位拆开计数"
 ---
 
 AQS 的两种**占用姿势**：

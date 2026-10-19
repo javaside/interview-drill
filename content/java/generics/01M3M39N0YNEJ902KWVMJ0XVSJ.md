@@ -51,6 +51,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+
+misconceptions:
+  - id: mc-gn1-1
+    text: 类型擦除发生在类加载阶段，JVM 加载泛型类时才把 T 替换成 Object
+    why: 误解：擦除在编译期就已完成，字节码里 T 早已是 Object，JVM 从头到尾没见过泛型
+  - id: mc-gn1-2
+    text: 泛型信息被擦得一干二净，运行时反射也读不到任何泛型参数
+    why: 误解：字段与方法签名上的泛型保留在 Signature 属性里，getGenericType 读得到，实例自身的元素类型才拿不到
+  - id: mc-gn1-3
+    text: 往 List<Integer> 里塞 String 会在 add 时当场抛 ClassCastException
+    why: 误解：add 阶段没有泛型检查，脏数据顺利入列，异常推迟到读出时由强制转换触发
 ---
 
 `List<String>` 和 `List<Integer>` 在**运行时是同一个类**——泛型只活在**编译期**，编译完就「洗掉」：

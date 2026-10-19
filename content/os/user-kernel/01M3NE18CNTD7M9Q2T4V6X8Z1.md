@@ -61,6 +61,15 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
       locator: Intro
+
+misconceptions:
+  - id: mc-uk2-1
+    text: 缺页异常都说明程序有 bug，访问了不该访问的非法地址
+    why: 误解：按需分配、写时复制、换页回内存都故意先缺页再由内核善后，良性缺页是虚拟内存的日常
+  - id: mc-uk2-2
+    text: 调用 printf 一定立刻陷入内核把字符交给内核输出
+    why: 误解：printf 先写用户态缓冲区，攒满或被刷新时才触发真正的 write 陷内核
+
 ---
 
 进内核只有**三条门**：

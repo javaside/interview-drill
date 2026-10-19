@@ -62,6 +62,13 @@ keyPoints:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
       locator: RFC 1034
+misconceptions:
+  - id: mc-dn3-1
+    text: "源站内容一更新，CDN 边缘缓存会立刻感知并自动换新"
+    why: "误解：边缘在缓存到期前不向源站核对，照样把旧内容端给用户；要即时生效必须主动刷新或调小缓存时长"
+  - id: mc-dn3-2
+    text: "CDN 只对静态资源有意义，动态接口接 CDN 纯属浪费"
+    why: "误解：动态加速不靠缓存——就近接入、边缘到源站的路由优化与连接复用照样压低接口延迟，全站加速就是这类产品"
 ---
 
 CDN = **把内容搬到离用户最近的机房**。核心三步：

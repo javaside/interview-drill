@@ -56,6 +56,16 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-sh5-1
+    text: "雪花算法生成的 id 近似随机没有规律，大批插入会打乱 B+ 树顺序，还不如自增主键"
+    why: "误解：雪花 id 时间戳在高位、整体趋势递增，对索引插入友好；真正打散 B+ 树的是无序的 UUID v4，别把两者混为一谈"
+  - id: mc-sh5-2
+    text: "分片后的跨片写用本地事务注解包住就行，框架会自动提交或回滚所有分片"
+    why: "误解：@Transactional 只绑定单个数据源连接，管不到第二个分片；跨片要么按分片键聚簇把数据收进同片，要么走消息表/Saga 的最终一致"
+  - id: mc-sh5-3
+    text: "上了 ShardingSphere 后跨片 join 与跨片事务都由中间件自动搞定，业务设计完全不用改"
+    why: "误解：中间件透明的只是路由与简单归并；跨片 join 靠冗余字段或业务聚合规避，跨片事务靠最终一致——设计期的功课省不掉"
 ---
 
 水平拆分带走的三个「单库福利」与补偿：

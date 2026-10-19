@@ -63,6 +63,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-dc7-1
+    text: "先删缓存再更新数据库更稳妥——删完之后，下一次读自然会回填最新值"
+    why: "误解：库更新前读 miss 查到的是旧库值，回填的脏数据会一直活到过期；主流顺序是先更库再删缓存，窗口更小"
+  - id: mc-dc7-2
+    text: "写操作应该直接更新缓存而不是删除，这样缓存里永远是最新的值"
+    why: "误解：并发写乱序到达会把旧值盖到新值上，聚合类缓存值还得整次重算；删除让下次读回填最新，且重复删除无害"
 ---
 
 **Cache Aside（旁路缓存）**——业务代码亲自管缓存的事实标准：

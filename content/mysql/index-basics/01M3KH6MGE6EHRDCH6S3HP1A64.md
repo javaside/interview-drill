@@ -57,6 +57,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
       locator: 15.6.2.2
+
+misconceptions:
+  - id: mc-clu-1
+    text: "二级索引的叶子里存的是指向数据行的物理磁盘地址，类似指针直达"
+    why: "误解：InnoDB 的二级索引叶子存主键值，查到后要拿主键回聚簇索引再找一次，存物理指针是堆表引擎的做法"
+  - id: mc-clu-2
+    text: "表不定义主键就没有聚簇索引，行数据按写入顺序平铺在磁盘上"
+    why: "误解：InnoDB 的表永远按一棵聚簇索引组织，没主键就选非空唯一索引顶上，再没有就启用隐藏的 row_id"
+  - id: mc-clu-3
+    text: "回表就是要把整张表完整扫一遍才能找出目标行"
+    why: "误解：回表是拿主键到聚簇索引上再做一次树查找，代价是三五个页访问，跟全表扫描是两码事"
 ---
 
 一张 InnoDB 表其实就是一棵按**主键**组织的 B+ 树——这棵树叫**聚簇索引（clustered index）**：叶子层就是数据本身（「数据即索引」）。你在别的列上建索引（比如给 name 建一个），会另起一棵小一点的 B+ 树——**二级索引（secondary index）**。

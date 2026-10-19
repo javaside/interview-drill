@@ -61,6 +61,13 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-mf4-1
+    text: "积压了就使劲加消费者实例，加到几十个总能消化完"
+    why: "误解：同组消费者超过分区数就只是闲置，并行上限锁死在分区数，要突破得扩分区或转储到更多分区的新 topic"
+  - id: mc-mf4-2
+    text: "扩分区随时无损，不影响同 key 消息的落点与顺序"
+    why: "误解：key 哈希随分区数变化，扩分区后同 key 新消息会落到新分区与旧消息分家，顺序敏感的 topic 要重建迁移"
 ---
 
 **积压 = lag（生产领先消费的条数）**。处置四板斧：

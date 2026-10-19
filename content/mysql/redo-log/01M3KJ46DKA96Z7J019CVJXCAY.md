@@ -60,6 +60,16 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-rd4-1
+    text: "脏页是被写坏的页，出现脏页说明数据文件已经损坏"
+    why: "误解：脏页只是缓存里改过、还没刷回磁盘的正常页，数据完好无损，落盘后就不脏了"
+  - id: mc-rd4-2
+    text: "查询读到脏页时也要先把它刷回磁盘，拿到最新结果才能返回"
+    why: "误解：读命中直接用内存里的新版本应答，落盘是后台线程的事，读路径不触发刷脏"
+  - id: mc-rd4-3
+    text: "正常停机不刷脏页，留给下次启动的崩溃恢复慢慢补"
+    why: "误解：正常关机会把脏页全量刷净再退出，崩溃恢复只兜底异常断电这类场景"
 ---
 
 **脏页**：内存里改了、还没写回磁盘的数据页（改完不是立刻写盘——WAL 已保证了安全，可以攒着批量写）。

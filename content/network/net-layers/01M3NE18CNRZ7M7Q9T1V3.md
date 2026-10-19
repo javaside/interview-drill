@@ -65,6 +65,13 @@ keyPoints:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
       locator: RFC 1122
+misconceptions:
+  - id: mc-nl4-1
+    text: "WebSocket 通信全程都跑在 HTTP 上，两端收发的始终是 HTTP 报文"
+    why: "误解：只有握手借道 HTTP（Upgrade 头 + 101 切换协议），完成后就走 TCP 上的 WS 帧格式，与 HTTP 脱钩"
+  - id: mc-nl4-2
+    text: "长连接一旦建立就一劳永逸，心跳保活纯属多余——断了线对端马上就知道"
+    why: "误解：NAT 和中间盒会悄悄清空转发表，连接成了半开也没有任何通知；不发心跳，你抱着死链还以为它活着"
 ---
 
 三档连接策略，按**「连接成本」和「通信方向」**两个维度选：

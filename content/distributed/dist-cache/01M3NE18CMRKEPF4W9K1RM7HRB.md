@@ -69,6 +69,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-dc9-1
+    text: "主库应答客户端写入前会先把命令同步给全部从库，所以故障转移不会丢已确认的写"
+    why: "误解：复制是异步的——主库应答时不候从库确认，尚未传播的写在升主后就丢了；要少丢得用 min-replicas-to-write 拿可用性来换"
+  - id: mc-dc9-2
+    text: "故障转移后旧主重新上线，会自动收回主库身份继续接写"
+    why: "误解：旧主回来会被改挂为新主的从库接着复制，角色不会翻转回去；让它复位会出现两个主同时接写的脑裂"
 ---
 
 **高可用的两层积木**：

@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-ex1-1
+    text: "Error 是 Exception 的子类，位于 Exception 分支之下"
+    why: "误解：Throwable 下 Error 与 Exception 平级两支，Error 不在任何 Exception 之下"
+  - id: mc-ex1-2
+    text: "Exception 的子类全部是受检异常，编译器都要强制处理"
+    why: "误解：RuntimeException 本身就继承 Exception，它这一系不受检；受检的只是 Exception 下其余分支"
+  - id: mc-ex1-3
+    text: "catch (Exception e) 能捕获 OutOfMemoryError"
+    why: "误解：OOM 在 Error 分支，catch Exception 接不到它；要接只能写 Throwable 或 Error"
 ---
 
 ```

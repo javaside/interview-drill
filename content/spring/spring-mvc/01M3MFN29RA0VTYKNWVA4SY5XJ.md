@@ -49,6 +49,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+
+misconceptions:
+  - id: mc-mv3-1
+    text: '@RestControllerAdvice 是全局兜底，连 Filter 阶段抛出的异常也能捕获'
+    why: 误解：Advice 只覆盖进入 Handler 之后的处理过程；Filter 运行在 DispatcherServlet 之前，那里抛的异常根本走不到它
+  - id: mc-mv3-2
+    text: Controller 里写的 @ExceptionHandler 会被全局 Advice 抢先捕获，局部处理器白写
+    why: 误解：查找顺序是本类优先，本类没有匹配的处理器才去问 ControllerAdvice，局部永远排在全局前面
+  - id: mc-mv3-3
+    text: 系统抛未知异常时把堆栈放进响应 message 返回，前端好定位问题
+    why: 误解：堆栈会把内部实现暴露给攻击者，对外只给笼统提示，完整堆栈进日志
 ---
 
 **统一异常三件套**：

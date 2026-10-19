@@ -64,6 +64,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-gb5-1
+    text: "三色标记出错的后果只是产生浮动垃圾，下一轮 GC 会自动修复"
+    why: "误解：多标留下的浮动垃圾才由下轮兜底；漏标会误收活对象、留下悬挂引用，程序自身无法修复"
+  - id: mc-gb5-2
+    text: "并发标记漏标的原因是业务线程在标记期间还在新建对象"
+    why: "误解：标记期新分配的对象直接按黑色处理；漏标只发生在黑对象新增指向白、同时灰到白的旧路径被删这两件事撞在一起时"
 ---
 
 并发标记（GC 扫对象时**业务还在跑**）用**三色**记账：**白**（候选垃圾）、**灰**（自己扫完、引用没扫完）、**黑**（彻底结案）。

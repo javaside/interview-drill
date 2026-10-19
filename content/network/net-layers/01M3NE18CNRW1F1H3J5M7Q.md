@@ -60,6 +60,13 @@ keyPoints:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1122.html
       locator: RFC 1122
+misconceptions:
+  - id: mc-nl1-1
+    text: "OSI 七层是互联网真正采用的架构，TCP/IP 四层只是没落地的理论草案"
+    why: "误解：实态恰恰是 TCP/IP 四层在跑；OSI 是 ISO 的参考模型，工业界从未按它完整实现"
+  - id: mc-nl1-2
+    text: "TCP 属于网络层，把数据包路由到目标主机正是它的职责"
+    why: "误解：TCP 在传输层，管端到端的连接与可靠性；按 IP 地址选路转发是网络层的事"
 ---
 
 工业界活的是 **TCP/IP 四层**，教科书考的是 **OSI 七层**——对照着记：

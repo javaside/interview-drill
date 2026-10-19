@@ -59,6 +59,14 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+
+misconceptions:
+  - id: mc-st2-1
+    text: 拿不准就用 StringBuffer，反正线程安全，性能也不比 StringBuilder 差
+    why: 误解：synchronized 的开销真实存在，单线程白付锁成本，默认选择应是 StringBuilder
+  - id: mc-st2-2
+    text: 只要出现 + 拼接就该手动改写成 StringBuilder，单行拼接也不例外
+    why: 误解：单表达式拼接编译期已优化（9+ 交给 invokedynamic），循环里的 + 才会每轮造新对象
 ---
 
 按场景选：

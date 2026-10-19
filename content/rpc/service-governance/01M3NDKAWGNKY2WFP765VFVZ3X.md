@@ -60,6 +60,13 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-sg4-1
+    text: "TraceContext 放进 ThreadLocal，提交给线程池的异步任务就能自动带上"
+    why: "误解：池化线程不随任务走，ThreadLocal 里存的东西传不过去——提交任务时要抓取上下文把 Runnable 包一层，或改用可传递的 TransmittableThreadLocal"
+  - id: mc-sg4-2
+    text: "每个服务的日志都打印同一个 traceId，就算完成链路追踪接入"
+    why: "误解：光有 ID 拼不出调用树——span 的起止与父子层级才是还原路径的骨架，日志带上 traceId 只是排查时的顺带收益"
 ---
 
 **链路追踪=给每次请求发一张全程通用的工牌**：

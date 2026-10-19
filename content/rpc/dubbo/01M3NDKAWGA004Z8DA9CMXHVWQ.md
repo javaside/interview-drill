@@ -49,6 +49,18 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+
+misconceptions:
+  - id: mc-du4-1
+    text: Dubbo SPI 无非是把配置换个目录，加载能力和 Java SPI 完全一样
+    why: 误解：Dubbo SPI 多出按名加载、运行时自适应选择与依赖注入包装，远不止换个位置
+  - id: mc-du4-2
+    text: Wrapper 增强靠给实现类生成子类，用继承织入日志监控
+    why: 误解：Wrapper 走组合路线，构造器接收被包装的扩展实例层层套娃，不碰继承关系
+  - id: mc-du4-3
+    text: '@Activate 和 @Adaptive 是同一套机制，都是按 URL 参数动态选实现'
+    why: 误解：@Activate 按条件自动激活一组扩展，@Adaptive 才是运行时按参数挑单个实现
+
 ---
 
 **SPI=框架的插件机制**（协议/注册中心/负载均衡全是插件）。Dubbo 增强 SPI 的三板斧：

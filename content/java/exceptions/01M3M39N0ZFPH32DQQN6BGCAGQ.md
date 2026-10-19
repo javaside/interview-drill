@@ -22,6 +22,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-ex4-1
+    text: "try 的 return 已经定局，finally 里的 return 会被忽略"
+    why: "误解：finally 的 return 走的是另一条退出路径，直接改写结局，try 的值被丢弃"
+  - id: mc-ex4-2
+    text: "finally 里 return 只会吞异常，方法返回值仍是 try 算好的那个"
+    why: "误解：返回值也被覆盖成 finally 的，try 的值与异常一起消失"
+  - id: mc-ex4-3
+    text: "finally 里写 return 直接编译不过，根本不用担心"
+    why: "误解：语法完全合法、能编译能跑，坑在静默吞值——所以才靠规约与静态检查拦它"
 ---
 
 答案：**finally 说了算**——try 里 `return 1`、finally 里 `return 2`，方法返回 **2**；try 抛异常而 finally return？异常被吞，照样返回 2。

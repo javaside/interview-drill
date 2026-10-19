@@ -62,6 +62,13 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
       locator: epoll(7)
+misconceptions:
+  - id: mc-io1-1
+    text: "epoll 属于异步 IO：事件到达时内核已经把数据拷进用户缓冲区，拿来就能用"
+    why: "误解：epoll 只做就绪通知，从内核到用户缓冲区的搬运仍要自己 read；连搬运都不用做的才叫异步（io_uring/IOCP）"
+  - id: mc-io1-2
+    text: "异步 IO 就是开一个后台线程去做阻塞 read，只要主线程不卡就算异步了"
+    why: "误解：那只是拿线程池包住阻塞 IO，「候与搬」一步没少；内核把数据填进缓冲再通知你，才是真异步"
 ---
 
 两个独立维度常被搅在一起：**「候不候」**（阻塞/非阻塞）与**「搬不搬」**（同步/异步）：

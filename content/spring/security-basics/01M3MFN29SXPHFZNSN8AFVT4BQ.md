@@ -49,6 +49,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+
+misconceptions:
+  - id: mc-sec4-1
+    text: 用 BCrypt 要单独建盐字段，注册时生成盐存一列，哈希结果存另一列
+    why: 误解：BCrypt 把盐内嵌进输出串（$2a$10$ 后那段），一张表一列就够，校验时从串里抠出盐重算再比对
+  - id: mc-sec4-2
+    text: 盐属于敏感信息必须保密，一旦泄露拖库者就能反查全部密码
+    why: 误解：盐本来就随哈希串明文存放，它的作用只是让同密码各次结果不同；拖库后真正挡住暴力破解的是 cost 拉高的算力开销
+  - id: mc-sec4-3
+    text: BCrypt 是可逆加密，后台拿着密钥就能把库里的密文还原成明文
+    why: 误解：BCrypt 是单向哈希，没有密钥也没有解密这回事；找回密码只能重置，校验是把输入用同一盐重算一遍再比对
 ---
 
 密码存储三宗罪：**明文**（拖库即裸奔）、**MD5**（快哈希——GPU 每秒千亿次撞库；无盐时「同密码同密文」还能彩虹表批量反查）、**固定盐**（盐泄露同前）。

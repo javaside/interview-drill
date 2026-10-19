@@ -60,6 +60,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-sh3-1
+    text: "查全局第 N 页时，让每个分片各自返回第 N 页的 20 条，拼起来就是全局第 N 页"
+    why: "误解：各片的第 N 页合起来既不完整也不有序；必须每片取前 N 乘以每页条数再内存归并截取——这正是深翻页代价的来源"
+  - id: mc-sh3-2
+    text: "跨片深分页慢主要慢在传输的列太宽，把 select 的字段裁剪到最少就能治好"
+    why: "误解：瓶颈是每片都要扫过偏移量加页大小那么多行才能捞出末尾几条，取列宽窄只是小头；根治靠游标连续翻页或把复杂查询外移到 ES"
 ---
 
 分片后的查询三形态：

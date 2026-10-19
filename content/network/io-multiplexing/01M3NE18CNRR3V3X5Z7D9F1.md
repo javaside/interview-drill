@@ -64,6 +64,13 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
       locator: epoll(7)
+misconceptions:
+  - id: mc-io2-1
+    text: "epoll 快就快在红黑树：一次对数级查找就能把就绪的 fd 全挑出来"
+    why: "误解：红黑树只管注册 fd 的增删查；就绪集合由事件回调挂进链表，epoll_wait 收链表就行——它赢在不用每次全量重扫"
+  - id: mc-io2-2
+    text: "上万条连接个个都在收发数据时，epoll 依然碾压 select/poll，快出一个数量级"
+    why: "误解：全员活跃时 epoll 也要逐个处理就绪事件，优势大幅缩水；它的主场是海量连接、少量活跃的形态"
 ---
 
 三者是**「怎么候一批 fd」**的三代方案：

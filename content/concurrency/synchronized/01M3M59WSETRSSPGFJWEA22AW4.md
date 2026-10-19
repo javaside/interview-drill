@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-sy1-1
+    text: "静态同步方法锁的是全部实例的 monitor，每个对象的锁都占上"
+    why: "误解：静态方法锁的是全 JVM 唯一的 Class 对象，实例的 monitor 一个都不碰——所以它与实例同步方法能并行"
+  - id: mc-sy1-2
+    text: "方法都标了 synchronized 就互斥，操作不同实例的两个线程也排队"
+    why: "误解：互斥看锁的是不是同一个对象；不同实例各锁各的 this 互不相干——跨实例互斥得锁 Class 或共用外部锁对象"
+  - id: mc-sy1-3
+    text: "monitor 挂在方法区的类元数据上，与具体实例无关"
+    why: "误解：锁状态记在对象头的 Mark Word 里，膨胀后的 ObjectMonitor 也按对象关联；换一个实例就是换一把锁"
 ---
 
 `synchronized` 的**锁是对象**，不是方法不是代码：

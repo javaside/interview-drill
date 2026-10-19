@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tl3-1
+    text: "static ThreadLocal<SimpleDateFormat> 让所有线程共用同一个 SDF 实例，比每线程新建省内存"
+    why: "误解：每个线程各自 new 一份存进自己的表——ThreadLocal 提供的是隔离，恰恰不共享实例"
+  - id: mc-tl3-2
+    text: "traceId 存进 ThreadLocal 后，提交到线程池的异步任务里也能原样取到"
+    why: "误解：值只认当前线程，换了线程就丢；池化异步要靠 TransmittableThreadLocal 这类搬运工显式接力"
+  - id: mc-tl3-3
+    text: "JDK 17 里 SimpleDateFormat 已经线程安全，可以放心 static 共享"
+    why: "误解：它至今非线程安全，版本升级并没有修；现代正解是换无状态的 DateTimeFormatter"
 ---
 
 两大类场景：

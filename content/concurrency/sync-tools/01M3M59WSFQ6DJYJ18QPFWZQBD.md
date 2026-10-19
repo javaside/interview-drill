@@ -57,6 +57,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: juc
+misconceptions:
+  - id: mc-sync4-1
+    text: "LinkedBlockingQueue 不设容量也安全，消费跟不上时 JVM 会替生产端限流"
+    why: "误解：不设界就是无界雷区，生产快过消费只进不出直到 OOM；背压要靠有界队列的 put 满阻塞"
+  - id: mc-sync4-2
+    text: "SynchronousQueue 容量为一：可以先塞一个占位，消费者随后再取"
+    why: "误解：它是零容量直递——put 必须候到有人 take 当场交接，没有「先垫一个」的格子"
+  - id: mc-sync4-3
+    text: "offer 与 put 只是两个名字，队列满时表现一模一样"
+    why: "误解：offer 满了立刻交还 false 走人（超时版限时）；put 才排队候位——背压语义认的是 put"
 ---
 
 生产者消费者的**队列选型**：

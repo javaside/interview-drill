@@ -65,6 +65,14 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
       locator: mm concepts
+misconceptions:
+  - id: mc-mm2-1
+    text: "缺页中断属于运行事故，写得好的程序全程一次缺页都不该发生"
+    why: "误解：按需调入正靠缺页中断把页第一次带进内存，良性缺页是机制的一部分；越权访问那一种才升级成段错误"
+  - id: mc-mm2-2
+    text: "内核每次访存都更新 LRU 时间戳，保证逐出的页绝对是最久未访问的"
+    why: "误解：逐出用的不是严格 LRU，精确记录每次访存代价不可接受；内核用 active/inactive 双链表扫出大致冷热，热页偶尔被误伤也认了"
+
 ---
 
 **缺页中断**（page fault）不是坏事——它是「按需分配」的兑现时刻：进程摸到一个还没映射的虚拟页 → CPU 陷入内核 → 内核看这地方**该不该有数据**：

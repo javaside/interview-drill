@@ -50,6 +50,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+
+misconceptions:
+  - id: mc-cl3-1
+    text: 重写 findClass 就算打破了双亲委派，加载顺序随之改变
+    why: 误解：findClass 只管到哪找字节流，依然排在委派失败之后才被调用，先父后子的顺序分毫未动
+  - id: mc-cl3-2
+    text: 线程上下文类加载器是为了让子层代码方便调用父层核心类
+    why: 误解：方向反了，它是核心库（父层）向下借用应用加载器发现 SPI 实现的通道
+  - id: mc-cl3-3
+    text: Tomcat 打破双亲委派是为了提速，少一层委派少一次查找开销
+    why: 误解：动机是 webapp 隔离与多版本共存，各 war 包同名类互不可见才是目的，性能不是理由
 ---
 
 两条路数：

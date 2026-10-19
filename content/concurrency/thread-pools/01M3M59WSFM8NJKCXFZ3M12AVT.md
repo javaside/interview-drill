@@ -60,6 +60,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tp5-1
+    text: "newFixedThreadPool 的风险在于线程数会无限膨胀"
+    why: "误解：fixed 的线程数恒定，炸的是那条不设上限的队列——上游一抖任务全堵在内存里"
+  - id: mc-tp5-2
+    text: "newCachedThreadPool 的风险在于无界队列堆积任务"
+    why: "误解：它用零容量的同步移交队列，任务根本不排队；风险是 max 线程数不设顶，洪峰时无限开线程压垮 OS"
+  - id: mc-tp5-3
+    text: "禁用 Executors 是因为老版本实现有 bug，JDK 17 已修复可以放心用"
+    why: "误解：工厂方法从来不是 bug，禁的是无界队列与无界线程数这类默认资源配置；这个风险在 JDK 17 原样存在"
 ---
 
 Executors 的方便面**三宗罪**：

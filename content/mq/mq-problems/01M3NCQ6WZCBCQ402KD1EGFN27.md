@@ -68,6 +68,13 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-mp1-1
+    text: "丢消息只可能发生在 broker 宕机，生产端与消费端两个环节不会丢"
+    why: "误解：最常见的丢失恰恰在两端——发送无确认或回调被吞、先提交后处理，排查必须三段全覆盖"
+  - id: mc-mp1-2
+    text: "消费端改成手动提交就绝不丢，处理异常 catch 住继续提交也没问题"
+    why: "误解：吞掉异常继续提交是假成功，位点前移了活却没干，消息无声丢失，失败必须不签收走重试"
 ---
 
 「**消息丢了**」的三段排查（背下三段各自的保险）：

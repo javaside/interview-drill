@@ -67,6 +67,13 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-kc5-1
+    text: "Kafka 快是因为消息全放在内存里，本质是个内存队列"
+    why: "误解：消息始终写磁盘，快靠顺序写加页缓存借力操作系统，进程重启缓存还在，并不是自建内存存储"
+  - id: mc-kc5-2
+    text: "分区越多吞吐越高，想提升性能就把分区数开到很大"
+    why: "误解：分区过多会推高副本同步、leader 切换与再平衡成本，吞吐先升后降，规划要按消费并行度留余量"
 ---
 
 Kafka 的性能是**四个「不折腾」**的叠加：

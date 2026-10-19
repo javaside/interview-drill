@@ -60,6 +60,13 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-dc2-1
+    text: "12 位序列号限制了单机每秒只能产出 4096 个 ID"
+    why: "误解：序列每毫秒清零重计——4096 是毫秒内上限，折算单机每秒约 409 万，量级差了一千倍"
+  - id: mc-dc2-2
+    text: "雪花 ID 全局严格递增，任何后生成的号都比先生成的大"
+    why: "误解：它只承诺趋势递增——多机并行时高位机器号不同、同毫秒号交错，跨节点没有全序，别拿它当全局单调序列用"
 ---
 
 **雪花 ID 的 64 位三段式**：

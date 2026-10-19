@@ -67,6 +67,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-dt1-1
+    text: "准备阶段只是口头投票：参与者回答能或不能，并不真正执行事务、不锁资源"
+    why: "误解：参与者必须在准备阶段执行到可提交状态并锁住资源，否则应了 YES 也可能交不上；持锁直到二阶段指令到达正是阻塞的根源"
+  - id: mc-dt1-2
+    text: "协调者宕机不算大事，参与者各自超时后可以自行决定提交或回滚"
+    why: "误解：投过 YES 的参与者若各自行动，会出现一部分提交一部分回滚；它们只能原地持锁候协调者恢复——单点缺陷正可怕在这里"
 ---
 
 **两阶段提交（2PC）**=「先投票、再执行」：

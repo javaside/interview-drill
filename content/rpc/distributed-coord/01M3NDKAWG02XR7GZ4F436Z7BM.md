@@ -64,6 +64,13 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-dc5-1
+    text: "CAP 是三选二的理论，系统可以主动放弃 P，让 C 与 A 兼得"
+    why: "误解：P 是躲不掉的环境事实，不容忍分区的系统分区一来就整体瘫痪；真实的抉择只发生在分区那一刻的 C 与 A 之间"
+  - id: mc-dc5-2
+    text: "最终一致保证数据最终收敛，所以并发冲突的写入也能自动合并出不丢更新的结果"
+    why: "误解：收敛只承诺副本趋同，不承诺内容正确——冲突多以最后写入覆盖解决，被覆盖的更新照样丢，合并策略要业务自己定"
 ---
 
 **CAP** 说的是**分区（P）发生时**你只能在 **C（一致性）** 和 **A（可用性）** 里挑一个：

@@ -59,6 +59,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-my3-1
+    text: "MyBatis 在编译期自动生成了 Mapper 实现类，运行时调的就是这个生成类"
+    why: "误解：从头到尾没有实现类——运行时 JDK 动态代理现造代理对象，接口全限定名加方法名只是查 SQL 的键"
+  - id: mc-my3-2
+    text: "Mapper 方法支持重载，同名不同参的两条 SQL 会按参数签名正确路由"
+    why: "误解：定位 SQL 只认接口名加方法名这个键，与参数签名无关——重载的两个方法只能落到同一条语句上"
 ---
 
 Mapper 接口**没有实现类**——你调用的是 **JDK 动态代理**：

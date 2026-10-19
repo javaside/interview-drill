@@ -51,6 +51,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-lk6-1
+    text: "普通 select 也会给读到的行加共享锁，所以长查询会阻塞别人更新"
+    why: "误解：普通查询走 MVCC 快照读一行锁都不加，会被挡住的只有显式加锁的那几类读法"
+  - id: mc-lk6-2
+    text: "一个事务锁的行数太多时，InnoDB 会把行锁升级成表锁来省内存"
+    why: "误解：InnoDB 从不做锁升级，行多了只是锁结构吃内存，行锁升表锁是 SQL Server 的机制"
+  - id: mc-lk6-3
+    text: "select ... for update 属于查询语句，加的是共享锁而非排他锁"
+    why: "误解：for update 恰恰是显式讨排他锁的读法，真要共享锁得写 lock in share mode"
 ---
 
 行锁的两种**模式**：

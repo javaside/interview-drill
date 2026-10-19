@@ -53,6 +53,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-co4-1
+    text: "TreeSet 判重也按 equals，与 HashSet 同一套口径"
+    why: "误解：TreeSet 只认 compareTo 或 Comparator 的返回值，比较结果非 0 的对象可同时入集"
+  - id: mc-co4-2
+    text: "LinkedHashSet 要维持顺序，元素必须实现 Comparable"
+    why: "误解：插入序靠内部双向链表记账，不需要比较能力；要 Comparable 的是 TreeSet"
+  - id: mc-co4-3
+    text: "HashSet 的 contains 要逐个 equals 比对元素，元素越多越慢"
+    why: "误解：contains 先按 hashCode 定桶直达，平均 O(1)；equals 只在同桶少数候选间确认"
 ---
 
 三个 Set，差在**顺序**和**代价**：

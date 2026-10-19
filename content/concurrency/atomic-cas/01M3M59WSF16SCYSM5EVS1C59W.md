@@ -43,6 +43,19 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: juc
+misconceptions:
+  - id: mc-ac4-1
+    text: "CAS 任何场景都比锁快，因为自旋不挂起不进内核"
+    why: "误解：竞争一烈自旋就成全员空转烧 CPU，失败者挂起睡觉的互斥锁反而省——快慢看竞争烈度与临界区长度"
+  - id: mc-ac4-2
+    text: "CAS 是悲观手段：料定别人会改，所以每次都先比对再动手"
+    why: "误解：先比对恰恰是乐观派的验证动作——默认没冲突、撞了才重试；料定有冲突先锁后动的是悲观派"
+  - id: mc-ac4-3
+    text: "两个变量各用各的 Atomic 做 CAS，两变量间的一致性就有了"
+    why: "误解：两次 CAS 中间随时可能被插一脚，别线程只看得见一半更新；跨变量要么上锁，要么打包成不可变对象整体换引用"
+  - id: mc-ac4-4
+    text: "原子类只是语法糖，底层就是 JVM 帮你 synchronized 加锁解锁"
+    why: "误解：原子类走 cmpxchg 这类硬件原语，不排队不挂起，失败只是重读重试；monitor 的阻塞唤醒根本没出场"
 ---
 
 **看竞争烈度和临界区长度**：

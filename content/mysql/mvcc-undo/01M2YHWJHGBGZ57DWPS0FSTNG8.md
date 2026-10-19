@@ -36,6 +36,22 @@ keyPoints:
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html
       locator: 15.7.1 Next-Key Locks
     reasoning: 手册指出 next-key lock 用于防止幻行插入，说明避免幻读的机制是锁而非 MVCC 本身
+misconceptions:
+  - id: mc-fstng8-1
+    text: "MVCC 加上 RR 已经彻底根治幻读，间隙锁在 8.0 里纯属多余"
+    why: "误解：固定快照只护住普通 select；带锁的当前读看最新数据仍会撞见新行，挡它靠 next-key lock"
+  - id: mc-fstng8-2
+    text: "幻读就是两次查询同一行的值不一样，跟不可重复读说的是一回事"
+    why: "误解：同行的值变化叫不可重复读；幻读专指同一范围查询冒出全新的行，两者对象与对策都不同"
+  - id: mc-fstng8-3
+    text: "next-key lock 只是间隙锁的别名，只锁记录之间的空隙，不锁记录本身"
+    why: "误解：next-key lock 是记录锁加前隙间隙锁的组合，索引记录本身连同它前面的区间一起锁住"
+  - id: mc-fstng8-4
+    text: "版本链常驻内存，数据库重启就丢，所以重启后幻读防护会失效"
+    why: "误解：旧版本存放在 undo 表空间里，随日志持久化落盘，重启后快照读照常沿链回溯"
+  - id: mc-fstng8-5
+    text: "ReadView 的活跃事务列表会随别的事务提交实时刷新，新提交的行立刻可见"
+    why: "误解：读视图生成时活跃列表就定格了，判断只看建视图那一刻的快照，不随外界提交而变"
 ---
 先说**幻读**是什么：同一个查询执行两次，第二次凭空多出了别人新插入的行——像你在数队伍人数，数第二遍时队伍里多了陌生人。
 

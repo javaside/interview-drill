@@ -61,6 +61,14 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
       locator: block
+misconceptions:
+  - id: mc-di1-1
+    text: "O_DIRECT 是提速开关，小 IO 随机读写加上它都会更快"
+    why: "误解：直接 IO 失去页缓存的预读与聚合红利，小 IO 常常更慢；它的价值在于避开双重缓存、把刷盘时机握在自己手里"
+  - id: mc-di1-2
+    text: "用了 O_DIRECT，write 一返回数据就已安全落盘，不必再 fsync"
+    why: "误解：write 返回只说明请求已交给设备，盘上自带的写缓存还在；持久化仍要靠 fsync 或 FUA 屏障兜底"
+
 ---
 
 **默认的 write 是「写到内存就算完」**——页缓存（PageCache）是内核替所有进程做的**读写缓存**：

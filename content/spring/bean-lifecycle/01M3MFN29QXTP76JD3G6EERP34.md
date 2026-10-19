@@ -62,6 +62,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-bl3-1
+    text: "BeanPostProcessor 的两个钩子在实例化之前和之后各执行一次，专用来改 BeanDefinition"
+    why: "误解：改 Bean 定义的是 BeanFactoryPostProcessor，启动期先跑；BPP 的钩子包着初始化前后，改的是实例本身"
+  - id: mc-bl3-2
+    text: "自定义 BPP 注册时可以声明只作用于指定的 Bean，没命中的自动跳过"
+    why: "误解：BPP 没有内建的目标过滤，钩子对容器内每个 Bean 都触发，范围控制要自己在实现里按类型或注解判断"
 ---
 
 **BeanPostProcessor = 装配流水线上的定制工位**：每个 Bean 走到初始化**前**和**后**都会过这两个钩子——你要在**不碰目标类**的前提下「加点料」（注入、代理、校验、替换），就插一个 BPP。

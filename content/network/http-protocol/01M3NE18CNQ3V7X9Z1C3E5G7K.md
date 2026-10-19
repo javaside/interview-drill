@@ -61,6 +61,13 @@ keyPoints:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
       locator: RFC 9110
+misconceptions:
+  - id: mc-hp2-1
+    text: "401 表示登录了但没权限，403 表示根本没登录"
+    why: "误解：正好相反——401 是未认证（没登录或凭证无效），403 是认证过了但被拒绝；401 响应还会带 WWW-Authenticate 头"
+  - id: mc-hp2-2
+    text: "429 限流属于 5xx 服务端错误——请求太多把服务器压出了故障"
+    why: "误解：429 是 4xx 客户端错误，判定的是请求方太频；服务器自身内部出的问题才落在 5xx"
 ---
 
 状态码是响应的**体检报告单**，五段分类记骨架、高频记个体：

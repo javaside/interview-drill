@@ -63,6 +63,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-vj5-1
+    text: "CAS 失败的线程会被挂起排队，持有者释放后再唤醒它重试"
+    why: "误解：CAS 不挂起线程也不进内核，失败就地自旋再来一次——这正是低竞争时快的原因"
+  - id: mc-vj5-2
+    text: "有自动内存管理在，ABA 在 Java 里不可能发生"
+    why: "误解：GC 回收后同地址重用新对象照样造成 ABA，无锁结构的经典事故——版本号戳的就是它"
+  - id: mc-vj5-3
+    text: "AtomicInteger 自旋到一定次数会自动升级为加锁，不会一直空转"
+    why: "误解：incrementAndGet 没有任何升级机制，失败就一直转；换 LongAdder 或改用锁是程序员自己的决策"
 ---
 
 **CAS（比较并交换）** 是 CPU 的一条**原子指令**：

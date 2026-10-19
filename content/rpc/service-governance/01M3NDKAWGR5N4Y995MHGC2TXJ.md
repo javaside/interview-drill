@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-sg2-1
+    text: "令牌桶的桶里装的是请求，桶满说明积压的请求太多要排队"
+    why: "误解：桶里装的是令牌不是请求——空闲攒下的是放行额度，请求要么拿到令牌就走，要么当场被拒或另找缓冲区排队，桶不存请求"
+  - id: mc-sg2-2
+    text: "空闲时令牌无限累积，业务歇多久突发额度就能攒多大"
+    why: "误解：桶容量封顶——攒满后新令牌直接作废不再累积，突发上限恒为桶容量，与空闲时长无关"
+  - id: mc-sg2-3
+    text: "Nginx limit_req 配了 burst 就当作允许突发，超速请求立刻放行"
+    why: "误解：burst 是排队缓冲的深度——默认行为是把超速请求延迟着匀速放出去，要立即放行还得再加 nodelay"
 ---
 
 两种**整流器**，差在**对突发的态度**：

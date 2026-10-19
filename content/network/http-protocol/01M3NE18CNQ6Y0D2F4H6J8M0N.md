@@ -66,6 +66,13 @@ keyPoints:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
       locator: RFC 9111
+misconceptions:
+  - id: mc-hp5-1
+    text: "强缓存一过期，浏览器就作废本地副本，重新下载完整文件"
+    why: "误解：过期只是强缓存这一级失效，接下来走协商缓存——内容没变回 304，继续用本地副本，省掉整个 body"
+  - id: mc-hp5-2
+    text: "Cache-Control 写 no-cache 就是不准缓存，效果与 no-store 相同"
+    why: "误解：no-cache 是「可以存，但每次使用前必须协商」，no-store 才是彻底不落盘；一字之差语义相反"
 ---
 
 HTTP 缓存分两级，**先问要不要发请求**：

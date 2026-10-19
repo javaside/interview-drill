@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: juc
+misconceptions:
+  - id: mc-sync1-1
+    text: "CountDownLatch 归零后再 countDown 会复位重数，天然支持多轮"
+    why: "误解：计数到零门就永久敞开，往下扣也是空扣；要多轮复用得换 CyclicBarrier 按代际重开"
+  - id: mc-sync1-2
+    text: "CyclicBarrier 的回调由最先到达的线程顺手执行，后到的只管候着"
+    why: "误解：屏障动作由最后到达的那位在放行前执行——他就是踩发令枪的人，先到的一直在候"
+  - id: mc-sync1-3
+    text: "CyclicBarrier 与 CountDownLatch 同为 AQS 共享实现，语义可互换"
+    why: "误解：Latch 才建在 AQS 共享模式上（state 即计数）；Barrier 是重入锁加条件队列按代际放行，主语与复用性都不同"
 ---
 
 两个「凑齐再走」的工具，**主语不同**：

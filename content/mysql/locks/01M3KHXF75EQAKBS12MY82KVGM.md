@@ -54,6 +54,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-lk3-1
+    text: "next-key lock 的锁定范围是左闭右开区间，例如 [10, 20)"
+    why: "误解：next-key 锁的是记录加上它前面的那段缝隙，写成区间是 (10, 20]，右端记录在锁内、左端不在"
+  - id: mc-lk3-2
+    text: "RR 隔离级别下普通 select 也会加 next-key lock，把扫过的范围全锁住"
+    why: "误解：普通查询走 MVCC 快照读一行锁都不加，只有 for update、lock in share mode 这类当前读才铺开 next-key"
+  - id: mc-lk3-3
+    text: "唯一索引精确命中一个已存在的值时依然要加 next-key lock，锁住该值两侧的空隙"
+    why: "误解：唯一索引按唯一值精确命中会优化成纯记录锁，间隙部分被省掉，锁的范围反而收窄"
 ---
 
 三种行锁，范围一个比一个大：

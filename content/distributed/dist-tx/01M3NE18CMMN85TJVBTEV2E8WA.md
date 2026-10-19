@@ -75,6 +75,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-dt2-1
+    text: "Try 阶段直接把款扣掉，Confirm 只是事后通知各方扣款已完成"
+    why: "误解：Try 只做检查与冻结（可用减、冻结增，钱没动）；真扣发生在 Confirm——先真扣就失去预留可撤销的余地，Cancel 无从谈起"
+  - id: mc-dt2-2
+    text: "空回滚就是一次普通的业务回滚：Try 执行失败后把已动用的资源自动退回去"
+    why: "误解：空回滚特指 Try 请求压根没到、Cancel 却先到的场景——没预留却收到取消，正确做法是记「已回滚」标记直接返回成功"
 ---
 
 **TCC（Try-Confirm-Cancel）**=把 2PC 的「数据库锁」换成「**业务级预留**」：

@@ -63,6 +63,15 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
       locator: sched(7)
+
+misconceptions:
+  - id: mc-pt1-1
+    text: 进程切换代价高，是因为每次切换都要复制搬运整个进程的内存
+    why: 误解：物理内存原地不动谁也不搬运，贵在换页表基址带来的 TLB 与缓存失效
+  - id: mc-pt1-2
+    text: Linux 的线程切换在用户态就能完成，根本不用进内核
+    why: 误解：NPTL 线程就是内核眼里的调度实体，切换照旧陷入内核，全程不出用户态的是协程
+
 ---
 
 记分水岭：**进程管资源、线程管执行**。

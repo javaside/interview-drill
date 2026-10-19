@@ -68,6 +68,13 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-kc4-1
+    text: "消息被消费组读完之后 broker 会立刻删掉，释放存储空间"
+    why: "误解：Kafka 删日志只看保留期与大小策略，与有没有人消费无关，消费进度只是记录在内部主题里的位点"
+  - id: mc-kc4-2
+    text: "自动提交最坏只是重复消费，不会丢消息，可以放心用默认配置"
+    why: "误解：自动提交存在已提交未处理的窗口，此时崩溃位点已前移，这批消息永远不会再投，丢起来无声无息"
 ---
 
 **offset = partition 内的座位号**（0,1,2,…）。消费组记住「我读到几号了」——**重启从这儿接着读**。

@@ -57,6 +57,16 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-gr2-1
+    text: "把 REST 的 JSON 换成 Protobuf 编码，接口就算改造为 gRPC 了"
+    why: "误解：gRPC 是整套框架——proto 契约编译期生成代码、HTTP/2 传输、四种流与超时取消传播都是组成部分，换序列化只动了皮"
+  - id: mc-gr2-2
+    text: "现代浏览器都支持 HTTP/2，前端可以直连原生 gRPC 服务"
+    why: "误解：浏览器不把 HTTP/2 的帧与流控制开放给页面脚本，也读不到 gRPC 依赖的 trailers——要 grpc-web 加代理转换才通得了"
+  - id: mc-gr2-3
+    text: "gRPC 的性能优势全部来自 Protobuf 编码小，传输层用 HTTP/1.1 也差不多"
+    why: "误解：多路复用免排队、HPACK 压掉重复头、长连接免反复建连——传输层与编码的收益同量级，HTTP/1.1 上跑不出 gRPC 的优势"
 ---
 
 按**给谁用**选：

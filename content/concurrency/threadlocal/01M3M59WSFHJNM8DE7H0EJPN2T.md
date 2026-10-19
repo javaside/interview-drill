@@ -52,6 +52,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tl2-1
+    text: "泄漏的是 ThreadLocal 对象本身——map 的键强引用着它，GC 回收不掉"
+    why: "误解：键恰是弱引用，ThreadLocal 本体能被正常回收；真正漏的是键清零后那条无主值，线程活着它就活着"
+  - id: mc-tl2-2
+    text: "弱引用设计已经根治泄漏，用完不调 remove() 也不会漏"
+    why: "误解：弱引用只负责让键断开，断完留下的值还躺在条目里，线程不死它就不走——remove 才能收尾"
+  - id: mc-tl2-3
+    text: "tl.remove() 会把全体线程里这个 ThreadLocal 的条目都清掉"
+    why: "误解：remove 只清当前线程自己表里的条目；别的线程的份要各自线程自己清，或随线程死亡带走"
 ---
 
 经典追问链。泄漏的**路径**：

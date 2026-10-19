@@ -65,6 +65,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-ba2-1
+    text: "自动配置类靠全类路径扫描 @Configuration 注解被发现，无需任何登记文件"
+    why: "误解：自动配置类不在主类包下、组件扫描够不着——必须登记在 META-INF/spring 的 AutoConfiguration.imports 里才会成为候选"
+  - id: mc-ba2-2
+    text: "自动配置的 Bean 与我自定义的同类型 Bean 共存时以自动配置为准，必须 exclude 才能用回自己的"
+    why: "误解：设计是用户优先——自动配置普遍挂 @ConditionalOnMissingBean，见你配了就让位；exclude 是整类关停，不是解决共存的手段"
 ---
 
 **自动装配的推理链**：

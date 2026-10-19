@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tb2-1
+    text: "直接调用 t.run() 会被 JVM 拦截并抛异常"
+    why: "误解：run 是公开方法，直接调用完全合法，只是安静地在当前线程里原地同步执行——这正是坑所在"
+  - id: mc-tb2-2
+    text: "run 执行完的 Thread 会回到 NEW 状态，可以再次 start 复用"
+    why: "误解：run 一结束线程就进 TERMINATED，状态机不可回退；再 start 只会抛 IllegalThreadStateException"
+  - id: mc-tb2-3
+    text: "t.start() 之后主线程会停顿，把 CPU 让给新线程先跑"
+    why: "误解：start 立即返回，新旧线程同台竞争调度；主线程要排到新线程后面必须显式 join"
 ---
 
 最容易踩的入门坑：

@@ -57,6 +57,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-eh2-1
+    text: "hashCode 相同的两个对象，equals 比对必定相同"
+    why: "误解：方向搞反了——equals 判同的两者必须同哈希；同哈希只是碰撞，桶里排队再由 equals 分辨"
+  - id: mc-eh2-2
+    text: "equals 为 false 的对象，hashCode 必须不同"
+    why: "误解：契约不管这个方向，判为不同的对象撞哈希完全合法；int 就 32 位，全避碰撞也不可能"
+  - id: mc-eh2-3
+    text: "hashCode 应该把对象的全部字段都掺进去，掺得越多越保险"
+    why: "误解：参与字段必须与 equals 完全一致；equals 不用的字段掺进哈希，判同的对象可能落到不同桶"
 ---
 
 一条**单向硬约束**：

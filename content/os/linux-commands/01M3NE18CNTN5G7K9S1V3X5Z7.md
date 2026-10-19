@@ -62,6 +62,14 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
       locator: uptime(1)
+misconceptions:
+  - id: mc-lc5-1
+    text: "load average 只统计 CPU 任务，数值飙高就只能加核或优化计算"
+    why: "误解：load 把不可中断候 IO 的 D 态任务也计入，CPU 很闲 load 照样飙高；先分诊是不是存储卡住再说"
+  - id: mc-lc5-2
+    text: "D 状态进程卡住了也没事，kill -9 一发就能立刻清掉"
+    why: "误解：D 态处在不可中断的 IO 路径上，SIGKILL 也要候系统调用返回才生效；根治得修底层存储，比如卡死的 NFS"
+
 ---
 
 **load average 的分子是两种人**：正在跑的（R）+**候磁盘 IO 的 D 态**（Linux 特色的计入方式）——1/5/15 分钟滑动平均：

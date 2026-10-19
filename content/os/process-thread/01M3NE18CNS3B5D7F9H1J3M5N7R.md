@@ -62,6 +62,15 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
       locator: proc(5)
+
+misconceptions:
+  - id: mc-pt2-1
+    text: 僵尸进程反复 kill -9 就能清掉 Z 状态
+    why: 误解：僵尸早已退出、没有活进程可杀，信号无处投递，得让父进程收尸或杀父过继 init
+  - id: mc-pt2-2
+    text: ps 里的 S 状态表示进程被冻结挂起，要 SIGCONT 才能继续跑
+    why: 误解：S 是可中断睡眠，事件或信号一到就醒，被 SIGSTOP 冻住的才是 T 状态
+
 ---
 
 **五态模型**（`ps`/`top` 里的字母）：

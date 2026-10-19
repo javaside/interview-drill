@@ -41,6 +41,19 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-sy3-1
+    text: "synchronized 不可重入：递归进同步方法会自己堵死自己"
+    why: "误解：它天生可重入，monitor 认得出持有者本人；重入只是计数加一，不会再排队竞争"
+  - id: mc-sy3-2
+    text: "重入靠 JVM 维护一张全局表，登记每个线程抢过哪些对象"
+    why: "误解：属主与计数记在每个对象自己的 monitor 里，重入加一、退出减一；全局登记表并不存在"
+  - id: mc-sy3-3
+    text: "可重入对谁都生效：A 持锁时 B 凭可重入也能直接进门"
+    why: "误解：重入只豁免持有者本人，不同线程之间照样互斥排队——它是线程维度的通行证，不是全场免检"
+  - id: mc-sy3-4
+    text: "计数器减到一锁就半开，别的线程这时已经能挤进来"
+    why: "误解：计数不归零锁就还在原线程手里，减到一也不行；进场只能候到真正归零那一刻"
 ---
 
 **是可重入的**——同一线程拿过的锁，可以**再拿**：

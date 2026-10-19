@@ -53,6 +53,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-ma3-1
+    text: "递归爆栈把 -Xss 调大就好，比改代码省事"
+    why: "误解：病根是缺终止条件，扩栈只是把爆点推深；且每线程栈变大后能开的线程更少——药方是终止条件或改迭代"
+  - id: mc-ma3-2
+    text: "OOM 的消息一定是 Java heap space，看到 OOM 就是堆满"
+    why: "误解：OOM 是家族病——Metaspace、Direct buffer memory、unable to create thread 都以 OOM 报；消息里的区域名才是分诊台"
+  - id: mc-ma3-3
+    text: "unable to create native thread 也是堆不够，把 -Xmx 加大就能解决"
+    why: "误解：建线程耗的是每线程一份的本机栈内存与系统线程配额，都在堆外；加 -Xmx 救不了，反而挤占本机内存"
 ---
 
 两个都是「装不下」，**病因相反**：

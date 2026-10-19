@@ -74,6 +74,13 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-kr5-1
+    text: "消费失败就该原地无限重试直到处理成功，这样一条都不会丢"
+    why: "误解：无限重试会被一条毒消息卡死整个分区，后面的消息全部堵住，重试有限次后必须转进死信"
+  - id: mc-kr5-2
+    text: "转入死信 topic 的消息会被 Kafka 自动定时搬回原 topic，无需人工干预"
+    why: "误解：死信 topic 是自建的终点隔离区，broker 不会自动回投，修复后要人工或程序显式重放"
 ---
 
 消费侧的**安全公式 = 手动提交 + idempotent + 死信出口**：

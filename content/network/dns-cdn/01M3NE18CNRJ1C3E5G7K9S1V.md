@@ -62,6 +62,13 @@ keyPoints:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc1034.html
       locator: RFC 1034
+misconceptions:
+  - id: mc-dn2-1
+    text: "DNS 轮询按连接分发请求，能把流量均匀摊到每台机器"
+    why: "误解：DNS 不记连接不看负载，只是把多个答案轮转着发；客户端与各级解析器缓存旧答案，同一台机器会被反复命中，分流天然不匀"
+  - id: mc-dn2-2
+    text: "摘掉宕机机器的 A 记录，用户马上就不会再访问到它"
+    why: "误解：各级解析器按 TTL 缓存旧答案继续派发，最长 TTL 内死机器照样收流量；秒级摘流要靠前置 LB，改 DNS 记录有分钟级滞后"
 ---
 
 DNS 天生就是个**全球分布式的调度器**，四层用法逐级增强：

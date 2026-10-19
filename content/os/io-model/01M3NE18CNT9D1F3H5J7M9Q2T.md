@@ -70,6 +70,14 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/block/index.html
       locator: block
+misconceptions:
+  - id: mc-di3-1
+    text: "%util 一冲到 100% 就是盘已饱和的铁证，必须立刻扩容"
+    why: "误解：%util 只是采样期内设备非空闲的占比，SSD 能并行服务多个请求，100% 时仍可能余量充足；先看 await 是否恶化再下结论"
+  - id: mc-di3-2
+    text: "r/s 加 w/s 就是每秒吞吐量的 MB 数，这个数大自然读得快"
+    why: "误解：r/s 与 w/s 数的是每秒次数（IOPS），吞吐量还要乘上每次请求的字节数；两个口径一个看频率、一个看流量"
+
 ---
 
 `iostat -x 1` 一屏指标，按重要性读：

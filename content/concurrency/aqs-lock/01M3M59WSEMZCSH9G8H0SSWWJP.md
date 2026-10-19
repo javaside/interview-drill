@@ -53,6 +53,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-aq2-1
+    text: "非公平锁释放时从候队线程里随机挑一个发锁，全凭手气"
+    why: "误解：非公平锁释放同样按队列唤醒队头；不公只发生在锁刚空出的瞬间路人可抢先，不是抽签选人"
+  - id: mc-aq2-2
+    text: "公平锁慢在每次抢锁都要遍历整条候队逐个核对前驱"
+    why: "误解：查前驱只瞄一眼队头下一位，开销恒定；慢在禁止插队后，队头从唤醒到跑起来那段锁空转、切换更密"
+  - id: mc-aq2-3
+    text: "公平锁实例上 tryLock 也守先来后到，绝不插队"
+    why: "误解：无参 tryLock 一律就地直接 CAS，官方文档明说它无条件插队；守公平纪律的是 lock 与超时版 tryLock"
 ---
 
 - **公平锁**：`new ReentrantLock(true)`——钥匙**按排队序**发：来抢锁先看队列里有没有人排在前面，有就老实去队尾。

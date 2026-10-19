@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-my1-1
+    text: "#{} 的防注入原理是把值里的特殊字符转义后再拼进 SQL"
+    why: "误解：#{} 不做转义拼接——SQL 结构先定型成问号占位发出去，值作为参数单独传输，结构根本碰不到值"
+  - id: mc-my1-2
+    text: "用 ${} 接用户输入没关系，把单引号手工替换掉就安全了"
+    why: "误解：拼接位置的数据已经是 SQL 结构的一部分，手工转义挡不住编码变形绕过——值位置必须用 #{} 让结构定型"
+  - id: mc-my1-3
+    text: "#{} 也能放在表名或排序字段的位置，加个配置开关即可"
+    why: "误解：预编译占位只能代表值，表名列名这类标识符没法当参数传——结构位置只能 ${} 加白名单校验"
 ---
 
 差在**进 SQL 的方式**：

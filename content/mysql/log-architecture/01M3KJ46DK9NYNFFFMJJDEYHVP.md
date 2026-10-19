@@ -58,6 +58,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-log4-1
+    text: "崩溃恢复只重放已提交事务的 redo，未提交事务的页修改一概跳过"
+    why: "误解：重放是物理现场的完整重建，未提交事务的页改动也照样重做，提交与否是重放完之后由 binlog 裁定的事"
+  - id: mc-log4-2
+    text: "恢复的正确顺序是先用 undo 回滚未提交事务，再重放 redo 补上已提交的"
+    why: "误解：顺序恰好相反，先从 checkpoint 重放 redo 拼回崩溃瞬间的物理现场；undo 段本身也是页，得先恢复出来才可读"
+  - id: mc-log4-3
+    text: "重放时同一页的修改可能被重复执行，会把数据改出错误结果"
+    why: "误解：页头记着 LSN，日志序号不超过页面上已有的就直接跳过，redo 重放天生禁得住重复执行"
 ---
 
 数据库重启后的**自我修复**流程：

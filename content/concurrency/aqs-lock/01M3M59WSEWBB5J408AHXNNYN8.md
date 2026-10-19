@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-aq1-1
+    text: "state 一个字段同时编码持有线程、重入深度与候队长度"
+    why: "误解：state 只是含义由子类定义的一个 int；持有线程与队列长度另有载体，一个字段装不下三件事"
+  - id: mc-aq1-2
+    text: "AQS 候队节点里装的是待执行的任务，空闲线程谁抢到谁认领"
+    why: "误解：节点包装的是抢锁失败的线程本身，入队即挂起候命——它是锁队列，不是线程池的任务队列"
+  - id: mc-aq1-3
+    text: "AQS 只出接口规范，入队挂起唤醒全由 ReentrantLock 这类子类自研"
+    why: "误解：AQS 是模板方法骨架类，排队挂起唤醒它全包；子类只填 tryAcquire 与 tryRelease 的语义"
 ---
 
 JUC 半数同步工具的**共同骨架**——AQS 只出两样东西：

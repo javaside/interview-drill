@@ -55,6 +55,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: juc
+misconceptions:
+  - id: mc-sync5-1
+    text: "Future.get 靠自旋轮询要结果，要不到就一直空转烧 CPU"
+    why: "误解：get 是阻塞挂起，线程让出 CPU 由完成方唤醒；真正烧 CPU 的是拿 isDone 死循环轮询的错误用法"
+  - id: mc-sync5-2
+    text: "链上某一步抛异常只作废那一步，下一步领个 null 照常执行"
+    why: "误解：异常沿链向下游传播，后续步骤整体跳过，直到 exceptionally 或 handle 接住——不会塞个 null 蒙混"
+  - id: mc-sync5-3
+    text: "supplyAsync 只是换个写法，任务仍在提交线程里就地执行"
+    why: "误解：supplyAsync 默认把任务派给 ForkJoinPool.commonPool 的工作线程；要指定跑在哪得显式传 executor"
 ---
 
 **Future** 是「取件条」：future.get() ——**傻站到货**；想「到货后再加工」只能自己再 get 再写，无法声明**流水线**。

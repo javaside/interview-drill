@@ -56,6 +56,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: juc
+misconceptions:
+  - id: mc-sync2-1
+    text: "acquire 凑不齐许可会立即失败返回 false，不挂起线程"
+    why: "误解：acquire 不足就阻塞候牌；立刻给布尔的是无超时版 tryAcquire，限时的是超时版——三个 API 分清楚"
+  - id: mc-sync2-2
+    text: "release 必须先 acquire 过才能调，没领就还抛异常"
+    why: "误解：release 只把许可计数加一，不查调用者领没领过；多还一张场上就多一张——信号量没有属主校验"
+  - id: mc-sync2-3
+    text: "Semaphore(1) 就是可重入的互斥锁：同一线程重复 acquire 也放行"
+    why: "误解：它既无属主也无重入计数，同线程第二次 acquire 就把自己堵死；真要互斥语义上 ReentrantLock"
 ---
 
 **信号量 = 发放手牌的排队机**：构造时放 N 个手牌，线程干活前 acquire() 领一个（没有就排队），干完 release() 还回来——**同时只有 N 个人在场上**。

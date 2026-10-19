@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-co1-1
+    text: "Map 继承自 Collection，只是元素成对存放"
+    why: "误解：Map 是与 Collection 平级的独立接口，键值对与单值是两种抽象，互不继承"
+  - id: mc-co1-2
+    text: "HashSet 遍历顺序与插入顺序一致，去重后仍按放入先后输出"
+    why: "误解：常规 HashSet 不记顺序；要插入序用 LinkedHashSet，要大小序用 TreeSet"
+  - id: mc-co1-3
+    text: "Queue 的所有实现都是先进先出"
+    why: "误解：ArrayDeque 可后进先出当栈用，PriorityQueue 按优先级出队；先进先出只是默认语义"
 ---
 
 集合框架 = **两大族谱**：

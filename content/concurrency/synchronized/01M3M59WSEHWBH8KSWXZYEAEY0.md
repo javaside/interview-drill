@@ -52,6 +52,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-sy5-1
+    text: "死锁僵持到超时，JVM 会自动杀掉一个线程给另一个放行"
+    why: "误解：JVM 只检测报告（jstack 那行 Found one Java-level deadlock），从不越权拆环；僵住就僵到重启"
+  - id: mc-sy5-2
+    text: "锁粒度拆得越细越不会死锁：小锁各管各的，天然无环"
+    why: "误解：细锁一多，嵌套持有与顺序失控的机会反而暴涨；防环靠全局固定抢锁顺序或 tryLock 超时弃牌"
+  - id: mc-sy5-3
+    text: "死锁的线程在死循环里疯狂重试抢锁，CPU 直接打满"
+    why: "误解：死锁线程是阻塞挂起，CPU 占用为零；空转打满 CPU 的是活锁——一直在动，一直没进展"
 ---
 
 **死锁** = 互相持有对方所需、互不退让的**永久静止**：

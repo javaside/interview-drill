@@ -60,6 +60,14 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html
       locator: oom(7)
+misconceptions:
+  - id: mc-mm4-1
+    text: "进程无声无息消失、又没有崩溃日志，可以断定是程序自己 panic 退出的"
+    why: "误解：OOM killer 用 SIGKILL 处决进程，不留任何崩溃栈；先翻 dmesg 里的 oom-killer 记录再定责"
+  - id: mc-mm4-2
+    text: "把关键进程的 oom_score_adj 调低之后，这台机器就不会再发生 OOM 了"
+    why: "误解：调低只改变被杀顺位、护住个别进程；内存不足照样发生，牺牲品换成别的进程而已"
+
 ---
 
 **OOM**（Out Of Memory）是内核的**弃车保帅**：物理内存+swap 全线告急 → 触发 OOM killer → 按 **oom_score**（≈RSS 越大分越高）挑一个「最肥」的进程 SIGKILL。**容器里更常见**：cgroup 内存超 limit → **OOMKilled**（exit code 137）——只看本容器账本，整机内存再空也没用（Java 容器事故的头号来源：JVM 没感知 cgroup limit，堆+元空间+堆外超限被杀）。

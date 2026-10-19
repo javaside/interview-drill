@@ -60,6 +60,14 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+
+misconceptions:
+  - id: mc-sec1-1
+    text: AuthenticationManager 自己连数据库比对密码，不再委托别的组件
+    why: 误解：它只是统一门面，实际校验委托给 AuthenticationProvider，DaoAuthenticationProvider 才是查库比对密码的那一层
+  - id: mc-sec1-2
+    text: SecurityContext 只放在 ThreadLocal，请求一结束登录态就丢，用户每次请求都得重新认证
+    why: 误解：默认还经 HttpSession 在请求间持久化（SecurityContextRepository 负责存取），下次请求由过滤器链恢复上下文
 ---
 
 **Spring Security = 一条 Servlet Filter 链**（DelegatingFilterProxy 注册的 FilterChainProxy）：所有请求先过它再到 MVC。链上各 Filter 分工：

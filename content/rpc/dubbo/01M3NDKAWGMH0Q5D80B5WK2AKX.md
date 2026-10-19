@@ -49,6 +49,18 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+
+misconceptions:
+  - id: mc-du1-1
+    text: 注册中心一宕机，所有 Dubbo 调用立刻中断，业务全停
+    why: 误解：Consumer 本地缓存着地址列表照常直连，收不到的只是新的上下线通知
+  - id: mc-du1-2
+    text: 每次调用前 Consumer 都先问注册中心要地址，请求也由注册中心中转
+    why: 误解：注册信息只在启动订阅阶段起作用，真正的请求走 Consumer 直连，数据从不路过注册中心
+  - id: mc-du1-3
+    text: Monitor 在调用链路上同步采集，上报失败或变慢会拖垮调用
+    why: 误解：监控走旁路异步上报，只影响统计完整性，既不阻塞调用也不改变结果
+
 ---
 
 **Dubbo 五角色**（Provider/Consumer/Registry/Monitor/Container）的**关键设计**：

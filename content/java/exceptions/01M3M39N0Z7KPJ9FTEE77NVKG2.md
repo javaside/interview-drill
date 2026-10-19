@@ -52,6 +52,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-ex3-1
+    text: "多个资源按声明顺序关闭，先声明的先关"
+    why: "误解：逆序关闭——后开的先关，被依赖的资源最后才释放"
+  - id: mc-ex3-2
+    text: "close 抛出的异常会顶掉 try 里的主异常"
+    why: "误解：主体异常先抛出，close 的异常挂进 suppressed 一起带上，两不互吞"
+  - id: mc-ex3-3
+    text: "只要类里写了 close 方法，就能放进 try(...) 自动关闭"
+    why: "误解：入场券是实现 AutoCloseable 接口，编译器按接口契约生成关闭逻辑，裸方法不算数"
 ---
 
 老写法的苦难：`InputStream in = null; try { … } finally { if (in != null) in.close(); }`——啰嗦、close 还要再 try（它也抛受检）。

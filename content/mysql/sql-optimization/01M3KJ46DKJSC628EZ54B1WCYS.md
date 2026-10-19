@@ -56,6 +56,16 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-opt4-1
+    text: "只要 where 条件走了索引，哪怕 select * 也算覆盖索引"
+    why: "误解：覆盖与否看 select 要的列是否全在索引里，select * 几乎必带索引外的列，回表照旧"
+  - id: mc-opt4-2
+    text: "Using index 和 Using index condition 是一回事，都代表覆盖生效"
+    why: "误解：前者才是覆盖免回表，后者是索引条件下推（ICP），过滤下推到索引层做，回表依然发生"
+  - id: mc-opt4-3
+    text: "为了一劳永逸，把查询涉及的字段全部塞进联合索引，越长越好没有代价"
+    why: "误解：索引每加一列，写入维护与存储空间都跟着涨，覆盖索引应按高频查询裁剪，不是越宽越赚"
 ---
 
 **回表**是二级索引的固定税：查到主键还得回主树取整行。**覆盖索引**= 让索引「自带干粮」：**select 和 where 用到的列全部在索引里**，查完索引直接返回，**免回表**。

@@ -55,6 +55,16 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-kc1-1
+    text: "Kafka 3.x 生产环境仍必须部署 ZooKeeper，KRaft 只是实验特性"
+    why: "误解：KRaft 自 3.3 起生产可用，ZooKeeper 已进入弃用周期，新集群可以直接用 KRaft 自治，不再依赖外部协调系统"
+  - id: mc-kc1-2
+    text: "Follower 副本平时也对外提供读服务，可以分担 Leader 的消费压力"
+    why: "误解：Kafka 的消费请求也只发往 Leader，Follower 唯一职责是拉取同步，读扩展靠加分区而不是靠 Follower"
+  - id: mc-kc1-3
+    text: "一个 partition 可以同时分给同组的多个消费者，broker 会把消息轮流派发"
+    why: "误解：同组内一个 partition 只归一个消费者独占，轮流派发会破坏分区内顺序，组内并行上限就是分区数"
 ---
 
 **Kafka 的四层积木**：

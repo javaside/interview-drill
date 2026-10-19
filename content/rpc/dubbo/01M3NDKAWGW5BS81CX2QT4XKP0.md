@@ -63,6 +63,15 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+
+misconceptions:
+  - id: mc-du2-1
+    text: Failover 对写接口最稳妥，失败自动换机重试直到成功
+    why: 误解：首次常常已执行成功只是响应超时，换机重试会造成重复执行，写接口未做防重就该用 Failfast
+  - id: mc-du2-2
+    text: retries=2 表示这次调用最多发起两次请求
+    why: 误解：retries 只数重试不含首次，retries=2 是首次调用加两次重试共三回
+
 ---
 
 **集群容错=调用失败后的补救策略**（按业务语义选）：

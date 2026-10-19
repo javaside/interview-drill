@@ -65,6 +65,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-ch1-1
+    text: "JDK 8 仍用 Segment 分段锁，只是段数开得更多"
+    why: "误解：Segment 结构已删——空桶 CAS 直插，非空桶 synchronized 锁桶头，粒度细到单个桶"
+  - id: mc-ch1-2
+    text: "put 全程无锁，纯靠 CAS 完成插入"
+    why: "误解：CAS 只用于空桶插入与表初始化，桶里已有节点就要 synchronized 锁头节点再写入"
 ---
 
 1.8 的方案——**读无锁 + 写锁单桶**：

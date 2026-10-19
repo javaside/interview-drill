@@ -65,6 +65,13 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
       locator: RFC 9293
+misconceptions:
+  - id: mc-tt3-1
+    text: "HTTP 头里带上 Keep-Alive 字段，就开启了 TCP keepalive 探测"
+    why: "误解：HTTP Keep-Alive 做的是复用一条连接连发多个请求，不发探测包；TCP keepalive 是内核的探活空包，两者机制与目的都不同"
+  - id: mc-tt3-2
+    text: "对端进程假死时，TCP keepalive 收不到响应会及时断开连接"
+    why: "误解：探测抵达的是对端内核，协议栈活着就能代答，进程卡死照样回包；进程级失活只有业务层 ping/pong 能暴露"
 ---
 
 两类探活都在回答「**对面还活着吗**」——不探的后果是**半开连接**（对端断电/拔网线，你这头永远不知道，连接与内存白占）：

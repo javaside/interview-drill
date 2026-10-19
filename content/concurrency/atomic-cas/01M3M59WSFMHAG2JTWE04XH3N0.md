@@ -73,6 +73,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: juc
+misconceptions:
+  - id: mc-ac2-1
+    text: "LongAdder 自增还是单点 CAS，快在换了条更宽的原子指令"
+    why: "误解：指令没换，是战场被拆——base 加一排 Cell 分散冲突，写进同一格的概率被摊薄，求和时才汇总"
+  - id: mc-ac2-2
+    text: "LongAdder 的 sum 给的是精确瞬时值，读期间写入会被锁挡住"
+    why: "误解：sum 是弱一致快照，求和途中并发的加照样落账；要精确瞬时值、读多写少的场景仍该用 AtomicLong"
 ---
 
 计数器的**堵与疏**：

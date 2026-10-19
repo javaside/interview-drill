@@ -65,6 +65,14 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
       locator: free(1)
+misconceptions:
+  - id: mc-lc2-1
+    text: "free 列只剩几十 MB 就是内存告急，应马上清 page cache 救急"
+    why: "误解：内核拿闲内存做缓存是常态而非侵占，available 才反映真实余量；手动清缓存反而让后续读全部直落磁盘"
+  - id: mc-lc2-2
+    text: "available 就是 free 与 buff/cache 两数相加，缓存部分随时全部可回收"
+    why: "误解：buff/cache 里混着脏页与 tmpfs 占位，脏页要先落盘、tmpfs 根本收不回；available 只计内核真能即时让渡的量"
+
 ---
 
 ```

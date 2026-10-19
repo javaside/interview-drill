@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-vj4-1
+    text: "两次判空都锁在 synchronized 里了，再加 volatile 属于画蛇添足"
+    why: "误解：锁只管进入临界区的次序，new 的三步仍可能被重排——外层无锁读能撞见非 null 的半成品引用"
+  - id: mc-vj4-2
+    text: "new K() 是不可分割的原子动作，别的线程要么看到 null 要么看到构造完的对象"
+    why: "误解：JVM 允许引用赋值先于构造指令落地，没有同步发布时半成品引用真能外泄"
+  - id: mc-vj4-3
+    text: "x86 是强内存模型，DCL 在 x86 上不加 volatile 也保证正确"
+    why: "误解：正确性由 JMM 契约承诺而不是具体 CPU；编译器重排就足以发布半成品，换平台更没保障"
 ---
 
 懒加载单例的经典写法——**判两次、锁一次**：

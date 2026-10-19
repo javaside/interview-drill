@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tb5-1
+    text: "对正在运行的线程调 interrupt()，它会立刻抛出 InterruptedException"
+    why: "误解：异常只从 sleep/wait/join 这类阻塞点抛出；正在跑的线程只被置标记，代码不查就毫无动静"
+  - id: mc-tb5-2
+    text: "isInterrupted() 与 interrupted() 只是命名风格差异，行为完全一样"
+    why: "误解：interrupted() 是静态方法且读后即清标记，isInterrupted() 是实例方法且保留标记"
+  - id: mc-tb5-3
+    text: "自定义 volatile 布尔标志位可以完全替代 interrupt，也能唤醒 sleep 中的线程"
+    why: "误解：标志位对阻塞中的线程无能为力——线程看不见标志继续睡；能惊醒阻塞点的只有 interrupt"
 ---
 
 Java **没有**「一拳打死线程」的开关（Thread.stop 已废弃——它直接解锁并杀死，对象可能被撕成两半）。中断是**递小纸条**：

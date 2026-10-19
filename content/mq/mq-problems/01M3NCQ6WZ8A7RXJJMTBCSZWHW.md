@@ -70,6 +70,13 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-mp4-1
+    text: "本地消息表应该先把消息发到 MQ 成功、再提交本地数据库事务"
+    why: "误解：先发后提交会在本地事务回滚时留下幽灵消息，正确做法是业务与消息记录同库同事务落盘再扫表投递"
+  - id: mc-mp4-2
+    text: "RocketMQ 半消息在本地事务提交前就对消费者可见，只是带着待确认标记"
+    why: "误解：半消息暂存在内部主题里消费者看不到，本地事务提交后才搬到真实主题对外可见，回滚则直接废弃"
 ---
 
 「**下订单（DB）+ 发消息（MQ）**」要原子，两条路：

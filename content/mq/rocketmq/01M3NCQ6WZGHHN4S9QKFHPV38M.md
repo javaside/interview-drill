@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-rq2-1
+    text: "RocketMQ 4.x 的延迟消息支持任意自定义时长，精确到毫秒"
+    why: "误解：4.x 只有 18 个固定档位，自定义时长只能就近落档产生误差，任意时长是 5.x 定时轮才有的能力"
+  - id: mc-rq2-2
+    text: "延迟消息先写进真实 topic，消费者拉到后没到时间就自己先搁置"
+    why: "误解：消息先暂存内部延迟主题，到点由定时服务搬进真实主题，消费者从头到尾都拉不到未到期的消息"
+  - id: mc-rq2-3
+    text: "延迟消息一到点就直接把订单改成已取消，不用再判当前状态"
+    why: "误解：到期瞬间用户可能刚支付，直接改状态会并发踩踏，必须用状态机 CAS 判当前态决定取消还是跳过"
 ---
 
 **延迟消息 = 到点才投递的消息**（订单 30 分钟未付自动取消是标配场景）：

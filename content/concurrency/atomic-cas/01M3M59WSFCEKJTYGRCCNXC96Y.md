@@ -67,6 +67,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: juc
+misconceptions:
+  - id: mc-ac1-1
+    text: "字段标成 volatile 就能自制原子类：永远读到最新值，自增不会丢"
+    why: "误解：volatile 只管可见与顺序，读-改-写三步照样会被插花丢更新；原子类靠 CAS 比对旧值，撞了就重试"
+  - id: mc-ac1-2
+    text: "AtomicReference 的 CAS 比内容用 equals，与数值 CAS 是两条路线"
+    why: "误解：引用 CAS 判的是不是同一个对象（指针判同）；换成内容一样的新对象，比对也会被拒"
 ---
 
 原子类 = **volatile 读 + CAS 写**的组合拳：

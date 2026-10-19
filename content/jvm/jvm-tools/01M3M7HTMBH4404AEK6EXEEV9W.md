@@ -56,6 +56,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-jt3-1
+    text: "-Xmx 限制的是 JVM 进程占用的总内存"
+    why: "误解：-Xmx 只封顶堆；元空间、线程栈、代码缓存与直接内存都在配额之外，进程占用超过 -Xmx 很正常"
+  - id: mc-jt3-2
+    text: "-XX:MetaspaceSize 是元空间的最大上限，超过它就 OOM"
+    why: "误解：MetaspaceSize 只是首次触发元空间回收的水位线；真正设顶的是 MaxMetaspaceSize，默认不设即不限"
+  - id: mc-jt3-3
+    text: "JDK 17 里打印 GC 详情还用 -XX:+PrintGCDetails"
+    why: "误解：9 起统一日志框架，PrintGCDetails 已被移除；17 里要用 -Xlog:gc*，写老参数 JVM 直接起不来"
 ---
 
 **四组高频参数**：

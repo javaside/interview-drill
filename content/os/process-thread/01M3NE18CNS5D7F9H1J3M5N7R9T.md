@@ -60,6 +60,15 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
       locator: futex(7)
+
+misconceptions:
+  - id: mc-pt4-1
+    text: 单核机器上自旋锁比互斥锁更划算，省下了上下文切换的开销
+    why: 误解：单核上锁持有者根本没机会上 CPU，自旋纯空转，睡候让出才是正解
+  - id: mc-pt4-2
+    text: 互斥锁就是初值为 1 的信号量，谁加的锁无所谓谁都能解
+    why: 误解：互斥锁绑定持有者，只有加锁的线程能解锁，信号量不绑定、任意线程可 release
+
 ---
 
 同步原语按「**候的方式**」与「**放几个人进**」分族：

@@ -61,6 +61,14 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man1/top.1.html
       locator: ss(8)
+misconceptions:
+  - id: mc-lc4-1
+    text: "机器上大量 TIME_WAIT 是对端乱断连造成的，锅在对面服务方"
+    why: "误解：TIME_WAIT 只出现在主动关闭的一方；自家堆积说明本机发起海量短连接，该上连接池复用长连接"
+  - id: mc-lc4-2
+    text: "CLOSE_WAIT 堆积是内核回收慢，调几个 tcp 内核参数就能解决"
+    why: "误解：CLOSE_WAIT 说明本端收到 FIN 后应用一直没调 close，fd 漏在进程手里；出路在补上关闭路径的代码，调参无效"
+
 ---
 
 按**成本从低到高**逐层逼近：

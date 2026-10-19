@@ -65,6 +65,13 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
       locator: ip-sysctl
+misconceptions:
+  - id: mc-tt1-1
+    text: "服务器上成片 TIME_WAIT 是客户端异常掉线（不发 FIN 就消失）造成的"
+    why: "误解：TIME_WAIT 只属于正常挥完手且主动关闭的一方；对端无故消失留下的是半开连接，根本走不到 TIME_WAIT"
+  - id: mc-tt1-2
+    text: "服务端打开 tcp_tw_reuse 就能回收本机成片的 TIME_WAIT"
+    why: "误解：reuse 只作用于本机主动发起的出方向连接，靠时间戳判定旧报文消亡后才放行复用四元组；被动连接攒下的 TIME_WAIT 它碰不到，治本仍是改长连接"
 ---
 
 TIME_WAIT 本身是**设计者的深谋远虑**（保最后的 ACK 能补发、让旧报文寿终正寝），**不是泄漏**。问题只在**量大**：

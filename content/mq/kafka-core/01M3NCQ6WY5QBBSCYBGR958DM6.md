@@ -62,6 +62,13 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-kc2-1
+    text: "rebalance 只影响发生增减的那个消费者实例，组内别的消费者照常消费"
+    why: "误解：传统再平衡是整组停摆，所有分区先收回再重分，只有增量式的 CooperativeSticky 做到只挪受影响的分区"
+  - id: mc-kc2-2
+    text: "消费者处理太慢会触发 rebalance，消息被自动挪给空闲的消费者分摊"
+    why: "误解：再平衡只由成员增减、订阅变化、分区扩容触发，消费慢不会搬走消息，只会让 lag 越积越高"
 ---
 
 **消费组是动态的**：有人加入（扩容上线）、有人退出（宕机/被运维杀）——partition 的**归属要重新分**，这就是 **rebalance**。

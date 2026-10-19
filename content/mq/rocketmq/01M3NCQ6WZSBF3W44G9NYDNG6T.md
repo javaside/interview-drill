@@ -56,6 +56,16 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-rq3-1
+    text: "RocketMQ 消费失败一次就直接进死信队列，中间没有自动重试"
+    why: "误解：失败先进重试队列按退避节奏再投，默认 16 次耗尽才转死信，不是一败就判死刑"
+  - id: mc-rq3-2
+    text: "Kafka broker 自带死信队列，消费失败自动转存，无需业务开发"
+    why: "误解：Kafka 没有内建死信机制，要靠 Spring Kafka 的错误处理器把失败消息发往自建死信 topic"
+  - id: mc-rq3-3
+    text: "死信队列的消息 3 天后会自动重投回原 topic 完成自愈"
+    why: "误解：默认 3 天是保留期，超时是直接删除，不处理就永久丢失，重要死信要外移归档并在修复后人工重放"
 ---
 
 **死信队列（DLQ）= 毒消息的隔离区**：

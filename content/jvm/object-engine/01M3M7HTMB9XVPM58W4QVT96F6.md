@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-oe3-1
+    text: "JVM 一启动就把全部字节码编译成本机代码，没有代码靠解释执行"
+    why: "误解：JIT 只编译计数器达标的热点；冷路径从头到尾解释执行，启动初期还要额外花 CPU 做编译"
+  - id: mc-oe3-2
+    text: "逃逸分析是 GC 的一个前置阶段，分析完才开始标记"
+    why: "误解：逃逸分析属于 C2 编译优化，判对象溜不溜得出方法边界，服务于标量替换与锁消除；不在 GC 流程里"
+  - id: mc-oe3-3
+    text: "不逃逸的对象会整个搬上栈分配，结构与堆里一模一样"
+    why: "误解：HotSpot 做的是标量替换——对象根本不创建，字段拆成局部变量；完整对象整体上栈并不存在"
 ---
 
 **解释执行→越跑越快**的秘密是 **JIT（即时编译）**：

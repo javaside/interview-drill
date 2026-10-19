@@ -62,6 +62,13 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html
       locator: RFC 9293
+misconceptions:
+  - id: mc-tt2-1
+    text: "粘包是 TCP 协议自身的缺陷，设计时没把消息边界做进去"
+    why: "误解：无边界正是字节流的设计承诺——保序保完整、不保分次送达；消息边界从来是应用层的契约，谈不上协议缺陷"
+  - id: mc-tt2-2
+    text: "UDP 也会粘包，只是数据报小的时候更少见"
+    why: "误解：UDP 是数据报协议，边界由内核保留，一次 sendto 严格对应一次 recvfrom；它的代价是丢包与乱序，从来不会粘"
 ---
 
 **「粘包」是个假问题真现象**：TCP 从承诺过「按发送的分次送达」——它只保证**字节流有序完整**，一次 send 可能被拆几段、几次 send 可能被合一段（Nagle 攒小包、MSS 分段、接收缓冲一次 recv 捞到多条）。**边界是应用层自己的契约**，TCP 无从知晓。

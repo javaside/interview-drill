@@ -71,6 +71,10 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-bl5-1
+    text: "第三级缓存存在的意义是多一层缓存提升查找性能，两级其实就够"
+    why: "误解：第三级存的是工厂而非实例，价值在把是否提前代理的决策延迟到真被引用那一刻，与查得快慢无关"
 ---
 
 **循环依赖**（A 要 B、B 要 A）的解法 = **三级缓存的提前暴露**：

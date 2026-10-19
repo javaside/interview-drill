@@ -20,6 +20,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+
+misconceptions:
+  - id: mc-cl4-1
+    text: 全限定类名相同就是同一个类，由哪个加载器加载无关紧要
+    why: 误解：定义类加载器参与类的身份判定，换了加载器就是另一个类，instanceof 都不认账
+  - id: mc-cl4-2
+    text: 同一个类被两个加载器加载时，JVM 会自动去重只留一份
+    why: 误解：没有全局去重，两份类各自独立存在，对象互相赋值当场抛 ClassCastException
+  - id: mc-cl4-3
+    text: 热部署换成新版本类后，旧实例调方法会自动走新类的逻辑
+    why: 误解：旧实例仍绑定旧 Class，新旧两套类并行共存，想走新逻辑只能重建对象
 ---
 
 JVM 里「是不是同一个类」看**两样**：**全限定名**（叫什么）+ **定义类加载器**（谁加载的）。

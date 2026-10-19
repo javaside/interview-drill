@@ -75,6 +75,12 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+
+misconceptions:
+  - id: mc-rb2-1
+    text: Protobuf 新增字段后老版本消费方解析会直接报错，必须全端同步升级
+    why: 误解：PB 按字段编号解码，旧端不认识的新字段直接跳过，加字段本是向后兼容的安全变更
+
 ---
 
 **序列化=对象怎么变成线上字节**。四个维度的排序题：

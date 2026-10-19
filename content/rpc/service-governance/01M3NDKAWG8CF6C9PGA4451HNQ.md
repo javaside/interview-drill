@@ -61,6 +61,13 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-sg3-1
+    text: "服务之间的调用也该统一收口到网关，治理规则只配一处多省事"
+    why: "误解：网关守的是南北向的大门——东西向调用绕行网关平白多一跳还造出流量集中点，服务间治理归 SDK 或 sidecar"
+  - id: mc-sg3-2
+    text: "鉴权和限流都放在网关了，后端业务服务可以彻底不设防"
+    why: "误解：网关只拦得住从大门进来的流量——内网直连、服务间调用都绕得开它，服务自身的校验与配额是纵深防御的第二道墙"
 ---
 
 **网关=微服务的城门**：所有外部流量（南北向）的**唯一入口**，职责三块：

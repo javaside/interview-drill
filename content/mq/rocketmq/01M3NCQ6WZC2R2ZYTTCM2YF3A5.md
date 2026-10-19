@@ -77,6 +77,13 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-rq5-1
+    text: "防重键用 broker 生成的 msgId 最方便，重投的消息 msgId 必定相同"
+    why: "误解：重发可能换 broker 换队列生成新的 msgId，防重要靠业务唯一键（订单号+事件类型），消息 ID 靠不住"
+  - id: mc-rq5-2
+    text: "Redis setnx 挡重是最终防线，配上后数据库唯一键都可以省掉"
+    why: "误解：setnx 有过期边界且 Redis 故障即失效，只算短窗口闸门，最终防线仍是库唯一键或状态机"
 ---
 
 **重复投递是 MQ 的本性**（网络重试/重平衡/ack 丢失都可能重投）——**at-least-once 是底色**，与其对抗不如接受 + **消费端防重**：

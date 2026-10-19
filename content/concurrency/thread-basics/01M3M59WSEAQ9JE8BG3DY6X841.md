@@ -59,6 +59,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tb3-1
+    text: "线程 sleep 进入 TIMED_WAITING 的同时会释放它持有的全部锁"
+    why: "误解：sleep 全程持锁不放，到点自己醒；释放 monitor 的是 wait 家族——停泊状态与放锁是两码事"
+  - id: mc-tb3-2
+    text: "线程阻塞在 socket 读上时，状态会显示为 BLOCKED"
+    why: "误解：JDK 不感知 native IO 的阻塞，线程仍处于 RUNNABLE；BLOCKED 只属于抢 monitor 失败的线程"
 ---
 
 Java 线程的**六态**（Thread.State）：

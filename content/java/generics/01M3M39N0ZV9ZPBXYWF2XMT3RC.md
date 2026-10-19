@@ -41,6 +41,20 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+
+misconceptions:
+  - id: mc-gn4-1
+    text: 编译能通过，String 是 Object 的子类，容器随之自动向上转型
+    why: 误解：子类关系不会顺延到泛型容器，List<String> 与 List<Object> 之间没有子类型关系，编译直接拒绝
+  - id: mc-gn4-2
+    text: 数组同样不协变，把 String[] 赋给 Object[] 也会编译报错
+    why: 误解：数组是协变的，Object[] o = strings 完全合法，代价是写入异类时运行时抛 ArrayStoreException
+  - id: mc-gn4-3
+    text: 这行赋值编译能过，要到运行时才抛 ClassCastException
+    why: 误解：不协变在编译期就拦死了，根本跑不到运行时，运行时才爆雷的是协变数组的 ArrayStoreException
+  - id: mc-gn4-4
+    text: 先用 List<?> 接住就能随便写入，未知类型意味着装什么都行
+    why: 误解：? 是编译器未知的类型，它无法证明能收什么，除 null 外一律拒绝写入
 ---
 
 **不行**，编译直接报错。表面看 String 是 Object 的子类，但 **List<String> 不是 List<Object> 的子类型**（泛型**不协变**）——假如允许：

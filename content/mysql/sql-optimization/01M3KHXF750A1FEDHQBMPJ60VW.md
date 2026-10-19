@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-opt-1
+    text: "explain 里 type=index 说明索引优化到位了，比 ref 还理想"
+    why: "误解：index 是整棵索引顺序全扫，只比 ALL 略好；ref 按值定位到少量条目，反而快得多"
+  - id: mc-opt-2
+    text: "rows 列是语句执行完统计出的真实行数，可以当对账依据"
+    why: "误解：rows 是优化器拿索引统计估出来的预估值，与实际扫描量可能差出数倍，别当执行结果看"
+  - id: mc-opt-3
+    text: "Extra 里的 Using index 表示这条语句用上了主键索引"
+    why: "误解：Using index 说的是覆盖索引生效、无需回表；用没用主键要看 type 与 key 列的输出"
 ---
 
 `EXPLAIN` 把优化器**打算怎么执行**这条 SQL 摆给你看。四列最要紧：

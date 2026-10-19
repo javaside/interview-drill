@@ -52,6 +52,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-bi2-1
+    text: "实例崩溃重启后 InnoDB 会重放 binlog 把数据修复到崩溃前"
+    why: "误解：实例自愈只认 redo，binlog 的舞台是主从复制和按时间点恢复，重启修复用不上它"
+  - id: mc-bi2-2
+    text: "MyISAM 表的写入也会记录 redo log，所以它同样具备崩溃自动恢复能力"
+    why: "误解：redo 是 InnoDB 的私有账本，MyISAM 的写入只进 binlog，这正是 MyISAM 崩溃后容易坏表的原因"
+  - id: mc-bi2-3
+    text: "binlog 文件写满后会循环覆盖最老的文件，空间回收方式与 redo 一致"
+    why: "误解：binlog 只追加不覆盖，过期清理由 binlog_expire_logs_seconds 控制，循环覆盖是 redo 固定文件组的做法"
 ---
 
 两本**层次不同**的账：

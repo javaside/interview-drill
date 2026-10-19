@@ -67,6 +67,13 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-reads.html
       locator: 15.7.2.4 Locking Reads
+misconceptions:
+  - id: mc-jbj3jw-1
+    text: "RR 的 ReadView 在执行 begin 时就建好了，这就是它可重复读的原因"
+    why: "误解：RR 的读视图在第一条快照读时才生成；begin 后迟迟不发查询，快照起点就还没定"
+  - id: mc-jbj3jw-2
+    text: "ReadView 生成后，本事务自己再改的数据也被快照挡住，只能读到旧值"
+    why: "误解：可见性规则对自己开特例：创建该视图的事务改的行，本事务后续读永远拿到新值"
 ---
 背景：多个人同时用数据库，需要规定「互相能看到对方多少修改」，这就是**隔离级别**。其中 **RR（REPEATABLE READ，可重复读）**要求：同一个事务里，同一条查询执行两次，结果必须一样。
 

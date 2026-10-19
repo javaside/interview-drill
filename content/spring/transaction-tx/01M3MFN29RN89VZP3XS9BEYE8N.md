@@ -66,6 +66,14 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+
+misconceptions:
+  - id: mc-tx1-1
+    text: NESTED 内层事务失败回滚时，外层事务必然跟着一起回滚
+    why: 误解：内层回滚只退到开内层时打的 savepoint，外层可以捕获异常继续执行并正常提交；连带方向只有外层回滚带内层
+  - id: mc-tx1-2
+    text: REQUIRED 内层抛的异常被外层 catch 住，外层就能正常提交这个事务
+    why: 误解：内层异常已把共享事务标记 rollbackOnly，外层正常返回也会在提交时撞上 UnexpectedRollbackException
 ---
 
 **传播行为**=「方法被调用时，事务怎么接续」。高频四档：

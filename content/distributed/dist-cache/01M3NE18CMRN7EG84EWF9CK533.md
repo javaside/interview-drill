@@ -61,6 +61,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-dca-1
+    text: "Redis Cluster 用一致性哈希环分配 key，增删节点只影响环上相邻节点的数据"
+    why: "误解：Cluster 是 CRC16 对 16384 取模落槽、槽再划给节点，增删节点靠槽迁移搬数据；哈希环是客户端分片时代的另一套方案"
+  - id: mc-dca-2
+    text: "ASK 与 MOVED 含义相同，客户端收到任意一个都应永久更新本地槽位表再重试"
+    why: "误解：MOVED 才表示映射过时要改表；ASK 只针对迁移中的槽，本次带 ASKING 去新节点重试即可，表不能动"
 ---
 
 **Redis Cluster** 的分片方案——**16384 个哈希槽**：

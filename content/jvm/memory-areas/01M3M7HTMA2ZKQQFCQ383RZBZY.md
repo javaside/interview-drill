@@ -62,6 +62,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-ma2-1
+    text: "两个 Survivor 是双保险，Minor GC 后幸存对象在两边各存一份"
+    why: "误解：两块 Survivor 轮换值班，任一时刻只有一块装幸存者、另一块空着——它是复制目的地，不是双副本"
+  - id: mc-ma2-2
+    text: "分代的依据是对象大小：小对象进新生代、大对象进老年代，与存活时间无关"
+    why: "误解：分代治理的是存活时间——死得快的集中在新生代便宜地收，活得久的沉淀到老年代；大对象直入只是防反复搬移的附带规则"
 ---
 
 对象的**生死规律**很偏科：大部分活不过一轮 GC。堆按「**岁数**」分而治之：

@@ -64,6 +64,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-ae4-1
+    text: "Redis 预扣库存直接 DECR 就够了，扣成负数大不了人工回补"
+    why: "误解：裸 DECR 只减不判库存见底——高并发下会一路扣穿成负数；判存与扣减要写进同一段 lua 原子完成，扣到 0 即终态"
+  - id: mc-ae4-2
+    text: "秒杀优化的重心在下单 SQL 调优与调大数据库连接池"
+    why: "误解：10 万 QPS 本就不该打到库——漏斗逐层拦截让注定失败的请求死在前面，DB 只接消费端匀速放出的成单流量，调参扛不住直打"
 ---
 
 **秒杀的本质：10 万 QPS 抢 100 件库存**——99.9% 的请求注定失败，**设计目标就是让它们死得越早越便宜**（漏斗逐层拦）：

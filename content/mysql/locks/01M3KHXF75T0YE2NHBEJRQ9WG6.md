@@ -51,6 +51,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-lk2-1
+    text: "意向锁是行级别的锁，事务准备改某一行时先给那一行挂意向标记"
+    why: "误解：意向锁加在表上，作用是让申请表锁的人一眼看出表内存在行锁，免去逐行核对的开销"
+  - id: mc-lk2-2
+    text: "InnoDB 的行锁实际加在 16KB 的数据页上，同一页里的行都会被牵连"
+    why: "误解：锁精确挂在索引记录上，没被碰到的行不受影响，页级牵连是部分老引擎的做法"
+  - id: mc-lk2-3
+    text: "意向共享锁 IS 和意向排他锁 IX 彼此冲突，一张表只能挂一个意向锁"
+    why: "误解：IS 与 IX 互相兼容，它们只跟表级的 S、X 锁冲突，从不妨碍对方的事务进表干活"
 ---
 
 锁的**粒度**从粗到细：

@@ -67,6 +67,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-jt1-1
+    text: "jmap -dump 对线上服务无感，想导随时导"
+    why: "误解：dump 要在安全点暂停整个 JVM，大堆一停秒级起步；带 live 子参数还会先触发一次 Full GC"
+  - id: mc-jt1-2
+    text: "jstack 只管死锁检测，CPU 飙高与它无关"
+    why: "误解：CPU 飙高的第一现场正是线程栈——top 定位线程、到栈里对号找热点方法；死锁检出只是顺带功能"
 ---
 
 排障工具箱按**查什么**配：

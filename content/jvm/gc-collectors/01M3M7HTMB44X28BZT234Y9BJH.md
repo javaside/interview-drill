@@ -53,6 +53,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-gc5-1
+    text: "JDK 17 服务端的默认收集器还是 Parallel Scavenge，要低延迟才需要手动换 G1"
+    why: "误解：9 起服务端默认就是 G1；Parallel 只在吞吐优先的批处理场景才值得显式选用"
+  - id: mc-gc5-2
+    text: "追求高吞吐就选 ZGC——停顿最短就代表干活效率最高"
+    why: "误解：ZGC 拿 CPU 换停顿，吞吐反而要让出 5-10%；总时间最短的吞吐型任务该选 Parallel 系"
+  - id: mc-gc5-3
+    text: "JDK 17 里低停顿需求首选 CMS，它经过多年生产验证"
+    why: "误解：CMS 在 9 被废弃、14 被移除，17 里根本选不到；超低停顿要上 ZGC 或 Shenandoah"
 ---
 
 按**要什么**分三派：

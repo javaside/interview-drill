@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-gb3-1
+    text: "标记-整理一定比标记-清除快，毕竟它不留碎片"
+    why: "误解：整理要挪动全部存活对象并改写引用，单次成本更高；无碎片换的是长期分配效率，不是这次回收更快"
+  - id: mc-gb3-2
+    text: "老年代对象存活率高，正适合标记-复制批量搬走"
+    why: "误解：复制代价与存活量成正比，老年代活的占大头、搬起来最亏；新生代死得多要搬的少，才是复制的主场"
+  - id: mc-gb3-3
+    text: "标记-清除留下的碎片只是账面难看，不影响程序运行"
+    why: "误解：碎片让大对象找不到整块连续空间，会提前触发 Full GC——这正是老年代改用整理算法的核心动机"
 ---
 
 三种**基础姿势**：

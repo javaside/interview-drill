@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-ioc1-1
+    text: "IoC 和 DI 是同一个概念的两种叫法，说到底是一回事"
+    why: "误解：IoC 是原则——创建与装配权反转给容器；DI 只是落地它的主要手段，依赖查找也是 IoC 的实现形态"
+  - id: mc-ioc1-2
+    text: "控制反转指的是方法调用权交给容器，由容器决定何时执行哪个业务方法"
+    why: "误解：反转的是对象的创建与装配权——谁 new、怎么接线归容器；方法调用的发起与编排仍由业务代码掌握"
+  - id: mc-ioc1-3
+    text: "用了 IoC 之后 A 对 B 的依赖关系就消失了，代码不再耦合"
+    why: "误解：依赖关系本身还在，变的只是满足方式——从自己 new 改成声明后由容器注入，解的是创建侧耦合"
 ---
 
 **IoC（控制反转）**= 把「**谁来创建对象、谁来接线**」这件事从你的代码手里**夺走**，交给容器：

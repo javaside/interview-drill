@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-al5-1
+    text: "CopyOnWriteArrayList 的读也要加锁，不然读不到最新数据"
+    why: "误解：读只走 volatile 数组快照，全程无锁；写时复制本来就允许读到前一拍的快照"
+  - id: mc-al5-2
+    text: "Collections.synchronizedList 包装后迭代器就安全了，可直接 for-each 遍历"
+    why: "误解：方法各自加锁拼不出安全的迭代，遍历仍要拿同一个锁对象包裹，否则照抛并发修改异常"
+  - id: mc-al5-3
+    text: "多个线程并发只读同一个 ArrayList 也会丢数据，读也必须加锁"
+    why: "误解：没有写就没有竞态，纯读共享完全安全；要防的是并发写或读写交织"
 ---
 
 **不安全**。并发场景两类替代：

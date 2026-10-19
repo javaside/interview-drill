@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-aop3-1
+    text: "自调用不走切面是因为切点表达式只匹配外部入口方法，类内部调用不在拦截范围"
+    why: "误解：根因与切点匹配无关——内部调用用的是 this 即原始对象，压根没经过代理，通知链自然无人执行"
+  - id: mc-aop3-2
+    text: "把 private 方法改成 public，同类直调时事务就能生效"
+    why: "误解：失效根因是调用没过代理而不是可见性，改 public 后依旧走 this，事务照样开不起来"
+  - id: mc-aop3-3
+    text: "@Lazy 注入自身会构成新的循环依赖，启动必然报错，所以此路不通"
+    why: "误解：@Lazy 注入的是代理，首次真正使用才解析目标，恰好以此打断循环，正是官方给的自调用解法"
 ---
 
 **根因一句话**：代理拦截的入口在「**外面的调用**」，而 `this.methodB()` 压根**没过代理**——this 是原始对象，通知链自然没人执行：

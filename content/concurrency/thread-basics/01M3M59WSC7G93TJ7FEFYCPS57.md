@@ -60,6 +60,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tb1-1
+    text: "Callable 和 Runnable 一样，可以直接传给 Thread 构造器启动"
+    why: "误解：Thread 构造器只收 Runnable；Callable 要先包进 FutureTask（它实现了 Runnable）才能交给 Thread 或线程池"
+  - id: mc-tb1-2
+    text: "推荐 Runnable 而非继承 Thread，主要原因是 Runnable 执行得更快"
+    why: "误解：两种写法跑起来没有性能差别，推荐的理由是任务与线程解耦——任务可复用、可入池，继承名额也不被占用"
 ---
 
 四种「姿势」，但**本质只有一个入口**：`new Thread(任务).start()`。区别只是「任务」长什么样：

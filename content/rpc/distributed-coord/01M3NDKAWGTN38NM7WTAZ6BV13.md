@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-dc1-1
+    text: "ZooKeeper 是 AP 系统，网络分区时两边都能继续对外服务"
+    why: "误解：ZK 写走 ZAB 过半提交，分区时凑不够过半的一侧直接不可用——它是把一致性排在可用性前面的 CP"
+  - id: mc-dc1-2
+    text: "Eureka 与 Nacos 一样能切换 CP 模式应对分区"
+    why: "误解：Eureka 是纯 AP 的极端可用派——自我保护机制宁可保留过期实例也不剔除，从不提供过半强一致模式"
+  - id: mc-dc1-3
+    text: "ZK 客户端注册一次 Watch 就能一直收到节点变更通知"
+    why: "误解：ZK 的 Watch 是一次性的——触发即失效，想继续盯就得在回调里重新注册，漏注册就再也收不到后续变更"
 ---
 
 按**CAP 取舍**分两派：

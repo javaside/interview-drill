@@ -59,6 +59,15 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+
+misconceptions:
+  - id: mc-rb5-1
+    text: 重试次数配得越多越可靠，多试几次失败总能自己恢复
+    why: 误解：下游过载时重试是流量放大器，次数越多放大越狠，重试风暴会亲手压垮下游
+  - id: mc-rb5-2
+    text: 上游超时该设得比下游短一点，好更早发现失败快速返回
+    why: 误解：上游要留足下游整条链的耗时预算，上游先到点放弃只会让下游白干再叠换机重试
+
 ---
 
 **超时与重试是 RPC 的安全气囊，装错了会杀人**：

@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-opt3-1
+    text: "limit 1000000,10 慢在结果集太大塞不进 sort_buffer，调大它就好"
+    why: "误解：代价出在逐行扫过并丢掉前一百万行上，调大排序缓冲救不了这种丢弃式翻页"
+  - id: mc-opt3-2
+    text: "游标式分页与 limit offset 可以随意互换，想跳第几页照样跳"
+    why: "误解：游标只记得上一页末尾的位置，只能顺次向后翻，随机跳页的能力天然拿不回来"
+  - id: mc-opt3-3
+    text: "延迟关联提速靠的是子查询这种写法本身，嵌套一层 select 就变快"
+    why: "误解：子查询不自带加速，快在内层全程待在覆盖索引里只取主键、外层才对最终 10 行回表"
 ---
 
 `limit 1000000, 10` 的慢是**冤枉功**：把前 1000010 行都取出来、逐行回表，然后扔掉前 100 万只留 10 行——扫描和回表全浪费了。

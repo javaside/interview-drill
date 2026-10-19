@@ -61,6 +61,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tp1-1
+    text: "keepAliveTime 对核心线程同样生效，空闲超时的常驻线程也会被回收"
+    why: "误解：默认只裁超出 corePoolSize 的临时线程，核心线程常驻；要连常驻一起裁得显式 allowCoreThreadTimeOut(true)"
+  - id: mc-tp1-2
+    text: "任务增多时线程池先把线程扩到 maximumPoolSize，顶不住才把任务放进队列"
+    why: "误解：真实次序是先填满 core、再入队排队、队列满才扩到 max——队列是缓冲层，先于临时线程启用"
 ---
 
 `ThreadPoolExecutor` 的**七大件**（把下面按语义排）：

@@ -63,6 +63,13 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-mp3-1
+    text: "Kafka 原生支持延迟消息，发消息时指定时间到点自动投递"
+    why: "误解：Kafka 没有内建延迟投递，要靠延迟 topic 加定时搬运或时间轮自建，开箱即用的是 RocketMQ"
+  - id: mc-mp3-2
+    text: "订单超时取消用定时任务扫全表最稳妥，数据量再大也不影响"
+    why: "误解：扫表是 O(N) 轮询，百万级订单扫一次数秒且精度受扫描间隔限制，延迟消息是到点定投的 O(1) 触发"
 ---
 
 四条路线按场景选：

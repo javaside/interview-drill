@@ -61,6 +61,13 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/epoll.7.html
       locator: epoll(7)
+misconceptions:
+  - id: mc-io4-1
+    text: "主从 Reactor 中 boss 线程管连接上的读写事件，worker 线程专门负责 accept 新连接"
+    why: "误解：分工正好相反——boss（mainReactor）只管 accept，worker（subReactor）各持一个 epoll 负责一批连接的读写"
+  - id: mc-io4-2
+    text: "Reactor 与 Proactor 没有本质区别，事件循环通知你时 IO 都已经完成了"
+    why: "误解：Reactor 通知的是「就绪」，可以开始 read/write 了；Proactor 通知的才是「完成」——搬运由谁收尾正是两者的分界"
 ---
 
 **Reactor** 把「一个线程候一批 fd + 就绪分发」固化成架构骨架，三代演进：

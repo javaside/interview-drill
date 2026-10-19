@@ -61,6 +61,15 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
       locator: proc(5)
+
+misconceptions:
+  - id: mc-pt3-1
+    text: 匿名管道是双向通道，父子进程用同一根管道就能互发数据
+    why: 误解：管道是单向字节流，双向对话要建两根管道各管一个方向
+  - id: mc-pt3-2
+    text: 共享内存自带互斥保护，两个进程同写一块内存也不会互相覆盖
+    why: 误解：内核只负责映射不做同步防护，防踩脚要自己配信号量或原子变量
+
 ---
 
 IPC 全家福按「**传什么、多快、跨不跨机**」选：

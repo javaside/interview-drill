@@ -49,6 +49,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+
+misconceptions:
+  - id: mc-lb5-1
+    text: 方法名相同、只改返回类型也算重载，编译器按返回值区分调用
+    why: 误解：调用方可以无视返回值，编译器无从分辨，仅返回类型不同会直接报重复定义
+  - id: mc-lb5-2
+    text: 子类可以重写父类的 private 方法，父类引用调用时会分派到子类版本
+    why: 误解：private 方法对子类不可见也不参与动态分派，同名只是全新方法，调用始终绑定在声明处
+  - id: mc-lb5-3
+    text: 构造器随类一起继承，子类可以重写父类的构造器
+    why: 误解：构造器不继承也没有多态分派，子类里的 super 调用是显式指定，能做的只有重载
 ---
 
 **重写（Override）**——**纵向**，子类改父类：签名一模一样，实现换成自己的。调用哪个看**运行时**对象的实际类型（多态的来源：父类引用指向子类对象，调的是子类版本）。

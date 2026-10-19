@@ -56,6 +56,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-log-1
+    text: "两阶段提交是外部分布式事务的概念，单机 MySQL 内部不存在这回事"
+    why: "误解：redo 与 binlog 分属引擎层与 Server 层，跨层提交靠内部 XA 协调，正是实打实的两阶段提交"
+  - id: mc-log-2
+    text: "只要 redo 和 binlog 最终都写成功，先后顺序无所谓，结果都一样"
+    why: "误解：崩在两次写的中间就露馅，先 binlog 主库会少一截，先 redo 从库会少一截，顺序本身就是中间态问题"
+  - id: mc-log-3
+    text: "崩溃恢复裁定事务生死时以 redo 的状态为准，redo 完整就提交"
+    why: "误解：准绳是 binlog，redo 停在 prepare 的事务要查 binlog 完不完整，完整才提交、残缺就回滚"
 ---
 
 一次提交要写**两本账**：redo（InnoDB 自己恢复用）和 binlog（从库/备份用）。**不管先写谁，崩溃在中间都会两账不一致**：

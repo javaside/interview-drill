@@ -69,6 +69,13 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: juc
+misconceptions:
+  - id: mc-ac3-1
+    text: "有 GC 兜底，Java 的 CAS 撞不上 ABA，对象地址不会被复用"
+    why: "误解：字段先指向别的对象再指回来、或节点池复用，CAS 一样认不出中途变过——GC 管不着逻辑上的回环"
+  - id: mc-ac3-2
+    text: "版本戳防 ABA 靠给修改上锁串行化，版本号就是锁编号"
+    why: "误解：戳全程无锁，只是随值一起配对的防伪码——值转一圈回来戳也涨了，配不上就拒绝"
 ---
 
 **ABA**：CAS 比对时值「看起来还是 A」——但它中间**变成过 B 又变回来了**。数值场景多半无所谓（结果一样）；**引用**场景致命：栈顶弹出 A 后，别的线程把**同地址的新对象**压回去——CAS 成功了，链却断在别人口袋里。

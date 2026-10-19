@@ -50,6 +50,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+
+misconceptions:
+  - id: mc-rf2-1
+    text: 反射访问不了 private 成员，private 修饰符把反射也挡在门外
+    why: 误解：setAccessible(true) 关闭访问检查后私有成员照读照写，private 挡的只是常规调用
+  - id: mc-rf2-2
+    text: Java 17 里只要调了 setAccessible(true)，对任何类都会成功
+    why: 误解：JDK 自身内部包默认强封装，闯入直接抛异常，必须 --add-opens 逐个放行
+  - id: mc-rf2-3
+    text: '--add-opens 是个总开关，加上它就全局解除了强封装'
+    why: 误解：一条 --add-opens 只放行一个模块里的一个包，边界要一条一条开，并非一劳永逸
 ---
 
 能。**访问检查不是安全墙，是开关**：

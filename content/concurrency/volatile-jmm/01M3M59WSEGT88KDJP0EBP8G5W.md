@@ -52,6 +52,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-vj3-1
+    text: "只要写操作在时间上先于另一个线程的读，读就一定看得到这个写"
+    why: "误解：没有 happens-before 边的两次操作，可见性没有任何承诺——看到了只是运气，重排或缓存随时翻脸"
+  - id: mc-vj3-2
+    text: "任意两个操作之间都能比出 happens-before 先后"
+    why: "误解：happens-before 是偏序，无关联的操作之间没有边；正因如此 JMM 才留出重排余地"
+  - id: mc-vj3-3
+    text: "join 返回后，主线程仍可能看不到子线程对普通变量的修改"
+    why: "误解：join 建立完整的先行链，子线程内的写在 join 返回后对主线程全部可见"
 ---
 
 **happens-before（先行发生）** 是 JMM 给开发者的**承诺**，不是时间上的先后：

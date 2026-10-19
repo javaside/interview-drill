@@ -65,6 +65,16 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-rd-1
+    text: "redo log 记录某行某列被改成了什么值，回滚就靠它逆向执行"
+    why: "误解：按行记修改前后值、供回滚逆推的是 undo log，redo 记的是页级物理修改供崩溃后重放"
+  - id: mc-rd-2
+    text: "WAL 的要求是事务提交前把改过的数据页全部刷盘，日志随后补写"
+    why: "误解：顺序恰好相反：先持久化的是日志，数据页保持脏态延后刷，这正是省掉随机写的关键"
+  - id: mc-rd-3
+    text: "redo log 文件写满会自动扩容，长事务也不会把写入卡住"
+    why: "误解：redo 容量固定、循环复用，写满只能强推 checkpoint 刷脏页腾出空间，新写入被迫排队让位"
 ---
 
 **持久性问题**：内存里改完的数据要写到磁盘才不怕断电，但每次修改都立刻刷磁盘太慢（随机写、每次一页）。

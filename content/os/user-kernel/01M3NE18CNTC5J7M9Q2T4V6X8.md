@@ -64,6 +64,15 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
       locator: Intro
+
+misconceptions:
+  - id: mc-uk1-1
+    text: 用户态内核态只是操作系统的软件约定，改改内核配置就能放开限制
+    why: 误解：特权级由 CPU 硬件强制执行，Ring3 跑特权指令当场触发异常，配置绕不过这道门
+  - id: mc-uk1-2
+    text: 系统调用本质是普通函数调用，只是外面包了一层标准库
+    why: 误解：系统调用靠陷阱指令切进 Ring0 由内核代办，要换栈保存现场，函数调用全程不出用户态
+
 ---
 
 **特权级（Ring）是 CPU 硬件给的门禁**：x86 分 Ring0~3，内核住 **Ring0**（全能：改页表、碰设备、收中断），应用住 **Ring3**（Restricted：碰硬件的指令直接 CPU 异常）。这不是软件君子协定——**硬件强制**。

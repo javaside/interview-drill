@@ -49,6 +49,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-tp4-1
+    text: "shutdown() 会中断正在运行的任务，只是放过了队列里的任务"
+    why: "误解：shutdown 一个都不中断，只挂打烊牌拒新客，在跑的与排队的都跑完；中断运行中线程的是 shutdownNow"
+  - id: mc-tp4-2
+    text: "shutdownNow() 返回的 List 是已执行完任务的记录清单"
+    why: "误解：那是被抛弃、一次都没跑过的队列任务；想不丢就得调用方自己接手重跑"
+  - id: mc-tp4-3
+    text: "awaitTermination() 本身会发起关闭动作，单独调用它就能收摊"
+    why: "误解：它只是限时守候池终结，不改变池的任何状态；标准姿势是先 shutdown 再用 awaitTermination 计时"
 ---
 
 两种关店方式：

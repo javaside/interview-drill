@@ -60,6 +60,15 @@ keyPoints:
       kind: official-doc
       url: https://man7.org/linux/man-pages/man7/sched.7.html
       locator: proc(5)
+
+misconceptions:
+  - id: mc-pt5-1
+    text: 死锁发生时线程满负荷空转，CPU 使用率会瞬间飙到 100%
+    why: 误解：死锁线程全阻塞在候锁上并不烧 CPU，真正空转烧 CPU 的是活锁
+  - id: mc-pt5-2
+    text: 四个必要条件满足其中任意一条就可能死锁，不必凑齐
+    why: 误解：必要条件缺一即破局，四条同时在环上成立才构成死锁
+
 ---
 
 死锁是**环**：每人手里攥一把钥匙，都在候对方手里那把——四个条件**缺一不死**：

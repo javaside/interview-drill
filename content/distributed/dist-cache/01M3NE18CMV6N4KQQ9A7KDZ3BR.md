@@ -71,6 +71,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-dc6-1
+    text: "布隆过滤器判断是精确的：说存在就一定存在，说不存在才拦截请求"
+    why: "误解：布隆只有「判不存在」百分百可信；「判存在」有小概率误判（哈希位碰撞），误判的请求照样打到库——它是概率筛不是精确表"
+  - id: mc-dc6-2
+    text: "击穿的解法是给过期时间加随机值，把热点 key 的到期时刻打散"
+    why: "误解：随机 TTL 治的是大批 key 同时到期的雪崩；击穿只有一个热点 key，无所谓打散——要互斥重建或热点永不过期"
 ---
 
 **三个「缓存失效伤及 DB」的病**，病因各不同：

@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-ioc2-1
+    text: "@Autowired 默认按名称匹配，找不到同名 Bean 再退回按类型"
+    why: "误解：@Autowired 先按类型收窄，同类型多候选才用 @Qualifier/@Primary 分流；先按名称走的是 @Resource"
+  - id: mc-ioc2-2
+    text: "构造器注入配合不了 final 字段，想不可变只能靠字段注入再加私有 setter"
+    why: "误解：构造器正是给 final 字段赋值的地方——构造注入加 final 才是官方推荐的不可变写法"
+  - id: mc-ioc2-3
+    text: "Setter 注入是官方推荐的默认方式，因为它灵活还能中途换依赖"
+    why: "误解：官方默认推荐构造器注入（强制依赖、不可变、依赖显式）；Setter 只留给可选或可重配置的依赖"
 ---
 
 按**依赖的刚性**选：

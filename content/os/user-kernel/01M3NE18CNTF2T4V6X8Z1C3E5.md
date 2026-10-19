@@ -67,6 +67,15 @@ keyPoints:
       kind: official-doc
       url: https://www.kernel.org/doc/html/latest/process/1.Intro.html
       locator: Intro
+
+misconceptions:
+  - id: mc-uk4-1
+    text: 进程切换的代价主要花在保存恢复寄存器，缓存失效可以忽略
+    why: 误解：真正的大头是换页表后的 TLB 与缓存冷启动这笔隐形账，寄存器交接只是微秒级零头
+  - id: mc-uk4-2
+    text: 时间片没用完就不会发生上下文切换，进程能一口气跑到底
+    why: 误解：候 IO 或抢锁失败时线程自愿让出 CPU 立即切换，抢占只是触发切换的方式之一
+
 ---
 
 **上下文切换**=CPU 从执行 A 换到执行 B 的搬家仪式：

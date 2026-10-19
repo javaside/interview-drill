@@ -57,6 +57,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-ex2-1
+    text: "try 里 return 之后 finally 就不执行了"
+    why: "误解：return 只是把返回值算好放在栈上，方法收尾必经 finally，之后才真正返回"
+  - id: mc-ex2-2
+    text: "finally 里给返回值变量重新赋值，方法就返回新值"
+    why: "误解：返回值在进 finally 前已快照到返回槽，改局部变量救不了；能改结局的只有 finally 里再写 return"
+  - id: mc-ex2-3
+    text: "System.exit 之后 JVM 也会把 finally 跑完再退出"
+    why: "误解：exit 直接终止虚拟机、不展开栈，finally 不执行；它救不了 exit 之后的清理"
 ---
 
 **finally 必然执行**——try 里 return、抛异常都拦不住它；顺序是：return 的**表达式先求值**（值放一边）→ 执行 finally → 才真正返回。

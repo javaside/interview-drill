@@ -51,6 +51,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html
       locator: 15.6.2.2
+
+misconceptions:
+  - id: mc-inv-1
+    text: "where 条件里只要出现 or 就必然导致索引失效、全表扫描"
+    why: "误解：or 两侧的列各自有索引时优化器可以走 index merge 合并结果，真正拖垮的是没有索引可用的那一侧"
+  - id: mc-inv-2
+    text: "字符串列传了数字没关系，MySQL 会把常量转成字符串再比较"
+    why: "误解：转换方向恰恰相反，MySQL 把每行的列值转成数字再比，函数套在了列上，索引自然用不上"
+  - id: mc-inv-3
+    text: "联合索引 (a,b,c) 上写 where a=1 and c=3，因为中间断了 b，整条索引都用不上"
+    why: "误解：a=1 仍能靠最左前缀定位到一段区间，断掉的只是 c 参与索引定位的能力，并非整棵树报废"
 ---
 
 索引是按**列的原值**有序组织的。写法一旦让数据库「没法直接按有序值找」，就只能放弃索引、全表逐行扫（**索引失效**→**全表扫描**）。四种最常见的踩法：

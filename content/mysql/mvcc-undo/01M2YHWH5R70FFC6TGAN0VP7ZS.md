@@ -67,6 +67,13 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-multi-versioning.html
       locator: '15.3'
+misconceptions:
+  - id: mc-0vp7zs-1
+    text: "undo log 是物理日志，记的是某个页哪个偏移被改了，与 redo 完全对称"
+    why: "误解：undo 记行级逻辑反操作供逆推还原，记页内物理修改的是 redo，两者格式与用途都不同"
+  - id: mc-0vp7zs-2
+    text: "事务一旦提交，它产生的 undo log 就能立刻全部删除"
+    why: "误解：insert undo 随提交可丢，update undo 得留给快照读回溯版本链，只要还有更早的读视图在用它就清不掉"
 ---
 你改数据之前，数据库会先把「旧的样子」抄在一个草稿本上，这个草稿本就是 **undo log（回滚日志）**。
 

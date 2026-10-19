@@ -60,6 +60,13 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-tac-2-1
+    text: "脏读就是两次读的结果不一样，读到的都是别人已提交的数据"
+    why: "误解：两次结果不同说的是不可重复读；脏读的危险在对方尚未提交、可能回滚，读到的是从未生效的值"
+  - id: mc-tac-2-2
+    text: "幻读与不可重复读是同一个问题，RR 防住其中一个另一个自然也没有了"
+    why: "误解：一个盯已有行的值被改、一个盯范围内冒出新行；固定快照只挡前者，后者当前读还得靠间隙锁"
 ---
 
 三种「读的时候被并发写坑了」的异常，一个比一个轻：

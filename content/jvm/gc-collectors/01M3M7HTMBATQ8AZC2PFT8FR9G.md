@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-gc3-1
+    text: "Eden 一满触发的是 Full GC，先整堆大扫除才能腾出最多空间"
+    why: "误解：Eden 满触发的是只扫新生代的 Minor GC；Full 的导火索在老年代满、元空间满与担保失败那一头"
+  - id: mc-gc3-2
+    text: "Major GC 才是整堆大扫除，Full GC 只收老年代"
+    why: "误解：口径记反了——Major 泛指老年代回收，整堆加方法区的大扫除叫 Full"
+  - id: mc-gc3-3
+    text: "System.gc() 只是礼貌性建议，JVM 从来不会真的执行 Full GC"
+    why: "误解：HotSpot 默认会照做一次 Full GC，生产要禁它得显式加 -XX:+DisableExplicitGC"
 ---
 
 按**扫哪儿**分三档：

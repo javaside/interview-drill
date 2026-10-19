@@ -42,6 +42,19 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-ch2-1
+    text: "禁的只是 null key，value 存 null 没问题"
+    why: "误解：key 与 value 都禁，put 一个 null value 同样抛 NullPointerException"
+  - id: mc-ch2-2
+    text: "拿不准时先 containsKey 再 get，两步一查就能区分 null 的含义"
+    why: "误解：两步之间表可能被别的线程改掉，组合判断不是原子快照——这才要从源头禁 null"
+  - id: mc-ch2-3
+    text: "禁 null 是因为 null 算不出哈希值，技术上实现不了"
+    why: "误解：null 完全可以特判定位（HashMap 就把 null key 归到 0 号桶）；禁掉是因为 get 返回 null 有二义性"
+  - id: mc-ch2-4
+    text: "putIfAbsent(k, null) 可以先占个位，之后再补真值"
+    why: "误解：value 为 null 一进 put 就抛 NullPointerException，占位思路在 CHM 里走不通"
 ---
 
 HashMap 里 `get(k)` 返回 null，可以用 `containsKey(k)` 复核「到底是没有还是值是 null」——**单线程**里这两步连起来答案是可靠的。

@@ -59,6 +59,16 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+misconceptions:
+  - id: mc-gr1-1
+    text: "多路复用让 gRPC 彻底告别队头阻塞，一个调用丢包不影响同连接的其他调用"
+    why: "误解：多路复用只消除了应用层的按序排队——TCP 丢包重传时整条连接的全部流都得停着候，传输层的队头阻塞仍在"
+  - id: mc-gr1-2
+    text: "gRPC 的每次调用独占一条 HTTP/2 连接，调用完就释放"
+    why: "误解：连接是长驻复用的——并发调用以流为单位共享同一条连接，调用结束关的是流不是连接"
+  - id: mc-gr1-3
+    text: "一元调用没有流，四种模式里只有双向流才用到 stream"
+    why: "误解：gRPC 在 HTTP/2 上一切调用皆流——一元也是一条恰好只含一条消息的流，四种模式只是每个方向的消息条数不同"
 ---
 
 四种**流形态**（按数据往哪个方向流）：

@@ -20,6 +20,16 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html
       locator: 15.7.2.1
+misconceptions:
+  - id: mc-4ay321-1
+    text: "READ COMMITTED，InnoDB 与 Oracle 保持一致选了已提交读做默认"
+    why: "误解：InnoDB 出厂默认是 REPEATABLE READ，已提交读是 Oracle、PostgreSQL 那一路的选择"
+  - id: mc-4ay321-2
+    text: "SERIALIZABLE，出厂就默认开最严级别，安全优先于并发"
+    why: "误解：默认级别是可重复读，串行化把并发执行压成排队，InnoDB 不会把它设成出厂值"
+  - id: mc-4ay321-3
+    text: "READ UNCOMMITTED，InnoDB 为追求吞吐默认容忍脏读"
+    why: "误解：InnoDB 默认可重复读，脏读级别要显式设置，任何出厂配置都不放开读未提交数据"
 ---
 **隔离级别**是数据库提供的几档「互相干扰程度」设定：档位越严，多个人同时操作时看到的干扰越少，但性能开销越大。
 

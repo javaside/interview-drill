@@ -51,6 +51,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-vj1-1
+    text: "把 count 声明成 volatile 后，count++ 就线程安全了"
+    why: "误解：++ 是读改写三步，volatile 保住每步读到新值却保不住三步不被插队——计数要 AtomicLong 或加锁"
+  - id: mc-vj1-2
+    text: "声明 volatile int[] arr 后，对 arr[i] 的写也自动有了 volatile 语义"
+    why: "误解：volatile 只罩住数组引用本身，元素写入不带任何屏障；要元素级可见用 AtomicIntegerArray 或加锁"
+  - id: mc-vj1-3
+    text: "给共享变量加了 volatile，围绕它的整段读写代码就自动成了临界区"
+    why: "误解：volatile 只作用于单次访问的可见与次序，围不出互斥区间；成段的原子操作仍要锁"
 ---
 
 volatile 的两保一不保：

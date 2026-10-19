@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-rd2-1
+    text: "innodb_flush_log_at_trx_commit 设为 2 就高枕无忧，主机断电也不丢事务"
+    why: "误解：2 只把 redo 写到操作系统缓存，掉电连缓存一起清掉，主机级宕机仍丢最多约 1 秒"
+  - id: mc-rd2-2
+    text: "参数 0 和 2 的安全性没有区别，反正都是每秒刷一次盘"
+    why: "误解：mysqld 崩溃时 2 的日志已交到操作系统层保住、0 还留在日志缓冲里会丢 1 秒；两者只对主机掉电同样脆弱"
+  - id: mc-rd2-3
+    text: "sync_binlog=1 的意思是每秒同步一次 binlog"
+    why: "误解：1 指每次事务提交都 fsync 一次 binlog；0 是完全交给操作系统安排落盘，不按秒计数"
 ---
 
 **可靠性 vs 性能**的两个总开关：

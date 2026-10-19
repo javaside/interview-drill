@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-oe2-1
+    text: "new Object() 只占 8 字节，一个 Mark Word 就够了"
+    why: "误解：还有 4 字节压缩类型指针与 4 字节对齐填充，经典答案是 16 字节"
+  - id: mc-oe2-2
+    text: "字段在内存里严格按源码声明顺序排布，JVM 不做手脚"
+    why: "误解：HotSpot 会字段重排——同宽聚集、父类在前，按对齐策略压缝隙；源码顺序不作数"
+  - id: mc-oe2-3
+    text: "Mark Word 同时装着哈希、锁指针与分代年龄三套数据"
+    why: "误解：Mark Word 是随锁状态换内容的联合体——无锁态里哈希与年龄并存，一旦加锁这些位整体让给锁记录或 monitor 指针"
 ---
 
 一个对象在堆里的**三段结构**：

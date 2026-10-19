@@ -49,6 +49,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-bi3-1
+    text: "从库 IO 线程收到 binlog 后直接执行其中的语句，不需要别的线程参与"
+    why: "误解：IO 线程只管收货入库（写 relay log），执行日志内容是 SQL 线程的活，两条线程各司其职"
+  - id: mc-bi3-2
+    text: "半同步复制要候从库把事务重放完才向客户端返回成功"
+    why: "误解：半同步的确认点是 IO 线程收到 binlog，不是重放完成，relay log 里排队的事务仍可能滞后"
+  - id: mc-bi3-3
+    text: "半同步模式下主库要收到全部从库的确认才返回提交"
+    why: "误解：默认只要一个从库确认收到即可，想增加确认数量需显式调大对应参数"
 ---
 
 **复制流程**（三线程接力）：

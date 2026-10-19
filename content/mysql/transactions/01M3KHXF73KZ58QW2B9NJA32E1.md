@@ -52,6 +52,16 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-tac-1
+    text: "原子性由 redo log 实现：崩溃后把没做完的事务重放补齐"
+    why: "误解：回滚未完成事务靠 undo log 逆向执行，redo 管持久性重放，两本日志的岗位别对调"
+  - id: mc-tac-2
+    text: "隔离性完全靠加锁实现，与 MVCC 没有任何关系"
+    why: "误解：InnoDB 的快照读走 MVCC 不加锁，只有当前读与写冲突才动锁，隔离性是两者合力"
+  - id: mc-tac-3
+    text: "事务提交返回的那一刻，它改的数据页已经写进 .ibd 文件"
+    why: "误解：提交时确保落盘的是 redo log，数据页往往还是脏页延后刷，重启后靠重放把修改补回文件"
 ---
 
 **事务（transaction）**= 一组「要么全成、要么全不算」的操作。转账 100 元 = 「你 -100」和「我 +100」两步，只做一半就是事故。ACID 是衡量一个事务系统靠不靠谱的四个标准：

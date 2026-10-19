@@ -66,6 +66,14 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+
+misconceptions:
+  - id: mc-st1-1
+    text: 把内部数组声明成 final 就足以保证不可变，类加不加 final 无所谓
+    why: 误解：final 只锁住数组引用，数组内容照样能改，类不封死还会被继承者开出后门
+  - id: mc-st1-2
+    text: replace、substring 这些方法直接在原字符串上就地修改
+    why: 误解：修改类方法一律返回新字符串对象，原串从创建到回收内容分毫不变
 ---
 
 `String s = "a"; s += "b";` 每一步都在造**新对象**——因为 String 一旦生成就**终生不变**。为什么这么设计？三个红利：

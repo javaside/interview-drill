@@ -57,6 +57,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-aop2-1
+    text: "Spring AOP 靠类加载期改写目标类字节码把切面织入，与 AspectJ 用同一套织入机制"
+    why: "误解：Spring AOP 是运行时动态代理，容器里存代理对象、目标类字节码原封不动；编译/加载期织入是 AspectJ 自带的机制"
+  - id: mc-aop2-2
+    text: "JDK 动态代理靠继承目标类生成子类实现拦截，所以要求目标类可被继承"
+    why: "误解：方向反了——JDK 代理生成的类只实现目标接口并把调用转发给 InvocationHandler；生成子类是 CGLIB 的路数"
+  - id: mc-aop2-3
+    text: "代理对象在 Bean 实例化的同时同步生成，构造器一跑完拦截器链就位"
+    why: "误解：代理要包装配完成的成品，后置处理器在初始化之后的钩子里才判定切点命中并生成代理"
 ---
 
 **Spring AOP = Bean 生命周期里的一次「偷梁换柱」**：

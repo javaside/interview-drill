@@ -59,6 +59,13 @@ keyPoints:
       kind: official-doc
       url: https://martin.kleppmann.com/ddia/
       locator: DDIA
+misconceptions:
+  - id: mc-dc8-1
+    text: "bgsave 期间 Redis 会停止处理写命令，快照拍完后才恢复接写，否则快照就不完整"
+    why: "误解：fork 靠写时复制——子进程看旧页、主进程改新页照常接写，快照天然完整；代价是这段时间内存占用可能接近翻倍"
+  - id: mc-dc8-2
+    text: "同时开启 RDB 与 AOF 时重启优先加载 RDB 快照，没有 RDB 文件才回放 AOF"
+    why: "误解：顺序正好反过来——AOF 里的数据通常更新，只要 AOF 开着就先回放 AOF，AOF 关闭才轮到加载 RDB"
 ---
 
 两种**持久化**路线（解决 Redis 重启数据丢不丢）：

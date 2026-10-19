@@ -51,6 +51,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-bi-1
+    text: "row 格式只记录被修改的列，日志比 statement 更省空间"
+    why: "误解：row 记每行的前后镜像，批量改十万行就要记二十万份值，正常情况比记 SQL 原文大得多"
+  - id: mc-bi-2
+    text: "MySQL 8.0 的 binlog 默认格式仍是 statement"
+    why: "误解：8.0 起默认就是 row，statement 只作为兼容选项保留"
+  - id: mc-bi-3
+    text: "mixed 模式一旦判定不安全就整段切到 row，之后不再用 statement"
+    why: "误解：mixed 是逐条语句现判，安全就记 statement、不安全才切 row，同一份日志里两种格式交替出现"
 ---
 
 **binlog**（归档日志）给**备份数据恢复和主从复制**用：主库把每次修改记下来，从库照着重放。记的格式有三种：

@@ -63,6 +63,13 @@ keyPoints:
       kind: official-doc
       url: https://www.rfc-editor.org/rfc/rfc9110.html
       locator: RFC 9110
+misconceptions:
+  - id: mc-hp3-1
+    text: "HTTP/2 的多路复用彻底消灭了队头阻塞，丢一个包也不会卡住别的流"
+    why: "误解：它只消掉 HTTP 层的队头阻塞；TCP 字节流全局有序，丢一个包后面已到的帧都得候重传——这正是换 HTTP/3 的动机"
+  - id: mc-hp3-2
+    text: "QUIC 选用 UDP 就是为了甩掉可靠传输的包袱，丢了包也不必重传"
+    why: "误解：QUIC 在 UDP 上自己重建了确认与重传，可靠性一点没少——只是做到流粒度，丢包只堵自己那条流"
 ---
 
 每一代都在拆上一代的墙：

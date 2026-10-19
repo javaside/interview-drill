@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-jt2-1
+    text: "内存泄漏和内存溢出是一回事，只是两种叫法"
+    why: "误解：泄漏是该回收的对象被引用拽着收不掉（慢性病），溢出是空间装不下（急性发作）；泄漏拖久了才恶化成溢出"
+  - id: mc-jt2-2
+    text: "把 -Xmx 调大就算治好了内存泄漏"
+    why: "误解：扩堆只是把溢出时点往后推，拽住内存的引用原封不动；根治要顺 Dominator Tree 找到把持者"
+  - id: mc-jt2-3
+    text: "泄漏时 Full GC 后老年代会慢慢回落，多收几轮总能降回去"
+    why: "误解：Full GC 后只升不降恰是泄漏的指纹——被引用拽着的对象，收多少轮也带不走"
 ---
 
 **排查流水线**：

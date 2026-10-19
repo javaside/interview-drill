@@ -50,6 +50,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+
+misconceptions:
+  - id: mc-st3-1
+    text: 不管常量池有没有 abc，这行代码都固定创建两个对象
+    why: 误解：字面量已入池时只剩 new 造的堆对象这一个，创建几个要看此前是否登记过
+  - id: mc-st3-2
+    text: 这行代码创建了三个对象：池里的 abc、堆里的拷贝、还有变量 s
+    why: 误解：s 只是引用变量不算对象，对象至多两个，把引用数进对象数是典型错法
+  - id: mc-st3-3
+    text: 字符串常量池放在方法区的元空间里，跟着类元数据一起管理
+    why: 误解：JDK 7 起池里的字符串对象就搬进了本地堆，元空间只存类元信息
 ---
 
 经典面试题，拆开看这行代码的两步：

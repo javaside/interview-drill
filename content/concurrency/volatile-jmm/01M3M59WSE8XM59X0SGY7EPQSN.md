@@ -52,6 +52,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/package-summary.html
       locator: java.util.concurrent
+misconceptions:
+  - id: mc-vj2-1
+    text: "as-if-serial 对多线程程序同样兜底，整体结果仍与顺序执行一致"
+    why: "误解：这份承诺只覆盖单线程视角；跨线程的次序与可见性由 happens-before 管，重排的效果在多线程下会被观察到"
+  - id: mc-vj2-2
+    text: "a=1 再 b=a 这样有数据依赖的两条指令也会被重排调换"
+    why: "误解：数据依赖是硬约束，编译器与 CPU 都不调换有依赖的指令；被调换的是没有依赖的相邻操作"
+  - id: mc-vj2-3
+    text: "关掉 JIT 用解释执行，指令重排就消失了"
+    why: "误解：JIT 只是重排来源之一，CPU 乱序执行与内存系统的重排照样发生——这是硬件行为，不随执行模式消失"
 ---
 
 为了跑得快，**编译器和 CPU 都会偷偷调换指令顺序**（等流水线不断流、缓存命中率拉满）。底线只有一条：**单线程看不出来**（as-if-serial——算出来结果跟顺序执行一样）。

@@ -51,6 +51,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-gc2-1
+    text: "染色指针把标记与转移状态记在对象头的 Mark Word 里"
+    why: "误解：颜色存在引用自身的 64 位指针高位，随引用走不随对象走——免查对象才撑得起并发整理"
+  - id: mc-gc2-2
+    text: "ZGC 全程并发，一次 STW 都没有"
+    why: "误解：根扫描那几个阶段仍有极短 STW，只是压到亚毫秒量级、且不随堆变大而变长"
+  - id: mc-gc2-3
+    text: "读屏障只加在 GC 线程上，业务线程零开销"
+    why: "误解：读屏障恰恰插在业务线程加载引用的路径上，顺路把旧地址修到新地址；ZGC 让出的那部分吞吐就是它的代价"
 ---
 
 ZGC 的野心：**停顿与堆大小无关**（16TB 堆也亚毫秒）。三板斧：

@@ -60,6 +60,14 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+
+misconceptions:
+  - id: mc-mv2-1
+    text: 方法级权限校验写在 Filter 里正合适，Filter 能拿到 HandlerMethod 读方法上的注解
+    why: 误解：Filter 运行在 DispatcherServlet 之前，目标方法还没解析出来；感知 HandlerMethod 是拦截器 preHandle 的能力
+  - id: mc-mv2-2
+    text: postHandle 一定发生在响应写出之前，@ResponseBody 接口的返回值也能在这里改
+    why: 误解：REST 场景下 HttpMessageConverter 在方法返回时就写完了响应体，postHandle 已晚，改返回值要用 ResponseBodyAdvice
 ---
 
 **层次不同**：Filter 在 **Servlet 容器层**（包裹整个 DispatcherServlet），拦截器在 **Spring MVC 层**（只管进到 MVC 的请求）：

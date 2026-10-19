@@ -92,6 +92,10 @@ keyPoints:
       kind: official-doc
       url: https://kafka.apache.org/documentation/
       locator: doc
+misconceptions:
+  - id: mc-kr3-1
+    text: "生产者开启 idempotent 后跨分区跨重启都不会重复，事务与消费端防重都用不上了"
+    why: "误解：idempotent 的去重范围只有单分区单会话，PID 重启就换，跨分区原子性靠事务，落库去重靠消费端唯一键"
 ---
 
 Kafka 原生的三层方案：

@@ -56,6 +56,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+misconceptions:
+  - id: mc-gc1-1
+    text: "CMS 用标记-复制并发搬运老年代活对象，所以没有碎片问题"
+    why: "误解：CMS 是标记-清除，拿碎片换并发低停顿；碎片放不下大对象正是它的死穴"
+  - id: mc-gc1-2
+    text: "G1 的新生代与老年代在物理上仍是两块连续大区，Region 只是画格子"
+    why: "误解：Region 是全堆统一尺寸的积木，分代只是动态指派的角色标签，物理上不再有连续的分代边界"
+  - id: mc-gc1-3
+    text: "MaxGCPauseMillis 设得越小越好，压到 1 毫秒只有好处没有代价"
+    why: "误解：停顿预算越紧，单次能收的 Region 越少、GC 越频繁，吞吐跟着让步；预算是权衡不是免费午餐"
 ---
 
 两代「低停顿」代表：

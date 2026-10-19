@@ -49,6 +49,17 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+
+misconceptions:
+  - id: mc-lk4-1
+    text: "两个事务同时更新同一行就会死锁，谁也不让谁"
+    why: "误解：同一行只会产生排队，后到的事务候着就行；死锁要成环，互相握着对方要的锁才成立"
+  - id: mc-lk4-2
+    text: "死锁报错说明数据库出了故障，应该先排查版本 bug 而不是改代码"
+    why: "误解：死锁是并发的正常副产物，被选中的事务收到 ER_LOCK_DEADLOCK 后重试通常就能过，重点在让事务按固定顺序拿锁"
+  - id: mc-lk4-3
+    text: "InnoDB 检测到死锁会回滚先启动、持锁时间最长的那个事务"
+    why: "误解：挑的是回滚代价最小的一方，即加锁数量最少的事务，不看谁先来谁拿得久"
 ---
 
 **死锁**=两个事务各拿一把锁、又都想要对方的，谁也不撒手：

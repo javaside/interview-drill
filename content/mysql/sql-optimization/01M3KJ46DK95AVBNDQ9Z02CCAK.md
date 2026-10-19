@@ -50,6 +50,16 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-opt5-1
+    text: "慢查询日志装好 MySQL 就默认开启，直接翻日志就能找到慢 SQL"
+    why: "误解：slow_query_log 出厂默认关闭，要先打开它并设好 long_query_time 阈值才有记录"
+  - id: mc-opt5-2
+    text: "慢查询日志只收录 select，update、delete 再慢也不会被记进去"
+    why: "误解：慢日志按耗时收录语句，增删改与 DDL 只要超过阈值同样入册，并非查询专属"
+  - id: mc-opt5-3
+    text: "show processlist 沉淀了历史慢 SQL，可以拿来替代慢日志做离线分析"
+    why: "误解：processlist 只展示此刻正在执行的语句快照，看完即散，历史统计还得依赖慢查询日志"
 ---
 
 定位慢 SQL 的标准流水线：

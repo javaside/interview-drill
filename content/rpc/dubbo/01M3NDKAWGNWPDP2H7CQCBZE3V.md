@@ -59,6 +59,15 @@ keyPoints:
       kind: official-doc
       url: https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/
       locator: doc
+
+misconceptions:
+  - id: mc-du3-1
+    text: Dubbo 默认的负载均衡是 RoundRobin 轮询，请求逐台轮流分发
+    why: 误解：默认是 Random 加权随机，大数定律把流量摊成权重比，轮询需显式配置
+  - id: mc-du3-2
+    text: 一致性哈希只要节点一变，全部请求的机器映射都要重新洗牌
+    why: 误解：一致性哈希节点增减只牵动约 1/N 的 key，全量洗牌的是简单取模
+
 ---
 
 **流量怎么分给多台 Provider**：

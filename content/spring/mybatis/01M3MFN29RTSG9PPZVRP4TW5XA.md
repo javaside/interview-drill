@@ -69,6 +69,10 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+misconceptions:
+  - id: mc-my2-1
+    text: "同一事务里连续两次相同查询也不会命中一级缓存，因为 Spring 每次 Mapper 调用都新开 SqlSession"
+    why: "误解：事务内 SqlSession 由事务绑定并全程复用同一个，一级缓存在事务里照样命中——换新 session 的是无事务的调用"
 ---
 
 **一级缓存（SqlSession 级）**：同一 SqlSession 里**同 SQL 同参数**直接回缓存对象；任何写操作/commit/关session **清空**。**Spring 集成的真相**：没有手动 sqlSession 的概念——**每次 Mapper 调用都开新 SqlSession**（事务内复用同一个），所以**跨请求的一级缓存基本无效**，只在同一事务内的重复查询生效（也有脏读旧值的风险，`localCacheScope=STATEMENT` 可关）。

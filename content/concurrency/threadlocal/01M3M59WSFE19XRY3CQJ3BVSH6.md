@@ -45,6 +45,19 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/ThreadLocal.html
       locator: ThreadLocal
+misconceptions:
+  - id: mc-tl5-1
+    text: "看得到——所有线程读的是同一张静态表，父线程 set 的值子线程自然 get 得到"
+    why: "误解：表是每线程私有的，父子互不相通；普通 ThreadLocal 下子线程 get 只会得到 null"
+  - id: mc-tl5-2
+    text: "InheritableThreadLocal 下父线程日后再改值，子线程也能实时看到"
+    why: "误解：继承只是子线程出生那一刻的一次性快照，抄完两边各改各的，此后互不可见"
+  - id: mc-tl5-3
+    text: "线程池里换 InheritableThreadLocal 就够了，线程复用时会重新同步提交线程的值"
+    why: "误解：拷贝只绑定线程出生，复用不触发任何同步——池线程拿到的是建池那一刻的老值"
+  - id: mc-tl5-4
+    text: "只要把子线程 new 在父线程 set 之后，普通 ThreadLocal 的值就能被子线程读到"
+    why: "误解：普通 ThreadLocal 与创建时机无关，两张表物理隔离，先后顺序救不了"
 ---
 
 **看不到**——普通 ThreadLocal 的隔离是**彻底**的：父线程 set 的值在子线程 get 是 null（两张独立的表）。

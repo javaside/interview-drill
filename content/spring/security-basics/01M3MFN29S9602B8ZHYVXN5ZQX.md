@@ -52,6 +52,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.spring.io/spring-framework/reference/core.html
       locator: core
+
+misconceptions:
+  - id: mc-sec2-1
+    text: 没登录返回 403，权限不足返回 401，因为 401 的英文原义就是 Unauthorized（未授权）
+    why: 误解：401 的真实语义是未认证（请先带凭证重来），权限不足是 403 Forbidden，名字里的 Unauthorized 是历史误导
+  - id: mc-sec2-2
+    text: JWT 验签属于鉴权环节，因为校验 token 就是在检查能不能访问这个接口
+    why: 误解：验签认的是身份（认证，产出你是谁），能不能访问是随后按角色/权限做的鉴权判断
+  - id: mc-sec2-3
+    text: 鉴权失败也走认证入口点，把用户重定向到登录页重新登录就能解决
+    why: 误解：入口点只处理未认证（401/登录跳转），已认证但无权限走拒绝处理器直接回 403，重登也换不出新的权限
 ---
 
 两道关：

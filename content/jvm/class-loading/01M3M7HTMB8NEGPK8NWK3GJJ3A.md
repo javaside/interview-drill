@@ -51,6 +51,17 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jvms/se17/html/jvms-2.html
       locator: JVMS
+
+misconceptions:
+  - id: mc-cl2-1
+    text: 双亲委派的「父」指类继承关系，应用加载器继承了平台加载器
+    why: 误解：父子只是加载器实例持有的 parent 引用，是组合不是继承，加载器类之间没有父子
+  - id: mc-cl2-2
+    text: 收到加载请求先自己找一遍，找不到才向上交给父加载器
+    why: 误解：方向恰好相反，请求先沿链层层上抛到顶层再逐级下放，自己永远排在最后
+  - id: mc-cl2-3
+    text: 启动类加载器本身也是 Java 类，能打印它的类名和实例
+    why: 误解：HotSpot 里 Bootstrap 由本地代码实现不落地为 Java 对象，取它的引用只会得到 null
 ---
 
 **双亲委派**=「有事先问爹」：收到加载请求，**先层层上抛给最顶层的加载器**，父加载器搞不定的才自己动手。

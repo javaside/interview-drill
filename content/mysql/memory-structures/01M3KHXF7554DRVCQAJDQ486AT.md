@@ -61,6 +61,13 @@ keyPoints:
       kind: official-doc
       url: https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
       locator: '15'
+misconceptions:
+  - id: mc-mem2-1
+    text: "全表扫描会污染缓存，是因为扫到的页被直接插进 young 区头部"
+    why: "误解：新读入的页一律先落在 old 区，扫描页得不到第二次访问就进不了 young 区，很快被逐出"
+  - id: mc-mem2-2
+    text: "调大 innodb_old_blocks_time 能让新页更快晋升成热页"
+    why: "误解：该值是晋升门槛的停留时长，调大后要停得更久再访问才晋升，热页入列反而更慢"
 ---
 
 传统 LRU 一刀切：谁最近用过谁留。被**全表扫描**坑：一次 `where 无索引` 把全表页灌进链头，原本书签般常用的热页全被挤到队尾逐出——扫描完缓存白瞎了。
