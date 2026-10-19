@@ -39,6 +39,20 @@ export const keyPointSchema = z.object({
   retiredAt: z.string().regex(ISO_DATE).optional(),
 }).strict()
 
+/**
+ * 卡级专属错误选项（spec §2.4）。同样 .strict()：`retiredAt`/`movedFrom` 是
+ * tombstone/改名放行开关，拼错必须有声，不能被 zod 静默剥离成"还在出题"。
+ */
+export const misconceptionSchema = z.object({
+  // id 禁含 #：content-upsert 的 tombstone 用单 JSON 数组 + unnest 下沉，
+  // 拼接键是 cardId#id——mc id 里出现 # 会把键拆错位（同 keyPoints 守卫口径）
+  id: z.string().min(1).regex(/^[^#]+$/, 'mc id 不得含 #（tombstone unnest 拼接键约束）'),
+  text: z.string().min(1),
+  why: z.string().min(1), // 必填：错勾永远有「为什么错」（spec §2.1），UI 溯源靠它
+  retiredAt: z.string().regex(ISO_DATE).optional(),
+  movedFrom: z.string().optional(),
+}).strict()
+
 export const cardSchema = z
   .object({
     id: z.string().min(1),
@@ -52,6 +66,7 @@ export const cardSchema = z
     appliesTo: z.string().min(1),
     frequency: z.enum(['high', 'mid', 'low']),
     conclusion: z.enum(['yes', 'no', 'depends']).optional(),
+    misconceptions: z.array(misconceptionSchema).max(8).optional(),
     retiredAt: z.string().regex(ISO_DATE).optional(),
     movedFrom: z.string().optional(),
   })
@@ -83,5 +98,9 @@ export const cardSchema = z
     if (card.cardType !== 'judgment' && card.conclusion !== undefined) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['conclusion'],
         message: 'conclusion 仅 judgment 型允许' })
+    }
+    if (card.cardType === 'sequence' && card.misconceptions !== undefined && card.misconceptions.length > 0) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['misconceptions'],
+        message: 'sequence 型无干扰项阶段，misconceptions 不会被消费——配了就是死内容' })
     }
   })

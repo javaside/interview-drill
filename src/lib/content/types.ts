@@ -63,6 +63,23 @@ export type KeyPoint = {
   retiredAt?: string
 }
 
+/**
+ * 卡级专属错误选项（spec §2.4）：为本卡量身写的「常见误解」干扰项，
+ * 抽取时优先于干扰项池（spec §3.1），why 供 UI 溯源「为什么错」。
+ */
+export type Misconception = {
+  /** 卡内唯一。禁含 #——content-upsert 的 tombstone 以 cardId#id 作拼接键 */
+  id: string
+  /** 错误说法本身，作为选项呈现 */
+  text: string
+  /** 为什么错。必填：错勾永远有「为什么错」（spec §2.1） */
+  why: string
+  /** 退役日期 YYYY-MM-DD。设后不再抽取，保留供 review_log 复现 */
+  retiredAt?: string
+  /** id 迁移记录：本条由哪个旧 id 改名而来，供跨提交守卫放行 */
+  movedFrom?: string
+}
+
 export type Card = {
   id: string
   blockId: string
@@ -78,6 +95,8 @@ export type Card = {
   frequency: Frequency
   /** 仅 cardType='judgment' 必填：正确结论（§4.4 二段式——结论错则本题 0 分） */
   conclusion?: 'yes' | 'no' | 'depends'
+  /** 本卡专属错误选项；缺省 = 无，全走干扰项池。sequence 型禁配（无消费方，配了是死内容） */
+  misconceptions?: Misconception[]
   /** tombstone：退役日期 YYYY-MM-DD。设置后不再出题，但保留以免 review_log 悬空 */
   retiredAt?: string
   /** id 迁移记录：本卡由哪个旧 id 改名而来，供 CI 跨提交守卫放行 */
