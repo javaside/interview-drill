@@ -1,5 +1,6 @@
 import { auditLibrary, MIN_BLOCK_POOL, type BlockLike } from '../../../src/lib/content/audit.js'
-import type { Card, CardType, KeyPoint } from '../../../src/lib/content/types.js'
+import { poolMarginsOf } from '../../../src/lib/content/exclusion.js'
+import type { Card, CardType, KeyPoint, Misconception } from '../../../src/lib/content/types.js'
 
 // 不能用 example.org —— 它是脚手架占位符 token，ready 块里会被占位符检查拦下。
 const URL = 'https://github.com/openjdk/jdk/blob/master/A.java'
@@ -12,12 +13,19 @@ function kp(id: string, over: Partial<KeyPoint> = {}): KeyPoint {
     ...over,
   }
 }
-function card(id: string, kps: KeyPoint[], cardType: CardType = 'enumeration'): Card {
+function card(id: string, kps: KeyPoint[], cardType: CardType = 'enumeration', over: Partial<Card> = {}): Card {
   return {
     id, blockId: 'b1', relatedBlocks: [], question: '问题？', cardType,
     keyPoints: kps, detail: '', followUps: [], appliesTo: 'JDK 8+', frequency: 'mid',
+    ...over,
   }
 }
+/** 文本按 id 派生：既不与要点文本（'要点'）撞车，也不踩占位符 token */
+function mc(id: string, over: Partial<Misconception> = {}): Misconception {
+  return { id, text: `错误说法 ${id}`, why: `误解：${id} 实际另有其解`, ...over }
+}
+/** poolMarginsOf 的最小 categories：单块即可，不引入跨层噪声 */
+const CATS = new Map([['b1', 'cat-a'], ['b2', 'cat-a']])
 const ready: BlockLike[] = [{ id: 'b1', status: 'ready' }]
 const wip: BlockLike[] = [{ id: 'b1', status: 'wip' }]
 
@@ -112,4 +120,91 @@ test('wip 块里的占位符不报错 —— 半成品是正常状态', () => {
   const stub = card('c1', [kp('a1'), kp('a2'), kp('a3')])
   stub.keyPoints[0]!.text = '待填写要点 1'
   expect(auditLibrary([stub], wip).errors).toEqual([])
+})
+
+// ---- 专属错误选项（misconceptions）与池 ----
+
+test('配满 mc 的卡豁免 MIN_BLOCK_POOL；poolMarginsOf 同口径', () => {
+  // 块内只有 1 张 enumeration 卡（要点 3 条），同块池可用 0 条本应报错；
+  // 配满缺口（9−3=6）的 mc 让它整卡豁免（spec §5.1）
+  const filled = card('c1', [kp('a1'), kp('a2'), kp('a3')], 'enumeration', {
+    misconceptions: [mc('mc-1'), mc('mc-2'), mc('mc-3'), mc('mc-4'), mc('mc-5'), mc('mc-6')],
+  })
+  expect(auditLibrary([filled], ready).errors).toEqual([])
+  // 豁免必须同步作用于 poolMarginsOf（--apply 的触线判定）——
+  // 否则配满卡 content:audit 绿了、content:exclusion --apply 仍拒落盘
+  expect(poolMarginsOf([filled], CATS).find(m => m.cardId === 'c1')!.need).toBe(0)
+
+  // atomic 的缺口是 4−1=3，最易配满
+  const atomicFilled = card('c1', [kp('a1')], 'atomic', {
+    misconceptions: [mc('mc-1'), mc('mc-2'), mc('mc-3')],
+  })
+  expect(auditLibrary([atomicFilled], ready).errors).toEqual([])
+  expect(poolMarginsOf([atomicFilled], CATS).find(m => m.cardId === 'c1')!.need).toBe(0)
+
+  // 部分配（mc 3 条 < 缺口 6）→ 照旧全额检查：豁免只认「配满」，
+  // need 不按活 mc 数折减（保守规则，spec §5.1 原文）
+  const partial = card('c1', [kp('a1'), kp('a2'), kp('a3')], 'enumeration', {
+    misconceptions: [mc('mc-1'), mc('mc-2'), mc('mc-3')],
+  })
+  const partialMsg = auditLibrary([partial], ready).errors.join()
+  expect(partialMsg).toContain('c1')
+  expect(partialMsg).toContain('池不足')
+  expect(poolMarginsOf([partial], CATS).find(m => m.cardId === 'c1')!.need)
+    .toBe(MIN_BLOCK_POOL.enumeration)
+
+  // 退役 mc 不算数：配满后把一条退役 → 缺口重现，照旧全额检查
+  const retiredMc = card('c1', [kp('a1'), kp('a2'), kp('a3')], 'enumeration', {
+    misconceptions: [
+      mc('mc-1'), mc('mc-2'), mc('mc-3'), mc('mc-4'), mc('mc-5'),
+      mc('mc-6', { retiredAt: '2026-10-01' }),
+    ],
+  })
+  expect(auditLibrary([retiredMc], ready).errors.join()).toContain('池不足')
+  expect(poolMarginsOf([retiredMc], CATS).find(m => m.cardId === 'c1')!.need)
+    .toBe(MIN_BLOCK_POOL.enumeration)
+})
+
+test('mc 文本与全库活要点撞车 → 红（含跨块）', () => {
+  // 卡 A（块 b1）的 mc.text 与卡 B（块 b2，跨块）某活要点 text 完全相同 ——
+  // kp id 只保证块内唯一，跨块文本撞车时同一变体会出现两条同文选项、一判对一判错
+  const clash = 'HashMap 是头插法所以并发扩容死循环'
+  const a = card('c1', [kp('a1')], 'atomic', { misconceptions: [mc('mc-1', { text: clash })] })
+  const b = card('c2', [kp('b1', { text: clash })], 'atomic', { blockId: 'b2' })
+  const cross = auditLibrary([a, b]).errors.join()
+  expect(cross).toContain('mc-1')
+  expect(cross).toContain('完全相同')
+
+  // 与本卡活要点同文同样拦（查重集合是全库活要点，不分你我）
+  const own = card('c1', [kp('a1', { text: '跟自己的要点撞车' })], 'atomic', {
+    misconceptions: [mc('mc-1', { text: '跟自己的要点撞车' })],
+  })
+  expect(auditLibrary([own]).errors.join()).toContain('完全相同')
+
+  // 退役要点的文本不在查重范围（liveKpTexts 只装活要点）
+  const retiredKp = card('c1', [kp('a1', { text: '已退役的说法', retiredAt: '2026-10-01' })], 'atomic', {
+    misconceptions: [mc('mc-1', { text: '已退役的说法' })],
+  })
+  expect(auditLibrary([retiredKp]).errors.join()).not.toContain('完全相同')
+
+  // 退役 mc 自身也不参与查重
+  const retiredMc = card('c1', [kp('a1')], 'atomic', {
+    misconceptions: [mc('mc-1', { text: clash, retiredAt: '2026-10-01' })],
+  })
+  expect(auditLibrary([retiredMc, b]).errors.join()).not.toContain('完全相同')
+})
+
+test('卡内两条 mc 文本相同 → 第二条报重复', () => {
+  const dup = card('c1', [kp('a1')], 'atomic', {
+    misconceptions: [mc('mc-1'), mc('mc-2', { text: '错误说法 mc-1' })],
+  })
+  const msg = auditLibrary([dup]).errors.join()
+  expect(msg).toContain('重复')
+  expect(msg).toContain('mc-2')
+})
+
+test('ready 块里 mc 的 text/why 残留脚手架占位符被拦下 —— 与 kp 文本同一规则', () => {
+  const cards = healthyBlock()
+  cards[0]!.misconceptions = [mc('mc-1', { why: '误解：见 REPLACE-ME' })]
+  expect(auditLibrary(cards, ready).errors.join()).toContain('占位符')
 })

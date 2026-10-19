@@ -33,6 +33,14 @@ test('卡 id 全局重复被发现', () => {
   expect(r.errors.join()).toContain('卡 id 重复')
 })
 
+test('mc id 全局重复被发现 —— lockfile 的 mc:<id> 行无块前缀，撞 id 会让引用歧义', () => {
+  const a = card('c1', 'b1', K3('a'), { misconceptions: [{ id: 'm-dup', text: '错误说法甲', why: '误解甲' }] })
+  const b = card('c2', 'b2', K3('b'), { misconceptions: [{ id: 'm-dup', text: '错误说法乙', why: '误解乙' }] })
+  const r = auditLibrary([a, b])
+  expect(r.errors.join()).toContain('mc id 重复')
+  expect(r.errors.join()).toContain('m-dup')
+})
+
 test('要点 id 在同一个块内重复被发现（跨文件也能抓到）', () => {
   const a = card('c1', 'b1', [kp('kp-x'), kp('kp-2'), kp('kp-3')])
   const b = card('c2', 'b1', [kp('kp-x'), kp('kp-5'), kp('kp-6')])

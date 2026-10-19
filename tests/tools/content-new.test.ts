@@ -47,3 +47,33 @@ test('要点 id 不含位置序号派生的成分 —— 插入新题不应触�
   // 前缀来自卡自己的 ULID，与它在块里的第几位无关
   expect(r.card.keyPoints[0]!.id).toContain('000aaa')
 })
+
+// ---- misconceptions 注释模板 ----
+
+test('骨架带 misconceptions 注释模板 —— 不取消注释则零影响', () => {
+  const src = renderTemplate({ id: '01J8ZKQ7Y00000000000000DDD', blockId: 'mysql/mvcc', cardType: 'enumeration', today: '2026-09-18' })
+  expect(src).toContain('# misconceptions:')
+  expect(src).toContain('#     why:')
+  const r = parseCard(src, 'x.md')
+  expect(r.ok).toBe(true)
+  if (!r.ok) return
+  expect(r.card.misconceptions).toBeUndefined()
+})
+
+test('misconceptions 注释模板取消注释后即为合法配置 —— 照抄可用', () => {
+  const src = renderTemplate({ id: '01J8ZKQ7Y00000000000000EEE', blockId: 'mysql/mvcc', cardType: 'enumeration', today: '2026-09-18' })
+  const uncommented = src.replace(/^# ?/gm, '')
+  const r = parseCard(uncommented, 'x.md')
+  expect(r.ok).toBe(true)
+  if (!r.ok) return
+  expect(r.card.misconceptions).toHaveLength(1)
+  expect(r.card.misconceptions![0]!.text.length).toBeGreaterThan(0)
+  expect(r.card.misconceptions![0]!.why.length).toBeGreaterThan(0)
+})
+
+test('sequence 型骨架不带 misconceptions 注释 —— schema 禁配，模板不引导犯错', () => {
+  const src = renderTemplate({ id: '01J8ZKQ7Y00000000000000FFF', blockId: 'mysql/mvcc', cardType: 'sequence', today: '2026-09-18' })
+  expect(src).not.toContain('misconceptions')
+  const r = parseCard(src, 'x.md')
+  expect(r.ok).toBe(true)
+})

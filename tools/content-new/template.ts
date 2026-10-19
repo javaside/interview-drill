@@ -34,6 +34,14 @@ export function renderTemplate(input: TemplateInput): string {
   const prefix = `kp-${id.slice(-6).toLowerCase()}`
   const kps = Array.from({ length: n }, (_, i) => keyPointBlock(prefix, i + 1, today, withOrder)).join('\n')
 
+  // mc 注释模板只给非 sequence 卡：schema 对 sequence+misconceptions 是
+  // superRefine 直接拒（无消费方的死内容），模板不能引导作者往枪口上写。
+  const mcHint = cardType === 'sequence' ? '' : `
+# misconceptions:            # 可选：本卡专属错误选项（常见误解），配几条用几条；缺口由干扰项池补足
+#   - id: mc-xxx-01          # 全库唯一、禁含 #；text 必须本身是错的命题
+#     text: "……"
+#     why: "误解：……实际……"   # 必填：错勾时展示「为什么错」`
+
   return `---
 id: ${id}
 blockId: ${blockId}
@@ -45,7 +53,7 @@ frequency: mid
 followUps:
   - 待填写追问
 keyPoints:
-${kps}
+${kps}${mcHint}
 ---
 
 待填写展开讲解。

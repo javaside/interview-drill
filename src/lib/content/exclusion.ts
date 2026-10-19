@@ -24,7 +24,7 @@
 import type { Card, CardType } from './types.js'
 import { layerOf } from '../options/layers.js'
 import type { DistractorLayer } from '../options/layers.js'
-import { MIN_BLOCK_POOL } from './pool.js'
+import { MIN_BLOCK_POOL, mcGapFilled } from './pool.js'
 import { fnv1a } from '../options/rng.js'
 
 /** 判定标准的版本。**写在仓库代码里，不取自 env** —— 否则开发机换个 key 就触发整体重跑 */
@@ -313,7 +313,7 @@ export type PoolMargin = {
   cardId: string
   blockId: string
   cardType: CardType
-  /** 该卡型的同块池下界（`MIN_BLOCK_POOL`）；0 = 不抽同块干扰项 */
+  /** 该卡型的同块池下界（`MIN_BLOCK_POOL`）；0 = 不抽同块干扰项，或配满 mc 豁免（见下） */
   need: number
   /** 同块层可用条数（免费层也不过 public —— 块已解锁） */
   sameBlock: number
@@ -334,6 +334,9 @@ export type PoolMargin = {
  *   这个函数算的是**偏保守**的余量（仍把那一条算作排除），不是落盘后的精确值
  * - 与运行时逐字对齐：退役要点不算、与目标卡撞 id 的候选不算、已登记的排除不算
  * - `sameBlock` 对齐 `auditLibrary` 的口径（免费层同块不过 public）
+ * - 配满缺口的卡豁免同块池下界（spec §5.1）：`need` 置 0——与 `auditLibrary`
+ *   同走 `mcGapFilled`（唯一实现）。否则配满卡 content:audit 绿了、这里的
+ *   触线闸门仍拒落盘，内容工作流被假触线卡死。`sameBlock` 照实计数供人看
  * - cross/neighbor 同时给两个口径：付费全量、免费仅 public（实测免费层 p10 为 0 条）
  */
 export function poolMarginsOf(
@@ -347,7 +350,7 @@ export function poolMarginsOf(
 
   const out: PoolMargin[] = []
   for (const target of live) {
-    const need = MIN_BLOCK_POOL[target.cardType]
+    const need = mcGapFilled(target) ? 0 : MIN_BLOCK_POOL[target.cardType]
     const ownIds = new Set(target.keyPoints.map(kp => kp.id))
     const margin: PoolMargin = {
       cardId: target.id, blockId: target.blockId, cardType: target.cardType, need,

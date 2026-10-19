@@ -94,12 +94,13 @@ if (existsSync(manifestFile)) {
 issues.push(...auditDemoSnapshots(demoFacts, knownCardPaths, manifestKeys))
 
 if (process.argv.includes('--write-lock')) {
-  // 卡 id 和要点 id 都要锁。spec §8.1 的 review_log.distractorIds 存的是
-  // **要点 id**，§4.2 也写"互斥登记、漏点统计、干扰项引用都指向它" ——
-  // 只锁卡 id 的话，要点改名/删除一样让历史日志悬空，而守卫看不见。
+  // 卡 id、要点 id、mc id 三类都要锁。review_log.distractorIds **既存要点 id、
+  // 也存错误项（mc）id**（专属错误选项上线后）——只锁卡 id 的话，要点/mc
+  // 改名删除一样让历史日志悬空，而守卫看不见。mc 全库唯一，行内不带块前缀。
   const ids = [
     ...cards.map(c => `card:${c.id}`),
     ...cards.flatMap(c => c.keyPoints.map(kp => `kp:${c.blockId}/${kp.id}`)),
+    ...cards.flatMap(c => (c.misconceptions ?? []).map(m => `mc:${m.id}`)),
   ].sort()
   writeFileSync(LOCK_FILE, ids.join('\n') + '\n', 'utf8')
   console.log(`已写入 ${LOCK_FILE}（${ids.length} 个 id）`)

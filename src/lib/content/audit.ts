@@ -1,6 +1,6 @@
 import type { Card, CardType } from './types.js'
 import { checkPlaceholders } from './rules.js'
-import { MIN_BLOCK_POOL } from './pool.js'
+import { MIN_BLOCK_POOL, mcGapFilled } from './pool.js'
 import { checkExclusion, enumerateCandidatePairs } from './exclusion.js'
 import type { ExclusionLedger } from './exclusion.js'
 
@@ -42,6 +42,17 @@ export function auditLibrary(
   for (const c of cards) {
     if (cardIds.has(c.id)) errors.push(`卡 id 重复：${c.id}`)
     cardIds.add(c.id)
+  }
+
+  // mc id 全库唯一（spec §5.2，与卡 id 同级）：ids.lock 的 mc:<id> 行无块前缀、
+  // content-upsert 的 tombstone 以 cardId#id 拼接，都建立在它之上——
+  // 两卡撞 id 会让 review_log.distractorIds 的引用歧义。
+  const mcIds = new Set<string>()
+  for (const c of cards) {
+    for (const m of c.misconceptions ?? []) {
+      if (mcIds.has(m.id)) errors.push(`mc id 重复（要求全库唯一）：${m.id}（卡 ${c.id}）`)
+      mcIds.add(m.id)
+    }
   }
 
   const blockIds = new Set(cards.map(c => c.blockId))
@@ -91,6 +102,10 @@ export function auditLibrary(
       if (c.retiredAt) continue
       const need = MIN_BLOCK_POOL[c.cardType]
       if (need === 0) continue
+      // 配满缺口的卡整卡豁免（spec §5.1）：专属错误项优先抽，缺口为零时
+      // 同块池规模不再有运行时意义。豁免只认「配满」，部分配照旧全额检查
+      // （need 不折减）——与 poolMarginsOf 同走 mcGapFilled，口径唯一。
+      if (mcGapFilled(c)) continue
       let usable = 0
       for (const other of blockCards) {
         if (other.id === c.id || other.retiredAt) continue
@@ -121,10 +136,33 @@ export function auditLibrary(
     }
   }
 
+  // mc 文本查重（spec §5.2.1）：错误项 text 若与全库**活要点**文本完全相同，
+  // 同一变体会出现两条同文选项、一判对一判错——复制要点冒充错误项是最廉价
+  // 的糊弄。kp id 只保证块内唯一，跨块文本撞车完全可能，所以比对的是全库
+  // 活要点文本（构建期一次装配），不是 id、也不分块。卡内 mc 文本互异同理。
+  const liveKpTexts = new Set(cards.flatMap(c => c.keyPoints.filter(kp => !kp.retiredAt).map(kp => kp.text)))
+  for (const c of cards) {
+    const seenMc = new Set<string>()
+    for (const m of c.misconceptions ?? []) {
+      if (m.retiredAt) continue
+      if (liveKpTexts.has(m.text)) {
+        errors.push(`mc ${m.id} 文本与某活要点完全相同（卡 ${c.id}）——复制要点冒充错误项`)
+      }
+      if (seenMc.has(m.text)) errors.push(`卡 ${c.id} 内 mc 文本重复：${m.id}`)
+      seenMc.add(m.text)
+    }
+  }
+
   // 占位符：同样只对 ready 块报错。wip 块里全是半成品，那是正常的。
   for (const c of cards) {
     if (!readyBlocks.has(c.blockId) || c.retiredAt) continue
-    const texts = [c.question, c.detail, ...c.keyPoints.flatMap(k => [k.text, k.source.url, k.source.locator])]
+    const texts = [
+      c.question, c.detail,
+      ...c.keyPoints.flatMap(k => [k.text, k.source.url, k.source.locator]),
+      // mc 的 text/why 与 kp 文本同一规则（spec §5.2.5）——错误项残留
+      // REPLACE-ME 一样是「这张卡还没写完」
+      ...(c.misconceptions ?? []).flatMap(m => [m.text, m.why]),
+    ]
     for (const t of texts) {
       for (const msg of checkPlaceholders(t)) {
         errors.push(`块 ${c.blockId} 卡 ${c.id}：${msg}`)
@@ -182,10 +220,12 @@ export function auditLibrary(
 
 /**
  * 跨提交 id 守卫。`lockedIds` 是上一次 main 的 content/.ids.lock 内容，
- * 每行形如 `card:<cardId>` 或 `kp:<blockId>/<keyPointId>`。
+ * 每行形如 `card:<cardId>`、`kp:<blockId>/<keyPointId>` 或 `mc:<mcId>`
+ * （mc 全库唯一，行内无块前缀——与要点的作用域不同）。
  *
- * 两类 id 都要守：review_log.distractorIds 存的是**要点** id，
- * 只守卡 id 的话要点改名一样让历史日志悬空。
+ * 三类 id 都要守：review_log.distractorIds 现在**既存要点 id、也存错误项（mc）
+ * id**（专属错误选项，spec §3.3），只守卡 id 的话后两类改名/删除一样让历史
+ * 日志悬空。
  */
 export function checkIdLock(cards: Card[], lockedIds: string[]): string[] {
   const liveCards = new Set(cards.map(c => c.id))
@@ -198,6 +238,12 @@ export function checkIdLock(cards: Card[], lockedIds: string[]): string[] {
       .map(kp => kp.movedFrom ? `${c.blockId}/${kp.movedFrom}` : null)
       .filter((x): x is string => !!x)),
   )
+  // mc 全库唯一（spec §5.2）：id 直接比对，不带块前缀——任何一张卡上的 mc
+  // 都能为本行作证；退役 mc 仍在源里，同样不算消失
+  const liveMcIds = new Set(cards.flatMap(c => (c.misconceptions ?? []).map(m => m.id)))
+  const mcMovedFrom = new Set(cards.flatMap(c => (c.misconceptions ?? [])
+    .map(m => m.movedFrom ?? null)
+    .filter((x): x is string => !!x)))
 
   const errors: string[] = []
   for (const line of lockedIds) {
@@ -217,6 +263,14 @@ export function checkIdLock(cards: Card[], lockedIds: string[]): string[] {
         `若为改名，请在新要点上写 movedFrom: ${id.split('/').pop()}；` +
         `若判定写错要作废，请保留该要点并设 retiredAt，不要直接删除 —— ` +
         `review_log.distractorIds 引用的正是它。`,
+      )
+    } else if (kind === 'mc') {
+      if (liveMcIds.has(id) || mcMovedFrom.has(id)) continue
+      errors.push(
+        `mc id ${id} 相对上一次 main 消失了。` +
+        `若为改名，请在新 mc 上写 movedFrom: ${id}；若为作废，请保留并设 retiredAt。` +
+        `直接删除会让 review_log.distractorIds 悬空引用 —— ` +
+        `专属错误项的 id 与要点 id 同样被历史日志记着。`,
       )
     } else {
       errors.push(`lockfile 行格式无法识别：${line}`)
