@@ -120,13 +120,20 @@ own        = 本卡活错误项（!retiredAt）
 
 ### 3.2 seed 分档：熟练前固定，熟练后换血
 
-| 掌握度 s | 抽取 seed | 效果 |
+| 掌握度 s | 抽取 seed | layerCounts 的 s |
 |---|---|---|
-| s < 2/3（未熟练） | `hashSeed(userId, cardId, -2)` 恒定哨兵 | K 份变体干扰项集合恒同 |
-| s ≥ 2/3（熟练） | `hashSeed(userId, cardId, reviewIndexBase+i)`（现状） | 每次复习换血 |
+| s < 2/3（未熟练） | `hashSeed(userId, cardId, -2)` 恒定哨兵 | **冻结为 rat(0,1)** |
+| s ≥ 2/3（熟练） | `hashSeed(userId, cardId, reviewIndexBase+i)`（现状） | 真实 s（现状） |
 
 分档作用于**整个抽取**（专属错误项选子集 + 池抽取），与卡是否配了
 错误项无关——存量卡未熟练期同样固定池干扰项集合（见 §2.2 修正）。
+
+**固定分支必须同时冻结 layerCounts 的 s**（审核阻断项修正）：s 每次
+复习后被 weightedS 重算，新卡首次答个半对 s 即从 0 跳到 ~1/2——仍在
+未熟练区间但跨过 layerCounts 的 3s=1 配额边界（1:2 → 1:1），哨兵 seed
+相同配额不同，集合照样变，「稳定记忆锚点」被掏空。冻结为 rat(0,1)
+（最低配额档）后，固定分支的整套抽取真正只依赖 `(userId, cardId,
+pools)`，§3.3 的复现声明才成立；跨档到 s≥2/3 时自然切到真实 s。
 
 关键实现细节：
 
@@ -139,8 +146,12 @@ own        = 本卡活错误项（!retiredAt）
 2. **哨兵 -2 保留**：-1 已被 sequence 呈现序占用，-2 专用于未熟练抽取。
 3. **s 是队列构建时的当日快照**（`queue.ts` 传 `st?.s`），当天内恒定，
    跨天 s 升过 2/3 自然换血、退步回 2/3 以下回到固定集合重新巩固。
-4. 熟练后专属错误项仍全用（内容资产每条都值得见），换血只作用于池抽取
-   部分与排列。
+   当天内的「再练错题」触发重建队列时用已演化的 s——若仍 <2/3，固定
+   分支因 s 冻结集合不变；跨过 2/3 则切换分支，符合语义。
+4. 专属错误项的取用：`own ≤ 缺口` 全用；`own > 缺口` 按 §3.1 选子集
+   （固定分支 = 稳定子集，换血分支 = 跨复习轮换）——子集轮换正是
+   「每条都值得见」的实现手段。换血分支的换血作用于子集选择、池抽取
+   与排列三处。
 5. `s` 语义沿用 `layerCounts` 的 3s≥2 分档线（两三轮答对≈熟练），常量
    写死在 `lib/options`，可调。
 
@@ -175,36 +186,73 @@ replay / 离线引擎 / 判分（只看 `correctIndices`）零改动。
 - 不重构闸门语义（它检查的是「同块要点池规模下界」，本豁免只按卡短路），
   diff 最小。
 - atomic 只需 3 条错误项即豁免——最易配满、对单选收益最大。
+- **豁免同步作用于 `poolMarginsOf`**（审核修正）：`content:exclusion
+  --apply` 的触线闸门用同一 MIN_BLOCK_POOL 口径（exclusion.ts 自述
+  「与运行时逐字同规则」），audit 与它必须同豁免——否则配满卡 audit
+  绿了、--apply 仍拒落盘，内容工作流被假触线卡死。
 
 ### 5.2 新闸门（便宜的真实性代理，CI 可判）
 
-1. 错误项 `text` 不得与本卡要点或同块活要点的文本**完全相同**——复制
-   要点冒充错误项是最可能的事故（真伪语义完全反转）。
-2. `id` 全库唯一 + `movedFrom` 改名守卫（与 key_points §7 同构）。
-3. `why` 必填在 zod 层挡（2.2）。
+1. 错误项 `text` 不得与**全库任何活要点**（本卡、同块及跨块）的文本
+   **完全相同**，且卡内 mc 文本互异——kp id 只保证块内唯一，跨块要点
+   文本完全可能相同，届时同一变体出现两条同文选项、一判对一判错
+   （审核修正：查重范围从「本卡+同块」扩到全库活要点文本 Set，构建期
+   一次装配，成本可忽略）。
+2. `id` 全库唯一 + `movedFrom` 改名守卫（与 key_points §7 同构）：
+   `.ids.lock` 增加 `mc:<id>` 行（无块前缀，与 §2.1「全库唯一」一致），
+   `checkIdLock` 与 `audit-cli --write-lock` 两处同步扩展——不扩展即
+   fail-open 守卫（review_log.distractorIds 将存 mc id，改名悬空历史）。
+   **mc id 禁含 `#`**（tombstone unnest 拼接键约束，与 kp 同）。
+3. `why` 必填在 zod 层挡（2.2）；mc 数量上限 `.max(8)`（keyPoints 的
+   MAX=6 先例）。
+4. **sequence 卡不得配 misconceptions**（superRefine 交叉校验）——
+   sequence 分支在 drawDistractors 之前 return，配了就是无消费的死内容。
+5. `content:new` 脚手架与 `checkPlaceholders`（现覆盖 question/detail/
+   kp 文本）同步纳入 mc 的 text/why。
 
-### 5.3 语义真伪不归机器
+### 5.3 语义真伪不归机器；source 豁免是有意的
 
 「错误项确实是错的」无法在 CI 里判。走既有的管理员审题闭环（线上发现 →
 `report:pull` → 线下修卡）。audit 不挡这项，明确登记为人工职责。
+
+**mc 不要求 source/verifiedAt（有意豁免，与 keyPointSchema 的强制
+source 不同）**：mc 是反面教材，不是正确知识的载体——其「正确理解」
+锚定在本卡要点与正文已有的官方 source 体系上；`why` 的断言质量由
+作者自核 + 审题闭环兜底。若日后线上证明该兜底不够，再考虑给 why 加
+可选 sourceRef，本期不做。
 
 ## 6. 迁移与部署
 
 1. 一张 create table 迁移（`misconceptions`）。
 2. content-upsert 补 misconceptions 的 upsert + tombstone（unnest 批量）。
-3. **存量 404 卡零改动**；第一波只给 `frequency=high` 的卡配（用户用现有
-   python 模板流程生产，判分/审计不需要等全量配齐）。
-4. 本地库与生产库都要重跑 `content:upsert`（content/ 是权威源，DB 不自动
+3. **判分复现投影链路必须同步补齐（审核阻断项修正，「replay 零改动」
+   撤回）**：`variantAt`（replay.ts）从 `CardSnapshot` 重算变体判分——
+   注释里留着历史事故记录（曾因投影错位判了另一份卷）。快照若缺 mc：
+   熟练分支下 mc 缺席 → 池缺口变大 → rng 消费序列不同 → `correctIndices`
+   不同 → **判分与展示不同卷**（违反 AGENTS.md 铁律）；固定分支排列碰巧
+   同形但 `distractorIds` 记错对象。必须改四处：
+   `CardSnapshot` 加 `misconceptions`、`loadCardSnapshots`（adapters.ts）
+   增查询、`variantAt` 与 `queue.ts` 的 `toOptionCard` 两处投影，以及
+   `lib/content/types.ts` 的 `Card` 类型。
+4. **存量 404 卡零改动**（已核实：404 即全部活卡源文件，卡级 retired
+   为 0）；第一波只给 `frequency=high` 的卡配（用户用现有 python 模板
+   流程生产，判分/审计不需要等全量配齐）。
+5. 本地库与生产库都要重跑 `content:upsert`（content/ 是权威源，DB 不自动
    跟随——AGENTS.md 铁律）。
-5. 免费墙、判分、AI 问答（qa.ts 不消费干扰项，已核实）、sequence、
-   离线引擎、replay 复现：全部零改动。
+6. 零改动面（已核实）：免费墙（mc 不进任何池，queue.ts 池装配只读
+   keyPoints；目标卡自身内容本就随队列下发，无新泄露面）、AI 问答
+   （qa.ts 不消费干扰项）、sequence、离线引擎；exclusion 账本不触发
+   （fingerprintOf 只哈希 kpText×targetQuestion，加 mc 字段不过期任何
+   存量判定）。
 
 ## 7. 测试覆盖
 
 | 层 | 用例 |
 |---|---|
-| lib/options 单测（node） | 专属优先/池补足序；s<2/3 集合恒定（跨 K 份、跨调用）；s≥2/3 换血（锁定现状行为）；**固定集合时排列仍随 i 变**（防位置记忆不回退）；错误项多于缺口按 seed 选子集；退役错误项不出现；专属+池全枯竭仍抛错 |
-| content 单测 | schema：strict 拒未知字段、why 必填、retiredAt/movedFrom 守卫；audit：复制要点冒充→红、配满豁免→不挡、存量卡行为不变 |
+| lib/options 单测（node） | 专属优先/池补足序；s<2/3 集合恒定（跨 K 份、跨调用、**跨 s 演化**——s 从 0 变 1/2 仍在固定带内时集合不变）；s≥2/3 换血（锁定现状行为）；**s≥2/3 且无 mc 时输出与旧实现逐字节一致**（回归锁，机器验证「现状=熟练分支子集」）；**固定集合时排列仍随 i 变**（防位置记忆不回退）；错误项多于缺口按 seed 选子集（固定=稳定、换血=轮换）；退役错误项不出现；专属+池全枯竭仍抛错 |
+| 存量测试迁移 | 现有夹具多为 s=0，上线后落入固定分支——「跨 reviewIndex 集合变化」类换血断言夹具改 s≥2/3；acceptance 的「21 次复习全扫」语义复核 |
+| serve/replay 等价 | 下发变体 == variantAt 重算变体：**两分档 × 配/不配 mc 四象限**全覆盖（防判分与展示不同卷） |
+| content 单测 | schema：strict 拒未知字段、why 必填、retiredAt/movedFrom 守卫、sequence 禁配 mc、.max(8)；audit：复制要点冒充（含跨块）→红、配满豁免（含 poolMarginsOf）→不挡、存量卡行为不变、ids.lock 认 mc: 行 |
 | PGlite 集成 | upsert 幂等；tombstone；队列变体下发含错误项文本与 why；`distractorIds` 记错误项 id 且固定模式可复现 |
 | 同构守卫扩展 | `tests/app/scoring-isomorphic.test.tsx` 四卡型造卡全部加 misconceptions 路径 |
 | jsdom | `DrillFeedback` 溯源三级降级链 |
@@ -222,11 +270,14 @@ replay / 离线引擎 / 判分（只看 `correctIndices`）零改动。
 1. **内容质量是唯一硬风险**：错误项写成真命题（「确实错」验证）没有机器
    闸门，依赖作者自核 + 线上审题闭环兜底。第一波高频卡配完后建议人工
    抽检一遍再上生产。
-2. 固定模式下专属错误项多于缺口时，选中的子集由哨兵 seed 决定——同卡
-   对所有未熟练用户抽到相同子集（排列仍因人而异）。若希望「不同用户见
-   不同子集」，可把 userId 混入哨兵（`hashSeed(userId, cardId, -2)` 本就
-   含 userId，天然满足）——已确认无需额外动作。
+2. 固定模式下专属错误项多于缺口时，子集由哨兵 seed 决定——哨兵
+   `hashSeed(userId, cardId, -2)` 本含 userId，**不同用户天然抽到不同
+   子集**（排列亦因人而异），无需额外动作。
 3. s 在同一天内恒定：当天内多次复习同一张卡，集合不变、排列变——语义
-   干净，但文档化时要写明「换血的最小粒度是天」。
+   干净，但文档化时要写明「换血的最小粒度是天」（当天内「再练错题」
+   重建队列亦然，见 §3.2.3）。
+4. 审核确认过的兼容面：exclusion 账本指纹不过期、免费墙无新泄露面、
+   判分只读 correctIndices、旧缓存变体字段缺省回退、queue 两处调用
+   自动继承——以上均有代码依据，实施时以回归测试锁定。
 
 
