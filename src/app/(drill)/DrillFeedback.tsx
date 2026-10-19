@@ -51,8 +51,14 @@ function checkedSetOf(submission: Submission): Set<number> {
   return new Set()   // sequence 无勾选染色语义
 }
 
-/** 错勾归属提示：variant 带 distractorOrigins 时给真实来源题面；旧缓存 variant 无该字段时回退通用文案 */
+/**
+ * 错勾归属提示三级降级（spec §4）：
+ * 专属错误项 → 「常见误解：{why}」（它不属于任何题，本身就是错的）；
+ * 池干扰项 → 真实来源题面；旧缓存 variant 两者字段皆缺 → 通用文案。
+ */
 function wrongAttributionOf(variant: PreparedVariant, i: number): string {
+  const why = variant.misconceptionWhy?.[i]
+  if (why !== undefined) return `常见误解：${why}`
   const origin = variant.distractorOrigins?.[i]
   return origin !== undefined ? `属于《${origin.question}》` : '属于本大类的另一道题'
 }

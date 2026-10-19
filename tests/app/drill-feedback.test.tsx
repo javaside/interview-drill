@@ -204,6 +204,36 @@ test('错勾溯源：variant 带 distractorOrigins → 显示真实来源题面'
   expect(opts[1]!.textContent).toContain('属于《RC 和 RR 的区别？》')   // 下标 1 是错勾的干扰项
 })
 
+test('错勾溯源三级降级：mc 优先「常见误解」→ 池干扰项「属于《…》」→ 旧缓存通用文案', () => {
+  // 下标 3 有 misconceptionWhy、下标 5 有 distractorOrigins、下标 7 两者皆无（旧缓存形态）
+  render(
+    <DrillFeedback
+      card={base.card}
+      variant={{
+        optionTexts: ['对1', '对2', '对3', '误解项', 'x', '池干扰项', 'x', '裸干扰项', 'x'],
+        correctIndices: [0, 1, 2],
+        distractorKeyPointIds: ['kp-1'],
+        misconceptionIds: ['mc-0'],
+        misconceptionWhy: { 3: 'W-m0' },
+        distractorOrigins: { 5: { cardId: 'c2', blockId: 'b1', question: '某题面' } },
+      }}
+      submission={{ submissionId: 's-mc', cardId: 'c1', reviewedAtMs: 0, kind: 'selection' as const, selected: [3, 5, 7] }}
+      offline={false}
+      result={{ score: { num: 0, den: 3 }, remainingPlan: [], replanned: false,
+        feedback: { correctChecked: 0, wrongChecked: 3, missed: 3 } } as never}
+    />,
+  )
+  const opts = screen.getAllByTestId('option')
+  expect(opts[3]!.textContent).toContain('常见误解：W-m0')        // ① 专属错误项：它不属于任何题，本身就是错的 → why 优先
+  expect(opts[5]!.textContent).toContain('属于《某题面》')         // ② 池干扰项 → 真实来源题面
+  expect(opts[7]!.textContent).toContain('属于本大类的另一道题')   // ③ 旧缓存两者皆缺 → 通用文案
+  // 染色/计数同构：correct:false 不分来源——mc、池、无溯源三者同为错勾红、一并记 3 条
+  expect(opts[3]).toHaveAttribute('data-state', 'wrong')
+  expect(opts[5]).toHaveAttribute('data-state', 'wrong')
+  expect(opts[7]).toHaveAttribute('data-state', 'wrong')
+  expect(screen.getByText(/错勾.*3/)).toBeInTheDocument()
+})
+
 test('错勾溯源：旧缓存 variant 无 origins → 回退通用文案（不炸）', () => {
   render(<DrillFeedback {...base} offline={false}
     result={{ score: { num: 2, den: 3 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 2, wrongChecked: 1, missed: 1 } } as never} />)
