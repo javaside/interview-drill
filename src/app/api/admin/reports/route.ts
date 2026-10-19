@@ -43,6 +43,7 @@ export async function POST(request: Request): Promise<Response> {
       detail: card.detail ?? '',
       cardType: card.cardType,
       keyPoints: card.keyPoints,
+      misconceptions: card.misconceptions,   // 活/退役透传，快照侧剔退役（与 keyPoints 同装配口径）
       ...(card.blockName ? { blockName: card.blockName } : {}),
     })
 

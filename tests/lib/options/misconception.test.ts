@@ -96,3 +96,46 @@ test('退役 mc 不出现；mc+池全枯竭仍抛错', () => {
   expect(() => prepareOptions(c, tiny, S_PROF, 'u1', 0, 1))
     .toThrow(/干扰项池枯竭/)
 })
+
+test('退役 mc 不出现（池充足）：只吃活 mc，退役文本与 id 都不进卷，池补其余缺口', () => {
+  const c: OptionCard = {
+    id: 'e3', blockId: 'b1', cardType: 'enumeration',
+    keyPoints: [kp('k0'), kp('k1'), kp('k2')],
+    misconceptions: [
+      mc('live0'),
+      mc('live1'),
+      { id: 'dead0', text: 'M-dead0', why: 'W-dead0', retiredAt: '2026-10-01' },
+    ],
+  }
+  const v = prepareOptions(c, pools(), S_PROF, 'u1', 0, 1).variants[0]!
+  expect(v.optionTexts).toHaveLength(9)
+  expect(v.optionTexts).toContain('M-live0')
+  expect(v.optionTexts).toContain('M-live1')
+  expect(v.optionTexts).not.toContain('M-dead0')   // draw 的 retiredAt 过滤是唯一防线，退役静默复出必须在此钉死
+  expect(v.misconceptionIds.sort()).toEqual(['live0', 'live1'])   // 退役 id 同样不进（review_log 复现口径）
+  // 缺口 6：活 mc 用 2，池只补 4
+  const poolTexts = v.optionTexts.filter(t => t.startsWith('T-') && !['T-k0', 'T-k1', 'T-k2'].includes(t))
+  expect(poolTexts).toHaveLength(4)
+})
+
+test('atomic 配满 mc：1 要点 + 3 mc → 4 选 1 零池依赖，distractorKeyPointIds 为空', () => {
+  const c: OptionCard = {
+    id: 'a1', blockId: 'b1', cardType: 'atomic',
+    keyPoints: [kp('k0')],
+    misconceptions: [mc('m0'), mc('m1'), mc('m2')],
+  }
+  const empty: DistractorPools = { sameBlock: [], crossBlock: [], neighbor: [] }
+  const v = prepareOptions(c, empty, S_PROF, 'u1', 0, 1).variants[0]!
+  expect(v.optionTexts).toHaveLength(4)
+  expect(v.distractorKeyPointIds).toEqual([])   // 池零抽取：空池也不降级、不抛枯竭
+  expect(v.misconceptionIds.sort()).toEqual(['m0', 'm1', 'm2'])
+})
+
+test('mc 恰好等于缺口：enumeration 3 要点 + 6 mc → 池零抽取，distractorKeyPointIds 为空', () => {
+  const c = cardWith(6)
+  const empty: DistractorPools = { sameBlock: [], crossBlock: [], neighbor: [] }
+  const v = prepareOptions(c, empty, S_PROF, 'u1', 0, 1).variants[0]!
+  expect(v.optionTexts).toHaveLength(9)
+  expect(v.distractorKeyPointIds).toEqual([])   // 缺口 6 被 6 条 mc 恰好填满，池零消费
+  expect(v.misconceptionIds).toHaveLength(6)
+})

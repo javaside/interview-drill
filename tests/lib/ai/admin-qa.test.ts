@@ -107,6 +107,22 @@ test('快照：题面/卡型/要点/题解/源文件路径齐备，可序列化'
   expect(() => JSON.stringify(snap)).not.toThrow()
 })
 
+test('快照透传 mc：配 mc 的卡含活 mc 的 id/text/why；退役 mc 不进；无 mc 卡不携带字段', () => {
+  const snap = reportSnapshotOf({
+    ...card,
+    misconceptions: [
+      { id: 'mc-1', text: '类型擦除发生在运行期', why: '泛型只是编译期语法，运行期无泛型信息' },
+      { id: 'mc-dead', text: '已退役误解', why: 'W', retiredAt: '2026-01-01' },
+    ],
+  })
+  expect(snap.misconceptions).toEqual([
+    { id: 'mc-1', text: '类型擦除发生在运行期', why: '泛型只是编译期语法，运行期无泛型信息' },
+  ])
+  // 无 mc 存量卡：字段缺省（与 CardSnapshot 同约定），既有快照形状不变
+  expect(reportSnapshotOf(card).misconceptions).toBeUndefined()
+  expect(() => JSON.stringify(snap)).not.toThrow()
+})
+
 test('导出 Markdown：自包含四件套 + 处理指引（拿到文件的人照着走完就是销单）', () => {
   const md = renderReportMarkdown({
     id: '01REPORT', cardId: '01ABC', createdAt: '2026-10-17T04:00:00.000Z',
@@ -125,4 +141,18 @@ test('导出 Markdown：自包含四件套 + 处理指引（拿到文件的人�
   expect(md).toContain('pnpm content:upsert')
   // 报告里的题解不带分隔符原文（分层标注渲染）
   expect(md).not.toContain('<!--advanced-->')
+})
+
+test('导出 Markdown：快照带 mc 时渲染「专属错误选项」清单（线下复盘核对 mc 是否确实错）', () => {
+  const md = renderReportMarkdown({
+    id: '01REPORT', cardId: '01ABC', createdAt: '2026-10-17T04:00:00.000Z',
+    conclusion: 'mc-1 不是误解，是正确命题',
+    turns: [{ role: 'user', content: 'mc-1 真的错吗？' }, { role: 'assistant', content: '确实错，why 如下……' }],
+    snapshot: reportSnapshotOf({
+      ...card,
+      misconceptions: [{ id: 'mc-1', text: '类型擦除发生在运行期', why: '泛型只是编译期语法' }],
+    }),
+  })
+  expect(md).toContain('**专属错误选项（= 错误答案；why = 误解缘由）**')
+  expect(md).toContain('1. [mc-1] 类型擦除发生在运行期 —— 泛型只是编译期语法')
 })

@@ -24,6 +24,8 @@ export type AdminQaCard = {
   cardType?: string
   /** 该卡要点（含退役墓碑时先 activeKeyPointsOf 过滤）——答案清单，审题版必发 */
   keyPoints?: ReadonlyArray<{ id: string; text: string; retiredAt?: string; order?: number }>
+  /** 该卡专属错误选项（活/退役均透传，消费侧过滤退役）——审题对象之一，可选与 CardSnapshot 口径一致 */
+  misconceptions?: ReadonlyArray<{ id: string; text: string; why: string; retiredAt?: string }>
   /** 剥头后的可运行示例（server 侧 loadDemoCode，已剥答案口径头注释） */
   demoCode?: string
 }
@@ -179,6 +181,14 @@ export type CardReportSnapshot = {
   question: string
   /** 在役要点（= 答案清单），id 供与 key_points 表对号 */
   keyPoints: Array<{ id: string; text: string }>
+  /**
+   * 在役专属错误选项（= 错误答案清单，退役墓碑已剔）。mc 必须进快照：
+   * mc 的「确实错」验证正压在审题闭环上（spec §5.3/§9.1）——审题兜底通道
+   * 对 mc 不能是盲的，快照缺 mc，线下复盘（report:pull 导出）就无从核对
+   * 某条 mc 是不是真的错了。spec §6.6「零改动面」清单的遗漏，终审补充修复。
+   * 可选 = 无 mc 的存量卡不携带该字段（与 CardSnapshot 同约定）。
+   */
+  misconceptions?: Array<{ id: string; text: string; why: string; retiredAt?: string }>
   /** 题解全文（含 <!--advanced--> 分隔符，导出时再分层标注） */
   detail: string
   /** content 源文件相对路径——开发者照此直达要改的文件 */
@@ -187,12 +197,17 @@ export type CardReportSnapshot = {
 
 /** 审题卡 → 快照（纯投影，server 层装配后随报告一并落库） */
 export function reportSnapshotOf(card: AdminQaCard): CardReportSnapshot {
+  // 活 mc（对齐 keyPoints 的装配：退役墓碑不进快照，留给 misconceptions 表存档）
+  const liveMc = (card.misconceptions ?? [])
+    .filter(m => m.retiredAt === undefined)
+    .map(({ id, text, why }) => ({ id, text, why }))
   return {
     blockId: card.blockId,
     blockName: card.blockName ?? card.blockId,
     cardType: card.cardType ?? '',
     question: card.question,
     keyPoints: activeKeyPointsOf(card.keyPoints ?? []),
+    ...(liveMc.length > 0 ? { misconceptions: liveMc } : {}),
     detail: card.detail,
     contentPath: `content/${card.blockId}/${card.cardId}.md`,
   }
@@ -242,6 +257,12 @@ export function renderReportMarkdown(input: ReportMarkdownInput): string {
   if (s.keyPoints.length > 0) {
     lines.push('**要点清单（= 答案）**：', '')
     s.keyPoints.forEach((kp, i) => lines.push(`${i + 1}. [${kp.id}] ${kp.text}`))
+    lines.push('')
+  }
+  // mc 清单必须随快照导出：线下复盘核对「某条 mc 是否确实错」就看这里（spec §5.3/§9.1）
+  if (s.misconceptions !== undefined && s.misconceptions.length > 0) {
+    lines.push('**专属错误选项（= 错误答案；why = 误解缘由）**：', '')
+    s.misconceptions.forEach((m, i) => lines.push(`${i + 1}. [${m.id}] ${m.text} —— ${m.why}`))
     lines.push('')
   }
   lines.push('**题解（入门版）**', '', intro, '')

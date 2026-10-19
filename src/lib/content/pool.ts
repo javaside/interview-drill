@@ -1,4 +1,5 @@
 import type { Card, CardType } from './types.js'
+import { ATOMIC_OPTIONS_TOTAL, OPTIONS_TOTAL } from '../options/types.js'
 
 /**
  * 同块可用干扰项池下界，**按 cardType 分派**。§4.3 的出题形式决定需求：
@@ -27,8 +28,9 @@ export const MIN_BLOCK_POOL: Record<CardType, number> = {
 
 /**
  * 专属错误项把抽取缺口**配满**的卡（spec §5.1 保守豁免）：整卡跳过同块池下界。
- * 缺口 = 选项总数 − 正确要点数（多选型 9 − 活要点数；atomic 恒 4 − 1 = 3），
- * 与运行时 `prepare.buildVariant` 逐字同口径。
+ * 缺口 = 选项总数 − 正确要点数（多选型 OPTIONS_TOTAL − 活要点数；atomic 恒
+ * ATOMIC_OPTIONS_TOTAL − 1 = 3），常量直引 lib/options/types.ts——运行时真值
+ * 与本豁免口径同一来源，与 `prepare.buildVariant` 逐字同口径。
  *
  * 豁免只认「配满」：部分配照旧全额检查，need **不**按活 mc 数折减——
  * 部分配时池仍要补缺口，池规模下界仍有运行时意义。
@@ -39,7 +41,7 @@ export const MIN_BLOCK_POOL: Record<CardType, number> = {
  */
 export function mcGapFilled(card: Card): boolean {
   const liveMc = card.misconceptions?.filter(m => !m.retiredAt).length ?? 0
-  const optionsTotal = card.cardType === 'atomic' ? 4 : 9
+  const optionsTotal = card.cardType === 'atomic' ? ATOMIC_OPTIONS_TOTAL : OPTIONS_TOTAL
   const correctCount = card.cardType === 'atomic' ? 1
     : card.keyPoints.filter(kp => !kp.retiredAt).length
   return liveMc >= optionsTotal - correctCount
