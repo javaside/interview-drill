@@ -27,6 +27,9 @@ export function variantAt(
 ): PreparedVariant {
   const optionCard: OptionCard = {
     id: card.cardId, blockId: card.blockId, cardType: card.cardType, keyPoints: card.keyPoints,
+    // mc 必须透传：快照缺它 → 专属项顶掉的池缺口回不来、rng 序列错位、correctIndices
+    // 不同——判的就是另一份卷（与 queue.toOptionCard 同一投影口径）
+    ...(card.misconceptions ? { misconceptions: card.misconceptions } : {}),
   }
   return prepareOptions(optionCard, pools, sAtServe, userId, reviewIndex, 1).variants[0]!
 }
@@ -298,7 +301,9 @@ export function applySubmissions(
         correctChecked: scored.correctChecked,
         wrongChecked: scored.wrongChecked,
         keyPointsTotal: variant.correctIndices.length,
-        distractorIds: variant.distractorKeyPointIds,
+        // 合并记录：池要点 id + 专属错误项 id（旧缓存缺省由 ?? [] 兜底）——只记池侧
+        // 会让 mc 查无此人，错勾统计/审计断一截
+        distractorIds: [...variant.distractorKeyPointIds, ...(variant.misconceptionIds ?? [])],
         clockClamped: clamp.clamped,
       })
       outcomeById.set(sub.submissionId, outcome)

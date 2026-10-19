@@ -238,6 +238,16 @@ export async function loadCardSnapshots(db: SqlRunner, cardIds: string[]): Promi
     })
     kpByCard.set(k.card_id, arr)
   }
+  // 专属错误选项：与 kps 同构的平行查询——retired 透传由 lib 侧过滤（draw 只用活的），
+  // 这里不做 SQL 层过滤，快照口径与 keyPoints 一致
+  const mcs = await db.execute<{ card_id: string; id: string; text: string; why: string; retired_at: string | null }>(sql`
+    select card_id, id, text, why, retired_at from misconceptions where card_id in ${inList(cardIds)}`)
+  const mcByCard = new Map<string, NonNullable<CardSnapshot['misconceptions']>>()
+  for (const m of mcs.rows) {
+    const arr = mcByCard.get(m.card_id) ?? []
+    arr.push({ id: m.id, text: m.text, why: m.why, ...(m.retired_at ? { retiredAt: m.retired_at } : {}) })
+    mcByCard.set(m.card_id, arr)
+  }
   for (const c of cards.rows) {
     out.set(c.id, {
       cardId: c.id,
@@ -246,6 +256,7 @@ export async function loadCardSnapshots(db: SqlRunner, cardIds: string[]): Promi
       frequency: c.frequency as CardSnapshot['frequency'],
       question: c.question,
       keyPoints: kpByCard.get(c.id) ?? [],
+      ...(mcByCard.get(c.id) ? { misconceptions: mcByCard.get(c.id)! } : {}),
       ...(c.block_name ? { blockName: c.block_name } : {}),
       ...(c.conclusion ? { conclusion: c.conclusion as CardSnapshot['conclusion'] } : {}),
       ...(c.detail ? { detail: c.detail } : {}),

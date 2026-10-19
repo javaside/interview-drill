@@ -87,3 +87,25 @@ test('池装配携带来源题面：三层池的要点都挂 origin（错勾溯�
   expectOrigin(pools.crossBlock.find(p => p.id === 'b3-priv')!, 'b3-c0', 'b3')
   expectOrigin(pools.neighbor.find(p => p.id === 'b4-pub')!, 'b4-c0', 'b4')
 })
+
+test('池装配隔离：misconceptions 永不进入任何干扰项池', () => {
+  // 同块目标卡 b1-c0 配专属错误选项（含 1 条活 + 1 条退役）；从 b1-c1 的视角装配，
+  // b1-c0 的 mc 文本与 id 在 sameBlock/crossBlock/neighbor 三层一概不得出现——
+  // 装配只读 key_points（结构性事实，防未来把 mc 混进池的回归）
+  const { all, categories } = mkFixture()
+  const withMc: CardSnapshot[] = [
+    {
+      ...cardOf(all, 'b1-c0'),
+      misconceptions: [
+        { id: 'b1-c0-m0', text: '专属错误说法-活', why: 'why-活' },
+        { id: 'b1-c0-m1', text: '专属错误说法-退役', why: 'why-退役', retiredAt: '2026-01-01' },
+      ],
+    },
+    ...all.slice(1),
+  ]
+  const pools = buildDistractorPools(cardOf(withMc, 'b1-c1'), withMc, makePaidEntitlement(), categories)
+  const layers = [...pools.sameBlock, ...pools.crossBlock, ...pools.neighbor]
+  expect(layers.some(p => p.id.startsWith('b1-c0-m') || p.text.includes('专属错误说法'))).toBe(false)
+  // 对照组：b1-c0 的**要点**照常进同块池——隔离的是 mc，不是 b1-c0 本身
+  expect(pools.sameBlock.some(p => p.id === 'b1-c0-a')).toBe(true)
+})

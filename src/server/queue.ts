@@ -14,9 +14,12 @@ import type { CardState } from '../lib/scheduler/types.js'
 import { localDateOf } from './time.js'
 import type { CardSnapshot, Settings } from './types.js'
 
-/** CardSnapshot → OptionCard（lib/options 的最小输入投影） */
+/** CardSnapshot → OptionCard（lib/options 的最小输入投影）——mc 透传，专属项进抽取 */
 function toOptionCard(c: CardSnapshot): OptionCard {
-  return { id: c.cardId, blockId: c.blockId, cardType: c.cardType, keyPoints: c.keyPoints }
+  return {
+    id: c.cardId, blockId: c.blockId, cardType: c.cardType, keyPoints: c.keyPoints,
+    ...(c.misconceptions ? { misconceptions: c.misconceptions } : {}),
+  }
 }
 
 /**
@@ -24,12 +27,14 @@ function toOptionCard(c: CardSnapshot): OptionCard {
  * 数据源：池装配时就知道每条要点来自哪张卡，挂上 origin 透传到变体的 distractorOrigins。
  * 展示口径与付费墙一致：sameBlock 本来可见；跨块层免费用户只含 public 要点——
  * public 要点的题面在 /q/[id] 公开题页本就可见，归属不新增泄露面。
+ * misconceptions 同样透传但**不挂 origin**——专属错误项不属于任何题，溯源走 why。
  */
 function toOptionCardWithOrigin(c: CardSnapshot): OptionCard {
   const origin = { cardId: c.cardId, blockId: c.blockId, question: c.question ?? '' }
   return {
     id: c.cardId, blockId: c.blockId, cardType: c.cardType,
     keyPoints: c.keyPoints.map(kp => ({ ...kp, origin })),
+    ...(c.misconceptions ? { misconceptions: c.misconceptions } : {}),
   }
 }
 

@@ -24,6 +24,12 @@ export type CardSnapshot = {
     excludeAsDistractorFor: string[]   // OptionKeyPoint 必填字段，池装配直接消费
     retiredAt?: string; order?: number
   }>
+  /**
+   * 专属错误选项（misconceptions 表投影，spec §2.3）。判分重算（replay.variantAt）与
+   * 展示装配（queue 两投影）共用同一快照——缺了它重算的池缺口不同、rng 序列不同，
+   * 判的就是另一份卷（判分与展示同卷铁律）。可选 = 无 mc 的存量卡不携带该字段。
+   */
+  misconceptions?: Array<{ id: string; text: string; why: string; retiredAt?: string }>
   conclusion?: 'yes' | 'no' | 'depends'
   /** 题解讲解（cards.detail）——UI 屏①「先看讲解」用，装配/判分不依赖，故可选 */
   detail?: string
