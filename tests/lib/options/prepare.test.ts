@@ -19,14 +19,14 @@ function enumCard(n: number): OptionCard {
   }
 }
 
-test('选项总数恒为 9：正确 3/4/6 条都不改变总数（§4.3 防数数）', () => {
+test('选项总数恒为 7：正确 3/4/6 条都不改变总数（§4.3 防数数）', () => {
   for (const n of [3, 4, 6]) {
     const r = prepareOptions(enumCard(n), bigPools(), S0, 'u1', 0, 2)
     for (const v of r.variants) {
-      expect(v.optionTexts).toHaveLength(9)
+      expect(v.optionTexts).toHaveLength(7)
       expect(v.correctIndices).toHaveLength(n)
-      expect(v.distractorKeyPointIds).toHaveLength(9 - n)
-      expect(v.correctIndices.every(i => i >= 0 && i < 9)).toBe(true)
+      expect(v.distractorKeyPointIds).toHaveLength(7 - n)
+      expect(v.correctIndices.every(i => i >= 0 && i < 7)).toBe(true)
     }
   }
 })
@@ -163,7 +163,7 @@ test('degradedTo 上浮：两层枯竭走 neighbor 则顶层聚合为 neighbor�
   const starved: DistractorPools = { sameBlock: [], crossBlock: poolOf('c', 1), neighbor: poolOf('n', 10) }
   const r = prepareOptions(enumCard(3), starved, S0, 'u1', 0, 2)
   expect(r.degradedTo).toBe('neighbor')
-  expect(r.variants[0]!.optionTexts).toHaveLength(9)      // 降级不断供
+  expect(r.variants[0]!.optionTexts).toHaveLength(7)      // 降级不断供
 
   const ok = prepareOptions(enumCard(3), bigPools(), S0, 'u1', 0, 2)
   expect(ok.degradedTo).toBe('none')

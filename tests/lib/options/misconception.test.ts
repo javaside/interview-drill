@@ -25,18 +25,18 @@ function cardWith(nMc: number): OptionCard {
   }
 }
 
-test('专属优先：mc 文本出现在选项里，池干扰项只补缺口（3 正确 + 4 mc + 池补 2）', () => {
-  const r = prepareOptions(cardWith(4), pools(), S_PROF, 'u1', 0, 1)
+test('专属优先：mc 文本出现在选项里，池干扰项只补缺口（3 正确 + 2 mc + 池补 2 = 7）', () => {
+  const r = prepareOptions(cardWith(2), pools(), S_PROF, 'u1', 0, 1)
   const v = r.variants[0]!
-  expect(v.optionTexts).toHaveLength(9)
-  const mcTexts = ['M-m0', 'M-m1', 'M-m2', 'M-m3']
+  expect(v.optionTexts).toHaveLength(7)
+  const mcTexts = ['M-m0', 'M-m1']
   for (const t of mcTexts) expect(v.optionTexts).toContain(t)
   const poolTexts = v.optionTexts.filter(t => t.startsWith('T-') && !['T-k0', 'T-k1', 'T-k2'].includes(t))
   expect(poolTexts).toHaveLength(2)
-  expect(v.misconceptionIds.sort()).toEqual(['m0', 'm1', 'm2', 'm3'])
+  expect(v.misconceptionIds.sort()).toEqual(['m0', 'm1'])
   // why 映射：mc 所在下标 → why
   const whyVals = Object.values(v.misconceptionWhy ?? {})
-  expect(whyVals.sort()).toEqual(['W-m0', 'W-m1', 'W-m2', 'W-m3'])
+  expect(whyVals.sort()).toEqual(['W-m0', 'W-m1'])
 })
 
 test('固定分支（s<2/3）：跨 K 份、跨调用干扰项集合恒同，排列互异；s 演化跨 3s=1 档集合仍不变', () => {
@@ -73,15 +73,15 @@ test('熟练分支（s≥2/3）：无 mc 时与现状签名一致——同输入
 })
 
 test('熟练分支 mc 多于缺口：跨 reviewIndex 子集轮换（每条都值得见）', () => {
-  const c = cardWith(8)   // enumeration 3 正确 → 缺口 6，8 > 6
+  const c = cardWith(8)   // enumeration 3 正确 → 缺口 4，8 > 4
   const a = prepareOptions(c, pools(), S_PROF, 'u1', 0, 1).variants[0]!
   const b = prepareOptions(c, pools(), S_PROF, 'u1', 1, 1).variants[0]!
   const d = prepareOptions(c, pools(), S_PROF, 'u1', 2, 1).variants[0]!
-  expect(a.misconceptionIds).toHaveLength(6)
-  expect(b.misconceptionIds).toHaveLength(6)
-  // 8 选 6、三份不同 seed：合计见过的 mc 超过单份的 6 条（轮换的可观测签名）
+  expect(a.misconceptionIds).toHaveLength(4)
+  expect(b.misconceptionIds).toHaveLength(4)
+  // 8 选 4、三份不同 seed：合计见过的 mc 超过单份的 4 条（轮换的可观测签名）
   expect(new Set([...a.misconceptionIds, ...b.misconceptionIds, ...d.misconceptionIds]).size)
-    .toBeGreaterThan(6)
+    .toBeGreaterThan(4)
 })
 
 test('退役 mc 不出现；mc+池全枯竭仍抛错', () => {
@@ -108,14 +108,14 @@ test('退役 mc 不出现（池充足）：只吃活 mc，退役文本与 id 都
     ],
   }
   const v = prepareOptions(c, pools(), S_PROF, 'u1', 0, 1).variants[0]!
-  expect(v.optionTexts).toHaveLength(9)
+  expect(v.optionTexts).toHaveLength(7)
   expect(v.optionTexts).toContain('M-live0')
   expect(v.optionTexts).toContain('M-live1')
   expect(v.optionTexts).not.toContain('M-dead0')   // draw 的 retiredAt 过滤是唯一防线，退役静默复出必须在此钉死
   expect(v.misconceptionIds.sort()).toEqual(['live0', 'live1'])   // 退役 id 同样不进（review_log 复现口径）
-  // 缺口 6：活 mc 用 2，池只补 4
+  // 缺口 4：活 mc 用 2，池只补 2
   const poolTexts = v.optionTexts.filter(t => t.startsWith('T-') && !['T-k0', 'T-k1', 'T-k2'].includes(t))
-  expect(poolTexts).toHaveLength(4)
+  expect(poolTexts).toHaveLength(2)
 })
 
 test('atomic 配满 mc：1 要点 + 3 mc → 4 选 1 零池依赖，distractorKeyPointIds 为空', () => {
@@ -131,11 +131,11 @@ test('atomic 配满 mc：1 要点 + 3 mc → 4 选 1 零池依赖，distractorKe
   expect(v.misconceptionIds.sort()).toEqual(['m0', 'm1', 'm2'])
 })
 
-test('mc 恰好等于缺口：enumeration 3 要点 + 6 mc → 池零抽取，distractorKeyPointIds 为空', () => {
-  const c = cardWith(6)
+test('mc 恰好等于缺口：enumeration 3 要点 + 4 mc → 池零抽取，distractorKeyPointIds 为空', () => {
+  const c = cardWith(4)
   const empty: DistractorPools = { sameBlock: [], crossBlock: [], neighbor: [] }
   const v = prepareOptions(c, empty, S_PROF, 'u1', 0, 1).variants[0]!
-  expect(v.optionTexts).toHaveLength(9)
-  expect(v.distractorKeyPointIds).toEqual([])   // 缺口 6 被 6 条 mc 恰好填满，池零消费
-  expect(v.misconceptionIds).toHaveLength(6)
+  expect(v.optionTexts).toHaveLength(7)
+  expect(v.distractorKeyPointIds).toEqual([])   // 缺口 4 被 4 条 mc 恰好填满，池零消费
+  expect(v.misconceptionIds).toHaveLength(4)
 })

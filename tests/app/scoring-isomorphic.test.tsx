@@ -20,15 +20,14 @@ function assertIsomorphic(card: CardSnapshot, variant: PreparedVariant, sub: Sub
   expect(client.wrongChecked).toBe(server.wrongChecked)
 }
 
-/** 9 选项混排卷：3 正确（0/2/5）+ 3 mc（1/3/6 带 why）+ 3 池干扰项（4/7/8 带 origins） */
+/** 7 选项混排卷：3 正确（0/2/5）+ 3 mc（1/3/6 带 why）+ 2 池干扰项（4/7 带 origins） */
 const enumVariant: PreparedVariant = {
-  optionTexts: ['A', '误解1', 'B', '误解2', '池1', 'C', '误解3', '池2', '池3'],
+  optionTexts: ['A', '误解1', 'B', '误解2', '池1', 'C', '误解3', '池2'],
   correctIndices: [0, 2, 5],
-  distractorKeyPointIds: ['kp-1', 'kp-2', 'kp-3'],
+  distractorKeyPointIds: ['kp-1', 'kp-2'],
   distractorOrigins: {
     4: { cardId: 'c2', blockId: 'b', question: '池1 的来源题？' },
     7: { cardId: 'c3', blockId: 'b', question: '池2 的来源题？' },
-    8: { cardId: 'c4', blockId: 'b', question: '池3 的来源题？' },
   },
   misconceptionIds: ['mc-1', 'mc-2', 'mc-3'],
   misconceptionWhy: { 1: '误解1 的 why', 3: '误解2 的 why', 6: '误解3 的 why' },
@@ -43,11 +42,11 @@ test('同构（§11）enumeration：mc 混排卷上勾对/勾错/漏选计数逐
     { submissionId: 's', cardId: 'c', reviewedAtMs: 0, kind: 'selection', selected: [0, 1, 2] })
 })
 
-test('同构（§11）enumeration：错勾全走 mc（1/3/6）与全走池（4/7/8）两核口径一致', () => {
+test('同构（§11）enumeration：错勾全走 mc（1/3/6）与全走池（4/7）两核口径一致', () => {
   assertIsomorphic(enumCard, enumVariant,
     { submissionId: 's9', cardId: 'c', reviewedAtMs: 0, kind: 'selection', selected: [1, 3, 6] })
   assertIsomorphic(enumCard, enumVariant,
-    { submissionId: 's10', cardId: 'c', reviewedAtMs: 0, kind: 'selection', selected: [4, 7, 8] })
+    { submissionId: 's10', cardId: 'c', reviewedAtMs: 0, kind: 'selection', selected: [4, 7] })
 })
 
 /** comparison：选项层与枚举同构（§4.3 分型表），同样吃 mc 混排卷 */

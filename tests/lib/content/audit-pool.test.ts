@@ -126,9 +126,9 @@ test('wip 块里的占位符不报错 —— 半成品是正常状态', () => {
 
 test('配满 mc 的卡豁免 MIN_BLOCK_POOL；poolMarginsOf 同口径', () => {
   // 块内只有 1 张 enumeration 卡（要点 3 条），同块池可用 0 条本应报错；
-  // 配满缺口（9−3=6）的 mc 让它整卡豁免（spec §5.1）
+  // 配满缺口（7−3=4）的 mc 让它整卡豁免（spec §5.1）
   const filled = card('c1', [kp('a1'), kp('a2'), kp('a3')], 'enumeration', {
-    misconceptions: [mc('mc-1'), mc('mc-2'), mc('mc-3'), mc('mc-4'), mc('mc-5'), mc('mc-6')],
+    misconceptions: [mc('mc-1'), mc('mc-2'), mc('mc-3'), mc('mc-4')],
   })
   expect(auditLibrary([filled], ready).errors).toEqual([])
   // 豁免必须同步作用于 poolMarginsOf（--apply 的触线判定）——
@@ -142,7 +142,7 @@ test('配满 mc 的卡豁免 MIN_BLOCK_POOL；poolMarginsOf 同口径', () => {
   expect(auditLibrary([atomicFilled], ready).errors).toEqual([])
   expect(poolMarginsOf([atomicFilled], CATS).find(m => m.cardId === 'c1')!.need).toBe(0)
 
-  // 部分配（mc 3 条 < 缺口 6）→ 照旧全额检查：豁免只认「配满」，
+  // 部分配（mc 3 条 < 缺口 4）→ 照旧全额检查：豁免只认「配满」，
   // need 不按活 mc 数折减（保守规则，spec §5.1 原文）
   const partial = card('c1', [kp('a1'), kp('a2'), kp('a3')], 'enumeration', {
     misconceptions: [mc('mc-1'), mc('mc-2'), mc('mc-3')],
@@ -153,11 +153,11 @@ test('配满 mc 的卡豁免 MIN_BLOCK_POOL；poolMarginsOf 同口径', () => {
   expect(poolMarginsOf([partial], CATS).find(m => m.cardId === 'c1')!.need)
     .toBe(MIN_BLOCK_POOL.enumeration)
 
-  // 退役 mc 不算数：配满后把一条退役 → 缺口重现，照旧全额检查
+  // 退役 mc 不算数：配满（4 = 缺口 4）后把一条退役 → 活 3 < 缺口，缺口重现照旧全额检查
   const retiredMc = card('c1', [kp('a1'), kp('a2'), kp('a3')], 'enumeration', {
     misconceptions: [
-      mc('mc-1'), mc('mc-2'), mc('mc-3'), mc('mc-4'), mc('mc-5'),
-      mc('mc-6', { retiredAt: '2026-10-01' }),
+      mc('mc-1'), mc('mc-2'), mc('mc-3'),
+      mc('mc-4', { retiredAt: '2026-10-01' }),
     ],
   })
   expect(auditLibrary([retiredMc], ready).errors.join()).toContain('池不足')

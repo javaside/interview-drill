@@ -57,8 +57,14 @@ export type DistractorPools = {
   neighbor: OptionKeyPoint[]
 }
 
-/** §4.3 出题规则：多选选项总数固定 9——选项个数不携带"几条是对的"信息 */
-export const OPTIONS_TOTAL = 9
+/**
+ * §4.3 出题规则：多选选项总数固定——选项个数不携带"几条是对的"信息。
+ * 2026-10-19 由 9 收至 7（用户拍板"干扰 2 条就够"）：总数仍恒定（防数数），
+ * 但主流 5 要点卡（48%）恰好 2 条干扰、4 要点卡（40%）3 条，阅读负荷 −22%；
+ * 6 要点卡剩 1 条干扰靠 mc 补位。恒定干扰数（如恒 2）会把答案数编码进
+ * 选项个数，是 spec §4.3 明文挡掉的作弊面，不可取。
+ */
+export const OPTIONS_TOTAL = 7
 
 /** §4.3 分型表：atomic 单选 4 选 1 */
 export const ATOMIC_OPTIONS_TOTAL = 4

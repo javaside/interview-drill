@@ -110,7 +110,7 @@ test('端到端：免费用户取队列——选项集只含可见语料（§11 
     const forbidden = await lockedTexts(t)
     for (const prep of p.prepared) {
       for (const v of prep.variants) {
-        expect(v.optionTexts).toHaveLength(9)
+        expect(v.optionTexts).toHaveLength(7)
         for (const text of v.optionTexts) expect(forbidden.has(text)).toBe(false)
       }
     }

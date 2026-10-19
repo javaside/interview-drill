@@ -63,7 +63,7 @@ test('§11 免费用户：跨块干扰项只来自公开要点池，未解锁块
   )
   const r = prepareOptions(t1, pools, S0, 'u-free', 0, 21)   // 21 次复习全扫
   for (const v of r.variants) {
-    expect(v.optionTexts).toHaveLength(9)
+    expect(v.optionTexts).toHaveLength(7)
     for (const text of v.optionTexts) {
       expect(forbidden.has(text)).toBe(false)   // 泄露边界：一次都不许出现
     }
@@ -93,10 +93,10 @@ test('§11 选项总数恒定：五种 cardType 全型扫描', () => {
   const all = buildCategory()
   const pools = poolsFor(all[0]!, all)
   const cards: Array<{ card: OptionCard; wantTotal: number }> = [
-    { card: card('e', 'b1', 'enumeration', [kp('a'), kp('b'), kp('c')]), wantTotal: 9 },
-    { card: card('e4', 'b1', 'enumeration', [kp('a'), kp('b'), kp('c'), kp('d')]), wantTotal: 9 },
-    { card: card('cmp', 'b1', 'comparison', [kp('a'), kp('b'), kp('c')]), wantTotal: 9 },
-    { card: card('jd', 'b1', 'judgment', [kp('a'), kp('b')]), wantTotal: 9 },   // 2 要点 → 7 干扰项
+    { card: card('e', 'b1', 'enumeration', [kp('a'), kp('b'), kp('c')]), wantTotal: 7 },
+    { card: card('e4', 'b1', 'enumeration', [kp('a'), kp('b'), kp('c'), kp('d')]), wantTotal: 7 },
+    { card: card('cmp', 'b1', 'comparison', [kp('a'), kp('b'), kp('c')]), wantTotal: 7 },
+    { card: card('jd', 'b1', 'judgment', [kp('a'), kp('b')]), wantTotal: 7 },   // 2 要点 → 7 干扰项
     { card: card('at', 'b1', 'atomic', [kp('a')]), wantTotal: 4 },
     {
       card: card('seq', 'b1', 'sequence', [kp('a', { order: 1 }), kp('b', { order: 2 }), kp('c', { order: 3 }), kp('d', { order: 4 })]),
@@ -109,7 +109,7 @@ test('§11 选项总数恒定：五种 cardType 全型扫描', () => {
   }
 })
 
-test('§11 池不足降级不断供：两层枯竭走相邻大类，总数仍 9', () => {
+test('§11 池不足降级不断供：两层枯竭走相邻大类，总数仍 7', () => {
   const all = buildCategory()
   const t1 = all[0]!
   const starved: DistractorPools = {
@@ -124,5 +124,5 @@ test('§11 池不足降级不断供：两层枯竭走相邻大类，总数仍 9'
   expect(d.degradedTo).toBe('neighbor')
   expect(d.keyPoints).toHaveLength(6)
   const r = prepareOptions(t1, starved, S0, 'u1', 0, 1)
-  expect(r.variants[0]!.optionTexts).toHaveLength(9)
+  expect(r.variants[0]!.optionTexts).toHaveLength(7)
 })

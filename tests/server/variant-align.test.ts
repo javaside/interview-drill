@@ -136,7 +136,7 @@ async function seedQuadrants(): Promise<TestDb> {
         values (${c.id}, ${`${c.id}-k${i}`}, ${`${c.id}-pt-${i}`}, ${kpSrc}::jsonb, false, '[]'::jsonb)`)
     }
     if (c.withMc) {
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 3; i++) {
         await t.db.execute(sql`
           insert into misconceptions (card_id, id, text, why)
           values (${c.id}, ${`${c.id}-m${i}`}, ${`错${c.id}-${i}`}, ${`因${c.id}-${i}`})`)
@@ -170,8 +170,9 @@ test('serve == replay 四象限：两分档 × 配/不配 mc，变体逐字节�
       // 不同、rng 序列不同、correctIndices 不同，判的就是另一份卷
       expect(JSON.stringify(served)).toBe(JSON.stringify(replayed))
       if (cardId === 'qa' || cardId === 'qc') {
-        // 防「两侧同缺 mc」的空转一致：配 mc 的卡，两侧变体都必须真含全部 4 条专属项
-        const want = new Set([0, 1, 2, 3].map(n => `${cardId}-m${n}`))
+        // 防「两侧同缺 mc」的空转一致：配 mc 的卡，两侧变体都必须真含全部 3 条专属项
+        // （缺口 4 = mc 3 + 池 1，mc 全用）
+        const want = new Set([0, 1, 2].map(n => `${cardId}-m${n}`))
         expect(new Set(served.misconceptionIds)).toEqual(want)
         expect(new Set(replayed.misconceptionIds)).toEqual(want)
       }
@@ -198,7 +199,7 @@ test('review_log.distractorIds 合并记录：mc id 与池要点 id 都在', asy
   const t = await seedQuadrants()
   try {
     const pools = await realPools(t)
-    // qa：干扰 6 = 专属 4（qa-m*）+ 同块池 2（qb/qc/qd 的要点）
+    // qa：干扰 4 = 专属 3（qa-m*）+ 同块池 1（qb/qc/qd 的要点）
     const p = await practiceQueue(payloadDepsOf(runner(t), 'u1', NOW), 'u1', 'b1')
     const i = p.cards.findIndex(c => c.cardId === 'qa')
     const variant = p.prepared[i]!.variants[0]!
@@ -211,13 +212,13 @@ test('review_log.distractorIds 合并记录：mc id 与池要点 id 都在', asy
       select distractor_ids from review_log where card_id = 'qa'`)
     const ids = rows.rows[0]!.distractor_ids
     // 专属错误项 id（m*）全部在——合并前这里只有池要点 id，专属项查无此人
-    for (let n = 0; n < 4; n++) expect(ids).toContain(`qa-m${n}`)
-    // 池要点 id 也在：剩余 2 条全部来自 qb/qc/qd 的要点
+    for (let n = 0; n < 3; n++) expect(ids).toContain(`qa-m${n}`)
+    // 池要点 id 也在：剩余 1 条来自 qb/qc/qd 的要点
     const poolIds = ids.filter(id => !id.startsWith('qa-m'))
-    expect(poolIds).toHaveLength(2)
+    expect(poolIds).toHaveLength(1)
     for (const id of poolIds) expect(id).toMatch(/^(qb|qc|qd)-k\d$/)
-    // 总数 = 干扰项 6（3 正确 + 6 干扰 = 选项 9）
-    expect(ids).toHaveLength(6)
+    // 总数 = 干扰项 4（3 正确 + 4 干扰 = 选项 7）
+    expect(ids).toHaveLength(4)
   } finally {
     await t.pg.close()
   }
