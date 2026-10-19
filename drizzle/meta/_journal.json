@@ -50,6 +50,13 @@
       "when": 1792338710422,
       "tag": "0006_elite_quicksilver",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792401916671,
+      "tag": "0007_noisy_gamora",
+      "breakpoints": true
     }
   ]
 }

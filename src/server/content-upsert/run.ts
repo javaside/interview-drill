@@ -47,14 +47,14 @@ function loadContent(dir: string): { cards: Card[]; blocks: Block[]; tracks: Tra
   return { cards, blocks, tracks }
 }
 
-export type UpsertResult = { blocks: number; cards: number; keyPoints: number; tracks: number }
+export type UpsertResult = { blocks: number; cards: number; keyPoints: number; misconceptions: number; tracks: number }
 
 /**
  * content/ → DB 的幂等 upsert（§7）。事务内：
- * 1. upsert blocks / cards / key_points / tracks（源为准，重跑逐字节等价）；
- * 2. tombstone：库里多出（源已删）的卡与要点置 retiredAt = CURRENT_DATE，**不物理删**
+ * 1. upsert blocks / cards / key_points / misconceptions / tracks（源为准，重跑逐字节等价）；
+ * 2. tombstone：库里多出（源已删）的卡与要点/专属错误选项置 retiredAt = CURRENT_DATE，**不物理删**
  *    ——review_log.distractorIds 引用着要点 id，删除会让历史日志悬空（§8.1）；
- * 3. 源里重现的卡/要点 retiredAt 回写为源值（通常 null）→ 自动解除 tombstone。
+ * 3. 源里重现的卡/要点/mc retiredAt 回写为源值（通常 null）→ 自动解除 tombstone。
  * tracks 是配置数据不做 tombstone：track 下线后 user_settings.track_id 悬空，
  * UI 侧对未知 trackId 回退「全部」视图。
  * 返回处理的源计数（源确定 → 重跑结果恒等）。
@@ -62,6 +62,7 @@ export type UpsertResult = { blocks: number; cards: number; keyPoints: number; t
 export async function runUpsert(db: SqlRunner, contentDir = CONTENT_DIR): Promise<UpsertResult> {
   const { cards, blocks, tracks } = loadContent(contentDir)
   const keyPointCount = cards.reduce((n, c) => n + c.keyPoints.length, 0)
+  const mcCount = cards.reduce((n, c) => n + (c.misconceptions?.length ?? 0), 0)
 
   await db.transaction(async tx => {
     for (const b of blocks) {
@@ -105,6 +106,14 @@ export async function runUpsert(db: SqlRunner, contentDir = CONTENT_DIR): Promis
             exclude_as_distractor_for = excluded.exclude_as_distractor_for,
             retired_at = excluded.retired_at`)
       }
+      // 专属错误选项：卡级数据随卡同 upsert；retiredAt 照源回写（重现即自动解除）
+      for (const m of c.misconceptions ?? []) {
+        await tx.execute(sql`
+          insert into misconceptions (id, card_id, text, why, retired_at)
+          values (${m.id}, ${c.id}, ${m.text}, ${m.why}, ${m.retiredAt ?? null})
+          on conflict (card_id, id) do update set
+            text = excluded.text, why = excluded.why, retired_at = excluded.retired_at`)
+      }
     }
 
     // tombstone：源已删的卡与要点（仅对当前 live 的置退役，避免每跑刷新日期）
@@ -125,7 +134,16 @@ export async function runUpsert(db: SqlRunner, contentDir = CONTENT_DIR): Promis
       where retired_at is null
         and (card_id || '#' || id) not in (
           select jsonb_array_elements_text(${JSON.stringify(liveKeys)}::jsonb))`)
+
+    // 专属错误选项 tombstone：与要点同构（单 JSON 数组 + unnest 拼接键），
+    // 同样不平铺参数——mc 数量随库增长，平铺迟早撞参数上限。
+    const liveMcKeys = cards.flatMap(c => (c.misconceptions ?? []).map(m => `${c.id}#${m.id}`))
+    await tx.execute(sql`
+      update misconceptions set retired_at = current_date
+      where retired_at is null
+        and (card_id || '#' || id) not in (
+          select jsonb_array_elements_text(${JSON.stringify(liveMcKeys)}::jsonb))`)
   })
 
-  return { blocks: blocks.length, cards: cards.length, keyPoints: keyPointCount, tracks: tracks.length }
+  return { blocks: blocks.length, cards: cards.length, keyPoints: keyPointCount, misconceptions: mcCount, tracks: tracks.length }
 }

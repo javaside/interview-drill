@@ -76,6 +76,15 @@ export const keyPoints = pgTable('key_points', {
   retiredAt: date('retired_at'),
 }, t => [primaryKey({ columns: [t.cardId, t.id] })])
 
+/** 专属错误选项（spec §2.3）：与 key_points 平行，永不进干扰项池（池装配只读 key_points） */
+export const misconceptions = pgTable('misconceptions', {
+  id: text('id').notNull(),   // 复合主键 (cardId, id)，同 key_points 的列级/表级处理
+  cardId: text('card_id').notNull().references(() => cards.id, { onDelete: 'cascade' }),
+  text: text('text').notNull(),
+  why: text('why').notNull(),
+  retiredAt: date('retired_at'),
+}, t => [primaryKey({ columns: [t.cardId, t.id] })])
+
 /**
  * plan 存绝对日期数组（§8.1 + 计划 2 尾注）；s 存分子分母（精确有理数）。
  * (userId, cardId) 主键。
