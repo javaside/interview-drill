@@ -20,6 +20,7 @@ const enumVariant: PreparedVariant = {
   optionTexts: ['A', 'x', 'B', 'x', 'x', 'C', 'x', 'x', 'x'],
   correctIndices: [0, 2, 5],
   distractorKeyPointIds: [],
+  misconceptionIds: [],
 }
 const enumCard: CardSnapshot = {
   cardId: 'c', blockId: 'b', cardType: 'enumeration', frequency: 'mid', keyPoints: [],
@@ -32,7 +33,7 @@ test('同构（§11）enumeration：勾对/勾错/漏选计数逐字节相同', 
 
 /** sequence：呈现 [A,B,C,D]，正确呈现序 = correctIndices = [1,0,3,2]（即 B,A,D,C） */
 const seqVariant: PreparedVariant = {
-  optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [],
+  optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [], misconceptionIds: [],
 }
 const seqCard: CardSnapshot = {
   cardId: 'c7', blockId: 'b', cardType: 'sequence', frequency: 'mid', keyPoints: [],
@@ -67,7 +68,7 @@ test('同构（§11）judgment：结论对', () => {
 })
 
 const atomicVariant: PreparedVariant = {
-  optionTexts: ['对', '错A', '错B', '错C'], correctIndices: [0], distractorKeyPointIds: [],
+  optionTexts: ['对', '错A', '错B', '错C'], correctIndices: [0], distractorKeyPointIds: [], misconceptionIds: [],
 }
 const atomicCard: CardSnapshot = {
   cardId: 'c5', blockId: 'b', cardType: 'atomic', frequency: 'mid', keyPoints: [],

@@ -59,7 +59,7 @@ test('scoreSubmission：selection 按 correctIndices 判勾对/勾错', () => {
   const sub: Submission = { submissionId: 's1', cardId: 'c1', reviewedAtMs: 0, kind: 'selection', selected: [0, 2, 5] }
   const v: PreparedVariant = {
     optionTexts: ['A', 'x', 'B', 'x', 'x', 'C', 'x', 'x', 'x'],
-    correctIndices: [0, 2, 5], distractorKeyPointIds: [],
+    correctIndices: [0, 2, 5], distractorKeyPointIds: [], misconceptionIds: [],
   }
   const r = scoreSubmission(enumCard, v, sub)
   expect(r).toEqual({ score: rat(3, 3), correctChecked: 3, wrongChecked: 0 })
@@ -70,7 +70,7 @@ test('scoreSubmission：selection 按 correctIndices 判勾对/勾错', () => {
 
 test('scoreSubmission：judgment 结论错 → 0 分，但记账按实际勾选（与染色口径一致）', () => {
   const card = { ...enumCard, cardType: 'judgment', conclusion: 'depends' } as CardSnapshot
-  const v: PreparedVariant = { optionTexts: [], correctIndices: [0, 1, 2, 3], distractorKeyPointIds: [] }
+  const v: PreparedVariant = { optionTexts: [], correctIndices: [0, 1, 2, 3], distractorKeyPointIds: [], misconceptionIds: [] }
   // 结论错（want=2，选了 0）+ 勾了对 2 条要点、错 0 条
   const r = scoreSubmission(card, v, {
     submissionId: 's', cardId: 'c1', reviewedAtMs: 0, kind: 'judgment', conclusion: 0, selected: [0, 1],
@@ -83,7 +83,7 @@ test('scoreSubmission：judgment 结论错 → 0 分，但记账按实际勾选�
 test('scoreSubmission：sequence 记账 = 位置精确匹配数（与屏② 位置染色同口径）', () => {
   const card = { ...enumCard, cardType: 'sequence' } as CardSnapshot
   // correctIndices 语义：canonical 第 i 项在呈现中的下标 → 正确的呈现顺序 = [1, 0, 3, 2]
-  const v: PreparedVariant = { optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [] }
+  const v: PreparedVariant = { optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [], misconceptionIds: [] }
   // 用户排 [1, 0, 2, 3]：位置 0（1✓）、位置 1（0✓）、位置 2（2 应为 3 ✗）、位置 3（3 应为 2 ✗）
   const r = scoreSubmission(card, v, {
     submissionId: 's', cardId: 'c1', reviewedAtMs: 0, kind: 'sequence', order: [1, 0, 2, 3],

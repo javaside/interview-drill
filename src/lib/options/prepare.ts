@@ -2,7 +2,8 @@ import { hashSeed, seedRng, shuffle } from './rng.js'
 import type { Rng } from './rng.js'
 import { drawDistractors } from './draw.js'
 import type { Degradation } from './draw.js'
-import { ATOMIC_OPTIONS_TOTAL, OPTIONS_TOTAL } from './types.js'
+import { isProficient } from './layers.js'
+import { ATOMIC_OPTIONS_TOTAL, FIXED_DRAW_SENTINEL, OPTIONS_TOTAL } from './types.js'
 import type { DistractorPools, OptionCard, OptionKeyPoint, Rational } from './types.js'
 
 export type PreparedVariant = {
@@ -22,6 +23,10 @@ export type PreparedVariant = {
    * 整个字段缺省，客户端回退通用文案。sequence 无干扰项，恒缺省。
    */
   distractorOrigins?: Record<number, { cardId: string; blockId: string; question: string }>
+  /** 被抽中的专属错误项 id——恒有可为空数组（review_log 复现用；旧缓存缺省由消费侧 ?? [] 兜底） */
+  misconceptionIds: string[]
+  /** 呈现下标 → 专属错误项的 why（UI 溯源「常见误解」）；无 mc 时整个字段缺省 */
+  misconceptionWhy?: Record<number, string>
 }
 
 export type PreparedOptions = {
@@ -58,9 +63,12 @@ function assertLiveKeyPoints(card: OptionCard, live: OptionKeyPoint[]): void {
 }
 
 /**
- * 预生成选项集（§4.3）。第 i 份变体的 rng 由 (userId, cardId,
- * reviewIndexBase + i) 派生——同一次复习永远同一套选项（可复现），
- * 下一次复习换一套（每次重抽，免疫"记住位置不记内容"）。
+ * 预生成选项集（§4.3）。第 i 份变体的排列 rng 由 (userId, cardId,
+ * reviewIndexBase + i) 派生——同一次复习永远同一套选项（可复现）。
+ * 干扰项**抽取** rng 分档（spec §3.2）：s ≥ 2/3 熟练，与排列同源，
+ * 下一次复习换一套（每次重抽，免疫"记住位置不记内容"）；s < 2/3 未熟练，
+ * 用恒定哨兵 seed——集合固定、只换排列，把同一组干扰项反复摆到用户面前，
+ * 直到熟练才放开换血（且 s 演化跨 layerCounts 配额档不影响集合）。
  *
  * 分型规则（§4.3 分型表）：
  * - enumeration / comparison / judgment：要点阶段多选，选项恒 9，
@@ -85,8 +93,13 @@ export function prepareOptions(
   const variants: PreparedVariant[] = []
   let degradedTo: Degradation = 'none'
   for (let i = 0; i < K; i++) {
-    const rng = seedRng(hashSeed(userId, card.id, reviewIndexBase + i))
-    const built = buildVariant(card, live, pools, s, rng, userId)
+    const permRng = seedRng(hashSeed(userId, card.id, reviewIndexBase + i))
+    // 抽取 seed 分档（spec §3.2）：熟练 = 与排列同一实例（无 mc 时消费序与现状逐字节一致）；
+    // 未熟练 = 恒定哨兵，且 layerCounts 的 s 冻结为 0（跨 3s=1 档集合不变）
+    const proficient = isProficient(s)
+    const drawRng = proficient ? permRng : seedRng(hashSeed(userId, card.id, FIXED_DRAW_SENTINEL))
+    const drawS = proficient ? s : { num: 0, den: 1 }
+    const built = buildVariant(card, live, pools, drawS, userId, permRng, drawRng)
     variants.push(built.variant)
     if (built.degradedTo === 'neighbor') degradedTo = 'neighbor'
   }
@@ -98,8 +111,9 @@ function buildVariant(
   correctPoints: OptionKeyPoint[],
   pools: DistractorPools,
   s: Rational,
-  rng: Rng,
   userId: string,
+  permRng: Rng,        // 排列与 sequence 呈现序专用（恒现状派生）
+  drawRng: Rng,        // 干扰项抽取专用（分档派生：熟练=permRng 同实例，未熟练=固定哨兵）
 ): { variant: PreparedVariant; degradedTo: Degradation } {
   if (card.cardType === 'sequence') {
     const canonical = [...correctPoints].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
@@ -126,44 +140,49 @@ function buildVariant(
         // 用户把呈现序排回 canonical 序即满分（scoreSequence 直接可用）
         correctIndices: idx.map(c => posOf.get(c)!),
         distractorKeyPointIds: [],
+        misconceptionIds: [],   // sequence 禁配 mc（spec §2.4），恒空
       },
       degradedTo: 'none',   // sequence 无抽取，不存在降级
     }
   }
   const total = card.cardType === 'atomic' ? ATOMIC_OPTIONS_TOTAL : OPTIONS_TOTAL
   const correctCount = card.cardType === 'atomic' ? 1 : correctPoints.length
-  const { keyPoints: distractors, degradedTo } = drawDistractors(
-    card,
-    pools,
-    total - correctCount,
-    s,
-    rng,
+  const { keyPoints: distractors, misconceptions, degradedTo } = drawDistractors(
+    card, pools, total - correctCount, s, drawRng,
   )
 
   type Entry = {
     text: string
     correct: boolean
     distractorId?: string
+    mcId?: string
+    mcWhy?: string
     origin?: { cardId: string; blockId: string; question: string }
   }
   const entries: Entry[] = [
     ...correctPoints.slice(0, correctCount).map(kp => ({ text: kp.text, correct: true })),
     ...distractors.map(kp => ({
-      text: kp.text, correct: false, distractorId: kp.id, ...(kp.origin !== undefined ? { origin: kp.origin } : {}),
+      text: kp.text, correct: false, distractorId: kp.id,
+      ...(kp.origin !== undefined ? { origin: kp.origin } : {}),
     })),
+    ...misconceptions.map(m => ({ text: m.text, correct: false, mcId: m.id, mcWhy: m.why })),
   ]
-  const arranged = shuffle(entries, rng)
-  // 错勾溯源：呈现下标 → 来源题（只有干扰项带 origin；全空则字段缺省）
+  const arranged = shuffle(entries, permRng)
+  // 错勾溯源：呈现下标 → 来源题 / 专属错误项 why（只有干扰项带；全空则字段缺省）
   const origins: Record<number, { cardId: string; blockId: string; question: string }> = {}
+  const whys: Record<number, string> = {}
   for (const [i, e] of arranged.entries()) {
     if (e.origin !== undefined) origins[i] = e.origin
+    if (e.mcWhy !== undefined) whys[i] = e.mcWhy
   }
   return {
     variant: {
       optionTexts: arranged.map(e => e.text),
       correctIndices: arranged.flatMap((e, i) => (e.correct ? [i] : [])),
       distractorKeyPointIds: arranged.flatMap(e => (e.distractorId ? [e.distractorId] : [])),
+      misconceptionIds: arranged.flatMap(e => (e.mcId ? [e.mcId] : [])),
       ...(Object.keys(origins).length > 0 ? { distractorOrigins: origins } : {}),
+      ...(Object.keys(whys).length > 0 ? { misconceptionWhy: whys } : {}),
     },
     degradedTo,
   }

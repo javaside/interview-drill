@@ -11,7 +11,7 @@ const card: CardView = {
 }
 const variant: PreparedVariant = {
   optionTexts: ['叶子有序链表', '干扰A', '非叶只存键', '干扰B', '干扰C', '磁盘友好', '干扰D', '干扰E', '干扰F'],
-  correctIndices: [0, 2, 5], distractorKeyPointIds: [],
+  correctIndices: [0, 2, 5], distractorKeyPointIds: [], misconceptionIds: [],
 }
 
 test('渲染块名/频度/题面 + 9 个选项，不显示正确条数', () => {
@@ -54,13 +54,13 @@ test('提交回调带勾选下标（selection）', async () => {
 
 test('atomic 型 4 个单选，选一个即可提交', () => {
   render(<DrillQuestion card={{ ...card, cardType: 'atomic' }}
-    variant={{ optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [0], distractorKeyPointIds: [] }} onSubmit={() => {}} />)
+    variant={{ optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [0], distractorKeyPointIds: [], misconceptionIds: [] }} onSubmit={() => {}} />)
   expect(screen.getAllByRole('radio')).toHaveLength(4)
 })
 
 test('sequence 型提示为排序指引，不出现勾选文案（排序题没有可勾选项）', () => {
   render(<DrillQuestion card={{ ...card, cardType: 'sequence' }}
-    variant={{ optionTexts: ['第 1 步', '第 2 步', '第 3 步', '第 4 步'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [] }}
+    variant={{ optionTexts: ['第 1 步', '第 2 步', '第 3 步', '第 4 步'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [], misconceptionIds: [] }}
     onSubmit={() => {}} />)
   expect(screen.getByText('把要点排成正确的先后顺序')).toBeInTheDocument()
   expect(screen.queryByText('勾出所有属于这道题的要点')).toBeNull()
@@ -68,7 +68,7 @@ test('sequence 型提示为排序指引，不出现勾选文案（排序题没�
 
 test('atomic 型提示为单选指引，不出现「勾出所有」文案', () => {
   render(<DrillQuestion card={{ ...card, cardType: 'atomic' }}
-    variant={{ optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [0], distractorKeyPointIds: [] }} onSubmit={() => {}} />)
+    variant={{ optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [0], distractorKeyPointIds: [], misconceptionIds: [] }} onSubmit={() => {}} />)
   expect(screen.getByText('选出正确的一项')).toBeInTheDocument()
   expect(screen.queryByText('勾出所有属于这道题的要点')).toBeNull()
 })

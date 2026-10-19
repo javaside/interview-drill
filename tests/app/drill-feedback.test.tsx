@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { DrillFeedback } from '../../src/app/(drill)/DrillFeedback.js'
 
-const variant = { optionTexts: ['对1', '错勾', '对2', '漏', 'x', 'x', 'x', 'x', 'x'], correctIndices: [0, 2, 3], distractorKeyPointIds: ['kp-x'] }
+const variant = { optionTexts: ['对1', '错勾', '对2', '漏', 'x', 'x', 'x', 'x', 'x'], correctIndices: [0, 2, 3], distractorKeyPointIds: ['kp-x'], misconceptionIds: [] }
 const submission = { submissionId: 's', cardId: 'c1', reviewedAtMs: 0, kind: 'selection' as const, selected: [0, 1, 2] }
 const base = {
   card: {
@@ -91,7 +91,7 @@ const seqBase = {
     cardType: 'sequence' as const, detail: '', keyPoints: [],
   } as never,
   // 呈现 [A,B,C,D]，正确的呈现顺序 = correctIndices = [1,0,3,2]（即 B,A,D,C）
-  variant: { optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [] },
+  variant: { optionTexts: ['A', 'B', 'C', 'D'], correctIndices: [1, 0, 3, 2], distractorKeyPointIds: [], misconceptionIds: [] },
   submission: { submissionId: 's7', cardId: 'c7', reviewedAtMs: 0, kind: 'sequence' as const, order: [1, 0, 2, 3] },
 }
 
@@ -114,7 +114,7 @@ test('sequence 批改：每行显示你的位置与应在位置（位置对绿 /
 test('atomic 批改屏：提示为「你的选择（批改）」，不出现「勾出所有」文案', () => {
   render(<DrillFeedback
     card={{ cardId: 'c5', blockName: 'MVCC', question: '哪条日志先写？', cardType: 'atomic' as const, keyPoints: [] } as never}
-    variant={{ optionTexts: ['redo log', 'binlog', 'undo log', 'doublewrite'], correctIndices: [0], distractorKeyPointIds: [] }}
+    variant={{ optionTexts: ['redo log', 'binlog', 'undo log', 'doublewrite'], correctIndices: [0], distractorKeyPointIds: [], misconceptionIds: [] }}
     submission={{ submissionId: 's5', cardId: 'c5', reviewedAtMs: 0, kind: 'atomic' as const, selected: 1 }}
     offline={false}
     result={{ score: { num: 0, den: 1 }, remainingPlan: [], replanned: false, feedback: { correctChecked: 0, wrongChecked: 1, missed: 0 } } as never} />)

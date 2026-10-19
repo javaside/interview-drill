@@ -7,6 +7,7 @@ const variant: PreparedVariant = {
   optionTexts: ['A', 'x', 'B', 'x', 'x', 'C', 'x', 'x', 'x'],
   correctIndices: [0, 2, 5],
   distractorKeyPointIds: [],
+  misconceptionIds: [],
 }
 
 test('selection：全对 3/3，missed=0 wrong=0', () => {

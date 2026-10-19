@@ -13,6 +13,8 @@
  * 不同实例若行序不同，同一次复习会抽到不同干扰项，破坏「判分与展示同卷」）。
  */
 
+import type { Rational } from './types.js'
+
 /** 大类值序列：去重 + 按名称升序。输入行序不影响结果 */
 export function categorySequenceOf(categories: ReadonlyMap<string, string>): string[] {
   return [...new Set(categories.values())].sort()
@@ -34,6 +36,15 @@ export function neighborCategoryOf(
 }
 
 export type DistractorLayer = 'sameBlock' | 'crossBlock' | 'neighbor'
+
+/**
+ * 熟练判定（spec §3.2）：s ≥ 2/3，与 layerCounts 的 3s≥2 分档线同一语义
+ * （两三轮答对≈熟练）。s < 2/3 走固定分支：抽取 seed 用恒定哨兵、
+ * layerCounts 的 s 冻结为 rat(0,1)——s 演化跨 3s=1 配额档不再影响集合。
+ */
+export function isProficient(s: Rational): boolean {
+  return 3 * s.num >= 2 * s.den
+}
 
 /**
  * 某张**别的卡**属于目标卡的哪一层。null = 进不了任何池（大类未知、或既不同类也不相邻）。

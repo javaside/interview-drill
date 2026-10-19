@@ -1,4 +1,4 @@
-import type { OptionCard, OptionKeyPoint } from './types.js'
+import type { OptionCard, OptionKeyPoint, OptionMisconception } from './types.js'
 import { shuffle } from './rng.js'
 import type { Rng } from './rng.js'
 import type { DistractorPools, Rational } from './types.js'
@@ -61,8 +61,11 @@ export function layerCounts(
 export type Degradation = 'none' | 'neighbor'
 
 /**
- * 干扰项抽取（§4.3）。
+ * 干扰项抽取（§4.3 + spec §3.1 专属优先）。
  *
+ * - 专属优先（spec §3.1）：本卡 misconceptions 活的全用，多于缺口按 rng 选
+ *   子集；池只补剩下的缺口。无 mc 时 shuffle([]) 零消费——rng 序与旧实现
+ *   逐字节一致（熟练分支回归锁的前提）
  * - 过滤三连：退役、本题要点、excludeAsDistractorFor 含目标卡（三个池同一套）
  * - 分层抽取：缺口双向回填（§4.3"优先从同大类补足"）——同块不足滚给跨块，
  *   跨块不足回捞同块剩余；两层都枯竭 → 相邻大类兜底并置
@@ -77,7 +80,14 @@ export function drawDistractors(
   count: number,
   s: Rational,
   rng: Rng,
-): { keyPoints: OptionKeyPoint[]; degradedTo: Degradation } {
+): { keyPoints: OptionKeyPoint[]; misconceptions: OptionMisconception[]; degradedTo: Degradation } {
+  // 专属优先（spec §3.1）：活的全用；多于缺口按 rng 选子集
+  const ownLive = (card.misconceptions ?? []).filter(m => !m.retiredAt)
+  const misconceptions = shuffle(ownLive, rng).slice(0, count)
+  const poolCount = count - misconceptions.length
+
+  // 池缺口走三层（互斥过滤、双向回填、枯竭抛错，全部照旧——
+  // 原 takeFrom 逻辑不动，只是入口计数变 poolCount；poolCount=0 时三层自然空转）
   const ownIds = new Set(card.keyPoints.map(kp => kp.id))
   const eligible = (pool: OptionKeyPoint[]) =>
     pool.filter(
@@ -95,7 +105,7 @@ export function drawDistractors(
     return want                                     // 返回剩余缺口
   }
 
-  const layers = layerCounts(count, s)
+  const layers = layerCounts(poolCount, s)
   let shortfall = takeFrom(pools.sameBlock, layers.sameBlock)
   shortfall = takeFrom(pools.crossBlock, layers.crossBlock + shortfall)
   // 双向回填（spec §4.3"优先从同大类补足"）：块 ⊂ 大类，同块剩余仍属于同大类，
@@ -109,9 +119,9 @@ export function drawDistractors(
   }
   if (shortfall > 0) {
     throw new Error(
-      `干扰项池枯竭：${card.id} 需要 ${count} 条，三层合计仍缺 ${shortfall} 条` +
+      `干扰项池枯竭：${card.id} 需要 ${count} 条（专属 ${misconceptions.length} + 池 ${poolCount}），三层合计仍缺 ${shortfall} 条` +
       '（内容缺陷，构建期解决，绝不静默少给）',
     )
   }
-  return { keyPoints: [...taken.values()], degradedTo }
+  return { keyPoints: [...taken.values()], misconceptions, degradedTo }
 }

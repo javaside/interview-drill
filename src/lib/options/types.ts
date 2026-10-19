@@ -27,11 +27,21 @@ export type OptionKeyPoint = {
   origin?: { cardId: string; blockId: string; question: string }
 }
 
+/** 专属错误选项（spec §2.4）：最小输入类型，movedFrom 不参与出题不进 */
+export type OptionMisconception = {
+  id: string
+  text: string
+  why: string
+  retiredAt?: string
+}
+
 export type OptionCard = {
   id: string
   blockId: string
   cardType: CardType
   keyPoints: OptionKeyPoint[]
+  /** 本卡专属错误选项；缺省 = 无，全走池（spec §3.1） */
+  misconceptions?: readonly OptionMisconception[]
 }
 
 /**
@@ -52,3 +62,6 @@ export const OPTIONS_TOTAL = 9
 
 /** §4.3 分型表：atomic 单选 4 选 1 */
 export const ATOMIC_OPTIONS_TOTAL = 4
+
+/** 固定分支抽取哨兵（spec §3.2）：-1 已被 sequence 呈现序占用，-2 专用于未熟练抽取 */
+export const FIXED_DRAW_SENTINEL = -2
