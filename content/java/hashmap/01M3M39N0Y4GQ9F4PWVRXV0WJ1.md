@@ -54,6 +54,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-hm3-1
+    text: "扩容搬移每个元素都要重新调用 hashCode 重新散列"
+    why: "误解：JDK 8 拆链只看 hash 新增那一位是 0 还是 1，分两条子链整体平移"
+  - id: mc-hm3-2
+    text: "负载因子设成 1 能最大化空间利用且不损失性能"
+    why: "误解：负载因子越高冲突越多、链更长查找越慢，0.75 是时空折中"
+  - id: mc-hm3-3
+    text: "HashMap 的默认初始容量是 10"
+    why: "误解：默认 16；记成 10 是与 ArrayList 混了"
 ---
 
 装到 **75% 满**（size > 16×0.75=12）就搬家：容量**翻倍**（2 的幂序列 16→32→64…），所有元素**重新分桶**。

@@ -49,6 +49,19 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-hm5-1
+    text: "HashMap 会感知 key 的变化，自动把它搬到新 hash 对应的桶"
+    why: "误解：入桶后无人跟踪 key 字段变化，元素一直留在按旧 hash 算出的桶里"
+  - id: mc-hm5-2
+    text: "get 会同时扫新旧两个桶，因此仍能找到"
+    why: "误解：get 只按当前 hash 定位一个桶，根本不知道旧桶的存在"
+  - id: mc-hm5-3
+    text: "value 字段可变同样会让 get 找不到这条映射"
+    why: "误解：定位与比对只依赖 key 的 hash 与 equals，value 变不影响查找"
+  - id: mc-hm5-4
+    text: "只要 key 的 equals 没变，get 就必然能找到"
+    why: "误解：先按 hash 定桶才轮得到 equals，hash 变了根本进不了那个桶"
 ---
 
 Map 定位元素靠的是 **key 的 hash**。放进去之后再**改 key 的字段**（参与 hashCode 的字段）：

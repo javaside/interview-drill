@@ -20,6 +20,16 @@ keyPoints:
       kind: official-doc
       url: https://docs.oracle.com/javase/specs/jls/se17/html/index.html
       locator: JLS 17
+misconceptions:
+  - id: mc-hm2-1
+    text: "扰动函数是加密运算，防止外部反推原始 key"
+    why: "误解：只是高低位异或混合，与安全无关，目的是让高位差异参与定桶"
+  - id: mc-hm2-2
+    text: "扰动与否无关紧要，hashCode 本身已足够均匀"
+    why: "误解：内存地址连续的对象低位可能全同，不混入高位就全挤进同一个桶"
+  - id: mc-hm2-3
+    text: "扰动是把高 16 位右移后直接替换整个 hash 值"
+    why: "误解：是异或混合（h 与 h>>>16 异或），不是替换，替换会丢掉高位信息"
 ---
 
 定位下标只用了 hash 的**低几位**（`(n-1) & hash`，n=16 时就是低 4 位）。如果 key 的 hash **只有高位有差异**（常见于内存地址连续的小对象），低 4 位全一样 → 全挤进**同一个桶**。
